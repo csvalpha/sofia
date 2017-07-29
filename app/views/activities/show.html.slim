@@ -1,0 +1,13 @@
+h1  
+  = "Activity: " + @model.title
+  
+ul
+  li 
+    ="Start Time: "
+    =@model.start_time 
+  li 
+    ="End Time: "
+    =@model.end_time 
+  li 
+    ="Deleted at: "
+    =@model.deleted_at || '-' 

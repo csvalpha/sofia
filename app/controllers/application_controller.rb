@@ -1,13 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
-  def index
-    resource_collection = records.includes(model_includes)
-    render resource_collection
-  rescue ActiveModel::RangeError
-    head :not_found
-  end
-
   def model_class
     raise NotImplementedError
   end
