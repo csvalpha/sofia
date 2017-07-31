@@ -1,24 +1,21 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Dit is de code die hoor bij het nieuwe streepsysteem, codenaam Alpha Tomato. Er moet nog veel
+gebeuren, maar het begin is er.
 
-Things you may want to cover:
+## Prerequisits
 
-* Ruby version
+_On Linux-like systems_
 
-* System dependencies
+- Ruby 2.4.1
+- Bundler (`gem install bundler`)
+- Postgresql 9.5+
 
-* Configuration
+## Installation
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+1. Clone this repository
+1. Run the following commands:
+  1. `bundle install` (might take a couple of minutes)
+  1. `bundle exec rails db:setup`
+  1. `bundle exec rails s`
+1. Go to http://localhost:3000 and you should see Alpha Tomato running
