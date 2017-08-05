@@ -1,5 +1,5 @@
 h1  
-  = "Activity: " + @model.title
+  = "Activity: #{@model.title}"
   
 ul
   li 
@@ -11,3 +11,20 @@ ul
   li 
     ="Deleted at: "
     =@model.deleted_at || '-' 
+
+hr
+
+h1
+  = 'Transactions'
+table
+  tr
+    td = 'id'
+    td = 'Gebruiker'
+    td = 'Product'
+    td = 'Bedrag'
+  - @model.transactions.each do |transaction|
+    tr
+      td = transaction.id
+      td = 'TODO'
+      td = transaction.product.name
+      td = transaction.amount
