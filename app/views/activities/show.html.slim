@@ -10,7 +10,10 @@ ul
     =@model.end_time 
   li 
     ="Deleted at: "
-    =@model.deleted_at || '-' 
+    =@model.deleted_at || '-'
+  li
+    ="Streeplijst: "
+    =@model.price_list.name
 
 hr
 
