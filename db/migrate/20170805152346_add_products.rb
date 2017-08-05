@@ -14,6 +14,8 @@ class AddProducts < ActiveRecord::Migration[5.1]
       t.timestamps
     end
 
+    add_reference :activities, :price_list
+
     create_table :product_prices do |t|
       t.references :product
       t.references :price_list

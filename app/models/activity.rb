@@ -1,4 +1,7 @@
 class Activity < ApplicationRecord
+  has_many :transactions
+  belongs_to :price_list
+
   validates :title,       presence: true
   validates :start_time,  presence: true
   validates :end_time,    presence: true

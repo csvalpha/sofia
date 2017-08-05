@@ -1,5 +1,6 @@
 class Transaction < ApplicationRecord
   belongs_to :product
+  belongs_to :activity
 
   validates :amount, presence: true
   validates :timestamp, presence: true
