@@ -25,7 +25,7 @@ ActiveRecord::Schema.define(version: 20170805153755) do
   end
 
   create_table "price_lists", force: :cascade do |t|
-    t.string "title", null: false
+    t.string "name", null: false
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(version: 20170805153755) do
   create_table "product_prices", force: :cascade do |t|
     t.bigint "product_id"
     t.bigint "price_list_id"
+    t.decimal "amount", precision: 8, scale: 2
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -42,7 +43,7 @@ ActiveRecord::Schema.define(version: 20170805153755) do
   end
 
   create_table "products", force: :cascade do |t|
-    t.string "title", null: false
+    t.string "name", null: false
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

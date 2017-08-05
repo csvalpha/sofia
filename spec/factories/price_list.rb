@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :product do
+  factory :price_list do
     name { Faker::Book.title }
   end
 end
