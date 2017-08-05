@@ -7,8 +7,7 @@ class ActivitiesController < ApplicationController
     head :not_found
   end
 
-  def show
-  end
+  def show; end
 
   def model_class
     Activity

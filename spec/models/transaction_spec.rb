@@ -10,7 +10,7 @@ RSpec.describe Transaction, type: :model do
       subject(:transaction) { FactoryGirl.build_stubbed(:transaction, timestamp: nil) }
 
       it { expect(transaction).not_to be_valid }
-      end
+    end
 
     context 'when without amount' do
       subject(:transaction) { FactoryGirl.build_stubbed(:transaction, amount: nil) }
@@ -20,6 +20,7 @@ RSpec.describe Transaction, type: :model do
 
     context 'when amount is changed' do
       subject(:transaction) { FactoryGirl.create(:transaction) }
+
       before do
         transaction.amount = 280
       end
