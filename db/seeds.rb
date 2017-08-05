@@ -1,10 +1,10 @@
 activities = []
-[0,1,2,3].each do
+[0, 1, 2, 3].each do
   activities << FactoryGirl.create(:activity)
 end
 
 products = []
-[0,1,2,3].each do
+[0, 1, 2, 3].each do
   products << FactoryGirl.create(:product)
 end
 
@@ -16,8 +16,9 @@ products.each do |product|
 end
 
 activities.each do |activity|
-  # TODO remove amount, this should be calculated in model
-  [0,1,2].each do
-    FactoryGirl.create(:transaction, product: products.sample, activity: activity, amount: 8)
+  [0, 1, 2].each do
+    product = products.sample
+    FactoryGirl.create(:transaction, product: product, activity: activity,
+                                     amount: activity.price_list.product_price_for(product).amount)
   end
 end

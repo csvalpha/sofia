@@ -12,4 +12,16 @@ RSpec.describe PriceList, type: :model do
       it { expect(price_list).not_to be_valid }
     end
   end
+
+  describe '#product_price_for' do
+    subject(:price_list) { FactoryGirl.create(:price_list) }
+
+    let(:product) { FactoryGirl.create(:product) }
+
+    before do
+      FactoryGirl.create(:product_price, product: product, price_list: price_list, amount: 8)
+    end
+
+    it { expect(price_list.product_price_for(product).amount).to eq 8 }
+  end
 end

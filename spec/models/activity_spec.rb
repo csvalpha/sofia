@@ -13,7 +13,7 @@ RSpec.describe Activity, type: :model do
     end
 
     context 'when without a price list' do
-      subject(:activity) { FactoryGirl.build_stubbed(:activity, price_list: nil)}
+      subject(:activity) { FactoryGirl.build_stubbed(:activity, price_list: nil) }
 
       it { expect(activity).not_to be_valid }
     end
