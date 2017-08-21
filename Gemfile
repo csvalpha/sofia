@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'bcrypt', '~> 3.1.7'
 gem 'coffee-rails', '~> 4.2'
+gem 'doorkeeper', '~> 4.2'
 gem 'factory_girl_rails', '~> 4.8'
 gem 'faker', '~> 1.7'
 gem 'jbuilder', '~> 2.5'
