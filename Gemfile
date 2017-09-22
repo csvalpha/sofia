@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'bootstrap', '~> 4.0.0.beta'
 gem 'bcrypt', '~> 3.1.7'
 gem 'coffee-rails', '~> 4.2'
 gem 'doorkeeper', '~> 4.2'
@@ -22,12 +23,15 @@ group :development, :test do
   gem 'better_errors'
   gem 'bullet'
   gem 'colorize'
+  gem 'guard-livereload', '~> 2.5'
+  gem 'guard-rspec', require: false
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'rspec-rails'
 end
 
 group :development do
+  gem 'foreman', require: false
   gem 'listen', '>= 3.0.5', '< 3.2'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
