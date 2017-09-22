@@ -7,4 +7,23 @@ html
     = csrf_meta_tags
 
   body
+
+    nav.navbar.navbar-expand-md.navbar-light.bg-light
+      a.navbar-brand href="/" 🍅
+      button.navbar-toggler type="button" data-toggle="collapse" data-target="#mainNavigation" aria-controls="mainNavigation" aria-expanded="false" aria-label="Toggle navigation"
+        span.navbar-toggler-icon
+
+      div.collapse.navbar-collapse id="mainNavigation"
+        ul.navbar-nav
+          li.nav-item.active
+            = link_to "Home", root_path, class: "nav-link"
+          li.nav-item
+            = link_to "Activities", activities_path, class: "nav-link"
+          li.nav-item
+            a.nav-link href="#" Pricelists
+          li.nav-item
+            a.nav-link href="#" Products
+          li.nav-item
+            a.nav-link href="#" Transactions
+
     == yield
