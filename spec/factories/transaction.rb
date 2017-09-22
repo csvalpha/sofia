@@ -4,5 +4,6 @@ FactoryGirl.define do
     amount { rand(0..250.0) }
     product
     activity
+    user
   end
 end
