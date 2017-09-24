@@ -1,0 +1,19 @@
+div.container
+
+  h1 Price Lists
+
+  table
+    thead
+      tr
+        td Name
+        td Created at
+        td Updated at
+    tbody
+      - @model.each do |price_list|
+        tr
+          td
+            = link_to price_list.name, price_list
+          td
+            = price_list.created_at
+          td
+            = price_list.updated_at

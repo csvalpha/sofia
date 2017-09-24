@@ -1,0 +1,20 @@
+div.container
+
+  h1
+    = "Price List: #{@model.name}"
+
+
+  h2 Products
+
+  table.price_list_table
+    thead
+      tr
+        th Product name
+        th Price
+    tbody
+      - @model.product_price.each do |product_price|
+        tr
+          td = product_price.product.name
+          td = product_price.amount
+
+  hr

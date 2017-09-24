@@ -1,7 +1,7 @@
-class ActivitiesController < ApplicationController
+class ProductsController < ApplicationController
   before_action :set_model, only: %i[show update destroy]
 
   def model_class
-    Activity
+    Product
   end
 end

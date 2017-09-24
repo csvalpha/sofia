@@ -1,33 +1,34 @@
-h1  
-  = "Activity: #{@model.title}"
-  
-ul
-  li 
-    ="Start Time: "
-    =@model.start_time 
-  li 
-    ="End Time: "
-    =@model.end_time 
-  li 
-    ="Deleted at: "
-    =@model.deleted_at || '-'
-  li
-    ="Streeplijst: "
-    =@model.price_list.name
+div.container
+  h1
+    = "Activity: #{@model.title}"
 
-hr
+  ul
+    li
+      = "Start Time: "
+      = @model.start_time
+    li
+      = "End Time: "
+      = @model.end_time
+    li
+      = "Deleted at: "
+      = @model.deleted_at || '-'
+    li
+      = "Streeplijst: "
+      = link_to @model.price_list.name, @model.price_list
 
-h1
-  = 'Transactions'
-table
-  tr
-    td = 'id'
-    td = 'Gebruiker'
-    td = 'Product'
-    td = 'Bedrag'
-  - @model.transactions.each do |transaction|
+  hr
+
+  h1
+    = 'Transactions'
+  table
     tr
-      td = transaction.id
-      td = 'TODO'
-      td = transaction.product.name
-      td = transaction.amount
+      td ID
+      td User
+      td Product
+      td Cost
+    - @model.transactions.each do |transaction|
+      tr
+        td = transaction.id
+        td = link_to transaction.user.username, transaction.user
+        td = link_to transaction.product.name, transaction.product
+        td = number_to_currency(transaction.amount)

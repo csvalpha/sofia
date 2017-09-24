@@ -1,5 +1,28 @@
 div.container
 
   h1 Activities
-  ul
-    = render partial: 'activities/activity', collection: @activities
+
+  table
+    thead
+      tr
+        td Name
+        td Start Time
+        td End Time
+        td Streeplijst
+        td Created at
+        td Updated at
+    tbody
+      - @model.each do |activity|
+        tr
+          td
+            = link_to activity.title, activity
+          td
+            = activity.start_time
+          td
+            = activity.end_time
+          td
+            = activity.price_list.name
+          td
+            = activity.created_at
+          td
+            = activity.updated_at

@@ -1,0 +1,19 @@
+div.container
+
+  h1 Products
+
+  table
+    thead
+      tr
+        td Name
+        td Created at
+        td Updated at
+    tbody
+      - @model.each do |product|
+        tr
+          td
+            = link_to product.name, product
+          td
+            =product.created_at
+          td
+            =product.updated_at

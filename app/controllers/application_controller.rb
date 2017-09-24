@@ -5,6 +5,12 @@ class ApplicationController < ActionController::Base
     raise NotImplementedError
   end
 
+  def index
+    @model = records.includes(model_includes)
+  rescue ActiveModel::RangeError
+    head :not_found
+  end
+
   private
 
   def set_model
