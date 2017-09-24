@@ -18,7 +18,7 @@ div.container
           td
             = link_to user.username, user
           td
-            = user.created_at
+            = user.created_at.strftime("%d-%M-%Y %H:%M:%S")
           td
             = user.updated_at
           td

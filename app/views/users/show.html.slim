@@ -5,8 +5,8 @@ div.container
   ul
     li = @model.id
     li = @model.username
-    li = @model.created_at
-    li = @model.updated_at
+    li = @model.created_at.strftime("%d-%M-%y %H:%M")
+    li = @model.updated_at.strftime("%d-%M-%y %H:%M")
     li = number_to_currency(@model.credit, unit: "€")
 
   h3 Transactions

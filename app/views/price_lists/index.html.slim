@@ -14,6 +14,6 @@ div.container
           td
             = link_to price_list.name, price_list
           td
-            = price_list.created_at
+            = price_list.created_at.strftime("%d-%b %H:%M")
           td
-            = price_list.updated_at
+            = price_list.updated_at.strftime("%d-%b %H:%M")

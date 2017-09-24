@@ -17,12 +17,12 @@ div.container
           td
             = link_to activity.title, activity
           td
-            = activity.start_time
+            = activity.start_time.strftime("%d-%b %H:%M")
           td
-            = activity.end_time
+            = activity.end_time.strftime("%d-%b %H:%M")
           td
             = activity.price_list.name
           td
-            = activity.created_at
+            = activity.created_at.strftime("%d-%b")
           td
-            = activity.updated_at
+            = activity.updated_at.strftime("%d-%b")
