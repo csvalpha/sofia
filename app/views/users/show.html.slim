@@ -1,0 +1,34 @@
+div.container
+
+  h1 = "User #{@model.username}"
+
+  ul
+    li = @model.id
+    li = @model.username
+    li = @model.created_at
+    li = @model.updated_at
+    li = number_to_currency(@model.credit, unit: "€")
+
+  h3 Transactions
+
+  table
+    thead
+      tr
+        td ID
+        td Timestamp
+        td Activity
+        td Product
+        td Amount
+    tbody
+      - @model.transactions.each do |t|
+        tr
+          td
+            = t.id
+          td
+            = t.timestamp
+          td
+            = link_to t.activity.title, t.activity
+          td
+            = link_to t.product.name, t.product
+          td
+            = number_to_currency(t.amount, unit: "€")
