@@ -31,4 +31,4 @@ div.container
         td = transaction.id
         td = link_to transaction.user.username, transaction.user
         td = link_to transaction.product.name, transaction.product
-        td = number_to_currency(transaction.amount)
+        td = number_to_currency(transaction.amount, unit: "€")
