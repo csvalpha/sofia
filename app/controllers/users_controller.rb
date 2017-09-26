@@ -4,4 +4,8 @@ class UsersController < ApplicationController
   def model_class
     User
   end
+
+  def model_includes
+    [:transactions]
+  end
 end
