@@ -22,6 +22,10 @@ class ActivitiesController < ApplicationController
     Activity
   end
 
+  def model_includes
+    [:price_list]
+  end
+
   private
   def permitted_attributes
     params.require(:activity).permit([:title, :start_time, :end_time, :price_list_id])

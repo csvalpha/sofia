@@ -3,10 +3,12 @@ div.container
   h1
     = "Price List: #{@model.name}"
 
+  p
+    = "Last used with \"#{@model.activities.last.title}\" on #{@model.activities.last.humanized_start_time}"
 
-  h2 Products
+  h4 Products
 
-  table.price_list_table
+  table.table
     thead
       tr
         th Product name
@@ -16,5 +18,3 @@ div.container
         tr
           td = product_price.product.name
           td = product_price.amount
-
-  hr

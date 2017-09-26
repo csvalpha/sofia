@@ -8,6 +8,10 @@ class PriceList < ApplicationRecord
     product_price.find_by(product: product)
   end
 
+  def activities
+    Activity.where(price_list: self).order(:start_time)
+  end
+
   def to_s
     name
   end

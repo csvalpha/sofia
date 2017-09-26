@@ -11,4 +11,12 @@ class Activity < ApplicationRecord
     where('(start_time < ? and end_time > ?) or start_time > ?', Time.zone.now,
           Time.zone.now, Time.zone.now).order(:start_time, :end_time)
   })
+
+  def humanized_start_time
+    start_time.strftime("%d %B %Y %H:%M")
+  end
+
+  def humanized_end_time
+    end_time.strftime("%d %B %Y %H:%M")
+  end
 end
