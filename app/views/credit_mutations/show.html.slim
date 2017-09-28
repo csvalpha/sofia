@@ -1,0 +1,39 @@
+div.container
+  h1
+    = "Activity: #{@model.title}"
+
+  ul
+    li
+      = "Start Time: "
+      = @model.start_time.strftime("%d-%m-%Y %H:%M:%S")
+    li
+      = "End Time: "
+      = @model.end_time.strftime("%d-%m-%Y %H:%M:%S")
+    li
+      = "Streeplijst: "
+      = link_to @model.price_list.name, @model.price_list
+    li
+      = "Created at: "
+      = @model.create_at.strftime("%d-%m %H:%M:%S")
+    li
+      = "Updated at: "
+      = @model.updated_at.strftime("%d-%m %H:%M:%S")
+
+  hr
+
+  h1
+    = 'Transactions'
+  table
+    tr
+      td ID
+      td Timestamp
+      td User
+      td Product
+      td Cost
+    - @model.transactions.each do |transaction|
+      tr
+        td = transaction.id
+        td = transaction.timestamp.strftime("%d-%b %H:%M:%S")
+        td = link_to transaction.user.username, transaction.user
+        td = link_to transaction.product.name, transaction.product
+        td = number_to_currency(transaction.amount, unit: "€")

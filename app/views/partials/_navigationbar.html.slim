@@ -5,7 +5,7 @@ nav.navbar.navbar-expand-md.navbar-light.bg-light
 
   div.collapse.navbar-collapse id="mainNavigation"
     ul.navbar-nav
-      li.nav-item.active
+      li.nav-item
         = link_to "Home", root_path, class: "nav-link"
       li.nav-item
         = link_to "Activities", activities_path, class: "nav-link"
@@ -15,3 +15,5 @@ nav.navbar.navbar-expand-md.navbar-light.bg-light
         = link_to "Products", products_path, class: "nav-link"
       li.nav-item
         = link_to "Users", users_path, class: "nav-link"
+      li.nav-item
+        = link_to "Mutations", credit_mutations_path, class: "nav-link"

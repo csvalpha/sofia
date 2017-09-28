@@ -1,0 +1,19 @@
+= simple_form_for @new_activity do |f|
+  div.form-group.row
+    = f.label :title, "Title", class: "col-sm-2"
+    = f.input :title, placeholder: "Title", label: false
+
+  div.form-group.row
+    = f.label :from, class: "col-sm-2"
+    = f.input :start_time, label: false, html5: true, input_html: { value: Time.zone.now.strftime("%Y-%m-%dT%H:%M") }
+
+  div.form-group.row
+    = f.label :to, class: "col-sm-2"
+    = f.input :end_time, as: :datetime, label: false, html5: true, input_html: { value: Time.zone.now.strftime("%Y-%m-%dT%H:%M") }
+
+  div.form-group.row
+    = f.label :price_list, "Price list", class: "col-sm-2"
+    = f.input :price_list, as: :autocomplete, source_query: autocomplete_price_list_name_price_lists_url, label: false
+
+  = f.button :submit, class: "btn btn-primary" do
+    = "Create activity"
