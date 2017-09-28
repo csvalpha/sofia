@@ -6,5 +6,22 @@ $brand-secondary:           #05B500; //darkred
 $brand-secondary-dark:      #013500;
 
 // Basic layout
-// $body-bg:    $gray-700;
-// $body-color: $gray-200;
+$body-bg:    #4a4a4a;
+$body-color: #cccccc;
+
+// Custom stuff
+.table-header-rotated {
+  th.rotate {
+    height: 150px;
+    white-space: nowrap;
+    > div {
+      transform:
+        translate(-9px, 0px)
+        rotate(-45deg);
+      width: 30px;
+    }
+    > div > a {
+      padding: 5px 10px;
+    }
+  }
+}
