@@ -11,11 +11,13 @@ div.container
             div = link_to price_list.name, price_list
     tbody
       - if @products
-        - @products.each_with_index do |product, index|
-          tr
+        - @products.each do |product|
+          tr data={object: 'product_price', attribute: 'amount'}
             td = product.name
             - @recent_price_lists&.each do |price_list|
-              td = number_to_currency(price_list.product_price[index].amount, unit: '€')
+              td
+                span class='rest-in-place' data={ url: url_for(price_list.product_price_for(product)), placeholder: 'Enter a price' }
+                  = number_to_currency(price_list.product_price_for(product).amount, unit: '€')
       - else
         tr = 'No products'
 

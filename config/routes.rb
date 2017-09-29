@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :products, only: %i[index show create update destroy]
   resources :users, only: %i[index show create update destroy]
   resources :credit_mutations, only: %i[index show create update destroy]
+  resources :product_price, only: %i[show update]
 
   root to: 'index#index'
 end

@@ -5,7 +5,7 @@ class PriceListsController < ApplicationController
 
   def index
     @recent_price_lists = PriceList.order(:created_at).limit(6).includes(:product_price)
-    @products = Product.all
+    @products = Product.order(:created_at)
   end
 
   def model_class
