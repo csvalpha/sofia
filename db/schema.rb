@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170927111708) do
+ActiveRecord::Schema.define(version: 20170929220256) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,26 @@ ActiveRecord::Schema.define(version: 20170927111708) do
     t.index ["user_id"], name: "index_credit_mutations_on_user_id"
   end
 
+  create_table "order_rows", force: :cascade do |t|
+    t.bigint "order_id", null: false
+    t.bigint "product_id", null: false
+    t.integer "product_count", null: false
+    t.decimal "product_price_total", precision: 8, scale: 2, null: false
+    t.index ["order_id"], name: "index_order_rows_on_order_id"
+    t.index ["product_id"], name: "index_order_rows_on_product_id"
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.decimal "order_total", precision: 8, scale: 2
+    t.bigint "activity_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["activity_id"], name: "index_orders_on_activity_id"
+    t.index ["user_id"], name: "index_orders_on_user_id"
+  end
+
   create_table "price_lists", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "deleted_at"
@@ -63,20 +83,6 @@ ActiveRecord::Schema.define(version: 20170927111708) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "transactions", force: :cascade do |t|
-    t.datetime "timestamp", null: false
-    t.bigint "product_id", null: false
-    t.bigint "activity_id", null: false
-    t.bigint "user_id", null: false
-    t.decimal "amount", precision: 8, scale: 2
-    t.datetime "deleted_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["activity_id"], name: "index_transactions_on_activity_id"
-    t.index ["product_id"], name: "index_transactions_on_product_id"
-    t.index ["user_id"], name: "index_transactions_on_user_id"
-  end
-
   create_table "users", force: :cascade do |t|
     t.string "username", null: false
     t.datetime "deleted_at"
@@ -84,5 +90,4 @@ ActiveRecord::Schema.define(version: 20170927111708) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "transactions", "users"
 end

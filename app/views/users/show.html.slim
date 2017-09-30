@@ -9,9 +9,9 @@ div.container
     li = @model.updated_at.strftime("%d-%M-%y %H:%M")
     li = number_to_currency(@model.credit, unit: "€")
 
-  h3 Transactions
+  h3 Orders
 
-  table
+  table.table
     thead
       tr
         td ID
@@ -20,15 +20,15 @@ div.container
         td Product
         td Amount
     tbody
-      - @model.transactions.each do |t|
+      - @model.orders.order(:created_at).each do |order|
         tr
           td
-            = t.id
+            = order.id
           td
-            = t.timestamp
+            = order.created_at
           td
-            = link_to t.activity.title, t.activity
+            = link_to order.activity.title, order.activity
           td
-            = link_to t.product.name, t.product
+            / = link_to product.name, order.product
           td
-            = number_to_currency(t.amount, unit: "€")
+            = number_to_currency(order.order_total, unit: "€")

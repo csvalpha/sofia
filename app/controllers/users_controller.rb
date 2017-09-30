@@ -6,6 +6,6 @@ class UsersController < ApplicationController
   end
 
   def model_includes
-    [:transactions]
+    [:orders]
   end
 end

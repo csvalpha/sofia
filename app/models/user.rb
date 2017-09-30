@@ -1,11 +1,11 @@
 class User < ApplicationRecord
-  has_many :transactions
+  has_many :orders, dependent: :destroy
   validates :username, presence: true
 
   def credit
     credit = 0
-    transactions.each do |t|
-      credit -= t.amount
+    orders.each do |order|
+      credit -= order.order_total
     end
     credit
   end

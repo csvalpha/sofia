@@ -1,5 +1,5 @@
 class Activity < ApplicationRecord
-  has_many :transactions
+  has_many :orders, dependent: :destroy
   belongs_to :price_list
 
   validates :title,       presence: true
