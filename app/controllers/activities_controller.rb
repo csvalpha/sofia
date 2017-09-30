@@ -9,10 +9,9 @@ class ActivitiesController < ApplicationController
   end
 
   def create
-    binding.pry
     @activity = Activity.new(permitted_attributes)
     if @activity.save
-      redirect_to activities_url, notice: "Successfully created activity."
+      redirect_to activities_url, notice: 'Successfully created activity.'
     else
       render :index
     end
@@ -27,7 +26,8 @@ class ActivitiesController < ApplicationController
   end
 
   private
+
   def permitted_attributes
-    params.require(:activity).permit([:title, :start_time, :end_time, :price_list_id])
+    params.require(:activity).permit(%i[title start_time end_time price_list_id])
   end
 end

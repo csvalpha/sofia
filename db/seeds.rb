@@ -30,17 +30,13 @@ end
 
 products.each do |product|
   activities.each do |activity|
-    # binding.pry
     FactoryGirl.create(:product_price, product: product, price_list: activity.price_list)
   end
 end
 
 activities.each do |activity|
-  3.times do
-    product = products.sample
-    FactoryGirl.create(:transaction, product: product, activity: activity,
-                                     amount: activity.price_list.product_price_for(product).amount,
-                                     user: users.sample)
+  rand(3..10).times do
+    FactoryGirl.create(:order, :with_items, products: products, activity: activity, user: users.sample)
   end
 end
 

@@ -1,0 +1,14 @@
+language: ruby
+cache: bundler
+
+env:
+  - TYPE=spec
+  - TYPE=lint
+
+script:
+  - './bin/ci.sh $TYPE'
+
+branches:
+  only:
+    - master
+    - staging

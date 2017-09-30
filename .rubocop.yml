@@ -1,6 +1,7 @@
 require: rubocop-rspec
 
 AllCops:
+  TargetRailsVersion: 5.1
   Include:
     - '**/Capfile'
     - '**/Gemfile'
@@ -11,6 +12,8 @@ AllCops:
   Exclude:
     - 'db/schema.rb'
     - 'config/initializers/secret_token.rb'
+    - 'config/initializers/simple_form.rb'
+    - 'config/initializers/simple_form_bootstrap.rb'
     - 'vendor/**/*'
   DisplayCopNames: true
   DisplayStyleGuide: true

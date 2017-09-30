@@ -13,12 +13,16 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe  '#credit' do
+  describe '#credit' do
     subject(:user) { FactoryGirl.create(:user) }
+
+    let(:order) { FactoryGirl.create(:order, user: user) }
+    let(:product_price) { FactoryGirl.create(:product_price, price_list: order.activity.price_list, amount: 1.23) }
+
     before do
-      FactoryGirl.create(:transaction, user: user, amount: 20)
+      FactoryGirl.create(:order_row, order: order, product: product_price.product, product_count: 1)
     end
 
-    it { expect(user.credit).to eq -20 }
+    it { expect(user.credit).to eq(-1.23) }
   end
 end
