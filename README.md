@@ -1,4 +1,7 @@
-# README
+Alpha Tomato
+============
+
+[![Build Status](https://travis-ci.com/csvalpha/alpha-tomato.svg?token=XFGWKzHpTzj88hKy9q2u&branch=staging)](https://travis-ci.com/csvalpha/alpha-tomato)
 
 Dit is de code die hoor bij het nieuwe streepsysteem, codenaam Alpha Tomato. Er moet nog veel
 gebeuren, maar het begin is er.
