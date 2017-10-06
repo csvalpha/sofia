@@ -7,9 +7,9 @@ class ProductPriceController < ApplicationController
 
   def update
     if @model.update(permitted_attributes)
-      render json: @mode
+      render json: @model
     else
-      respond_with_errors(@model)
+      respond_bip_error(@model)
     end
   end
 

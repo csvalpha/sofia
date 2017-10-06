@@ -1,11 +1,11 @@
 class PriceList < ApplicationRecord
   has_many :product_price, dependent: :destroy
-  has_many :products, through: :product_price, dependent: :destroy
+  has_many :products, through: :product_price, dependent: :restrict_with_exception
 
   validates :name, presence: true
 
   def product_price_for(product)
-    product_price.find_by(product: product)
+    product_price.select { |pp| pp.product == product }.first
   end
 
   def activities

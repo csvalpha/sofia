@@ -2,10 +2,8 @@ class ActivitiesController < ApplicationController
   before_action :set_model, only: %i[show update destroy]
 
   def index
-    @model = records.includes(model_includes)
     @new_activity = Activity.new
-  rescue ActiveModel::RangeError
-    head :not_found
+    super
   end
 
   def create
@@ -22,7 +20,7 @@ class ActivitiesController < ApplicationController
   end
 
   def model_includes
-    [:price_list]
+    [:price_list, orders: :user]
   end
 
   private

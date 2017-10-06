@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
   private
 
   def set_model
-    @model = model_class.find(params[:id])
+    @model = model_class.includes(model_includes).find(params[:id])
   rescue ActiveRecord::RecordNotFound
     head :not_found
   end

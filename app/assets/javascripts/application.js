@@ -17,5 +17,5 @@
 //= require bootstrap-sprockets
 //= require bootstrap3-typeahead.min
 //= require bootstrap-autocomplete-input.min
-//= require rest_in_place
+//= require best_in_place
 //= require_tree .
