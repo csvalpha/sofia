@@ -1,19 +1,19 @@
-div.container
+.container
 
-  h1 Products
+  h1 = 'Products'
 
   table.table
     thead
       tr
-        td Name
-        td Created at
-        td Updated at
+        td = 'Name'
+        td = 'Created at'
+        td = 'Updated at'
     tbody
       - @model.each do |product|
         tr
           td
-            = link_to product.name, product
+            =product.name
           td
-            =product.created_at.strftime("%d-%b-%Y %H:%M")
+            =product.created_at.strftime('%d-%b-%Y %H:%M')
           td
-            =product.updated_at.strftime("%d-%b-%Y %H:%M")
+            =product.updated_at.strftime('%d-%b-%Y %H:%M')

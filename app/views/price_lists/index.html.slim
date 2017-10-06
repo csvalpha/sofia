@@ -1,4 +1,4 @@
-div.container
+.container
 
   h1 Price Lists
 
@@ -6,18 +6,19 @@ div.container
     thead.table-header-rotated
       tr
         th = 'Product'
-        - @recent_price_lists&.each do |price_list|
+        - @recent_price_lists.each do |price_list|
           th.rotate
             div = link_to price_list.name, price_list
     tbody
       - if @products
         - @products.each do |product|
-          tr data={object: 'product_price', attribute: 'amount'}
+          tr data={ object: 'product_price', attribute: 'amount' }
             td = product.name
-            - @recent_price_lists&.each do |price_list|
+            - @recent_price_lists.each do |price_list|
               td
-                span class='rest-in-place' data={ url: url_for(price_list.product_price_for(product)), placeholder: 'Enter a price' }
-                  = number_to_currency(price_list.product_price_for(product).amount, unit: '€')
+                = best_in_place(price_list.product_price_for(product), :amount,
+                                display_with: :number_to_currency, helper_options: { unit: '€' },
+                                data: { price_list: price_list.name, product: product })
       - else
         tr = 'No products'
 

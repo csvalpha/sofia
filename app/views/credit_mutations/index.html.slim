@@ -1,16 +1,16 @@
-div.container
+.container
 
   h1 Mutations
 
-  div.col
+  .col
     table.table
       thead
         tr
-          td Decription
-          td User
-          td Amount
-          td Date added
-          td Activity
+          td = 'Decription'
+          td = 'User'
+          td = 'Amount'
+          td = 'Date added'
+          td = 'Activity'
       tbody
         - if @model
           - @model.each do |mutation|
@@ -20,9 +20,9 @@ div.container
               td
                 = link_to mutation.user.username, mutation.user
               td
-                = number_to_currency(mutation.amount, unit: "€")
+                = number_to_currency(mutation.amount, unit: '€')
               td
-                = mutation.created_at.strftime("%d-%b %H:%M")
+                = mutation.created_at.strftime('%d-%b %H:%M')
               td
                 = link_to(mutation.activity.title, mutation.activity) unless mutation.activity.nil?
         - else

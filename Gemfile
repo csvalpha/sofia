@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'bcrypt', '~> 3.1.7'
+gem 'best_in_place', '~> 3.1.1'
 gem 'bootstrap', '~> 4.0.0.beta'
 gem 'bootstrap_autocomplete_input'
 gem 'coffee-rails', '~> 4.2'
@@ -13,14 +14,13 @@ gem 'paranoia', '~> 2.2'
 gem 'pg', '~> 0.21.0'
 gem 'puma', '~> 3.7'
 gem 'rails', '~> 5.1.2'
-gem 'rest_in_place', '~> 2.4.0'
 gem 'sass-rails', '~> 5.0'
 gem 'simple_form', '~> 3.5.0'
 gem 'slim'
 gem 'turbolinks', '~> 5'
 gem 'uglifier', '>= 1.3.0'
 gem 'validates_timeliness', '~> 4.0'
-gem 'webpacker'
+gem 'webpacker', '~> 3.0.2'
 
 group :development, :test do
   gem 'awesome_print'
@@ -34,6 +34,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'rspec-rails'
+  gem 'slim_lint', '~> 0.14'
 end
 
 group :development do

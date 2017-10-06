@@ -1,15 +1,15 @@
-div.container
+.container
 
   h1 Users
 
   table.table
     thead
       tr
-        td ID
-        td Username
-        td Created at
-        td Updated at
-        td Saldo
+        td = 'ID'
+        td = 'Username'
+        td = 'Created at'
+        td = 'Updated at'
+        td = 'Saldo'
     tbody
       - @model.each do |user|
         tr
@@ -18,8 +18,8 @@ div.container
           td
             = link_to user.username, user
           td
-            = user.created_at.strftime("%d-%M-%Y %H:%M:%S")
+            = user.created_at.strftime('%d-%M-%Y %H:%M:%S')
           td
             = user.updated_at
           td
-            = number_to_currency(user.credit, unit: "€")
+            = number_to_currency(user.credit, unit: '€')
