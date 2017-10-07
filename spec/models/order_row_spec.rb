@@ -50,8 +50,6 @@ RSpec.describe OrderRow, type: :model do
       subject(:order_row) { FactoryGirl.create(:order_row, order: order) }
 
       it { expect(order_row.available_products).to match_array(available_products) }
-
-      # it { expect(order_row.available_products).not_to include(not_available_product) }
     end
   end
 end
