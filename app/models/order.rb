@@ -6,7 +6,11 @@ class Order < ApplicationRecord
 
   validates :activity, :user, presence: true
 
-  def recalculate_order_total
-    update(order_total: order_rows&.map(&:product_price_total)&.inject(:+) || 0)
+  def order_total
+    sum = 0
+    order_rows.each do |row|
+      sum += row.price_per_product * row.product_count
+    end
+    sum
   end
 end

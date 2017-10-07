@@ -6,12 +6,6 @@ RSpec.describe OrderRow, type: :model do
   describe '#valid' do
     it { expect(order_row).to be_valid }
 
-    context 'when without product' do
-      subject(:order_row) { FactoryGirl.build(:order_row, product: nil) }
-
-      it { expect(order_row).not_to be_valid }
-    end
-
     context 'when without order' do
       subject(:order_row) { FactoryGirl.build(:order_row, order: nil) }
 
@@ -19,34 +13,45 @@ RSpec.describe OrderRow, type: :model do
     end
 
     context 'when with a product not in this price list' do
-      let(:product) { FactoryGirl.create(:product) }
-      let(:other_product) { FactoryGirl.create(:product) }
+      let(:other_product) { FactoryGirl.build(:product) }
 
-      subject(:order_row) { FactoryGirl.create(:order_row, product: product) }
-
-      before do
-        FactoryGirl.create(:product_price, price_list: order_row.order.activity.price_list, product: other_product)
-      end
+      subject(:order_row) { FactoryGirl.build(:order_row, product: other_product) }
 
       it { expect(order_row).not_to be_valid }
     end
   end
 
-  describe '#calculate_product_price_total' do
-    context 'when with one product' do
-      let(:price_list) { FactoryGirl.create(:price_list) }
+  describe '#copy_product_price' do
+    context 'when with a product' do
       let(:product) { FactoryGirl.create(:product) }
-
+      let(:price_list) { FactoryGirl.create(:price_list) }
       let(:activity) { FactoryGirl.create(:activity, price_list: price_list) }
       let(:order) { FactoryGirl.create(:order, activity: activity) }
 
-      subject(:order_row) { FactoryGirl.create(:order_row, order: order, product: product, product_count: 2) }
+      subject(:order_row) { FactoryGirl.create(:order_row, order: order, product: product) }
 
       before do
-        FactoryGirl.create(:product_price, price_list: price_list, product: product, amount: 2.30)
+        FactoryGirl.create(:product_price, price_list: price_list, product: product, amount: 2.00)
       end
 
-      it { expect(order_row.product_price_total).to eq(2 * 2.30) }
+      it { expect(order_row.price_per_product).to eq(2.00) }
+    end
+  end
+
+  describe '#available_products' do
+    context 'when with an order' do
+      let(:available_products) { FactoryGirl.create_list(:product, 5) }
+      let(:not_available_product) { FactoryGirl.create(:product) }
+
+      let(:price_list) { FactoryGirl.create(:price_list, products: available_products) }
+      let(:activity) { FactoryGirl.create(:activity, price_list: price_list) }
+      let(:order) { FactoryGirl.create(:order, activity: activity) }
+
+      subject(:order_row) { FactoryGirl.create(:order_row, order: order) }
+
+      it { expect(order_row.available_products).to match_array(available_products) }
+
+      # it { expect(order_row.available_products).not_to include(not_available_product) }
     end
   end
 end
