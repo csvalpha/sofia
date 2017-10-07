@@ -2,6 +2,7 @@ Alpha Tomato
 ============
 
 [![Build Status](https://travis-ci.com/csvalpha/alpha-tomato.svg?token=XFGWKzHpTzj88hKy9q2u&branch=staging)](https://travis-ci.com/csvalpha/alpha-tomato)
+[![codebeat badge](https://codebeat.co/badges/bae9fba5)](https://codebeat.co/a/twan-coenraad/projects/github-com-csvalpha-alpha-banana-api-staging)
 
 Dit is de code die hoor bij het nieuwe streepsysteem, codenaam Alpha Tomato. Er moet nog veel
 gebeuren, maar het begin is er.
