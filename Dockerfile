@@ -4,7 +4,11 @@ RUN apt-get update -qq \
   build-essential \
   git \
   libpq-dev \
-  nodejs
+  curl
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
+  apt-get install -y \
+  nodejs && \
+  npm install -g yarn
 
 RUN mkdir /app
 WORKDIR /app
@@ -14,6 +18,6 @@ ADD Gemfile.lock /app/Gemfile.lock
 RUN bundle install --without development test
 ADD . /app
 
-RUN bundle exec rake assets:precompile
+RUN bundle exec rails assets:precompile RAILS_ENV=production
 
 CMD bundle exec puma -C config/puma.rb
