@@ -11,7 +11,7 @@ gebeuren, maar het begin is er.
 
 _On Linux-like systems_
 
-- Ruby 2.4.1
+- Ruby (see `.ruby-version`)
 - Bundler (`gem install bundler`)
 - Postgresql 9.5+
 
