@@ -14,4 +14,6 @@ ADD Gemfile.lock /app/Gemfile.lock
 RUN bundle install --without development test
 ADD . /app
 
+RUN bundle exec rake assets:precompile
+
 CMD bundle exec puma -C config/puma.rb
