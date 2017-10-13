@@ -6,7 +6,7 @@ module Slackistrano
     end
 
     def environment
-      stage.to_s
+      "tomato/#{stage}"
     end
 
     def deployer
@@ -17,7 +17,7 @@ module Slackistrano
       {
         fields: [{
           title: 'Environment',
-          value: "#Tomato #{environment}",
+          value: environment,
           short: true
         }, {
           title: 'Branch',
