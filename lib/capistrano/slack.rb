@@ -17,7 +17,7 @@ module Slackistrano
       {
         fields: [{
           title: 'Environment',
-          value: environment,
+          value: "#Tomato #{environment}",
           short: true
         }, {
           title: 'Branch',
