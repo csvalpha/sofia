@@ -6,7 +6,7 @@ module Slackistrano
     end
 
     def environment
-      "#{stage}"
+      stage.to_s
     end
 
     def deployer
