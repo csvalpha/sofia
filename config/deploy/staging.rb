@@ -1,4 +1,4 @@
-set :branch, :deploy_docker
+set :branch, :staging
 set :deploy_to, '/opt/projects/alpha-tomato-staging'
 
 before :"deploy:started", 'docker:compose:down'
