@@ -13,3 +13,7 @@ development:
 test:
   <<: *default
   database: alpha-tomato_test
+
+production:
+  <<: *default
+  database: <%= ENV['POSTGRES_USER'] %>

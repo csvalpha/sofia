@@ -1,0 +1,23 @@
+version: '2'
+
+services:
+  db:
+    env_file: .env
+    image: postgres:9.6.5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  web:
+    env_file: .env
+    build: .
+    ports:
+      - "9494:5000"
+    depends_on:
+      - db
+    environment:
+      - RAILS_ENV=production
+      - POSTGRES_HOST=db
+    volumes:
+      - ./log:/app/log
+
+volumes:
+  postgres_data:
