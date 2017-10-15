@@ -21,9 +21,6 @@
 # Ignore secret data
 .env
 
-# Ignore uploads
-/public/uploads/*
-
 /pkg
 /test/test_app/log
 node_modules
