@@ -33,5 +33,5 @@
       tr
         td = order.id
         td = order.created_at.strftime('%H:%M:%S - %d %b')
-        td = link_to order.user.username, order.user
+        td = link_to order.user.name, order.user
         td = number_to_currency(order.order_total, unit: '€')

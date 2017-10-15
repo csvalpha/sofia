@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  devise_for :users, controllers: { omniauth_callbacks: 'callbacks' }
+
   resources :activities, only: %i[index show create update destroy]
   resources :price_lists, only: %i[index show create update destroy] do
     get :autocomplete_price_list_name, on: :collection
@@ -7,6 +9,10 @@ Rails.application.routes.draw do
   resources :users, only: %i[index show create update destroy]
   resources :credit_mutations, only: %i[index show create update destroy]
   resources :product_price, only: %i[show update]
+
+  devise_scope :user do
+    delete 'sign_out', to: 'devise/sessions#destroy', as: :destroy_user_session
+  end
 
   root to: 'index#index'
 end

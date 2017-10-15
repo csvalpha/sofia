@@ -1,10 +1,10 @@
 .container
 
-  h1 = "User #{@model.username}"
+  h1 = "User #{@model.name}"
 
   ul
     li = @model.id
-    li = @model.username
+    li = @model.name
     li = @model.created_at.strftime('%d-%M-%y %H:%M')
     li = @model.updated_at.strftime('%d-%M-%y %H:%M')
     li = number_to_currency(@model.credit, unit: '€')

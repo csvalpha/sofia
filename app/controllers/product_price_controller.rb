@@ -1,5 +1,6 @@
 class ProductPriceController < ApplicationController
   before_action :set_model, only: %i[show update]
+  before_action :authenticate_user!
 
   def show
     render json: @model

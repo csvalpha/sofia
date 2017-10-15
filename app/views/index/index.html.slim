@@ -6,3 +6,5 @@
 
       p = 'Welcome to StreepSis!'
 
+    - unless current_user
+      = render partial: 'partials/login_prompt'
