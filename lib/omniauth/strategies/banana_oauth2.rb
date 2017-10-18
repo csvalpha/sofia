@@ -22,7 +22,8 @@ module OmniAuth
       end
 
       def raw_info
-        @raw_info ||= JSON.parse(access_token.get('/users/me', headers: { accept: 'application/vnd.csvalpha.nl; version=1' }).body)['data']
+        headers = { accept: 'application/vnd.csvalpha.nl; version=1' }
+        @raw_info ||= JSON.parse(access_token.get('/users/me', headers: headers).body)['data']
       end
 
       # https://github.com/intridea/omniauth-oauth2/issues/81
