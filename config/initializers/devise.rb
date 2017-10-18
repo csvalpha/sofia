@@ -11,7 +11,4 @@ Devise.setup do |config|
 
   config.omniauth :banana_oauth2, Rails.application.secrets.fetch(:banana_client_id),
                   Rails.application.secrets.fetch(:banana_client_secret)
-
-  config.omniauth :google_oauth2, Rails.application.secrets.fetch(:google_client_id),
-                  Rails.application.secrets.fetch(:google_client_secret)
 end

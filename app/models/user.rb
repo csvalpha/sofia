@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  devise :omniauthable, omniauth_providers: %i[google_oauth2 banana_oauth2]
+  devise :omniauthable, omniauth_providers: [:banana_oauth2]
   has_many :orders, dependent: :destroy
   validates :name, presence: true
 
