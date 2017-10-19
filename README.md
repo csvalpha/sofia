@@ -21,5 +21,5 @@ _On Linux-like systems_
 1. Run the following commands:
   1. `bundle install` (might take a couple of minutes)
   1. `bundle exec rails db:setup`
-  1. `bundle exec rails s`
-1. Go to http://localhost:3000 and you should see Alpha Tomato running
+  1. `bundle exec rails s -p 5000` (port specified so it doesn't use the same as Banana API)
+1. Go to http://localhost:5000 and you should see Alpha Tomato running

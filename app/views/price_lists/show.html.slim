@@ -1,7 +1,5 @@
 .container
 
-  = link_to 'Edit', [:edit, @model], class: 'btn btn-outline-primary float-right'
-
   h1 = "Price List: #{@model.name}"
 
   p = "Last used with \"#{@model.activities.last.title}\" on #{@model.activities.last.humanized_start_time}"

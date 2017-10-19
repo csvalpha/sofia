@@ -5,16 +5,24 @@ nav.navbar.navbar-expand-md.navbar-light.bg-light
     span.navbar-toggler-icon
 
   .collapse.navbar-collapse id='mainNavigation'
-    ul.navbar-nav
+    ul.navbar-nav.mr-auto
       li.nav-item
         = link_to 'Home', root_path, class: 'nav-link'
-      li.nav-item
-        = link_to 'Activities', activities_path, class: 'nav-link'
-      li.nav-item
-        = link_to 'Pricelists', price_lists_path, class: 'nav-link'
-      li.nav-item
-        = link_to 'Products', products_path, class: 'nav-link'
-      li.nav-item
-        = link_to 'Users', users_path, class: 'nav-link'
-      li.nav-item
-        = link_to 'Mutations', credit_mutations_path, class: 'nav-link'
+
+      - if current_user
+        li.nav-item
+          = link_to 'Activities', activities_path, class: 'nav-link'
+        li.nav-item
+          = link_to 'Pricelists', price_lists_path, class: 'nav-link'
+        li.nav-item
+          = link_to 'Products', products_path, class: 'nav-link'
+        li.nav-item
+          = link_to 'Users', users_path, class: 'nav-link'
+        li.nav-item
+          = link_to 'Mutations', credit_mutations_path, class: 'nav-link'
+
+    - if current_user
+      .navbar-text.mr-1
+        = "Signed in as #{current_user.name} "
+      .navbar-text.small
+        = link_to ' (sign out)', destroy_user_session_path, method: :delete

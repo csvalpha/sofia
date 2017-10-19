@@ -6,8 +6,8 @@ RSpec.describe User, type: :model do
   describe '#valid' do
     it { expect(user).to be_valid }
 
-    context 'when without a username' do
-      subject(:user) { FactoryGirl.build_stubbed(:user, username: nil) }
+    context 'when without a name' do
+      subject(:user) { FactoryGirl.build_stubbed(:user, name: nil) }
 
       it { expect(user).not_to be_valid }
     end

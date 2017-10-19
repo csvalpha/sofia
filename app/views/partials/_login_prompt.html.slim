@@ -1,0 +1,10 @@
+.col-sm-4.ml-auto
+  .card
+    .card-header
+      h4.card-title
+        h3 = 'Log in to continue'
+
+    .card-body
+      p.card-text = 'Log in with a C.S.V. Alpha account.'
+
+      = link_to 'Sign in with C.S.V. Alpha', user_banana_oauth2_omniauth_authorize_path, class: 'btn btn-primary btn-block'

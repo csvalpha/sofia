@@ -1,5 +1,6 @@
 class ActivitiesController < ApplicationController
   before_action :set_model, only: %i[show update destroy]
+  before_action :authenticate_user!
 
   def index
     @new_activity = Activity.new

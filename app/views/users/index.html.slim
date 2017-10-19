@@ -6,20 +6,23 @@
     thead
       tr
         td = 'ID'
-        td = 'Username'
+        td = 'Name'
         td = 'Created at'
         td = 'Updated at'
         td = 'Saldo'
+        td = 'Account source'
     tbody
       - @model.each do |user|
         tr
           td
             = user.id
           td
-            = link_to user.username, user
+            = link_to user.name, user
           td
             = user.created_at.strftime('%d-%M-%Y %H:%M:%S')
           td
             = user.updated_at
           td
             = number_to_currency(user.credit, unit: '€')
+          td
+            = user.provider || 'Custom account'
