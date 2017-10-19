@@ -44,7 +44,7 @@ end
 group :development do
   gem 'capistrano-sidekiq'
   gem 'foreman', require: false
-  gem 'listen', '>= 3.0.5', '< 3.2'
+  gem 'listen'
   gem 'spring'
   gem 'spring-commands-rspec'
   gem 'spring-watcher-listen'
