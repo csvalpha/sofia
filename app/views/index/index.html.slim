@@ -9,17 +9,20 @@
     - if current_user
       .col-sm-6
         .card
-          h4.card-header = 'Upcoming Activities'
+          h3.card-header
+            = icon('calendar')
+            = ' Upcoming Activities'
 
           .card-body
-
             - if @upcoming_activities
               ul
                 - @upcoming_activities.each do |activity|
                   li = link_to "#{activity.title} – #{activity.humanized_start_time}", activity
 
               - @current_activities&.each do |activity|
-                = link_to "#{activity.title} – #{activity.humanized_start_time}", activity, class: 'btn btn-primary btn-block'
+                = link_to activity, class: 'btn btn-primary btn-block'
+                  = icon 'calculator'
+                  = " #{activity.title} – #{activity.humanized_start_time}"
 
             - else
               p.card-text = 'Er zijn geen activiteiten gepland. Maak er een aan op de activiteitenpagina.'
