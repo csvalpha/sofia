@@ -32,6 +32,7 @@ group :development, :test do
   gem 'bullet'
   gem 'colorize'
   gem 'consistency_fail'
+  gem 'dotenv-rails', '~> 2.2.1'
   gem 'guard-livereload', '~> 2.5'
   gem 'guard-rspec', require: false
   gem 'pry-byebug'

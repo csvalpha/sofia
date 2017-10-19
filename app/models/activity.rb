@@ -12,6 +12,11 @@ class Activity < ApplicationRecord
           Time.zone.now, Time.zone.now).order(:start_time, :end_time)
   })
 
+  scope :current, (lambda {
+    where('(start_time < ? and end_time > ?)', Time.zone.now,
+          Time.zone.now).order(:start_time, :end_time)
+  })
+
   def humanized_start_time
     start_time.strftime('%d %B %Y %H:%M')
   end
