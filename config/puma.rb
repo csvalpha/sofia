@@ -4,6 +4,8 @@
 # nginx will be running in a different Docker container.
 bind "tcp://#{ENV['BIND_ON']}" if ENV['BIND_ON']
 
+port ENV.fetch('PORT') { 5000 }
+
 # Puma supports threading. Requests are served through an internal thread pool.
 # Even on MRI, it is beneficial to leverage multiple threads because I/O
 # operations do not lock the GIL. This typically requires more CPU resources.
