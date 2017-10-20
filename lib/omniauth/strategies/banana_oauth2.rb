@@ -7,7 +7,7 @@ module OmniAuth
       option :name, 'banana_oauth2'
 
       option :client_options,
-             site: Rails.environment.production? ? 'https://csvalpha.nl' : 'http://localhost:3000',
+             site: 'http://localhost:3000',
              authorize_url: '/oauth/authorize',
              token_url: '/oauth/token'
 
