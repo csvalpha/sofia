@@ -24,3 +24,6 @@
 /pkg
 /test/test_app/log
 node_modules
+
+/public/assets/
+/public/bassets/
