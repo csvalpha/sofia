@@ -13,7 +13,7 @@ require_relative 'lib/capistrano/slack'
 
 task :docker do
   require 'capistrano/docker'
-  # require 'capistrano/docker/assets'
+  require 'capistrano/docker/assets'
 end
 
 task staging: [:docker]

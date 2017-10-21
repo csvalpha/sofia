@@ -298,6 +298,8 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
+    sentry-raven (2.7.1)
+      faraday (>= 0.7.6, < 1.0)
     shellany (0.0.1)
     sidekiq (5.0.5)
       concurrent-ruby (~> 1.0)
@@ -408,6 +410,7 @@ DEPENDENCIES
   rubocop (~> 0.50.0)
   rubocop-rspec
   sass-rails (~> 5.0)
+  sentry-raven (~> 2.3)
   simple_form (~> 3.5.0)
   simplecov
   slackistrano (~> 3.8.1)

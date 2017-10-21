@@ -13,11 +13,10 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
 RUN mkdir /app
 WORKDIR /app
 
-COPY Gemfile /app/Gemfile
-COPY Gemfile.lock /app/Gemfile.lock
+COPY Gemfile* /app/
 RUN bundle install --without development test
 COPY . /app
 
-RUN RAILS_ENV=production bundle exec rails assets:precompile --trace
+RUN RAILS_ENV=production bundle exec rails assets:precompile
 
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
