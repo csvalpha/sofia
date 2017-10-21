@@ -13,12 +13,12 @@ set :log_level, :info
 
 server 'csvalpha.nl', user: 'deploy', roles: %i[app web db], primary: true
 
-set :sentry_project, "alpha-tomato-#{fetch(:stage)}"
-set :sentry_api_endpoint, 'https://sentry.io'
-set :sentry_api_auth_token, 'a149a77cd6254b558b719ca578002675b0fd7e1771e34a24b2e5d2667aa92fcd'
-set :sentry_organization, 'csvalpha'
-
-after 'deploy:published', 'sentry:notify_deployment'
+# set :sentry_project, "alpha-tomato-#{fetch(:stage)}"
+# set :sentry_api_endpoint, 'https://sentry.io'
+# set :sentry_api_auth_token, 'a149a77cd6254b558b719ca578002675b0fd7e1771e34a24b2e5d2667aa92fcd'
+# set :sentry_organization, 'csvalpha'
+#
+# after 'deploy:published', 'sentry:notify_deployment'
 
 set :slackistrano,
     klass: Slackistrano::CustomMessaging,

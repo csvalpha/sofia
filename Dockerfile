@@ -18,6 +18,6 @@ COPY Gemfile.lock /app/Gemfile.lock
 RUN bundle install --without development test
 COPY . /app
 
-# RUN RAILS_ENV=production bundle exec rails assets:precompile --trace
+RUN RAILS_ENV=production bundle exec rails assets:precompile --trace
 
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
