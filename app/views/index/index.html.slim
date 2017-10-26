@@ -10,7 +10,7 @@
       .col-sm-6
         .card
           h3.card-header
-            = icon('calendar')
+            = fa_icon 'calendar'
             = ' Upcoming Activities'
 
           .card-body
@@ -19,9 +19,9 @@
                 - @upcoming_activities.each do |activity|
                   li = link_to "#{activity.title} – #{activity.humanized_start_time}", activity
 
-              - @current_activities&.each do |activity|
+              - @current_activities.each do |activity|
                 = link_to activity, class: 'btn btn-primary btn-block'
-                  = icon 'calculator'
+                  = fa_icon 'calculator'
                   = " #{activity.title} – #{activity.humanized_start_time}"
 
             - else
