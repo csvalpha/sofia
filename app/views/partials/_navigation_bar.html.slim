@@ -1,5 +1,5 @@
 nav.navbar.navbar-expand-md.navbar-light.bg-light
-  a.navbar-brand href='/' 🍅
+  span.navbar-brand 🍅
   button.navbar-toggler{ type= 'button' data-toggle= 'collapse' data-target= '#mainNavigation'
                          aria-controls= 'mainNavigation' aria-expanded= 'false' aria-label= 'Toggle navigation'}
     span.navbar-toggler-icon
@@ -8,30 +8,24 @@ nav.navbar.navbar-expand-md.navbar-light.bg-light
     ul.navbar-nav.mr-auto
       li.nav-item
         = nav_link root_path, class: 'nav-link'
-          = fa_icon('home', class: 'mr-1')
-          = 'Home'
+          = fa_icon 'home', class: 'mr-1', text: 'Home'
 
       - if current_user
         li.nav-item
           = nav_link activities_path, class: 'nav-link'
-            = fa_icon('calendar', class: 'mr-1')
-            = 'Activities'
+            = fa_icon 'calendar', class: 'mr-1', text: 'Activiteiten'
         li.nav-item
           = nav_link price_lists_path, class: 'nav-link'
-            = fa_icon('list', class: 'mr-1')
-            = 'Pricelists'
+            = fa_icon 'list', class: 'mr-1', text: 'Prijslijsten'
         li.nav-item
           = nav_link products_path, class: 'nav-link'
-            = fa_icon('beer', class: 'mr-1')
-            = 'Products'
+            = fa_icon 'beer', class: 'mr-1', text: 'Producten'
         li.nav-item
           = nav_link users_path, class: 'nav-link'
-            = fa_icon('users', class: 'mr-1')
-            = 'Users'
+            = fa_icon 'users', class: 'mr-1', text: 'Gebruikers'
         li.nav-item
           = nav_link credit_mutations_path, class: 'nav-link'
-            = fa_icon('money', class: 'mr-1')
-            = 'Mutations'
+            = fa_icon 'money', class: 'mr-1', text: 'Mutaties (inleg)'
 
     - if current_user
       .navbar-text.mr-1
