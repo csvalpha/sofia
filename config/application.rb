@@ -11,5 +11,7 @@ module Tomato
 
     config.i18n.default_locale = :nl
     config.i18n.available_locales = %i[en nl]
+
+    config.x.banana_host_url = Rails.env.production? ? 'https://csvalpha.nl/api' : 'http://localhost:3000'
   end
 end
