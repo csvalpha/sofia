@@ -46,9 +46,9 @@ group :development do
   gem 'capistrano-sidekiq'
   gem 'foreman', require: false
   gem 'listen'
-  gem 'spring'
-  gem 'spring-commands-rspec'
-  gem 'spring-watcher-listen'
+  gem 'spring', require: false
+  gem 'spring-commands-rspec', require: false
+  gem 'spring-watcher-listen', require: false
   gem 'web-console', '>= 3.3.0'
 end
 
