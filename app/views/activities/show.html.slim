@@ -35,20 +35,23 @@
       h2
         = 'Bestellingen'
       table.table.table-striped
-        tr
-          th scope='col'= '#'
-          th scope='col'= 'Timestamp'
-          th scope='col'= 'User'
-          th scope='col'= 'Order total'
-        - if @model.orders.empty?
+        thead
           tr
-            td.text-center colspan='4'
-              p.my-1
-                em = 'Er zijn nog geen bestellingen'
-        - else
-          - @model.orders.each do |order|
+            th scope='col'= '#'
+            th scope='col'= 'Timestamp'
+            th scope='col'= 'User'
+            th scope='col'= 'Order total'
+
+        tbody
+          - if @model.orders.empty?
             tr
-              th scope='row' = order.id
-              td = order.created_at.strftime('%H:%M:%S - %d %b')
-              td = link_to order.user.name, order.user
-              td = number_to_currency(order.order_total, unit: '€')
+              td.text-center colspan='4'
+                p.my-1
+                  em = 'Er zijn nog geen bestellingen'
+          - else
+            - @model.orders.each do |order|
+              tr
+                th scope='row' = order.id
+                td = order.created_at.strftime('%H:%M:%S - %d %b')
+                td = link_to order.user.name, order.user
+                td = number_to_currency(order.order_total, unit: '€')

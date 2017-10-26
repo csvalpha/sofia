@@ -1,4 +1,13 @@
-.container
+.container-fluid
+  .row
+    .order-screen
 
-  h1
-    = 'Order'
+      nav.header
+        ul.header-nav
+          li.header-nav-item.header-nav-home
+            = link_to root_path, class: 'nav-link'
+              = fa_icon 'home'
+          li.header-nav-item
+            span.header-text
+              = @activity.title
+              span.font-light.ml-2 = @activity.humanized_start_time

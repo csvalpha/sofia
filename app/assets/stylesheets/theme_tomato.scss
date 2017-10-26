@@ -1,13 +1,16 @@
 
 // Basic colors
-$brand-primary:             #E82C0C; //yellow
-$brand-primary-dark:        #350A03;
-$brand-secondary:           #05B500; //darkred
-$brand-secondary-dark:      #013500;
+$brand-primary:   #e8df0c;
+$brand-secondary: #00a5b5;
+
 
 // Basic layout
-$body-bg:    #4a4a4a;
-$body-color: #cccccc;
+$body-bg:    #f8f9fa;
+$body-color: #212529;
+
+$enable-shadows: true;
+$enable-print-styles: false;
+
 
 // Custom stuff
 .table-header-rotated {
