@@ -31,7 +31,7 @@ RSpec.describe OrderRow, type: :model do
       subject(:order_row) { FactoryGirl.create(:order_row, order: order, product: product) }
 
       before do
-        FactoryGirl.create(:product_price, price_list: price_list, product: product, amount: 2.00)
+        FactoryGirl.create(:product_price, price_list: price_list, product: product, price: 2.00)
       end
 
       it { expect(order_row.price_per_product).to eq(2.00) }

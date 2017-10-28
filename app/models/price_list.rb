@@ -1,5 +1,5 @@
 class PriceList < ApplicationRecord
-  has_many :product_price, dependent: :destroy
+  has_many :product_price, -> { order(:position) }, dependent: :destroy
   has_many :products, through: :product_price, dependent: :restrict_with_exception
 
   validates :name, presence: true

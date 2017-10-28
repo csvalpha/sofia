@@ -21,6 +21,6 @@ class ProductPriceController < ApplicationController
   private
 
   def permitted_attributes
-    params.require(:product_price).permit(:amount)
+    params.require(:product_price).permit(:price)
   end
 end

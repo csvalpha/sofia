@@ -12,13 +12,13 @@
     tbody
       - if @products
         - @products.each do |product|
-          tr data={ object: 'product_price', attribute: 'amount' }
+          tr data={ object: 'product_price', attribute: 'price' }
             td = product.name
             - @recent_price_lists.each do |price_list|
               td
                 - if price_list.product_price_for(product).present?
                   = best_in_place_if(price_list.product_price_for(product), price_list.product_price_for(product),
-                                     :amount, display_with: :number_to_currency, helper_options: { unit: '€' },
+                                     :price, display_with: :number_to_currency, helper_options: { unit: '€' },
                                      data: { price_list: price_list.name, product: product })
       - else
         tr = 'No products'

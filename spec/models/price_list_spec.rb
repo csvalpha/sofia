@@ -19,9 +19,9 @@ RSpec.describe PriceList, type: :model do
     let(:product) { FactoryGirl.create(:product) }
 
     before do
-      FactoryGirl.create(:product_price, product: product, price_list: price_list, amount: 8)
+      FactoryGirl.create(:product_price, product: product, price_list: price_list, price: 8)
     end
 
-    it { expect(price_list.product_price_for(product).amount).to eq 8 }
+    it { expect(price_list.product_price_for(product).price).to eq 8 }
   end
 end

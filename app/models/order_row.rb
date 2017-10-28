@@ -13,7 +13,7 @@ class OrderRow < ApplicationRecord
   before_create :copy_product_price
 
   def copy_product_price
-    self.price_per_product = order.activity.price_list.product_price_for(product).amount
+    self.price_per_product = order.activity.price_list.product_price_for(product).price
   end
 
   def no_changes_of_product_count_allowed
