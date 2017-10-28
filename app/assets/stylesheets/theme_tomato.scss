@@ -3,6 +3,16 @@
 $brand-primary:   #e8df0c;
 $brand-secondary: #00a5b5;
 
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #868e96;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+
 
 // Basic layout
 $body-bg:    #f8f9fa;
@@ -10,6 +20,20 @@ $body-color: #212529;
 
 $enable-shadows: true;
 $enable-print-styles: false;
+
+// Typography
+$font-family-sans-serif: Roboto, "Helvetica Neue", Arial, sans-serif;
+
+$font-weight-light:    300;
+$font-weight-normal:   400;
+$font-weight-bold:     500;
+
+$font-size-base:       1rem;
+$font-size-xl:         ($font-size-base * 2);
+
+$font-color-light:     $gray-100;
+$font-color-medium:    $gray-600;
+$font-color-dark:      $gray-800;
 
 
 // Custom stuff

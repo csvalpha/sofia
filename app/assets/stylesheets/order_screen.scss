@@ -12,7 +12,7 @@
     z-index: 10;
 
     background-color: $gray-100;
-    color: $gray-800;
+    color: $font-color-dark;
     box-shadow: 0 1px 4px rgba(0,0,0,0.2);
 
     display: flex;
@@ -24,7 +24,7 @@
     align-self: flex-start;
 
     list-style: none;
-    font-size: 24pt;
+    font-size: $font-size-xl;
     padding: 0;
     margin: 0;
     height: 100%;
@@ -43,12 +43,8 @@
   .header-nav-home {
     a.nav-link {
       padding: 0;
-      color: $gray-800;
+      color: $font-color-dark;
     }
-  }
-
-  .font-light {
-    font-weight: 300;
   }
 
   .flash {
@@ -57,10 +53,11 @@
     display: flex;
     height: 100%;
 
-    font-size: 1.2rem;
+    font-size: $font-size-lg;
     text-align: center;
     vertical-align: middle;
-    color: $gray-200;
+    background-color: $gray-800;
+    color: $font-color-light;
   }
 
   .flash-text {
@@ -75,17 +72,23 @@
     }
   }
 
+  .flash-success {
+    i {
+      color: $success;
+    }
+  }
+
   .flash-undo {
     color: inherit;
   }
 
   .side-panel {
-    grid-column: 1 / 2;
-    grid-row: 2 / -1;
+    grid-column: user-details-start / orders-end;
+    grid-row: user-details-start / orders-end;
     z-index: 4;
 
     background-color: $gray-200;
-    color: $gray-800;
+    color: $font-color-dark;
     border-right: 1px solid $gray-600;
     box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.2);
   }
@@ -103,16 +106,19 @@
     align-items: stretch;
   }
 
+  .user-details-search #search {
+    font-weight: 300;
+  }
+
   .user-details-seperator {
     text-align: center;
-    font-size: 1.3rem;
-    font-weight: 300;
-    color: $gray-600;
+    font-size: $font-size-lg;
+    color: $font-color-medium;
   }
 
   .user-details-cash-button {
     button {
-      background-color: $gray-700;
+      background-color: $gray-800;
     }
   }
 
@@ -125,7 +131,7 @@
   }
 
   .user-search-results-header {
-    font-size: 1.2rem;
+    font-size: $font-size-lg;
 
     display: flex;
     align-items: center;
@@ -143,7 +149,7 @@
   }
 
   .orders-header {
-    font-size: 2rem;
+    font-size: $font-size-xl;
     text-align: center;
   }
 
@@ -153,17 +159,17 @@
     justify-content: center;
     flex-grow: 0.5;
 
-    font-size: 1.5rem;
-    color: $gray-500;
+    font-size: $font-size-lg;
+    color: $font-color-medium;
   }
 
   .orders-confirmation {
     align-self: flex-end;
     width: 100%;
 
-    color: $gray-200;
+    color: $font-color-light;
     padding: 1rem;
-    font-size: 1.3rem;
+    font-size: $font-size-lg;
 
     display: flex;
     justify-content: center;
@@ -174,8 +180,8 @@
     grid-area: product-grid;
 
     display: grid;
-    grid-template-columns: repeat(5, [col] 1fr);
-    grid-template-rows: repeat(6, [row] 1fr);
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: auto;
     grid-gap: 2px;
 
     background-color: $gray-400;
@@ -186,12 +192,14 @@
     background-color: $gray-100;
 
     display: flex;
+    flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
   }
 
   .product-grid-product-name {
-    font-size: 1.3rem;
-    font-weight: 300;
+    font-size: $font-size-lg;
+    color: $font-color-dark;
+    text-align: center;
   }
 }
