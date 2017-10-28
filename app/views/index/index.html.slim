@@ -9,24 +9,34 @@
     - if current_user
       .col-sm-6
         .card
-          h3.card-header
+          h4.card-header
             = fa_icon 'calendar'
             = ' Upcoming Activities'
 
           .card-body
-            - if @upcoming_activities
-              ul
+            - if @upcoming_activities.empty?
+              p.card-text = 'Er zijn geen activiteiten gepland. Maak er een aan op de activiteitenpagina.'
+              = link_to 'Activiteiten', activities_path, class: 'btn btn-primary btn-block'
+
+            - else
+              p.card-text = 'Dit zijn de eerstvolgende vijf activiteiten:'
+
+              ol
                 - @upcoming_activities.each do |activity|
                   li = link_to "#{activity.title} – #{activity.humanized_start_time}", activity
 
-              - @current_activities.each do |activity|
-                = link_to activity, class: 'btn btn-primary btn-block'
-                  = fa_icon 'calculator'
-                  = " #{activity.title} – #{activity.humanized_start_time}"
+              - unless @current_activities.empty?
+                hr
+                h4.card-title.text-center
+                  = 'Direct naar het streepscherm'
 
-            - else
-              p.card-text = 'Er zijn geen activiteiten gepland. Maak er een aan op de activiteitenpagina.'
-              = link_to 'Activiteiten', activities_path, class: 'btn btn-primary btn-block'
+                - @current_activities.each do |activity|
+                  = link_to activity_orders_url(activity), class: 'btn btn-primary btn-block btn-lg'
+                    span
+                      = fa_icon 'calculator', class: 'mr-1'
+                      = activity.title
+                      br
+                      small = activity.humanized_start_time
 
 
     - else

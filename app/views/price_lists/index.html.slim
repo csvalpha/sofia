@@ -1,26 +1,30 @@
 .container
 
-  h1 Price Lists
+  .row.py-4
+    h1 Price Lists
 
-  table.table.table-striped
-    thead.table-header-rotated
-      tr
-        th = 'Product'
-        - @recent_price_lists.each do |price_list|
-          th.rotate
-            div = link_to price_list.name, price_list
-    tbody
-      - if @products
-        - @products.each do |product|
-          tr data={ object: 'product_price', attribute: 'price' }
-            td = product.name
-            - @recent_price_lists.each do |price_list|
-              td
+    table.table.table-striped
+      thead.table-header-rotated
+        tr
+          th scope='col' = '#'
+          th scope='col' = 'Product'
+          - @recent_price_lists.each do |price_list|
+            th.rotate
+              div = link_to price_list.name, price_list
+      tbody
+        - if @products
+          - @products.each do |product|
+            tr data={ object: 'product_price', attribute: 'price' }
+              th scope='row' = product.position
+              td = product.name
+              - @recent_price_lists.each do |price_list|
                 - if price_list.product_price_for(product).present?
-                  = best_in_place_if(price_list.product_price_for(product), price_list.product_price_for(product),
-                                     :price, display_with: :number_to_currency, helper_options: { unit: '€' },
-                                     data: { price_list: price_list.name, product: product })
-      - else
-        tr = 'No products'
-
-  hr
+                  td.product-price
+                    = best_in_place(price_list.product_price_for(product), :price, display_with: :number_to_currency,
+                                    helper_options: { unit: '€' }, data: { price_list: price_list.name,
+                                                                           product: product })
+                - else
+                  td.new-price
+                    = fa_icon 'plus', class: 'pl-3'
+        - else
+          tr = 'No products'

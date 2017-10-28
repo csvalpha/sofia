@@ -72,7 +72,6 @@ ActiveRecord::Schema.define(version: 20171028170026) do
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "position", default: 0
     t.index ["price_list_id"], name: "index_product_prices_on_price_list_id"
     t.index ["product_id"], name: "index_product_prices_on_product_id"
   end
@@ -82,6 +81,7 @@ ActiveRecord::Schema.define(version: 20171028170026) do
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "position", default: 0
   end
 
   create_table "users", force: :cascade do |t|

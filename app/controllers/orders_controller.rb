@@ -3,7 +3,7 @@ class OrdersController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @product_prices = @activity.price_list.product_price
+    @product_prices = @activity.price_list.product_price.includes(:product)
     render layout: 'order_screen'
   end
 

@@ -4,24 +4,12 @@ activities = []
 end
 
 products = []
-products << Product.create(name: 'Bier (glas)')
-products << Product.create(name: 'Bier (pul)')
-products << Product.create(name: 'Bier (pitcher)')
-products << Product.create(name: 'Speciaalbier')
-products << Product.create(name: 'Sterke drank')
-products << Product.create(name: 'Dure Whisky')
-products << Product.create(name: 'Weduwe Joustra Beerenburg')
-products << Product.create(name: 'Wijn (glas)')
-products << Product.create(name: 'Wijn (fles)')
-products << Product.create(name: 'Fris')
-products << Product.create(name: 'Fris (klein)')
-products << Product.create(name: 'Red Bull')
-products << Product.create(name: 'Tosti')
-products << Product.create(name: 'Nootjes')
-products << Product.create(name: 'Chips')
-products << Product.create(name: 'Sigaar')
-products << Product.create(name: 'Sigaar (duur)')
-products << Product.create(name: '12+1')
+product_names = ['Bier (glas)', 'Bier (pul)', 'Bier (pitcher)', 'Speciaalbier', 'Sterke drank', 'Dure Whisky',
+                 'Weduwe Joustra Beerenburg', 'Wijn (glas)', 'Wijn (fles)', 'Fris', 'Fris (klein)', 'Red Bull', 'Tosti',
+                 'Nootjes', 'Chips', 'Sigaar', 'Sigaar (duur)', '12+1']
+product_names.each_with_index do |name, index|
+  products << FactoryGirl.create(:product, name: name, position: index + 1)
+end
 
 users = []
 5.times do

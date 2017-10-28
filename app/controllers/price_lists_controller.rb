@@ -5,8 +5,8 @@ class PriceListsController < ApplicationController
   autocomplete :price_list, :name, full: true
 
   def index
-    @recent_price_lists = PriceList.order(:created_at).limit(6).includes(model_includes) || []
-    @products = @recent_price_lists.map(&:products).flatten.uniq.sort_by(&:created_at)
+    @recent_price_lists = PriceList.limit(6).includes(model_includes) || []
+    @products = @recent_price_lists.map(&:products).flatten.uniq
   end
 
   def update
@@ -22,7 +22,7 @@ class PriceListsController < ApplicationController
   end
 
   def model_includes
-    [:product_price, product_price: :product]
+    %i[product_price products]
   end
 
   private
