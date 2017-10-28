@@ -1,0 +1,19 @@
+td.product-price {
+  i {
+    color: rgba(0,0,0,0);
+  }
+
+  &:hover {
+    cursor: pointer;
+
+    i {
+      color: $font-color-dark;
+    }
+  }
+}
+
+form.form_in_place {
+  input {
+    width: 4rem;
+  }
+}

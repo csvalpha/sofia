@@ -6,7 +6,7 @@
     table.table.table-striped
       thead.table-header-rotated
         tr
-          th scope='col' = '#'
+          th scope='col' = 'Positie'
           th scope='col' = 'Product'
           - @recent_price_lists.each do |price_list|
             th.rotate
@@ -23,8 +23,9 @@
                     = best_in_place(price_list.product_price_for(product), :price, display_with: :number_to_currency,
                                     helper_options: { unit: '€' }, data: { price_list: price_list.name,
                                                                            product: product })
+                    = fa_icon 'pencil', class: 'pl-1'
                 - else
-                  td.new-price
-                    = fa_icon 'plus', class: 'pl-3'
+                  td.product-price.new-price data-price_list=price_list.id
+                    = fa_icon 'plus-square', class: 'pl-2'
         - else
           tr = 'No products'
