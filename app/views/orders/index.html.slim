@@ -1,13 +1,30 @@
-.container-fluid
-  .row
-    .order-screen
+.order-screen
 
-      nav.header
-        ul.header-nav
-          li.header-nav-item.header-nav-home
-            = link_to root_path, class: 'nav-link'
-              = fa_icon 'home'
-          li.header-nav-item
-            span.header-text
-              = @activity.title
-              span.font-light.ml-2 = @activity.humanized_start_time
+  nav.header
+    ul.header-nav
+      li.header-nav-item.header-nav-home
+        = link_to root_path, class: 'nav-link'
+          = fa_icon 'home'
+      li.header-nav-item
+        = @activity.title
+        small.font-light.ml-3 = @activity.humanized_start_time
+
+    .flash.bg-success
+      .flash-text
+
+        = fa_icon 'check-circle lg', class: 'mr-1'
+
+        span.mr-2.font-light = 'Bestelling geplaatst'
+
+        a.flash-undo href='#' = 'Ongedaan maken'
+
+  .user-details
+
+  .orders
+    .orders-confirmation.bg-success
+      span.font-light = 'Bestellen'
+
+  .product-grid
+    - 25.times do
+      .product-grid-product
+        span.product-grid-product-name = 'Bier'
