@@ -1,8 +1,11 @@
 .order-screen {
+  width: 100vw;
+  height: 100vh;
+
   display: grid;
 
-  grid-template-columns: [header-start orders-start user-details-start] 400px [orders-end user-details-end product-grid-start] 1fr [header-end product-grid-end];
-  grid-template-rows: [header-start] 80px [header-end product-grid-start] 300px [user-details-end orders-start ] 1fr [orders-end product-grid-end];
+  grid-template-columns: [header-start orders-start user-details-start] 340px [orders-end user-details-end product-grid-start] 1fr [header-end product-grid-end];
+  grid-template-rows: [header-start] 80px [header-end product-grid-start] 240px [user-details-end orders-start ] 1fr [orders-end product-grid-end];
 
   .header {
     grid-area: header;
@@ -96,6 +99,7 @@
     display: flex;
     flex-flow: column nowrap;
     align-content: flex-start;
+    justify-content: space-between;
   }
 
   .orders-confirmation {
@@ -116,7 +120,7 @@
 
     display: grid;
     grid-template-columns: repeat(5, [col] 1fr);
-    grid-template-rows: repeat(5, [row] 1fr);
+    grid-template-rows: repeat(6, [row] 1fr);
     grid-gap: 2px;
 
     background-color: $gray-400;
