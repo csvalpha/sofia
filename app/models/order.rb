@@ -9,7 +9,7 @@ class Order < ApplicationRecord
   def order_total
     sum = 0
     order_rows.each do |row|
-      sum += row.price_per_product * row.product_count
+      sum += row.row_total
     end
     sum
   end

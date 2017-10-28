@@ -27,4 +27,8 @@ class OrderRow < ApplicationRecord
   def available_products
     order ? order.activity.price_list.products : []
   end
+
+  def row_total
+    price_per_product * product_count
+  end
 end

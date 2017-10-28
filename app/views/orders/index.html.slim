@@ -9,23 +9,59 @@
         = @activity.title
         small.font-light.ml-3 = @activity.humanized_start_time
 
-    .flash.bg-success
-      .flash-text
+    / .flash.bg-success
+    /   .flash-text
+    /
+    /     = fa_icon 'check-circle lg', class: 'mr-1'
+    /
+    /     span.mr-2.font-light = 'Bestelling geplaatst'
+    /
+    /     a.flash-undo href='#' = 'Ongedaan maken'
 
-        = fa_icon 'check-circle lg', class: 'mr-1'
-
-        span.mr-2.font-light = 'Bestelling geplaatst'
-
-        a.flash-undo href='#' = 'Ongedaan maken'
+  .side-panel
 
   .user-details
-    span = 'Here will be some text'
+    form.user-details-search
+      = text_field_tag 'search', nil, placeholder: 'Gebruiker zoeken', class: 'form-control form-control-lg'
 
-  .orders
-    span = 'Here will be some text'
+    em.user-details-seperator.py-2 = 'of'
 
-    .orders-confirmation.bg-success
-      span.font-light = 'Bestellen'
+    .user-details-cash-button
+      button.btn.btn-secondary.btn-block.btn-lg.font-light
+        = 'Contant betalen'
+
+  / .orders
+  /   p.orders-header.font-light.py-2 = 'Bestelling'
+  /
+  /   - if [true, false].sample
+  /     em.no-items.font-light = 'Selecteer rechts een product'
+  /
+  /   - else
+  /     .orders-row
+  /       .orders-row-product-count
+  /         = '3'
+  /       .orders-row-product-name
+  /         = 'Bier'
+  /       .orders-row-product-price
+  /         = number_to_currency(1, unit: '€')
+  /       .orders-row-cancel
+  /         = fa_icon('remove')
+  /
+  /   .orders-confirmation.bg-success
+  /     span.font-light = 'Bestellen'
+
+  .user-search-results
+    / p.user-search-results-header.font-light.py-2 = 'Zoekresultaten'
+
+    em.no-items.font-light = 'Selecteer eerst een gebruiker'
+
+    / .user-search-results-user
+    /   .user-avatar
+    /     / = image_tag
+    /   .user-name
+    /     = 'Willem Wilmink'
+    /   .user-credit
+    /     = '€20,50'
 
   .product-grid
     - 30.times do
