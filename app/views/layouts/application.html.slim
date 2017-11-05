@@ -4,6 +4,7 @@ html
     title = 'Tomato – Streepsysteem der C.S.V. Alpha'
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track' => 'reload'
+    = javascript_pack_tag params[:controller]
     = csrf_meta_tags
 
   body

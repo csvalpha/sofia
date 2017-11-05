@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
 gem 'bcrypt', '~> 3.1.7'
-gem 'best_in_place', '~> 3.1.1'
 gem 'bootstrap', '~> 4.0.0.beta2'
 gem 'bootstrap_autocomplete_input', '~> 0.2.1'
 gem 'coffee-rails', '~> 4.2'

@@ -20,9 +20,7 @@
                 - @recent_price_lists.each do |price_list|
                   - if price_list.product_price_for(product).present?
                     td.product-price
-                      = best_in_place(price_list.product_price_for(product), :price, display_with: :number_to_currency,
-                                      helper_options: { unit: '€' }, data: { price_list: price_list.name,
-                                                                             product: product })
+                      = number_to_currency price_list.product_price_for(product).price, unit: '€'
                       = fa_icon 'pencil', class: 'pl-1'
                   - else
                     td.product-price.new-price data-price_list=price_list.id
