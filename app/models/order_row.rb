@@ -1,5 +1,5 @@
 class OrderRow < ApplicationRecord
-  belongs_to :order
+  belongs_to :order, inverse_of: :order_rows
   belongs_to :product
 
   validates :order, :product, presence: true

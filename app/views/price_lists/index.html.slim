@@ -1,7 +1,7 @@
 .container
   .row.py-4
     .col-sm-12
-      h1 = 'Prijslijsten en producten'
+      h1 = 'Prijzen en producten'
 
       table.table.table-striped
         thead.table-header-rotated
@@ -27,3 +27,11 @@
                       = fa_icon 'plus-square', class: 'pl-2'
           - else
             tr = 'Geen producten'
+
+  .row.py-4
+    .col-sm-12 id='product_categories'
+      .row v-for='c in cats'
+        .col-sm-4
+          img src='/images/avatar_thumb_default.png'
+        .col-sm-8
+          h4 = '{{ c.name }}'
