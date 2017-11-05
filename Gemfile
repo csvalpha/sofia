@@ -25,6 +25,7 @@ gem 'slim', '~> 3.0.8'
 gem 'turbolinks', '~> 5.0.1'
 gem 'uglifier', '>= 1.3.0'
 gem 'validates_timeliness', '~> 4.0'
+gem 'webpacker', '~> 3.0.2'
 
 group :development, :test do
   gem 'awesome_print'
