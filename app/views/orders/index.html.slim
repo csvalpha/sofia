@@ -6,8 +6,8 @@
         = link_to root_path, class: 'nav-link'
           = fa_icon 'home'
       li.header-nav-item
-        = @activity.title
-        small.font-weight-light.ml-3 = @activity.humanized_start_time
+        span.mr-3 = @activity.title
+        small.font-weight-light.d-inline-block = @activity.humanized_start_time
 
     .flash.flash-success
       .flash-text

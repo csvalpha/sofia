@@ -1,31 +1,31 @@
 .container
-
   .row.py-4
-    h1 Price Lists
+    .col-sm-12
+      h1 = 'Prijslijsten en producten'
 
-    table.table.table-striped
-      thead.table-header-rotated
-        tr
-          th scope='col' = 'Positie'
-          th scope='col' = 'Product'
-          - @recent_price_lists.each do |price_list|
-            th.rotate
-              div = link_to price_list.name, price_list
-      tbody
-        - if @products
-          - @products.each do |product|
-            tr data={ object: 'product_price', attribute: 'price' }
-              th scope='row' = product.position
-              td = product.name
-              - @recent_price_lists.each do |price_list|
-                - if price_list.product_price_for(product).present?
-                  td.product-price
-                    = best_in_place(price_list.product_price_for(product), :price, display_with: :number_to_currency,
-                                    helper_options: { unit: '€' }, data: { price_list: price_list.name,
-                                                                           product: product })
-                    = fa_icon 'pencil', class: 'pl-1'
-                - else
-                  td.product-price.new-price data-price_list=price_list.id
-                    = fa_icon 'plus-square', class: 'pl-2'
-        - else
-          tr = 'No products'
+      table.table.table-striped
+        thead.table-header-rotated
+          tr
+            th scope='col' = 'Positie'
+            th scope='col' = 'Product'
+            - @recent_price_lists.each do |price_list|
+              th.rotate
+                div = link_to price_list.name, price_list
+        tbody
+          - if @products
+            - @products.each do |product|
+              tr data={ object: 'product_price', attribute: 'price' }
+                th scope='row' = product.position
+                td = product.name
+                - @recent_price_lists.each do |price_list|
+                  - if price_list.product_price_for(product).present?
+                    td.product-price
+                      = best_in_place(price_list.product_price_for(product), :price, display_with: :number_to_currency,
+                                      helper_options: { unit: '€' }, data: { price_list: price_list.name,
+                                                                             product: product })
+                      = fa_icon 'pencil', class: 'pl-1'
+                  - else
+                    td.product-price.new-price data-price_list=price_list.id
+                      = fa_icon 'plus-square', class: 'pl-2'
+          - else
+            tr = 'Geen producten'

@@ -14,12 +14,6 @@ $gray-800: #343a40;
 $gray-900: #212529;
 
 
-// Basic layout
-$body-bg:    #f8f9fa;
-$body-color: #212529;
-
-$enable-shadows: true;
-$enable-print-styles: false;
 
 // Typography
 $font-family-sans-serif: Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -35,6 +29,11 @@ $font-color-light:     $gray-100;
 $font-color-medium:    $gray-600;
 $font-color-dark:      $gray-800;
 
+
+// Basic layout
+$body-bg:              $gray-100;
+$body-color:           $font-color-dark;
+$enable-print-styles:  false;
 
 // Custom stuff
 .table-header-rotated {
