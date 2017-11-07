@@ -3,35 +3,25 @@
     .col-sm-12
       h1 = 'Prijzen en producten'
 
-      table.table.table-striped
+      = content_tag :table, id: 'price_lists_table', class: 'table table-striped',
+        data: { price_lists: @recent_price_lists.to_json(except: %i[created_at updated_at deleted_at]),
+                products: @products.to_json(except: %i[created_at updated_at deleted_at], include: :product_price),
+                product_price: @product_price.to_json(except: %i[created_at updated_at deleted_at]) }
+
         thead.table-header-rotated
           tr
             th scope='col' = 'Positie'
             th scope='col' = 'Product'
-            - @recent_price_lists.each do |price_list|
-              th.rotate
-                div = link_to price_list.name, price_list
-        tbody
-          - if @products
-            - @products.each do |product|
-              tr data={ object: 'product_price', attribute: 'price' }
-                th scope='row' = product.position
-                td = product.name
-                - @recent_price_lists.each do |price_list|
-                  - if price_list.product_price_for(product).present?
-                    td.product-price
-                      = number_to_currency price_list.product_price_for(product).price, unit: '€'
-                      = fa_icon 'pencil', class: 'pl-1'
-                  - else
-                    td.product-price.new-price data-price_list=price_list.id
-                      = fa_icon 'plus-square', class: 'pl-2'
-          - else
-            tr = 'Geen producten'
+            th.rotate v-for='priceList in priceLists'
+              div = '{{ priceList.name }} ({{ priceList.id }})'
 
-  .row.py-4
-    .col-sm-12 id='product_categories'
-      .row v-for='c in cats'
-        .col-sm-4
-          img src='/images/avatar_thumb_default.png'
-        .col-sm-8
-          h4 = '{{ c.name }}'
+        tbody
+          tr v-for='product in products'
+            th scope='row' = '{{ product.position }}'
+            td = '{{ product.name }}'
+            td.product-price v-for='priceList in priceLists'
+              span v-if='findPrice(product, priceList)' v-bind:title='product.name + " " + priceList.id'
+                = '{{ findPrice(product, priceList) }}'
+                = fa_icon 'pencil', class: 'pl-1'
+              span v-else=''
+                = fa_icon 'plus-square', class: 'pl-2'

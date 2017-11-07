@@ -1,6 +1,6 @@
 class ProductPrice < ApplicationRecord
-  belongs_to :product, touch: true
-  belongs_to :price_list, touch: true
+  belongs_to :product
+  belongs_to :price_list
 
   validates :price, presence: true
 
