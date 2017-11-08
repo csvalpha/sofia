@@ -25,12 +25,21 @@ document.addEventListener('turbolinks:load', () => {
           var p = productPrice.find(p => (p.product_id === product.id && p.price_list_id === priceList.id));
           return p ? `€${parseFloat(p.price).toFixed(2)}` : '';
         },
-        addProduct: function() {
+        newProduct: function() {
           products.push({
             id: null,
             name: 'test',
             contains_alcohol: true,
+            editing: true,
           });
+        },
+        removeProduct: function(product) {
+          var index = this.products.indexOf(product);
+          this.products.splice(index, 1);
+        },
+        saveProduct: function(product) {
+          console.log(`Save product: ${product.name}`);
+          product.editing = false;
         }
       }
     });

@@ -12,34 +12,42 @@
           tr
             th scope='col' = 'ID'
             th scope='col' = 'Product'
-            th scope='col' = 'Bevat alcohol'
-            th.rotate v-for='priceList in priceLists'
+            th.rotate scope='col'
+              div = 'Bevat alcohol'
+            th.rotate scope='col' v-for='priceList in priceLists'
               div = '{{ priceList.name }} ({{ priceList.id }})'
 
         tbody
           tr v-for='(product, index) in products'
-            th scope='row' = '{{ product.id }}'
-            td = '{{ product.name }}'
-            td
-              span v-if='product.contains_alcohol' = fa_icon 'check'
+            template v-if='product.editing'
+              td.new-product-remove v-on:click.prevent='removeProduct(product)' = fa_icon 'ban'
+              td.new-product-input colspan='2'
+                .input-group
+                  input.form-control type='text' v-model='product.name'
+                  .input-group-addon
+                    label.form-check-label
+                      input.form-check-input type='checkbox' v-model='product.contains_alcohol'
+                      span = '18+'
+                  .input-group-addon.new-product-save v-on:click='saveProduct(product)' = fa_icon 'save'
 
-            td.product-price v-for='priceList in priceLists'
-              span v-if='findPrice(product, priceList)' v-bind:title='product.name + " " + priceList.id'
-                = '{{ findPrice(product, priceList) }}'
-                = fa_icon 'pencil', class: 'pl-1'
-              span v-else=''
-                = fa_icon 'plus-square', class: 'pl-2'
+              td colspan='6'
 
-          / tr v-for='(product, index) in products'
-          /   td
-          /   td.new-product-input
-          /     input type='text' v-model='product.name'
-          /   td.new-product-input-contains-alcohol
-          /     input type='checkbox' v-model='product.contains_alcohol'
+            template v-else=''
+              th scope='row' = '{{ product.id }}'
+              td = '{{ product.name }}'
+              td
+                span v-if='product.contains_alcohol' = fa_icon 'check'
+
+              td.product-price v-for='priceList in priceLists'
+                span v-if='findPrice(product, priceList)' v-bind:title='product.name + " " + priceList.id'
+                  = '{{ findPrice(product, priceList) }}'
+                  = fa_icon 'pencil', class: 'pl-1'
+                span v-else=''
+                  = fa_icon 'plus-square', class: 'pl-2'
 
           tr
             td
-            td.new-product-button colspan='6'
-              em v-on:click='addProduct'
+            td colspan='6'
+              a.btn.btn-secondary.btn-sm role='button' href='#' v-on:click.prevent='newProduct'
                 = 'Voeg een nieuw product toe'
-                = fa_icon 'plus-square', class: 'pl-4'
+                = fa_icon 'plus-square', class: 'pl-2'

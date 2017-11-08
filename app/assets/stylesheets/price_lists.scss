@@ -11,3 +11,16 @@ td.product-price {
     }
   }
 }
+
+td.new-product-input {
+  input.form-control {
+    width: 8rem;
+  }
+  input.form-check-input {
+    margin-top: 0.25rem;
+  }
+}
+
+.new-product-remove, .new-product-save {
+  cursor: pointer;
+}
