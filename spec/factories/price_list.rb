@@ -3,7 +3,7 @@ FactoryGirl.define do
     name { Faker::Book.title }
 
     transient do
-      products { create_list(:product, 2) }
+      products { create_list(:product, 2) } unless Product.any?
     end
 
     after(:create) do |price_list, evaluator|
