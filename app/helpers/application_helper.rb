@@ -4,8 +4,6 @@ module ApplicationHelper
       options&.merge!(class: 'active') { |_, v1, v2| [v1, v2].join ' ' }
     end
 
-    link_to(name, options, html_options) do
-      yield
-    end
+    link_to(name, options, html_options, &block)
   end
 end
