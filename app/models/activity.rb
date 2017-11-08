@@ -17,6 +17,8 @@ class Activity < ApplicationRecord
           Time.zone.now).order(:start_time, :end_time)
   })
 
+  delegate :products, to: :price_list
+
   def humanized_start_time
     start_time.strftime('%d %B %Y %H:%M')
   end

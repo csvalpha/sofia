@@ -6,7 +6,7 @@ class PriceListsController < ApplicationController
 
   def index
     @recent_price_lists = PriceList.limit(6).includes([:product_price, :products, { product_price: :product }])
-    @products = Product.all.order(:position).includes(:product_price)
+    @products = Product.all.includes(:product_price)
     @product_price = @recent_price_lists.map(&:product_price).flatten.uniq
   end
 
