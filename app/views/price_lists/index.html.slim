@@ -4,47 +4,50 @@
       h1 = 'Prijzen en producten'
 
       = content_tag :table, id: 'price_lists_table', class: 'table table-striped',
-        data: { price_lists: @recent_price_lists.to_json(except: %i[created_at updated_at deleted_at]),
-                products: @products.to_json(except: %i[created_at updated_at deleted_at]),
-                product_price: @product_price.to_json(except: %i[created_at updated_at deleted_at]) }
+        data: { price_lists: @recent_price_lists_json, products: @products_json }
 
-        thead.table-header-rotated
+        thead.table-header-rotated.products
           tr
-            th scope='col' = 'ID'
-            th scope='col' = 'Product'
-            th.rotate scope='col'
+            th.products-id scope='col' = 'ID'
+            th.products-name scope='col' = 'Product'
+            th.products-alcohol.rotate scope='col'
               div = 'Bevat alcohol'
-            th.rotate scope='col' v-for='priceList in priceLists'
-              div v-bind:title='"Lijst ID: " + priceList.id' = '{{ priceList.name }})'
-            th v-if='priceLists.length > 0'
+            th.products-pricelist.rotate scope='col' v-for='priceList in priceLists'
+              .center-text v-bind:title='"Lijst ID: " + priceList.id' = '{{ priceList.name }}'
+            th.products-actions v-if='priceLists.length > 0'
 
         tbody
-          tr.products v-for='(product, index) in products'
+          tr.products-product v-for='(product, index) in products'
+
             template v-if='product.editing'
-              td.new-product-remove v-on:click.prevent='removeProduct(product)' = fa_icon 'ban'
-              td.new-product-input colspan='2'
+              td.products-new-remove v-on:click.prevent='removeProduct(product)' = fa_icon 'ban lg'
+              td.products-new colspan='2'
                 .input-group
-                  input.form-control type='text' v-model='product.name'
+                  input.form-control type='text' v-model='product.name' placeholder='Productnaam'
                   .input-group-addon
                     label.form-check-label
                       input.form-check-input type='checkbox' v-model='product.contains_alcohol'
                       span = '18+'
-                  .input-group-addon.new-product-save v-on:click='saveProduct(product)' = fa_icon 'save'
 
-              td colspan='7'
+              td.products-new-price v-for='(priceList, index) in priceLists'
+                .input-group
+                  input.form-control type='text' v-model='product.product_prices[index].price' placeholder='2.18'
+              td.products-new-save v-on:click='saveProduct(product)'
+                span.btn.btn-primary = fa_icon 'floppy-o lg'
 
             template v-else=''
               th scope='row' = '{{ product.id }}'
               td = '{{ product.name }}'
-              td
+              td.center-text
                 span v-if='product.contains_alcohol' = fa_icon 'check'
 
-              td.product-price v-for='priceList in priceLists'
-                span v-bind:title='product.name + "; in lijst " + priceList.name'
-                  = '{{ findPrice(product, priceList) }}'
+              td.product-price.center-text v-for='priceList in priceLists'
+                span v-bind:title='product.name + " in lijst " + priceList.name'
+                  = '{{ productPriceToCurrency(findPrice(product, priceList)) }}'
 
-              td.edit-product-row v-if='priceLists.length > 0'
-                = fa_icon 'pencil', class: 'pl-1'
+              td.products-new-edit-button v-if='priceLists.length > 0'
+                a.btn.btn-sm.btn-outline-secondary.pull-right role='button' v-on:click='editProduct(product)'
+                  = fa_icon 'pencil'
 
           tr
             td
@@ -52,3 +55,4 @@
               a.btn.btn-secondary.btn-sm role='button' href='#' v-on:click.prevent='newProduct'
                 = 'Voeg een nieuw product toe'
                 = fa_icon 'plus-square', class: 'pl-2'
+            td

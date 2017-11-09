@@ -13,33 +13,49 @@ document.addEventListener('turbolinks:load', () => {
 
     var priceLists = JSON.parse(element.dataset.priceLists);
     var products = JSON.parse(element.dataset.products);
-    var productPrice = JSON.parse(element.dataset.productPrice);
 
     var users = new Vue({
       el: element,
       data: function() {
-        return { priceLists: priceLists, products: products, productPrice: productPrice};
+        return { priceLists: priceLists, products: products};
       },
       methods: {
         findPrice: function(product, priceList) {
-          var p = productPrice.find(p => (p.product_id === product.id && p.price_list_id === priceList.id));
-          return p ? `€${parseFloat(p.price).toFixed(2)}` : '';
+          return product.product_prices.find(p => (p.product_id === product.id && p.price_list_id === priceList.id));
         },
-        newProduct: function() {
-          products.push({
-            id: null,
-            name: 'test',
+        newProduct: function(index) {
+          var newProduct = {
+            id: products.length,
+            name: '',
             contains_alcohol: true,
             editing: true,
-          });
+            product_prices: [],
+          };
+          for (var i = 0, len = priceLists.length; i < len; i++) {
+            newProduct.product_prices.push({
+              product_id: products.length,
+              price_list_id: priceLists[i].id,
+              price: null,
+            });
+          }
+
+          return products.push(newProduct);
         },
         removeProduct: function(product) {
           var index = this.products.indexOf(product);
           this.products.splice(index, 1);
+          return products;
         },
         saveProduct: function(product) {
-          console.log(`Save product: ${product.name}`);
           product.editing = false;
+          return product;
+        },
+        editProduct: function(product) {
+          product.editing = true;
+          return product;
+        },
+        productPriceToCurrency: function(productPrice) {
+          return productPrice ? `€${parseFloat(productPrice.price).toFixed(2)}` : '';
         }
       }
     });

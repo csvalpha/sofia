@@ -5,9 +5,13 @@ class PriceListsController < ApplicationController
   autocomplete :price_list, :name, full: true
 
   def index
-    @recent_price_lists = PriceList.limit(6).includes([:product_price, :products, { product_price: :product }])
-    @products = Product.all.includes(:product_price)
-    @product_price = @recent_price_lists.map(&:product_price).flatten.uniq
+    recent_price_lists = PriceList.limit(6)
+    products = Product.all.includes(:product_prices)
+                      .where(product_prices: { price_list: recent_price_lists.map(&:id) }).references(:product_prices)
+
+    @recent_price_lists_json = recent_price_lists.to_json(except: %i[created_at updated_at deleted_at])
+    @products_json = products.to_json(include: { product_prices: { except: %i[created_at updated_at deleted_at] } },
+                                      except: %i[created_at updated_at deleted_at])
   end
 
   def update
