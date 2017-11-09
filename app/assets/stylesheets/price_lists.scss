@@ -1,14 +1,10 @@
-td.product-price {
-  i {
-    color: rgba(0,0,0,0);
-  }
-
-  &:hover {
-    cursor: pointer;
-
-    i {
-      color: $font-color-dark;
-    }
+td.edit-product-row i {
+  cursor: pointer;
+  color: rgba(0,0,0,0);
+}
+tr.products:hover {
+  td.edit-product-row i {
+    color: $font-color-dark;
   }
 }
 

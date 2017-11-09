@@ -15,10 +15,11 @@
             th.rotate scope='col'
               div = 'Bevat alcohol'
             th.rotate scope='col' v-for='priceList in priceLists'
-              div = '{{ priceList.name }} ({{ priceList.id }})'
+              div v-bind:title='"Lijst ID: " + priceList.id' = '{{ priceList.name }})'
+            th v-if='priceLists.length > 0'
 
         tbody
-          tr v-for='(product, index) in products'
+          tr.products v-for='(product, index) in products'
             template v-if='product.editing'
               td.new-product-remove v-on:click.prevent='removeProduct(product)' = fa_icon 'ban'
               td.new-product-input colspan='2'
@@ -30,7 +31,7 @@
                       span = '18+'
                   .input-group-addon.new-product-save v-on:click='saveProduct(product)' = fa_icon 'save'
 
-              td colspan='6'
+              td colspan='7'
 
             template v-else=''
               th scope='row' = '{{ product.id }}'
@@ -39,11 +40,11 @@
                 span v-if='product.contains_alcohol' = fa_icon 'check'
 
               td.product-price v-for='priceList in priceLists'
-                span v-if='findPrice(product, priceList)' v-bind:title='product.name + " " + priceList.id'
+                span v-bind:title='product.name + "; in lijst " + priceList.name'
                   = '{{ findPrice(product, priceList) }}'
-                  = fa_icon 'pencil', class: 'pl-1'
-                span v-else=''
-                  = fa_icon 'plus-square', class: 'pl-2'
+
+              td.edit-product-row v-if='priceLists.length > 0'
+                = fa_icon 'pencil', class: 'pl-1'
 
           tr
             td
