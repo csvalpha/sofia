@@ -6,8 +6,8 @@ RSpec.describe ProductPrice, type: :model do
   describe '#valid' do
     it { expect(product_price).to be_valid }
 
-    context 'when without a amount' do
-      subject(:product_price) { FactoryGirl.build_stubbed(:product_price, amount: nil) }
+    context 'when without a price' do
+      subject(:product_price) { FactoryGirl.build_stubbed(:product_price, price: nil) }
 
       it { expect(product_price).not_to be_valid }
     end

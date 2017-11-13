@@ -15,4 +15,4 @@
       - @model.product_price.each do |product_price|
         tr
           td = product_price.product.name
-          td = product_price.amount
+          td = number_to_currency(product_price.price, unit: '€')

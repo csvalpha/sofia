@@ -35,7 +35,7 @@ RSpec.describe Order, type: :model do
       subject(:order) { FactoryGirl.create(:order, activity: activity) }
 
       before do
-        FactoryGirl.create(:product_price, price_list: price_list, product: product, amount: 2.30)
+        FactoryGirl.create(:product_price, price_list: price_list, product: product, price: 2.30)
         FactoryGirl.create(:order_row, order: order, product: product, product_count: 2)
         order.reload
       end

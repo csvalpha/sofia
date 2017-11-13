@@ -1,37 +1,57 @@
 .container
-  h1
-    = "Activity: #{@model.title}"
+  .row.justify-content-between.py-3
+    .col-sm-12.col-lg-6
 
-  ul
-    li
-      = 'Start Time: '
-      = @model.start_time.strftime('%d-%m-%Y %H:%M:%S')
-    li
-      = 'End Time: '
-      = @model.end_time.strftime('%d-%m-%Y %H:%M:%S')
-    li
-      = 'Streeplijst: '
-      = link_to @model.price_list.name, @model.price_list
-    li
-      = 'Created at: '
-      = @model.created_at.strftime('%d-%m %H:%M:%S')
-    li
-      = 'Updated at: '
-      = @model.updated_at.strftime('%d-%m %H:%M:%S')
+      h1 = fa_icon 'calendar', class: 'mr-2', text: @model.title
+
+      table.table.table-sm
+        tbody
+          tr
+            th scope='row' = 'Starttijd'
+            td = @model.humanized_start_time
+          tr
+            th scope='row' = 'Eindtijd'
+            td = @model.humanized_end_time
+          tr
+            th scope='row' = 'Prijslijst'
+            td = link_to @model.price_list.name, @model.price_list
+
+    .card.col-sm-8.col-lg-4
+      .card-body
+        h2.card-title
+          = 'Streepscherm'
+
+        p.card-text
+          = 'Klik op de knop hieronder om naar het streepscherm te gaan.'
+
+        = link_to activity_orders_url(@model), class: 'btn btn-primary btn-block'
+          = 'Naar het streepscherm'
+          = fa_icon 'calculator', class: 'ml-1'
 
   hr
 
-  h2
-    = 'Orders'
-  table.table
-    tr
-      td ID
-      td Timestamp
-      td User
-      td Order total
-    - @model.orders.each do |order|
-      tr
-        td = order.id
-        td = order.created_at.strftime('%H:%M:%S - %d %b')
-        td = link_to order.user.name, order.user
-        td = number_to_currency(order.order_total, unit: '€')
+  .row.py-3
+    .col-sm-12
+      h2
+        = 'Bestellingen'
+      table.table.table-striped
+        thead
+          tr
+            th scope='col'= '#'
+            th scope='col'= 'Timestamp'
+            th scope='col'= 'User'
+            th scope='col'= 'Order total'
+
+        tbody
+          - if @model.orders.empty?
+            tr
+              td.text-center colspan='4'
+                p.my-1
+                  em = 'Er zijn nog geen bestellingen'
+          - else
+            - @model.orders.each do |order|
+              tr
+                th scope='row' = order.id
+                td = order.created_at.strftime('%H:%M:%S - %d %b')
+                td = link_to order.user.name, order.user
+                td = number_to_currency(order.order_total, unit: '€')

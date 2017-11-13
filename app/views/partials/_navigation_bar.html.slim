@@ -1,5 +1,5 @@
-nav.navbar.navbar-expand-md.navbar-light.bg-light
-  a.navbar-brand href='/' 🍅
+nav.navbar.navbar-expand-md.navbar-dark.bg-dark
+  span.navbar-brand 🍅
   button.navbar-toggler{ type= 'button' data-toggle= 'collapse' data-target= '#mainNavigation'
                          aria-controls= 'mainNavigation' aria-expanded= 'false' aria-label= 'Toggle navigation'}
     span.navbar-toggler-icon
@@ -7,22 +7,26 @@ nav.navbar.navbar-expand-md.navbar-light.bg-light
   .collapse.navbar-collapse id='mainNavigation'
     ul.navbar-nav.mr-auto
       li.nav-item
-        = link_to 'Home', root_path, class: 'nav-link'
+        = nav_link root_path, class: 'nav-link'
+          = fa_icon 'home', class: 'mr-1', text: 'Home'
 
       - if current_user
         li.nav-item
-          = link_to 'Activities', activities_path, class: 'nav-link'
+          = nav_link activities_path, class: 'nav-link'
+            = fa_icon 'calendar', class: 'mr-2', text: 'Activiteiten'
         li.nav-item
-          = link_to 'Pricelists', price_lists_path, class: 'nav-link'
+          = nav_link price_lists_path, class: 'nav-link'
+            = fa_icon 'beer', class: 'mr-2', text: 'Prijzen en producten'
         li.nav-item
-          = link_to 'Products', products_path, class: 'nav-link'
+          = nav_link users_path, class: 'nav-link'
+            = fa_icon 'users', class: 'mr-2', text: 'Gebruikers'
         li.nav-item
-          = link_to 'Users', users_path, class: 'nav-link'
-        li.nav-item
-          = link_to 'Mutations', credit_mutations_path, class: 'nav-link'
+          = nav_link credit_mutations_path, class: 'nav-link'
+            = fa_icon 'money', class: 'mr-2', text: 'Mutaties (inleg)'
 
     - if current_user
       .navbar-text.mr-1
-        = "Signed in as #{current_user.name} "
+        = fa_icon('user-circle-o', class: 'mr-1')
+        = current_user.name
       .navbar-text.small
         = link_to ' (sign out)', destroy_user_session_path, method: :delete

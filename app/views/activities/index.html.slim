@@ -1,37 +1,38 @@
 .container
 
-  h1
-    = 'Activities'
+  .row.py-4
+    .col-sm-12
+      h1 = 'Activities'
 
-  .col
-    table.table
-      thead
-        tr
-          td = 'Name'
-          td = 'Start Time'
-          td = 'End Time'
-          td = 'Streeplijst'
-          td = 'Created at'
-          td = 'Updated at'
-      tbody
-        - @model.each do |activity|
+    .col-sm-12
+      table.table.table-striped
+        thead
           tr
-            td
-              = link_to activity.title, activity
-            td
-              = activity.start_time.strftime('%d-%b %H:%M')
-            td
-              = activity.end_time.strftime('%d-%b %H:%M')
-            td
-              = activity.price_list.name
-            td
-              = activity.created_at.strftime('%d-%b')
-            td
-              = activity.updated_at.strftime('%d-%b')
+            th scope='col' = 'Name'
+            th scope='col' = 'Start Time'
+            th scope='col' = 'End Time'
+            th scope='col' = 'Streeplijst'
+            th scope='col' = 'Created at'
+            th scope='col' = 'Updated at'
+        tbody
+          - @model.each do |activity|
+            tr
+              td
+                = link_to activity.title, activity
+              td
+                = activity.start_time.strftime('%d-%b %H:%M')
+              td
+                = activity.end_time.strftime('%d-%b %H:%M')
+              td
+                = activity.price_list.name
+              td
+                = activity.created_at.strftime('%d-%b')
+              td
+                = activity.updated_at.strftime('%d-%b')
 
-  .col-lg-6.col-md-12
-    .card
-      .card-header
-        h4 = 'New activity'
-      .card-body
-        = render 'form'
+  .row
+    .col-lg-8.col-md-12
+      .card
+        h4.card-header = 'New activity'
+
+        .card-body = render 'form'

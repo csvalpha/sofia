@@ -1,13 +1,39 @@
 
 // Basic colors
-$brand-primary:             #E82C0C; //yellow
-$brand-primary-dark:        #350A03;
-$brand-secondary:           #05B500; //darkred
-$brand-secondary-dark:      #013500;
+$brand-primary:   #e8df0c;
+$brand-secondary: #00a5b5;
+
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #868e96;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+
+
+
+// Typography
+$font-family-sans-serif: Roboto, "Helvetica Neue", Arial, sans-serif;
+
+$font-weight-light:    300;
+$font-weight-normal:   400;
+$font-weight-bold:     500;
+
+$font-size-base:       1rem;
+$font-size-xl:         ($font-size-base * 2);
+
+$font-color-light:     $gray-100;
+$font-color-medium:    $gray-600;
+$font-color-dark:      $gray-800;
+
 
 // Basic layout
-$body-bg:    #4a4a4a;
-$body-color: #cccccc;
+$body-bg:              $gray-100;
+$body-color:           $font-color-dark;
+$enable-print-styles:  false;
 
 // Custom stuff
 .table-header-rotated {
@@ -24,9 +50,4 @@ $body-color: #cccccc;
       padding: 5px 10px;
     }
   }
-}
-
-span.best_in_place {
-  cursor: pointer;
-  border-bottom: 1px dashed;
 }

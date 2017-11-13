@@ -14,8 +14,7 @@
 //= require turbolinks
 //= require jquery3
 //= require popper
-//= require bootstrap-sprockets
+//= require bootstrap
 //= require bootstrap3-typeahead.min
 //= require bootstrap-autocomplete-input.min
-//= require best_in_place
-//= require_tree .
+//= require_tree . 

@@ -1,5 +1,8 @@
 class Product < ApplicationRecord
-  has_many :prices, source: :product_price, dependent: :destroy
-  has_many :price_lists, through: :prices, dependent: :restrict_with_error
+  has_many :product_prices, dependent: :destroy
+  has_many :price_lists, through: :product_prices, dependent: :restrict_with_error
   validates :name, presence: true
+  validates :requires_age, inclusion: [true, false]
+
+  accepts_nested_attributes_for :product_prices
 end

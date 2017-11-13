@@ -1,10 +1,11 @@
 class User < ApplicationRecord
   devise :omniauthable, omniauth_providers: [:banana_oauth2]
   has_many :orders, dependent: :destroy
+  has_many :credit_mutations, dependent: :destroy
   validates :name, presence: true
 
   def credit
-    credit = 0
+    credit = credit_mutations.sum(:amount)
     orders.each do |order|
       credit -= order.order_total
     end

@@ -3,8 +3,11 @@ class ActivitiesController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @new_activity = Activity.new
-    super
+    @activity = Activity.new(
+      start_time: (Time.zone.now + 2.hours).beginning_of_hour,
+      end_time: (Time.zone.now + 6.hours).beginning_of_hour
+    )
+    @model = Activity.includes(model_includes)
   end
 
   def create
@@ -12,6 +15,7 @@ class ActivitiesController < ApplicationController
     if @activity.save
       redirect_to activities_url, notice: 'Successfully created activity.'
     else
+      @model = Activity.includes(model_includes)
       render :index
     end
   end

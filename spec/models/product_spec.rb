@@ -11,5 +11,11 @@ RSpec.describe Product, type: :model do
 
       it { expect(product).not_to be_valid }
     end
+
+    context 'when without requires_age' do
+      subject(:product) { FactoryGirl.build_stubbed(:product, requires_age: nil) }
+
+      it { expect(product).not_to be_valid }
+    end
   end
 end

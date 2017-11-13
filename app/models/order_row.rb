@@ -1,5 +1,5 @@
 class OrderRow < ApplicationRecord
-  belongs_to :order
+  belongs_to :order, inverse_of: :order_rows
   belongs_to :product
 
   validates :order, :product, presence: true
@@ -13,7 +13,7 @@ class OrderRow < ApplicationRecord
   before_create :copy_product_price
 
   def copy_product_price
-    self.price_per_product = order.activity.price_list.product_price_for(product).amount
+    self.price_per_product = order.activity.price_list.product_price_for(product).price
   end
 
   def no_changes_of_product_count_allowed
@@ -26,5 +26,9 @@ class OrderRow < ApplicationRecord
 
   def available_products
     order ? order.activity.price_list.products : []
+  end
+
+  def row_total
+    price_per_product * product_count
   end
 end

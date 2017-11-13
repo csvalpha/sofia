@@ -17,7 +17,7 @@ RSpec.describe User, type: :model do
     subject(:user) { FactoryGirl.create(:user) }
 
     let(:order) { FactoryGirl.create(:order, user: user) }
-    let(:product_price) { FactoryGirl.create(:product_price, price_list: order.activity.price_list, amount: 1.23) }
+    let(:product_price) { FactoryGirl.create(:product_price, price_list: order.activity.price_list, price: 1.23) }
 
     before do
       FactoryGirl.create(:order_row, order: order, product: product_price.product, product_count: 1)

@@ -1,6 +1,9 @@
 class ProductPrice < ApplicationRecord
-  belongs_to :product, touch: true
-  belongs_to :price_list, touch: true
+  belongs_to :product
+  belongs_to :price_list
 
-  validates :amount, presence: true
+  validates :price, presence: true
+  validates :product_id, uniqueness: { scope: :price_list_id }
+
+  delegate :name, to: :product
 end

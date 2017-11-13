@@ -1,26 +1,62 @@
 .container
+  .row.py-4
+    .col-sm-12
+      h1 = 'Prijzen en producten'
 
-  h1 Price Lists
+      = content_tag :table, id: 'price_lists_table', class: 'table table-striped',
+        data: { price_lists: @recent_price_lists_json, products: @products_json }
 
-  table.table.table-striped
-    thead.table-header-rotated
-      tr
-        th = 'Product'
-        - @recent_price_lists.each do |price_list|
-          th.rotate
-            div = link_to price_list.name, price_list
-    tbody
-      - if @products
-        - @products.each do |product|
-          tr data={ object: 'product_price', attribute: 'amount' }
-            td = product.name
-            - @recent_price_lists.each do |price_list|
-              td
-                - if price_list.product_price_for(product).present?
-                  = best_in_place_if(price_list.product_price_for(product), price_list.product_price_for(product),
-                                     :amount, display_with: :number_to_currency, helper_options: { unit: '€' },
-                                     data: { price_list: price_list.name, product: product })
-      - else
-        tr = 'No products'
+        thead.table-header-rotated.products
+          tr
+            th.products-id scope='col' = 'ID'
+            th.products-name scope='col' = 'Product'
+            th.products-alcohol.rotate scope='col'
+              div = '18+'
+            th.products-pricelist.rotate scope='col' v-for='priceList in priceLists'
+              .center-text v-bind:title='"Lijst ID: " + priceList.id' = '{{ priceList.name }}'
+            th.products-actions v-if='priceLists.length > 0'
 
-  hr
+        tbody
+          tr.products-product{ v-for='product in products' v-on:dblclick='editProduct(product)'
+                               @keyup.esc='cancelEditProduct(product)' @keyup.enter='saveProduct(product)'}
+
+            template v-if='product.editing'
+              td.products-cancel-edit v-if='product.id' title='Cancel' v-on:click='cancelEditProduct(product)'
+                = fa_icon 'undo lg'
+              td.products-cancel-new v-else='' title='Remove' v-on:click='cancelEditProduct(product)'
+                = fa_icon 'times lg'
+
+              td.products-new colspan='2'
+                .input-group
+                  input.form-control type='text' v-model='product.name' placeholder='Productnaam'
+                  .input-group-addon
+                    label.form-check-label
+                      input.form-check-input type='checkbox' v-model='product.requires_age'
+                      span = '18+'
+
+              td.products-new-price v-for='priceList in priceLists'
+                .input-group
+                  input.form-control type='text' v-model='findPrice(product, priceList).price' placeholder='2.18'
+              td.products-save-new v-on:click='saveProduct(product)'
+                span.btn.btn-primary = fa_icon 'floppy-o lg'
+
+            template v-else=''
+              th scope='row' = '{{ product.id }}'
+              td  = '{{ product.name }}'
+              td.center-text
+                span v-if='product.requires_age' = fa_icon 'check'
+
+              td.product-price.center-text v-for='priceList in priceLists'
+                span v-bind:title='product.name + " in lijst " + priceList.name'
+                  = '{{ productPriceToCurrency(findPrice(product, priceList)) }}'
+
+              td.products-new-edit-button v-if='priceLists.length > 0'
+                button.btn.btn-sm.btn-outline-secondary v-on:click='editProduct(product)'
+                  = fa_icon 'pencil'
+
+          tr
+            td colspan='3'
+              button.btn.btn-secondary.btn-sm.btn-block.products-button-new v-on:click.prevent='newProduct'
+                = 'Voeg een nieuw product toe'
+                = fa_icon 'plus-square', class: 'pl-2'
+            td colspan='5'

@@ -18,7 +18,7 @@
         td = 'Timestamp'
         td = 'Activity'
         td = 'Product'
-        td = 'Amount'
+        td = 'Order total'
     tbody
       - @model.orders.order(:created_at).each do |order|
         tr
