@@ -6,7 +6,7 @@ class PriceListsController < ApplicationController
 
   def index
     recent_price_lists = PriceList.limit(6)
-    products = Product.all.includes(:product_prices)
+    products = Product.all.order(:id).includes(:product_prices)
 
     @recent_price_lists_json = recent_price_lists.to_json(except: %i[created_at updated_at deleted_at])
     @products_json = products.to_json(include: { product_prices: { except: %i[created_at updated_at deleted_at] } },

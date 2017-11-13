@@ -45,9 +45,18 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         saveProduct: function(product) {
-          if (!product.id) { // New product
-            this.sanitizeProductInput(product);
+          this.sanitizeProductInput(product);
+          if (product.id) { // Existing product
+            this.$http.put(`/products/${product.id}.json`, { product: product }).then( (response) => {
+                var newProduct = response.data;
+                newProduct.editing = false;
 
+                this.$set(this.products, this.products.indexOf(product), newProduct);
+              }, (response) => {
+                this.errors = response.data.errors;
+              }
+            );
+          } else {
             this.$http.post('/products.json', { product: product }).then( (response) => {
                 var index = this.products.indexOf(product);
                 this.products.splice(index, 1);
@@ -60,12 +69,20 @@ document.addEventListener('turbolinks:load', () => {
                 this.errors = response.data.errors;
               }
             );
-          } else { // Update existing product
-            product.editing = true;
           }
         },
 
         sanitizeProductInput: function (product) {
+          this.$delete(product, 'editing');
+          this.$delete(product, '_beforeEditingCache');
+
+          if (product.id) {
+            this.$delete(product.product_prices, 'product_id');
+            this.$delete(product.product_prices, 'price_list_id');
+          } else {
+            this.$delete(product, 'id');
+          }
+
           this.$set(product, 'product_prices_attributes', {});
 
           product.product_prices.forEach((price, index) => {
@@ -78,14 +95,18 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         editProduct: function(product) {
-          // TODO: save original state
+          // Save original state
+          product._beforeEditingCache = Object.assign({}, product);
+
           product.editing = true;
           return product;
         },
 
         cancelEditProduct: function(product) {
           if (product.id) { // Product already exists on server
-            // TODO: reset object to original state
+            // Reset object to original state
+            Object.assign(product, product._beforeEditingCache);
+
             product.editing = false;
           } else {
             var index = this.products.indexOf(product);
