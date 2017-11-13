@@ -41,7 +41,8 @@ class ProductsController < ApplicationController
   end
 
   def permitted_attributes
-    params.require(:product).permit(%i[name contains_alcohol], product_prices_attributes: %i[id product_id price_list_id price])
+    params.require(:product)
+          .permit(%i[name requires_age], product_prices_attributes: %i[id product_id price_list_id price])
   end
 
   def json_includes

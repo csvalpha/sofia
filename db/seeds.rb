@@ -1,16 +1,16 @@
 products = []
 product_names_with_alcohol = ['Bier (glas)', 'Bier (pul)', 'Bier (pitcher)', 'Speciaalbier', 'Sterke drank',
-                              'Dure Whisky', 'Weduwe Joustra Beerenburg', 'Wijn (glas)', 'Wijn (fles)', '12+1']
+                              'Dure Whisky', 'Weduwe Joustra Beerenburg', 'Wijn (glas)', 'Wijn (fles)', '12+1',
+                              'Sigaar', 'Sigaar (duur)']
 
-product_names_without_alcohol = ['Fris', 'Fris (klein)', 'Red Bull', 'Tosti', 'Nootjes', 'Chips', 'Sigaar',
-                                 'Sigaar (duur)']
+product_names_without_alcohol = ['Fris', 'Fris (klein)', 'Red Bull', 'Tosti', 'Nootjes', 'Chips']
 
 product_names_with_alcohol.each do |name|
-  products << Product.create(name: name, contains_alcohol: true)
+  products << Product.create(name: name, requires_age: true)
 end
 
 product_names_without_alcohol.each do |name|
-  products << Product.create(name: name, contains_alcohol: false)
+  products << Product.create(name: name, requires_age: false)
 end
 
 activities = []
@@ -31,7 +31,7 @@ end
 
 activities.each do |activity|
   5.times do
-    FactoryGirl.create(:order, :with_items, products: activity.products, activity: activity, user: users.sample)
+    FactoryGirl.create(:order, :with_all_products, products: activity.products, activity: activity, user: users.sample)
   end
 end
 

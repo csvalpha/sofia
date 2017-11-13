@@ -2,7 +2,7 @@ class Product < ApplicationRecord
   has_many :product_prices, dependent: :destroy
   has_many :price_lists, through: :product_prices, dependent: :restrict_with_error
   validates :name, presence: true
-  validates :contains_alcohol, inclusion: [true, false]
+  validates :requires_age, inclusion: [true, false]
 
   accepts_nested_attributes_for :product_prices
 end

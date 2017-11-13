@@ -11,7 +11,7 @@
             th.products-id scope='col' = 'ID'
             th.products-name scope='col' = 'Product'
             th.products-alcohol.rotate scope='col'
-              div = 'Bevat alcohol'
+              div = '18+'
             th.products-pricelist.rotate scope='col' v-for='priceList in priceLists'
               .center-text v-bind:title='"Lijst ID: " + priceList.id' = '{{ priceList.name }}'
             th.products-actions v-if='priceLists.length > 0'
@@ -31,7 +31,7 @@
                   input.form-control type='text' v-model='product.name' placeholder='Productnaam'
                   .input-group-addon
                     label.form-check-label
-                      input.form-check-input type='checkbox' v-model='product.contains_alcohol'
+                      input.form-check-input type='checkbox' v-model='product.requires_age'
                       span = '18+'
 
               td.products-new-price v-for='priceList in priceLists'
@@ -44,7 +44,7 @@
               th scope='row' = '{{ product.id }}'
               td  = '{{ product.name }}'
               td.center-text
-                span v-if='product.contains_alcohol' = fa_icon 'check'
+                span v-if='product.requires_age' = fa_icon 'check'
 
               td.product-price.center-text v-for='priceList in priceLists'
                 span v-bind:title='product.name + " in lijst " + priceList.name'

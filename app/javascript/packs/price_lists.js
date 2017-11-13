@@ -37,7 +37,7 @@ document.addEventListener('turbolinks:load', () => {
         newProduct: function(index) {
           var newProduct = {
             name: '',
-            contains_alcohol: false,
+            requires_age: false,
             editing: true,
             product_prices: [],
           };
