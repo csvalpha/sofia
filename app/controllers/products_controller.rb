@@ -11,26 +11,18 @@ class ProductsController < ApplicationController
   def create
     @product = Product.new(permitted_attributes)
 
-    respond_to do |format|
-      if @product.save
-        format.html { redirect_to @product }
-        format.json { render json: @product, include: json_includes, except: json_exludes }
-      else
-        format.html { render :new }
-        format.json { render json: @product.errors, status: :unprocessable_entity }
-      end
+    if @product.save
+      render json: @product, include: json_includes, except: json_exludes
+    else
+      render json: @product.errors, status: :unprocessable_entity
     end
   end
 
   def update
-    respond_to do |format|
-      if @product.update(permitted_attributes)
-        format.html { redirect_to @product, notice: 'Team was successfully updated.' }
-        format.json { render json: @product, include: json_includes, except: json_exludes }
-      else
-        format.html { render :edit }
-        format.json { render json: @product.errors, status: :unprocessable_entity }
-      end
+    if @product.update(permitted_attributes)
+      render json: @product, include: json_includes, except: json_exludes
+    else
+      render json: @product.errors, status: :unprocessable_entity
     end
   end
 
