@@ -29,7 +29,6 @@ class ProductsController < ApplicationController
   end
 
   def permitted_attributes
-    params[:product][:product_prices_attributes] ||= params[:product].delete(:product_prices)
     params.require(:product).permit(%i[name contains_alcohol], product_prices_attributes: %i[price_list_id price])
   end
 end

@@ -10,54 +10,79 @@ document.addEventListener('turbolinks:load', () => {
 
   var element = document.getElementById('price_lists_table');
   if (element != null) {
-
     var priceLists = JSON.parse(element.dataset.priceLists);
     var products = JSON.parse(element.dataset.products);
+
+    // Make sure property exists before Vue sees the data
     products.forEach(p => p.editing = false);
 
-    var users = new Vue({
+    var vuePriceLists = new Vue({
       el: element,
-      data: function() {
+      data: () => {
         return { priceLists: priceLists, products: products };
       },
       methods: {
         findPrice: function(product, priceList) {
-          return product.product_prices.find(p => (p.product_id === product.id && p.price_list_id === priceList.id));
+          if (!product || !product.product_prices) {
+            return { price: null };
+          }
+          var price = product.product_prices.find(p => (p.product_id === product.id && p.price_list_id === priceList.id));
+          return price || product.product_prices.push({
+            product_id: product.id,
+            price_list_id: priceList.id,
+            price: null
+          });
         },
+
         newProduct: function(index) {
           var newProduct = {
             name: '',
-            contains_alcohol: true,
+            contains_alcohol: false,
             editing: true,
             product_prices: [],
           };
-          this.stubProductPrice(newProduct);
           return products.push(newProduct);
         },
+
         saveProduct: function(product) {
-          if (!product.id) {
+          if (!product.id) { // New product
+            this.sanitizeProductInput(product);
+
             this.$http.post('/products.json', { product: product }).then( (response) => {
                 var index = this.products.indexOf(product);
                 this.products.splice(index, 1);
 
                 var newProduct = response.data;
                 newProduct.editing = false;
-                this.stubProductPrice(newProduct);
-                this.products.push(Object.assign({}, newProduct));
+
+                this.products.push(newProduct);
               }, (response) => {
                 this.errors = response.data.errors;
               }
             );
-          } else {
-            console.log(product.product_prices[0].price);
+          } else { // Update existing product
             product.editing = true;
           }
         },
+
+        sanitizeProductInput: function (product) {
+          this.$set(product, 'product_prices_attributes', {});
+
+          product.product_prices.forEach((price, index) => {
+            if (price && price.price && price.price > 0) {
+              this.$set(product.product_prices_attributes, index, price);
+            }
+          });
+
+          this.$delete(product, 'product_prices');
+        },
+
         editProduct: function(product) {
           // TODO: save original state
           product.editing = true;
           return product;
         },
+
         cancelEditProduct: function(product) {
           if (product.id) { // Product already exists on server
             // TODO: reset object to original state
@@ -68,20 +93,10 @@ document.addEventListener('turbolinks:load', () => {
           }
           return products;
         },
-        productPriceValue: function(productPrice) {
-          return productPrice ? parseFloat(productPrice.price).toFixed(2) : null;
-        },
+
         productPriceToCurrency: function(productPrice) {
-          return productPrice ? `€${parseFloat(productPrice.price).toFixed(2)}` : '';
+          return (productPrice && productPrice.price) ? `€${parseFloat(productPrice.price).toFixed(2)}` : '';
         },
-        stubProductPrice: function(product) {
-          for (var i = 0, len = this.priceLists.length; i < len; i++) {
-            product.product_prices.push({
-              price_list_id: priceLists[i].id,
-              price: null,
-            });
-          }
-        }
       }
     });
   }
