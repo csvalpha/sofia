@@ -27,6 +27,7 @@ document.addEventListener('turbolinks:load', () => {
             return { price: null };
           }
           var price = product.product_prices.find(p => (p.product_id === product.id && p.price_list_id === priceList.id));
+
           return price || product.product_prices.push({
             product_id: product.id,
             price_list_id: priceList.id,
@@ -96,16 +97,18 @@ document.addEventListener('turbolinks:load', () => {
 
         editProduct: function(product) {
           // Save original state
-          product._beforeEditingCache = Object.assign({}, product);
+          product._beforeEditingCache = Vue.util.extend({}, product);
+          product.product_prices.forEach((pp, i) => {
+            product._beforeEditingCache.product_prices[i] = Vue.util.extend({}, pp);
+          });
 
           product.editing = true;
           return product;
         },
 
         cancelEditProduct: function(product) {
-          if (product.id) { // Product already exists on server
-            // Reset object to original state
-            Object.assign(product, product._beforeEditingCache);
+          if (product.id) {
+            this.$set(this.products, this.products.indexOf(product), product._beforeEditingCache);
 
             product.editing = false;
           } else {
