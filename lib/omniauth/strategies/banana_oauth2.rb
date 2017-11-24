@@ -17,7 +17,7 @@ module OmniAuth
         {
           uid: raw_info['id'],
           username: raw_info['attributes']['username'],
-          name: raw_info['attributes']['username']
+          name: full_name(raw_info)
         }
       end
 
@@ -29,6 +29,12 @@ module OmniAuth
       # https://github.com/intridea/omniauth-oauth2/issues/81
       def callback_url
         options[:redirect_uri] || (full_host + script_name + callback_path)
+      end
+
+      def full_name(raw_info)
+        [raw_info['attributes']['first-name'],
+         raw_info['attributes']['last-name-prefix'],
+         raw_info['attributes']['last-name']].reject(&:blank?).join(' ')
       end
     end
   end

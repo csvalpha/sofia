@@ -4,11 +4,18 @@ Rails.application.routes.draw do
   resources :activities, only: %i[index show create update destroy] do
     resources :orders, only: %i[index new create destroy]
   end
+
   resources :price_lists, only: %i[index show create update destroy] do
     get :autocomplete_price_list_name, on: :collection
   end
+
+  resources :users, only: %i[index show create update destroy] do
+    collection do
+      get :refresh_user_list
+    end
+  end
+
   resources :products, only: %i[index show create update destroy], defaults: { format: :json }
-  resources :users, only: %i[index show create update destroy]
   resources :credit_mutations, only: %i[index show create update destroy]
   resources :product_price, only: %i[show update]
 

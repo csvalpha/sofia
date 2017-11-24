@@ -3,10 +3,10 @@
     .col-sm-6
 
       h1 = 'Alpha Tomato 🍅'
-
       p = 'Welcome to StreepSis!'
 
     - if current_user
+
       .col-sm-6
         .card
           h4.card-header
@@ -37,7 +37,6 @@
                       = activity.title
                       br
                       small = activity.humanized_start_time
-
 
     - else
       = render partial: 'partials/login_prompt'

@@ -4,8 +4,10 @@ class User < ApplicationRecord
   has_many :credit_mutations, dependent: :destroy
   validates :name, presence: true
 
+  scope :in_banana, (-> { where(provider: 'banana_oauth2') })
+
   def credit
-    credit = credit_mutations.sum(:amount)
+    credit = credit_mutations.map(&:amount).sum
     orders.each do |order|
       credit -= order.order_total
     end

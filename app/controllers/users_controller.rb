@@ -1,12 +1,60 @@
 class UsersController < ApplicationController
   before_action :set_model, only: %i[show update destroy]
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: :load_users_from_api
+
+  def index
+    @model = User.all.includes(model_includes)
+  end
+
+  def refresh_user_list
+    save_users_from_banana
+    redirect_to users_path
+  end
+
+  def save_users_from_banana
+    token_response = RestClient.post 'http://localhost:3000/oauth/token',
+                                     grant_type: 'client_credentials',
+                                     client_id: Rails.application.secrets.fetch(:banana_client_id),
+                                     client_secret: Rails.application.secrets.fetch(:banana_client_secret)
+
+    token = JSON.parse(token_response)['access_token']
+    save_users(users_json(token)) if token
+  end
 
   def model_class
     User
   end
 
   def model_includes
-    [:orders]
+    [:orders, :credit_mutations, orders: :order_rows]
+  end
+
+  private
+
+  def users_json(token)
+    JSON.parse(RestClient.get('http://localhost:3000/users',
+                              'Accept' => 'application/vnd.csvalpha.nl; version=1',
+                              'Authorization' => "Bearer #{token}"))['data']
+  end
+
+  def save_users(users_json)
+    available_users = []
+    users_json.each do |user_json|
+      available_users << find_or_create_user(user_json)
+    end
+    archive_unavailable_users(available_users)
+  end
+
+  def find_or_create_user(user_json)
+    fields = user_json['attributes']
+    User.find_or_create_by(uid: user_json['id']) do |u|
+      u.name = [fields['first-name'], fields['last-name-prefix'],
+                fields['last-name']].reject(&:blank?).join(' ')
+      u.provider = 'banana_oauth2'
+    end
+  end
+
+  def archive_unavailable_users(available_users)
+    (User.in_banana - available_users).map(&:destroy)
   end
 end
