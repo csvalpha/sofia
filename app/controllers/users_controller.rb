@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_model, only: %i[show update destroy]
-  before_action :authenticate_user!, except: :load_users_from_api
+  before_action :authenticate_user!
 
   def index
     @model = User.all.includes(model_includes)
@@ -12,10 +12,10 @@ class UsersController < ApplicationController
   end
 
   def save_users_from_banana
-    token_response = RestClient.post 'http://localhost:3000/oauth/token',
-                                     grant_type: 'client_credentials',
-                                     client_id: Rails.application.secrets.fetch(:banana_client_id),
-                                     client_secret: Rails.application.secrets.fetch(:banana_client_secret)
+    options = { grant_type: 'client_credentials',
+                client_id: Rails.application.secrets.fetch(:banana_client_id),
+                client_secret: Rails.application.secrets.fetch(:banana_client_secret) }
+    token_response = RestClient.post 'http://localhost:3000/oauth/token', options
 
     token = JSON.parse(token_response)['access_token']
     save_users(users_json(token)) if token
