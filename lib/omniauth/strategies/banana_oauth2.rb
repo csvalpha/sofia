@@ -17,7 +17,10 @@ module OmniAuth
         {
           uid: raw_info['id'],
           username: raw_info['attributes']['username'],
-          name: full_name(raw_info)
+          name: full_name(raw_info),
+          avatar_url: raw_info['attributes']['avatar-url'],
+          avatar_thumb_url: raw_info['attributes']['avatar-thumb-url'],
+          memberships: memberships_from_json(raw_info['relationships']['groups']['data'])
         }
       end
 
@@ -35,6 +38,10 @@ module OmniAuth
         User.full_name_from_attributes(raw_info['attributes']['first-name'],
                                        raw_info['attributes']['last-name-prefix'],
                                        raw_info['attributes']['last-name'])
+      end
+
+      def memberships_from_json(json)
+        json.map { |membership| membership['id'] }
       end
     end
   end
