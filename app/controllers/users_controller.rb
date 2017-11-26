@@ -7,18 +7,22 @@ class UsersController < ApplicationController
   end
 
   def refresh_user_list
-    save_users_from_banana
+    available_users = []
+    users_json.each do |user_json|
+      available_users << find_or_create_user(user_json)
+    end
+    archive_unavailable_users(available_users)
     redirect_to users_path
   end
 
-  def save_users_from_banana
+  def api_token
+    return @token if @token
     options = { grant_type: 'client_credentials',
                 client_id: Rails.application.secrets.fetch(:banana_client_id),
                 client_secret: Rails.application.secrets.fetch(:banana_client_secret) }
     token_response = RestClient.post 'http://localhost:3000/oauth/token', options
 
-    token = JSON.parse(token_response)['access_token']
-    save_users(users_json(token)) if token
+    @token = JSON.parse(token_response)['access_token']
   end
 
   def model_class
@@ -31,18 +35,10 @@ class UsersController < ApplicationController
 
   private
 
-  def users_json(token)
+  def users_json
     JSON.parse(RestClient.get('http://localhost:3000/users',
                               'Accept' => 'application/vnd.csvalpha.nl; version=1',
-                              'Authorization' => "Bearer #{token}"))['data']
-  end
-
-  def save_users(users_json)
-    available_users = []
-    users_json.each do |user_json|
-      available_users << find_or_create_user(user_json)
-    end
-    archive_unavailable_users(available_users)
+                              'Authorization' => "Bearer #{api_token}"))['data']
   end
 
   def find_or_create_user(user_json)
