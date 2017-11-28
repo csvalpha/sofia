@@ -7,11 +7,9 @@ class UsersController < ApplicationController
   end
 
   def refresh_user_list
-    available_users = []
     users_json.each do |user_json|
-      available_users << find_or_create_user(user_json)
+      find_or_create_user(user_json)
     end
-    archive_unavailable_users(available_users)
     redirect_to users_path
   end
 
@@ -49,9 +47,5 @@ class UsersController < ApplicationController
                                               fields['last-name'])
       u.provider = 'banana_oauth2'
     end
-  end
-
-  def archive_unavailable_users(available_users)
-    (User.in_banana - available_users).map(&:destroy)
   end
 end
