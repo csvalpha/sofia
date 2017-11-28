@@ -3,7 +3,7 @@ class User < ApplicationRecord
   has_many :orders, dependent: :destroy
   has_many :credit_mutations, dependent: :destroy
   validates :name, presence: true
-  validates :uid, uniqueness: true
+  validates :uid, uniqueness: true, allow_blank: true
 
   scope :in_banana, (-> { where(provider: 'banana_oauth2') })
 
