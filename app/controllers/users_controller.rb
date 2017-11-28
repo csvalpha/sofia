@@ -44,8 +44,9 @@ class UsersController < ApplicationController
   def find_or_create_user(user_json)
     fields = user_json['attributes']
     User.find_or_create_by(uid: user_json['id']) do |u|
-      u.name = [fields['first-name'], fields['last-name-prefix'],
-                fields['last-name']].reject(&:blank?).join(' ')
+      u.name = User.full_name_from_attributes(fields['first-name'],
+                                              fields['last-name-prefix-name'],
+                                              fields['last-name'])
       u.provider = 'banana_oauth2'
     end
   end

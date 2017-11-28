@@ -19,4 +19,8 @@ class User < ApplicationRecord
       user.name = auth[:info][:name]
     end
   end
+
+  def self.full_name_from_attributes(first_name, last_name_prefix, last_name)
+    [first_name, last_name_prefix, last_name].reject(&:blank?).join(' ')
+  end
 end
