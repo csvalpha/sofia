@@ -8,11 +8,7 @@ class User < ApplicationRecord
   scope :in_banana, (-> { where(provider: 'banana_oauth2') })
 
   def credit
-    credit = credit_mutations.map(&:amount).sum
-    orders.each do |order|
-      credit -= order.order_total
-    end
-    credit
+    credit_mutations.map(&:amount).sum - orders.map(&:order_total).sum
   end
 
   def self.from_omniauth(auth)

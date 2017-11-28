@@ -8,14 +8,6 @@ class Order < ApplicationRecord
   validates :activity, :user, presence: true
 
   def order_total
-    @sum ||= calculate_total
-  end
-
-  def calculate_total
-    sum = 0
-    order_rows.each do |row|
-      sum += row.row_total
-    end
-    sum
+    @sum ||= order_rows.map(&:row_total).sum
   end
 end
