@@ -32,9 +32,9 @@ module OmniAuth
       end
 
       def full_name(raw_info)
-        User.full_name_from_attributes([raw_info['attributes']['first-name'],
-                                        raw_info['attributes']['last-name-prefix'],
-                                        raw_info['attributes']['last-name']])
+        User.full_name_from_attributes(raw_info['attributes']['first-name'],
+                                       raw_info['attributes']['last-name-prefix'],
+                                       raw_info['attributes']['last-name'])
       end
     end
   end
