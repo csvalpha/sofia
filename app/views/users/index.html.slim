@@ -3,10 +3,11 @@
     .col-sm-12.d-flex.justify-content-between
       h1 = 'Gebruikers'
 
-      span
-        = link_to refresh_user_list_users_path, class: 'btn btn-primary btn-sm'
-          = fa_icon 'refresh', class: 'mr-1'
-          = 'Sync users'
+      - if current_user&.treasurer?
+        span
+          = link_to refresh_user_list_users_path, class: 'btn btn-primary btn-sm'
+            = fa_icon 'refresh', class: 'mr-1'
+            = 'Sync users'
 
   .row
     .col-sm-12

@@ -1,34 +1,66 @@
 .container
+  .row.justify-content-between.py-3
+    .col-sm-12.col-lg-6
 
-  h1 = "User #{@model.name}"
+      h1 = fa_icon 'user', class: 'mr-2', text: @user.name
 
-  ul
-    li = @model.id
-    li = @model.name
-    li = @model.created_at.strftime('%d-%M-%y %H:%M')
-    li = @model.updated_at.strftime('%d-%M-%y %H:%M')
-    li = number_to_currency(@model.credit, unit: '€')
+      table.table.table-sm
+        tbody
+          tr
+            th scope='row' = 'Aangemaakt op'
+            td = @user.created_at.strftime('%d %B %Y %H:%M')
+          tr
+            th scope='row' = 'Geüpdate op'
+            td = @user.updated_at.strftime('%d %B %Y %H:%M')
+          tr
+            th scope='row' = 'Account bron'
+            td = @user.provider || 'Handmatig aangemaakt'
 
-  h3 = 'Orders'
+    .card.col-sm-8.col-lg-6
+      .card-body
+        button.btn.btn-small.pull-right type= 'button' data-toggle= 'collapse' data-target= 'roleSyncDescription'
+          = fa_icon 'question-circle'
 
-  table.table
-    thead
-      tr
-        td = 'ID'
-        td = 'Timestamp'
-        td = 'Activity'
-        td = 'Product'
-        td = 'Order total'
-    tbody
-      - @model.orders.order(:created_at).each do |order|
-        tr
-          td
-            = order.id
-          td
-            = order.created_at
-          td
-            = link_to order.activity.title, order.activity
-          td
-            / = link_to product.name, order.product
-          td
-            = number_to_currency(order.order_total, unit: '€')
+        h2.card-title
+          = 'Rollen'
+
+        p.card-text.collapse id='roleSyncDescription'
+          em = 'Rollen worden gesynchroniseerd als de gebruiker zelf inlogt'
+
+        p.card-text
+          = 'Je rechten zijn afhankelijk van de rollen die je in het streepsysteem hebt. '
+          = 'Je rollen zijn afhankelijk van de commissies waar je in zit.'
+
+        - if @user.roles_users.any?
+          ul
+            - @user.roles_users.each do |role|
+              li = role.name
+        - else
+          p
+            = 'Deze gebruiker heeft geen speciale rollen binnen het streepsysteem.'
+
+  hr
+
+  .row.py-3
+    .col-sm-12
+      h2
+        = 'Bestellingen'
+      table.table.table-striped
+        thead
+          tr
+            th scope='col'= '#'
+            th scope='col'= 'Timestamp'
+            th scope='col'= 'Order total'
+
+        tbody
+          - if @user.orders.empty?
+            tr
+              td.text-center colspan='3'
+                p.my-1
+                  em = 'Deze gebruiker heeft nog geen bestellingen gedaan'
+          - else
+            - @user.orders.each do |order|
+              tr
+                th scope='row' = order.id
+                td = order.created_at.strftime('%H:%M:%S - %d %b')
+                td = number_to_currency(order.order_total, unit: '€')

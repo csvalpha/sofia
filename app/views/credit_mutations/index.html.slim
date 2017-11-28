@@ -14,8 +14,8 @@
               th scope='col' = 'Decription'
               th scope='col' = 'Activiteit'
           tbody
-            - if @model
-              - @model.each do |mutation|
+            - if @mutations
+              - @mutations.each do |mutation|
                 tr
                   td = link_to mutation.user.name, mutation.user
                   td = number_to_currency(mutation.amount, unit: '€')

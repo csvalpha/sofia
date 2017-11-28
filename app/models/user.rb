@@ -14,6 +14,18 @@ class User < ApplicationRecord
     credit_mutations.map(&:amount).sum - orders.map(&:order_total).sum
   end
 
+  def roles
+    @roles ||= roles_users.includes(:role).map(&:role).flatten.uniq
+  end
+
+  def treasurer?
+    roles.map(&:name).include?('Treasurer')
+  end
+
+  def main_bartender?
+    roles.map(&:name).include?('Main Bartender')
+  end
+
   def update_role(memberships)
     return unless memberships&.any?
     my_roles = []

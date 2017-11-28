@@ -1,12 +1,22 @@
 class UsersController < ApplicationController
-  before_action :set_model, only: %i[show update destroy]
   before_action :authenticate_user!
+
+  after_action :verify_authorized
 
   def index
     @model = User.all.includes(model_includes)
+    authorize @model
+  end
+
+  def show
+    @user = User.includes(model_includes).find(params[:id])
+    authorize @user
   end
 
   def refresh_user_list
+    authorize User
+
+    available_users = []
     users_json.each do |user_json|
       find_or_create_user(user_json)
     end

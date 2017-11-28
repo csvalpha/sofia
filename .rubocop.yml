@@ -2,6 +2,7 @@ require: rubocop-rspec
 
 AllCops:
   TargetRailsVersion: 5.1
+  TargetRubyVersion: 2.4
   Include:
     - '**/Capfile'
     - '**/Gemfile'

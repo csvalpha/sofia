@@ -1,17 +1,21 @@
 class ActivitiesController < ApplicationController
-  before_action :set_model, only: %i[show update destroy]
   before_action :authenticate_user!
+  after_action :verify_authorized
 
   def index
+    @activities = Activity.includes(model_includes)
+    authorize @activities
+
     @activity = Activity.new(
       start_time: (Time.zone.now + 2.hours).beginning_of_hour,
       end_time: (Time.zone.now + 6.hours).beginning_of_hour
     )
-    @model = Activity.includes(model_includes)
   end
 
   def create
     @activity = Activity.new(permitted_attributes)
+    authorize @activity
+
     if @activity.save
       redirect_to activities_url, notice: 'Successfully created activity.'
     else
@@ -20,12 +24,14 @@ class ActivitiesController < ApplicationController
     end
   end
 
-  def model_class
-    Activity
+  def show
+    @activity = Activity.includes(model_includes).find(params[:id])
+
+    authorize @activity
   end
 
   def model_includes
-    [:price_list, orders: :user]
+    [:price_list, orders: %i[user order_rows]]
   end
 
   private
