@@ -1,19 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe Activity, type: :model do
-  subject(:activity) { FactoryGirl.build_stubbed(:activity) }
+  subject(:activity) { FactoryBot.build_stubbed(:activity) }
 
   describe '#valid' do
     it { expect(activity).to be_valid }
 
     context 'when without a title' do
-      subject(:activity) { FactoryGirl.build_stubbed(:activity, title: nil) }
+      subject(:activity) { FactoryBot.build_stubbed(:activity, title: nil) }
 
       it { expect(activity).not_to be_valid }
     end
 
     context 'when without a price list' do
-      subject(:activity) { FactoryGirl.build_stubbed(:activity, price_list: nil) }
+      subject(:activity) { FactoryBot.build_stubbed(:activity, price_list: nil) }
 
       it { expect(activity).not_to be_valid }
     end
@@ -21,12 +21,12 @@ RSpec.describe Activity, type: :model do
 
   describe '#upcoming' do
     let(:past_activity) do
-      FactoryGirl.create(:activity, start_time: 2.days.ago,
+      FactoryBot.create(:activity, start_time: 2.days.ago,
                                     end_time: 1.day.ago)
     end
 
     subject(:future_activity) do
-      FactoryGirl.create(:activity, start_time: 1.day.from_now,
+      FactoryBot.create(:activity, start_time: 1.day.from_now,
                                     end_time: 2.days.from_now)
     end
 
@@ -36,7 +36,7 @@ RSpec.describe Activity, type: :model do
 
   describe '#humanized_time' do
     subject(:activity) do
-      FactoryGirl.build_stubbed(:activity, start_time: '2017-12-20'.to_date,
+      FactoryBot.build_stubbed(:activity, start_time: '2017-12-20'.to_date,
                                            end_time: '2017-12-21'.to_date)
     end
 

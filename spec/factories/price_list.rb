@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :price_list do
     name { Faker::Book.title }
 

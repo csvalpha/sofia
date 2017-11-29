@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :order_row do
     order
     product_count { rand(1...5) }

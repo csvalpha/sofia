@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :product_price do
     price { rand(0..5.00) }
     product
