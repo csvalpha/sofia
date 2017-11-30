@@ -16,16 +16,20 @@
             th scope='row' = 'Account bron'
             td = @user.provider || 'Handmatig aangemaakt'
 
+      h2
+        = "Saldo: #{number_to_currency(@user.credit, unit: '€')}"
+
     .card.col-sm-8.col-lg-6
       .card-body
-        button.btn.btn-small.pull-right type= 'button' data-toggle= 'collapse' data-target= 'roleSyncDescription'
+        button.btn.btn-small.pull-right (type= 'button' data-toggle= 'collapse'
+          data-target= '#roleSyncDescription' aria-controls='roleSyncDescription' aria-expanded='false')
           = fa_icon 'question-circle'
 
         h2.card-title
           = 'Rollen'
 
-        p.card-text.collapse id='roleSyncDescription'
-          em = 'Rollen worden gesynchroniseerd als de gebruiker zelf inlogt'
+        p.alert.alert-light.card-text.collapse id='roleSyncDescription'
+          = 'Rollen worden gesynchroniseerd als de gebruiker zelf inlogt'
 
         p.card-text
           = 'Je rechten zijn afhankelijk van de rollen die je in het streepsysteem hebt. '
@@ -41,26 +45,64 @@
 
   hr
 
-  .row.py-3
+  .row
     .col-sm-12
-      h2
-        = 'Bestellingen'
-      table.table.table-striped
-        thead
-          tr
-            th scope='col'= '#'
-            th scope='col'= 'Timestamp'
-            th scope='col'= 'Order total'
+      span.pull-right
+        .btn.btn-secondary
+          = fa_icon 'plus', class: 'mr-2'
+          = 'Nieuwe mutatie'
 
-        tbody
-          - if @user.orders.empty?
-            tr
-              td.text-center colspan='3'
-                p.my-1
-                  em = 'Deze gebruiker heeft nog geen bestellingen gedaan'
-          - else
-            - @user.orders.each do |order|
+      ul.nav.nav-tabs role='tablist' id='userTabs'
+        li.nav-item
+          a.nav-link.active (id='orders-tab' data-toggle="tab" href="#orders" role="tab"
+            aria-controls="orders" aria-selected="true")
+            = 'Bestellingen'
+        li.nav-item
+          a.nav-link (id='creditMutations-tab' data-toggle="tab" href="#creditMutations" role="tab"
+            aria-controls="creditMutations" aria-selected="false")
+            = 'Saldomutaties'
+
+      .tab-content.p-2 id='userTabsContent'
+        .tab-pane.show.active id='orders' role='tabpanel' aria-labelledby='orders-tab'
+          table.table.table-striped
+            thead
               tr
-                th scope='row' = order.id
-                td = order.created_at.strftime('%H:%M:%S - %d %b')
-                td = number_to_currency(order.order_total, unit: '€')
+                th scope='col'= '#'
+                th scope='col'= 'Datum'
+                th scope='col'= 'bedrag'
+
+            tbody
+              - if @user.orders.empty?
+                tr
+                  td.text-center colspan='3'
+                    p.my-1
+                      em = 'Deze gebruiker heeft nog geen bestellingen gedaan'
+              - else
+                - @user.orders.each do |order|
+                  tr
+                    th scope='row' = order.id
+                    td = order.created_at.strftime('%H:%M:%S - %d %b')
+                    td = number_to_currency(order.order_total, unit: '€')
+
+        .tab-pane id='creditMutations' role='tabpanel' aria-labelledby='creditMutations-tab'
+          table.table.table-striped
+            thead
+              tr
+                th scope='col'= '#'
+                th scope='col'= 'Datum'
+                th scope='col'= 'Beschrijving'
+                th scope='col'= 'Bedrag'
+
+            tbody
+              - if @user.credit_mutations.empty?
+                tr
+                  td.text-center colspan='3'
+                    p.my-1
+                      em = 'Deze gebruiker heeft nog saldomutaties'
+              - else
+                - @user.credit_mutations.each do |mutation|
+                  tr
+                    th scope='row' = mutation.id
+                    td = mutation.created_at.strftime('%H:%M:%S - %d %b')
+                    td = mutation.description
+                    td = number_to_currency(mutation.amount, unit: '€')
