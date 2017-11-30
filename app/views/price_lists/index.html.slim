@@ -21,10 +21,9 @@
                                @keyup.esc='cancelEditProduct(product)' @keyup.enter='saveProduct(product)'}
 
             template v-if='product.editing'
-              td.products-cancel-edit v-if='product.id' title='Cancel' v-on:click='cancelEditProduct(product)'
-                = fa_icon 'undo lg'
-              td.products-cancel-new v-else='' title='Remove' v-on:click='cancelEditProduct(product)'
-                = fa_icon 'times lg'
+              td.products-cancel-edit v-on:click='cancelEditProduct(product)'
+                span v-if='product.id' title='Cancel' = fa_icon 'undo lg'
+                span v-else='' title='Remove' = fa_icon 'times lg'
 
               td.products-new colspan='2'
                 .input-group

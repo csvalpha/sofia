@@ -31,7 +31,8 @@ end
 
 activities.each do |activity|
   5.times do
-    FactoryGirl.create(:order, :with_all_products, products: activity.products, activity: activity, user: users.sample)
+    FactoryGirl.create(:order, :with_items,
+                       products: activity.products.sample(5), activity: activity, user: users.sample)
   end
 end
 
