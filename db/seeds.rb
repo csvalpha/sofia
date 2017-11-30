@@ -32,7 +32,7 @@ end
 activities.each do |activity|
   5.times do
     FactoryBot.create(:order, :with_items,
-                       products: activity.products.sample(5), activity: activity, user: users.sample)
+                      products: activity.products.sample(5), activity: activity, user: users.sample)
   end
 end
 
