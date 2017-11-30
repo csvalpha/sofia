@@ -16,7 +16,6 @@ class UsersController < ApplicationController
   def refresh_user_list
     authorize User
 
-    available_users = []
     users_json.each do |user_json|
       find_or_create_user(user_json)
     end

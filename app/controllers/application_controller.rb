@@ -10,4 +10,12 @@ class ApplicationController < ActionController::Base
   def user_not_authorized
     head :forbidden
   end
+
+  def records
+    @objects ||= model_class.all
+  end
+
+  def model_includes
+    []
+  end
 end
