@@ -15,7 +15,7 @@
             th scope='col' = 'Created at'
             th scope='col' = 'Updated at'
         tbody
-          - @model.each do |activity|
+          - @activities.each do |activity|
             tr
               td
                 = link_to activity.title, activity

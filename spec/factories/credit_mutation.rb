@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :credit_mutation do
     description { Faker::Space.agency }
     user

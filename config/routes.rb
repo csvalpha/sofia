@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   end
 
   resources :products, only: %i[index show create update destroy], defaults: { format: :json }
-  resources :credit_mutations, only: %i[index show create update destroy]
+  resources :credit_mutations, only: %i[create]
   resources :product_price, only: %i[show update]
 
   devise_scope :user do

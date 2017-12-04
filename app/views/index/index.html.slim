@@ -5,6 +5,22 @@
       h1 = 'Alpha Tomato 🍅'
       p = 'Welcome to StreepSis!'
 
+      - if current_user
+        .card
+          h5.card-header = "Welkom, #{current_user.name}"
+          .card-body
+            p.card-text
+              strong = 'Dit zijn jouw rollen in het streepsysteem'
+
+            - if current_user.roles_users.any?
+              ul
+                - current_user.roles_users.each do |role|
+                  li = role.name
+            - else
+              p
+                = 'Je hebt geen speciale rollen binnen het streepsysteem, '
+                = 'je kan hier wel je saldo en bestelgeschiedenis zien'
+
     - if current_user
 
       .col-sm-6

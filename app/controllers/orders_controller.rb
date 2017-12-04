@@ -2,7 +2,11 @@ class OrdersController < ApplicationController
   before_action :set_model, only: %i[index new create]
   before_action :authenticate_user!
 
+  after_action :verify_authorized
+
   def index
+    authorize Order
+
     @product_prices = @activity.price_list.product_price.includes(:product)
     render layout: 'order_screen'
   end

@@ -1,10 +1,8 @@
 class CreditMutationsController < ApplicationController
-  before_action :set_model, only: %i[show update destroy]
   before_action :authenticate_user!
+  after_action :verify_authorized
 
-  def model_class
-    CreditMutation
-  end
+  def create; end
 
   def model_includes
     [:user]

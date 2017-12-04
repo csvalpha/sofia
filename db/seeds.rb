@@ -15,27 +15,27 @@ end
 
 activities = []
 4.times do
-  activities << FactoryGirl.create(:activity)
+  activities << FactoryBot.create(:activity)
 end
 
 users = []
 5.times do
-  users << FactoryGirl.create(:user)
+  users << FactoryBot.create(:user)
 end
 
 activities.each do |activity|
   products.each do |product|
-    FactoryGirl.create(:product_price, product: product, price_list: activity.price_list)
+    FactoryBot.create(:product_price, product: product, price_list: activity.price_list)
   end
 end
 
 activities.each do |activity|
   5.times do
-    FactoryGirl.create(:order, :with_items,
-                       products: activity.products.sample(5), activity: activity, user: users.sample)
+    FactoryBot.create(:order, :with_items,
+                      products: activity.products.sample(5), activity: activity, user: users.sample)
   end
 end
 
 users.each do |user|
-  FactoryGirl.create_list(:credit_mutation, 3, user: user)
+  FactoryBot.create_list(:credit_mutation, 3, user: user)
 end

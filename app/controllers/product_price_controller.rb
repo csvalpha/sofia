@@ -2,6 +2,8 @@ class ProductPriceController < ApplicationController
   before_action :set_model, only: %i[show update]
   before_action :authenticate_user!
 
+  after_action :verify_authorized
+
   def show
     render json: @model
   end
@@ -12,10 +14,6 @@ class ProductPriceController < ApplicationController
     else
       respond_bip_error(@model)
     end
-  end
-
-  def model_class
-    ProductPrice
   end
 
   private

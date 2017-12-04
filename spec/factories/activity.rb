@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :activity do
     title { Faker::Book.title }
     start_time { Faker::Time.between(1.day.ago, Time.zone.today).beginning_of_minute }
