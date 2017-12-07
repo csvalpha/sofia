@@ -15,6 +15,6 @@ module Tomato
     config.i18n.available_locales = %i[en nl]
     config.i18n.fallbacks = [:en]
 
-    config.x.banana_host_url = Rails.env.production? ? 'https://csvalpha.nl/api' : 'http://localhost:3000'
+    config.x.banana_host_url = ENV['BANANA_HOST_URL']
   end
 end
