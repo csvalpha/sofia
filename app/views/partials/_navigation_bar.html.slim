@@ -24,8 +24,10 @@ nav.navbar.navbar-expand-md.navbar-dark.bg-dark
             = fa_icon 'beer', class: 'mr-2', text: 'Prijzen en producten'
 
     - if current_user
-      .navbar-text.mr-1
-        = fa_icon('user-circle-o', class: 'mr-1')
-        = current_user.name
+      .navbar-nav
+        = nav_link current_user, class: 'nav-item'
+          span.nav-link
+            = fa_icon('user-circle-o', class: 'mr-1')
+            = current_user.name
       .navbar-text.small
         = link_to ' (sign out)', destroy_user_session_path, method: :delete

@@ -1,11 +1,17 @@
 .container.py-sm-3
   .row
-    .col-sm-6
+    .col-sm-12.p-3.text-center
 
       h1 = 'Alpha Tomato 🍅'
-      p = 'Welcome to StreepSis!'
 
-      - if current_user
+      blockquote.blockquote.text-center
+        p.mb-0 = 'Vakmanschap is meesterschap'
+        footer.blockquote-footer = 'Gerard Brummer, Grolsch'
+
+  .row.d-flex.justify-content-around
+
+    - if current_user
+      .col-sm-6
         .card
           h5.card-header = "Welkom, #{current_user.name}"
           .card-body
@@ -22,15 +28,14 @@
                 = 'je kan hier wel je saldo en bestelgeschiedenis zien'
 
     - if current_user
-
       .col-sm-6
         .card
           h4.card-header
-            = fa_icon 'calendar'
-            = ' Upcoming Activities'
+            = fa_icon 'calendar', class: 'mr-1'
+            = 'Komende activiteiten'
 
           .card-body
-            - if @upcoming_activities.empty?
+            - if @upcoming_activities&.empty?
               p.card-text = 'Er zijn geen activiteiten gepland. Maak er een aan op de activiteitenpagina.'
               = link_to 'Activiteiten', activities_path, class: 'btn btn-primary btn-block'
 
@@ -41,13 +46,13 @@
                 - @upcoming_activities.each do |activity|
                   li = link_to "#{activity.title} – #{activity.humanized_start_time}", activity
 
-              - unless @current_activities.empty?
+              - if @current_activities&.any?
                 hr
                 h4.card-title.text-center
                   = 'Direct naar het streepscherm'
 
                 - @current_activities.each do |activity|
-                  = link_to activity_orders_url(activity), class: 'btn btn-primary btn-block btn-lg'
+                  = link_to activity_orders_url(activity), class: 'btn btn-primary btn-block'
                     span
                       = fa_icon 'calculator', class: 'mr-1'
                       = activity.title
