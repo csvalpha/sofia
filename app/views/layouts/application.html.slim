@@ -11,8 +11,6 @@ html
 
     = render partial: 'partials/navigation_bar'
 
-    - flash.each do |key, value|
-      = content_tag :div, class: flash_class(key)
-        = value
+    = render partial: 'partials/flash'
 
     == yield
