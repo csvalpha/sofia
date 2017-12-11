@@ -9,7 +9,7 @@ module OmniAuth
       option :client_options,
              site: Rails.application.config.x.banana_host_url,
              authorize_url: '/oauth/authorize',
-             token_url: '/oauth/token'
+             token_url: '/api/oauth/token'
 
       uid { raw_info['id'] }
 
