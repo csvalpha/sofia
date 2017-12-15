@@ -11,7 +11,7 @@ class PriceListsController < ApplicationController
 
     authorize recent_price_lists
 
-    @new_price_list = PriceList.new
+    @price_list = PriceList.new
 
     @recent_price_lists_json = recent_price_lists.to_json(except: %i[created_at updated_at deleted_at])
     @products_json = products.to_json(include: { product_prices: { except: %i[created_at updated_at deleted_at] } },
@@ -19,8 +19,9 @@ class PriceListsController < ApplicationController
   end
 
   def show
-    @model = PriceList.includes(model_includes).find(params[:id])
-    authorize @model
+    @price_list = PriceList.includes(model_includes).find(params[:id])
+    @products = Product.all.order(:id)
+    authorize @price_list
   end
 
   def create
@@ -36,14 +37,21 @@ class PriceListsController < ApplicationController
   end
 
   def update
-    authorize @model
-    render json: @model if @model.update(permitted_attributes)
+    @price_list = PriceList.find(params[:id])
+    authorize @price_list
+
+    if @price_list.update(permitted_attributes)
+      flash[:success] = 'Prijslijst opgeslagen'
+    else
+      flash[:error] = "Prijslijst wijzigen mislukt; #{@price_list.errors.full_messages.join(', ')}"
+    end
+    redirect_to @price_list
   end
 
   private
 
   def model_includes
-    [:product_price, product_price: :product]
+    [:product_price, :activities, product_price: :product]
   end
 
   def permitted_attributes

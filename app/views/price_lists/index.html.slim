@@ -6,26 +6,11 @@
       .d-flex.justify-content-between.mb-3
         p = 'Hier worden de vijf nieuwste prijslijsten getoond.'
 
-        button.btn.btn-sm.btn-primary role='button' data-toggle='modal' data-target='#newPriceListModal'
+        button.btn.btn-sm.btn-primary role='button' data-toggle='modal' data-target='#editPriceListModal'
           = fa_icon 'plus', class: 'mr-1'
           = 'Nieuwe prijslijst'
 
-      .modal.fade id='newPriceListModal' role='dialog' aria-labelledby='newPriceListModalLabel' aria-hidden='true'
-        .modal-dialog role='document'
-          .modal-content
-
-            .modal-header
-              h5.modal-title = 'Nieuwe prijslijst'
-              button.close type='button' data-dismiss='modal' aria-label='close'
-                span aria-hidden='true' = fa_icon 'times'
-
-            = simple_form_for @new_price_list, wrapper: :horizontal_form do |f|
-              .modal-body
-                  = f.input :name, placeholder: 'Naam', required: true
-
-              .modal-footer
-                button.btn.btn-secondary type='button' data-dismiss='modal' = 'Annuleren'
-                = f.button :submit, 'Prijslijst aanmaken', class: 'btn btn-primary'
+      = render 'modal'
 
       = content_tag :table, id: 'price_lists_table', class: 'table table-striped',
         data: { price_lists: @recent_price_lists_json, products: @products_json }
