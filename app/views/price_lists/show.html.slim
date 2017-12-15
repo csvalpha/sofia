@@ -1,18 +1,33 @@
 .container
+  .row.py-4
+    .col-sm-12
 
-  h1 = "Price List: #{@model.name}"
+      .d-flex.justify-content-between.align-items-start
 
-  p = "Last used with \"#{@model.activities.last.title}\" on #{@model.activities.last.humanized_start_time}"
+        h1 = "Prijslijst #{@price_list.name}"
 
-  h4 Products
+        button.btn.btn-outline-secondary role='button' data-toggle='modal' data-target='#editPriceListModal'
+          = fa_icon 'pencil', class: 'mr-1'
+          = 'Naam wijzigen'
 
-  table.table
-    thead
-      tr
-        th Product name
-        th Price
-    tbody
-      - @model.product_price.each do |product_price|
-        tr
-          td = product_price.product.name
-          td = number_to_currency(product_price.price, unit: '€')
+      - if @price_list.activities.any?
+        p
+          = "Laatstgebruikt bij \"#{@price_list.activities.last.title}\" "
+          = "op #{@price_list.activities.last.humanized_start_time}"
+      - else
+        p = 'List is nog nooit gebruikt bij een activiteit'
+
+      = render 'modal'
+
+      table.table.table-striped
+        thead
+          tr
+            th scope='col' = 'ID'
+            th scope='col' = 'Productnaam'
+            th scope='col' = 'Prijs'
+        tbody
+          - @products.each do |product|
+            tr
+              th scope='row' = product.id
+              td = product.name
+              td = number_to_currency(@price_list.product_price_for(product)&.price, unit: '€')

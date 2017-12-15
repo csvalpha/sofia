@@ -3,6 +3,15 @@
     .col-sm-12
       h1 = 'Prijzen en producten'
 
+      .d-flex.justify-content-between.mb-3
+        p = 'Hier worden de vijf nieuwste prijslijsten getoond.'
+
+        button.btn.btn-sm.btn-primary role='button' data-toggle='modal' data-target='#editPriceListModal'
+          = fa_icon 'plus', class: 'mr-1'
+          = 'Nieuwe prijslijst'
+
+      = render 'modal'
+
       = content_tag :table, id: 'price_lists_table', class: 'table table-striped',
         data: { price_lists: @recent_price_lists_json, products: @products_json }
 
@@ -13,7 +22,8 @@
             th.products-alcohol.rotate scope='col'
               div = '18+'
             th.products-pricelist.rotate scope='col' v-for='priceList in priceLists'
-              .center-text v-bind:title='"Lijst ID: " + priceList.id' = '{{ priceList.name }}'
+              .center-text v-bind:title='"Lijst ID: " + priceList.id'
+                a v-bind:href='"/price_lists/" + priceList.id' = '{{ priceList.name }}'
             th.products-actions v-if='priceLists.length > 0'
 
         tbody

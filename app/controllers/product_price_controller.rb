@@ -5,10 +5,14 @@ class ProductPriceController < ApplicationController
   after_action :verify_authorized
 
   def show
+    authorize @model
+
     render json: @model
   end
 
   def update
+    authorize @model
+
     if @model.update(permitted_attributes)
       render json: @model
     else

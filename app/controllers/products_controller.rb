@@ -4,14 +4,14 @@ class ProductsController < ApplicationController
 
   after_action :verify_authorized
 
-  def model_class
-    Product
+  def show
+    authorize @product
   end
-
-  def show; end
 
   def create
     @product = Product.new(permitted_attributes)
+
+    authorize @product
 
     if @product.save
       render json: @product, include: json_includes, except: json_exludes
@@ -21,6 +21,8 @@ class ProductsController < ApplicationController
   end
 
   def update
+    authorize @product
+
     if @product.update(permitted_attributes)
       render json: @product, include: json_includes, except: json_exludes
     else
