@@ -1,5 +1,13 @@
-class ProductListPolicy < ApplicationPolicy
+class ProductPolicy < ApplicationPolicy
   def index?
-    true
+    user.present?
+  end
+
+  def create?
+    user&.treasurer?
+  end
+
+  def update?
+    create?
   end
 end
