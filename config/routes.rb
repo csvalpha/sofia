@@ -6,7 +6,9 @@ Rails.application.routes.draw do
   end
 
   resources :price_lists, only: %i[index show create update destroy] do
-    get :autocomplete_price_list_name, on: :collection
+    collection do
+      post :search
+    end
   end
 
   resources :users, only: %i[index show create update destroy] do

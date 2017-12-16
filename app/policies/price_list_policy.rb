@@ -14,4 +14,8 @@ class PriceListPolicy < ApplicationPolicy
   def update?
     create?
   end
+
+  def search?
+    index?
+  end
 end
