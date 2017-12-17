@@ -4,6 +4,15 @@
     .col-sm-12
       h1 = 'Activities'
 
+      .d-flex.justify-content-between.mb-3
+        p = 'De laatste 25 activiteiten'
+
+        button.btn.btn-sm.btn-primary role='button' data-toggle='modal' data-target='#editActivityModal'
+          = fa_icon 'plus', class: 'mr-1'
+          = 'Nieuwe activiteit'
+
+    = render 'modal'
+
     .col-sm-12
       table.table.table-striped
         thead
@@ -15,7 +24,7 @@
             th scope='col' = 'Created at'
             th scope='col' = 'Updated at'
         tbody
-          - @activities.each do |activity|
+          - @activities&.each do |activity|
             tr
               td
                 = link_to activity.title, activity
@@ -29,10 +38,3 @@
                 = activity.created_at.strftime('%d-%b')
               td
                 = activity.updated_at.strftime('%d-%b')
-
-  .row
-    .col-lg-8.col-md-12
-      .card
-        h4.card-header = 'New activity'
-
-        .card-body = render 'form'

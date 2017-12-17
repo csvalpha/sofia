@@ -15,6 +15,4 @@
 //= require jquery3
 //= require popper
 //= require bootstrap
-//= require bootstrap3-typeahead.min
-//= require bootstrap-autocomplete-input.min
 //= require_tree .

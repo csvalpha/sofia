@@ -3,8 +3,6 @@ class PriceListsController < ApplicationController
 
   after_action :verify_authorized
 
-  autocomplete :price_list, :name, full: true
-
   def index
     recent_price_lists = PriceList.order(created_at: :desc).limit(5)
     products = Product.all.order(:id).includes(:product_prices)
@@ -46,6 +44,14 @@ class PriceListsController < ApplicationController
       flash[:error] = "Prijslijst wijzigen mislukt; #{@price_list.errors.full_messages.join(', ')}"
     end
     redirect_to @price_list
+  end
+
+  def search
+    authorize PriceList
+
+    @price_lists = PriceList.where('lower(name) LIKE ?', "%#{params[:query]&.downcase}%")
+
+    render json: @price_lists
   end
 
   private

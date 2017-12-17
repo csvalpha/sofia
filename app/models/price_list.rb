@@ -9,10 +9,6 @@ class PriceList < ApplicationRecord
     product_price.select { |pp| pp.product == product }.first
   end
 
-  # def activities
-  #   Activity.where(price_list: self).order(:start_time)
-  # end
-
   def to_s
     name
   end
