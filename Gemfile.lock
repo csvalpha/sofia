@@ -63,7 +63,6 @@ GEM
       autoprefixer-rails (>= 6.0.3)
       popper_js (>= 1.12.3, < 2)
       sass (>= 3.5.2)
-    bootstrap_autocomplete_input (0.2.1)
     brakeman (4.1.0)
     builder (3.2.3)
     bullet (5.7.0)
@@ -404,7 +403,6 @@ DEPENDENCIES
   bcrypt (~> 3.1.7)
   better_errors
   bootstrap (~> 4.0.0.beta2)
-  bootstrap_autocomplete_input (~> 0.2.1)
   brakeman
   bullet
   capistrano (= 3.9.1)
