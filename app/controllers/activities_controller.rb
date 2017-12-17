@@ -17,11 +17,12 @@ class ActivitiesController < ApplicationController
     authorize @activity
 
     if @activity.save
-      redirect_to activities_url, notice: 'Successfully created activity.'
+      flash[:success] = 'Successfully created activity'
     else
-      @model = Activity.includes(model_includes)
-      render :index
+      flash[:error] = @activity.errors.full_messages.join(', ')
     end
+
+    redirect_to activities_url
   end
 
   def show
