@@ -1,4 +1,4 @@
-FROM ruby:2.4.2-slim
+FROM ruby:2.4.3-slim
 RUN apt-get update -qq \
   && apt-get install -y \
   build-essential \
