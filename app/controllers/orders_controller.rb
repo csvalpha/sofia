@@ -7,7 +7,16 @@ class OrdersController < ApplicationController
   def index
     authorize Order
 
-    @product_prices = @activity.price_list.product_price.includes(:product)
+    @activity = Activity.includes([:price_list, price_list: { product_price: :product }])
+                        .find(params[:activity_id])
+
+    @product_prices_json = @activity.price_list.product_price
+                                    .to_json(include: {
+                                               product: { except: %i[created_at updated_at deleted_at] }
+                                             }, except: %i[created_at updated_at])
+
+    @users_json = User.all.to_json(except: %i[created_at updated_at deleted_at])
+
     render layout: 'order_screen'
   end
 
