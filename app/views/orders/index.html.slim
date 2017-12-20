@@ -9,12 +9,12 @@
       li.header-nav-item
         span.mr-3 = @activity.title
         small.font-weight-light.d-inline-block = @activity.humanized_start_time
+        button.btn.btn-primary.m-2 v-on:click='sendFlash("Flash", "Ongedaan maken", "success")'
+          = 'Flash!'
 
     orderscreen-flash
 
   .side-panel
-    button.btn.btn-primary.m-2 v-on:click='sendFlash("Flash", "Ongedaan maken", "success")'
-      = 'Flash!'
 
   template v-if='false'
     .user-details
@@ -63,13 +63,11 @@
           = '€20,50'
 
   .product-grid
-    - if @product_prices&.any?
-      - @product_prices.each do |product|
-        .product-grid-product data-product-id= product.id
-          span.product-grid-product-name.font-weight-light = product.name
-          span.product-grid-product-price = "(#{number_to_currency(product.price, unit: '€')})"
-    - else
-      em.no-items.font-weight-light
+    .product-grid-product v-for="price in productPrices"
+      span.product-grid-product-name.font-weight-light = '{{price.product.name}}'
+      span.product-grid-product-price = '{{productPriceToCurrency(price)}}'
+
+    em.no-items.font-weight-light v-if="!productPrices.length"
         span
           = "Nog geen prijzen beschikbaar in de prijslijst #{@activity.price_list.name}. Klik "
           = link_to 'hier', price_lists_path

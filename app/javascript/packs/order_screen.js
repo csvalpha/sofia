@@ -125,7 +125,11 @@ document.addEventListener('turbolinks:load', () => {
       methods: {
         sendFlash: function(message, actionText, type) {
           flash(message, actionText, type);
-        }
+        },
+
+        productPriceToCurrency(productPrice) {
+          return `€${parseFloat(productPrice.price).toFixed(2)}`;
+        },
       },
       components: {
         'orderscreen-flash': orderscreenFlash
