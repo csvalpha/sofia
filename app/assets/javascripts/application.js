@@ -15,4 +15,11 @@
 //= require jquery3
 //= require popper
 //= require bootstrap
+//= require webfontloader/webfontloader
 //= require_tree .
+
+WebFont.load({
+  google: {
+    families: ['Roboto']
+  }
+});
