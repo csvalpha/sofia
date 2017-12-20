@@ -23,7 +23,7 @@ document.addEventListener('turbolinks:load', () => {
       props: {
         timeout: {
           type: Number,
-          default: 2000
+          default: 3000
         },
         transition: {
           type: String,
@@ -54,7 +54,8 @@ document.addEventListener('turbolinks:load', () => {
       data: () => ({
         notificationQue: [],
         activeNotification: null,
-        timeoutVar: null
+        timeoutVar: null,
+        notificationCounter: 1
       }),
 
       created() {
@@ -66,12 +67,13 @@ document.addEventListener('turbolinks:load', () => {
       methods: {
         flash(message, actionText, type) {
           const flashData = {
-            message: message,
+            message: `${message} #${this.notificationCounter}`,
             actionText: actionText,
             type: type,
             typeObject: this.classes(this.types, type),
             iconObject: this.classes(this.icons, type)
           };
+          this.notificationCounter++;
           this.notificationQue.push(flashData);
           this.notificationQueChanged();
         },
@@ -94,18 +96,22 @@ document.addEventListener('turbolinks:load', () => {
 
         notificationQueChanged() {
           if (!this.activeNotification && this.notificationQue.length > 0) {
-            this.activeNotification = this.notificationQue.shift();
+            const newNotification = this.notificationQue.shift();
+            this.activeNotification = null;
+
+            // Small delay for UX purposes
+            setTimeout(() => {
+              this.activeNotification = newNotification;
+            }, 100);
             this.timeoutVar = setTimeout(this.hideCurrentNotification, this.timeout);
           }
         },
 
         mouseOver() {
-          console.log('MouseOver');
           clearTimeout(this.timeoutVar);
         },
 
         mouseLeave() {
-          console.log('mouseLeave');
           this.timeoutVar = setTimeout(this.hideCurrentNotification, this.timeout);
         }
       }
