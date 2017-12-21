@@ -122,20 +122,33 @@
     }
   }
 
-  .user-search-results {
+  .user-search {
     grid-area: orders;
     z-index: 5;
 
     display: flex;
     flex-flow: column nowrap;
+
+    overflow-y: auto;
   }
 
-  .user-search-results-header {
+  .user-search-header {
     font-size: $font-size-lg;
 
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .user-search-users-user {
+    border-bottom: 1px solid $gray-400;
+
+    .highlight {
+      background-color: rgba(0,0,0,0.1);
+    }
+    &:hover {
+      background-color: rgba(0,0,0,0.1);
+    }
   }
 
   .orders {

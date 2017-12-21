@@ -12,6 +12,7 @@ document.addEventListener('turbolinks:load', () => {
   if (element != null) {
     var users = JSON.parse(element.dataset.users);
     var productPrices = JSON.parse(element.dataset.productPrices);
+    var activity = JSON.parse(element.dataset.activity);
 
     window.flash = function(message, actionText, type) {
       const event = new CustomEvent('flash', { detail: { message: message, actionText: actionText, type: type } } );
@@ -120,16 +121,51 @@ document.addEventListener('turbolinks:load', () => {
     var vueOrderScreen = new Vue({
       el: element,
       data: () => {
-        return { users: users, productPrices: productPrices };
+        return {
+          users: users,
+          productPrices: productPrices,
+          activity: activity,
+          selectedUser: null,
+          highlightedUserIndex: -1,
+          userQuery: ''
+        };
       },
       methods: {
         sendFlash: function(message, actionText, type) {
           flash(message, actionText, type);
         },
 
-        productPriceToCurrency(productPrice) {
-          return `€${parseFloat(productPrice.price).toFixed(2)}`;
+        floatToCurrency(price) {
+          return `€${parseFloat(price).toFixed(2)}`;
         },
+
+        searchUsersResult: function() {
+          return this.users.filter((user) => {
+            return user.name.toLowerCase().indexOf(this.userQuery.toLowerCase()) !== -1;
+          });
+        },
+
+        selectHighlightedUser() {
+          if (this.highlightedUserIndex >= 0 &&
+              this.searchUsersResult(this.userQuery)) {
+            console.log(`Select ${this.searchUsersResult(this.userQuery)[0].name}`);
+          }
+        },
+
+        selectUser(user) {
+          if (user) {
+            console.log(`Select ${user.name}`);
+          }
+        },
+
+        resetHighlight() {
+          if (this.userQuery.length == 0) {
+            this.highlightedUserIndex = -1;
+          } else {
+            this.highlightedUserIndex = 0;
+          }
+          return;
+        }
       },
       components: {
         'orderscreen-flash': orderscreenFlash

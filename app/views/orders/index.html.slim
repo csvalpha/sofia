@@ -1,5 +1,5 @@
 = content_tag :div, id: 'order-screen', class: 'order-screen',
-  data: { users: @users_json, product_prices: @product_prices_json }
+  data: { users: @users_json, product_prices: @product_prices_json, activity: @activity_json }
 
   nav.header
     ul.header-nav
@@ -9,17 +9,17 @@
       li.header-nav-item
         span.mr-3 = @activity.title
         small.font-weight-light.d-inline-block = @activity.humanized_start_time
-        button.btn.btn-primary.m-2 v-on:click='sendFlash("Flash", "Ongedaan maken", "success")'
-          = 'Flash!'
 
     orderscreen-flash
 
   .side-panel
 
-  template v-if='false'
+  template v-if="!selectedUser"
     .user-details
-      form.user-details-search
-        = text_field_tag 'search', nil, placeholder: 'Gebruiker zoeken', class: 'form-control form-control-lg'
+      .user-details-search
+        input( placeholder="Gebruiker zoeken" class="form-control form-control-lg"
+               v-model="userQuery"
+               @input="resetHighlight" @keyup.enter.prevent="selectHighlightedUser")
 
       em.user-details-seperator.font-weight-light.py-2 = 'of'
 
@@ -27,7 +27,22 @@
         button.btn.btn-secondary.btn-lg.font-weight-light
           = 'Contant betalen'
 
-  template v-if='false'
+  template v-if="!selectedUser"
+    .user-search
+      .user-search-users-user.row.no-gutters(
+          v-for="(user, index) in searchUsersResult(this.userQuery)"
+          @click="selectUser(user)" v-bind:class="{ highlight : (highlightedUserIndex == index) }")
+        .user-search-users-user-avatar.col-4
+          = image_tag '/images/avatar_thumb_default.png', class: 'img-thumbnail rounded-circle'
+        .user-search-users-user-details.col-8.px-3
+          .user-search-users-user-name
+            h4.pt-2
+              = '{{user.name}}'
+              small.ml-1 = '({{user.id}})'
+          .user-search-users-user-credit
+            = '{{floatToCurrency(user.credit)}}'
+
+  template v-if='selectedUser'
     .orders
       p.orders-header.font-weight-light.py-2 = 'Bestelling'
 
@@ -48,24 +63,10 @@
       .orders-confirmation.bg-success
         span.font-weight-light = 'Bestellen'
 
-  template v-if='false'
-    .user-search-results
-      p.user-search-results-header.font-weight-light.py-2 = 'Zoekresultaten'
-
-      em.no-items.font-weight-light = 'Selecteer eerst een gebruiker'
-
-      .user-search-results-user
-        .user-avatar
-          / = image_tag
-        .user-name
-          = 'Willem Wilmink'
-        .user-credit
-          = '€20,50'
-
   .product-grid
     .product-grid-product v-for="price in productPrices"
       span.product-grid-product-name.font-weight-light = '{{price.product.name}}'
-      span.product-grid-product-price = '{{productPriceToCurrency(price)}}'
+      span.product-grid-product-price = '{{floatToCurrency(price.price)}}'
 
     em.no-items.font-weight-light v-if="!productPrices.length"
         span
