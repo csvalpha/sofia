@@ -19,7 +19,8 @@
       .user-details-search
         input( placeholder="Gebruiker zoeken" class="form-control form-control-lg"
                v-model="userQuery"
-               @input="resetHighlight" @keyup.enter.prevent="selectHighlightedUser")
+               @input="queryChange" @keyup.enter.prevent="selectHighlightedUser"
+               @keyup.up="decreaseHighlightedUserIndex" @keyup.down="increaseHighlightedUserIndex")
 
       em.user-details-seperator.font-weight-light.py-2 = 'of'
 
@@ -30,8 +31,9 @@
   template v-if="!selectedUser"
     .user-search
       .user-search-users-user.row.no-gutters(
-          v-for="(user, index) in searchUsersResult(this.userQuery)"
-          @click="selectUser(user)" v-bind:class="{ highlight : (highlightedUserIndex == index) }")
+          v-for="(user, index) in suggestedUsers"
+          @click="selectUser(user)" v-bind:class="{ highlight : (highlightedUserIndex == index) }"
+          @mouseover="highlightedUserIndex = -1" @mouseleave="resetHighlight")
         .user-search-users-user-avatar.col-4
           = image_tag '/images/avatar_thumb_default.png', class: 'img-thumbnail rounded-circle'
         .user-search-users-user-details.col-8.px-3

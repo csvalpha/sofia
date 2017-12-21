@@ -127,7 +127,8 @@ document.addEventListener('turbolinks:load', () => {
           activity: activity,
           selectedUser: null,
           highlightedUserIndex: -1,
-          userQuery: ''
+          userQuery: '',
+          suggestedUsers: []
         };
       },
       methods: {
@@ -146,9 +147,9 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         selectHighlightedUser() {
-          if (this.highlightedUserIndex >= 0 &&
-              this.searchUsersResult(this.userQuery)) {
-            console.log(`Select ${this.searchUsersResult(this.userQuery)[0].name}`);
+          if (this.searchUsersResult(this.userQuery).length > 0){
+            var user = this.searchUsersResult(this.userQuery)[this.highlightedUserIndex];
+            this.selectUser(user);
           }
         },
 
@@ -158,13 +159,29 @@ document.addEventListener('turbolinks:load', () => {
           }
         },
 
+        queryChange() {
+          this.suggestedUsers = this.searchUsersResult();
+          this.resetHighlight();
+        },
+
         resetHighlight() {
-          if (this.userQuery.length == 0) {
+          if (this.userQuery.length === 0) {
             this.highlightedUserIndex = -1;
           } else {
             this.highlightedUserIndex = 0;
           }
-          return;
+        },
+
+        increaseHighlightedUserIndex() {
+          if ((this.highlightedUserIndex + 1) < this.suggestedUsers.length) {
+            this.highlightedUserIndex++;
+          }
+        },
+
+        decreaseHighlightedUserIndex() {
+          if ((this.highlightedUserIndex) > 0) {
+            this.highlightedUserIndex--;
+          }
         }
       },
       components: {
