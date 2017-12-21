@@ -128,7 +128,7 @@ document.addEventListener('turbolinks:load', () => {
           selectedUser: null,
           highlightedUserIndex: -1,
           userQuery: '',
-          suggestedUsers: []
+          suggestedUsers: users
         };
       },
       methods: {
@@ -140,28 +140,15 @@ document.addEventListener('turbolinks:load', () => {
           return `€${parseFloat(price).toFixed(2)}`;
         },
 
+        queryChange() {
+          this.suggestedUsers = this.searchUsersResult();
+          this.resetHighlight();
+        },
+
         searchUsersResult: function() {
           return this.users.filter((user) => {
             return user.name.toLowerCase().indexOf(this.userQuery.toLowerCase()) !== -1;
           });
-        },
-
-        selectHighlightedUser() {
-          if (this.searchUsersResult(this.userQuery).length > 0){
-            var user = this.searchUsersResult(this.userQuery)[this.highlightedUserIndex];
-            this.selectUser(user);
-          }
-        },
-
-        selectUser(user) {
-          if (user) {
-            console.log(`Select ${user.name}`);
-          }
-        },
-
-        queryChange() {
-          this.suggestedUsers = this.searchUsersResult();
-          this.resetHighlight();
         },
 
         resetHighlight() {
@@ -181,6 +168,19 @@ document.addEventListener('turbolinks:load', () => {
         decreaseHighlightedUserIndex() {
           if ((this.highlightedUserIndex) > 0) {
             this.highlightedUserIndex--;
+          }
+        },
+
+        selectUser(user) {
+          if (user) {
+            console.log(`Select ${user.name}`);
+          }
+        },
+
+        selectHighlightedUser() {
+          if (this.searchUsersResult(this.userQuery).length > 0){
+            var user = this.searchUsersResult(this.userQuery)[this.highlightedUserIndex];
+            this.selectUser(user);
           }
         }
       },

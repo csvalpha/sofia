@@ -20,7 +20,8 @@
         input( placeholder="Gebruiker zoeken" class="form-control form-control-lg"
                v-model="userQuery"
                @input="queryChange" @keyup.enter.prevent="selectHighlightedUser"
-               @keyup.up="decreaseHighlightedUserIndex" @keyup.down="increaseHighlightedUserIndex")
+               @keyup.up="decreaseHighlightedUserIndex"
+               @keyup.down="increaseHighlightedUserIndex")
 
       em.user-details-seperator.font-weight-light.py-2 = 'of'
 
