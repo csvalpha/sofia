@@ -29,7 +29,6 @@
         button.btn.btn-secondary.btn-lg.font-weight-light
           = 'Contant betalen'
 
-  template v-if="!selectedUser"
     .user-search
       .user-search-users-user.row.no-gutters(
           v-for="(user, index) in suggestedUsers"
@@ -43,7 +42,19 @@
               = '{{user.name}}'
               small.ml-1 = '({{user.id}})'
           .user-search-users-user-credit
-            = '{{floatToCurrency(user.credit)}}'
+            h5 = '{{floatToCurrency(user.credit)}}'
+
+  template v-if="selectedUser"
+    .user-details
+      .user-details-user.row.no-gutters
+        .user-details-avatar.col-4
+          = image_tag '/images/avatar_thumb_default.png', class: 'img-thumbnail rounded-circle'
+        .user-details-name.col-8.pl-2.py-2
+          h2.mb-3
+            = '{{selectedUser.name}}'
+            span.pull-right.pr-2 = fa_icon 'times-circle', class: 'user-details-close', '@click': 'selectedUser = null'
+          h2 v-bind:class="{ 'text-danger' : (selectedUser.credit <= 0) }"
+            = '{{floatToCurrency(selectedUser.credit)}}'
 
   template v-if='selectedUser'
     .orders

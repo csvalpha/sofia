@@ -174,6 +174,7 @@ document.addEventListener('turbolinks:load', () => {
         selectUser(user) {
           if (user) {
             console.log(`Select ${user.name}`);
+            this.selectedUser = user;
           }
         },
 

@@ -97,7 +97,7 @@
     grid-area: user-details;
     z-index: 5;
 
-    padding: 1.5rem;
+    padding: .5rem;
     border-bottom: 1px solid $gray-400;
 
     display: flex;
@@ -120,6 +120,10 @@
     button {
       background-color: $gray-800;
     }
+  }
+
+  .user-details-close:hover {
+    color: $gray-600;
   }
 
   .user-search {
