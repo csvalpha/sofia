@@ -14,7 +14,7 @@
 
   .side-panel
 
-  user-selection v-bind="selectedUser" :users="users"
+  user-selection v-bind:selected-user="selectedUser" :users="users" v-on:updateuser="setUser($event)"
 
   .orders v-if="selectedUser"
     p.orders-header.font-weight-light.py-2 = 'Bestelling'
@@ -96,6 +96,6 @@ template id="user-selection"
       .user-details-name.col-8.pl-2.py-2
         h2.mb-3
           = '{{selectedUser.name}}'
-          span.pull-right.pr-2 = fa_icon 'times-circle', class: 'user-details-close', '@click': 'selectedUser = null'
+          span.pull-right.pr-2 = fa_icon 'times-circle', class: 'user-details-close', '@click': 'selectUser(null)'
         h2 v-bind:class="{ 'text-danger' : (selectedUser.credit <= 0) }"
           = '{{doubleToCurrency(selectedUser.credit)}}'

@@ -173,10 +173,9 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         selectUser(user) {
-          if (user) {
-            console.log(`Select ${user.name}`);
-            this.selectedUser = user;
-          }
+          console.log(`Select ${user ? user.name : 'null'} in component`);
+          // this.selectedUser = user;
+          this.$emit('updateuser', user);
         },
 
         selectHighlightedUser() {
@@ -205,6 +204,11 @@ document.addEventListener('turbolinks:load', () => {
 
         doubleToCurrency(price) {
           return `€${parseFloat(price).toFixed(2)}`;
+        },
+
+        setUser(user) {
+          console.log(`Select ${user ? user.name : 'null'} in root`);
+          this.selectedUser = user;
         }
       },
 
