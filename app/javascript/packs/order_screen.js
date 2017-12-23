@@ -136,7 +136,7 @@ document.addEventListener('turbolinks:load', () => {
           flash(message, actionText, type);
         },
 
-        floatToCurrency(price) {
+        doubleToCurrency(price) {
           return `€${parseFloat(price).toFixed(2)}`;
         },
 
