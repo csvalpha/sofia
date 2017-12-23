@@ -25,9 +25,8 @@ class CreditMutationsController < ApplicationController
       flash[:error] = @mutation.errors.full_messages.join(', ')
     end
 
-    redirect_to request.referrer
+    redirect_to request.referer
   end
-
 
   def model_includes
     [:user]
