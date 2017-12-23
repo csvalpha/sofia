@@ -4,8 +4,8 @@
 
   display: grid;
 
-  grid-template-columns: [header-start orders-start user-details-start] minmax(35%, 340px) [orders-end user-details-end product-grid-start] 1fr [header-end product-grid-end];
-  grid-template-rows: [header-start] 80px [header-end user-details-start product-grid-start] 240px [user-details-end orders-start ] 1fr [orders-end product-grid-end];
+  grid-template-columns: [header-start orders-start user-details-start user-details-search-start user-details-suggestions-start] minmax(35%, 340px) [user-details-end user-details-search-end orders-end product-grid-start user-details-suggestions-end] 1fr [header-end product-grid-end];
+  grid-template-rows: [header-start] 80px [header-end user-details-start user-details-search-start product-grid-start] 240px [user-details-search-end user-details-suggestions-start orders-start ] 1fr [user-details-end user-details-suggestions-end orders-end product-grid-end];
 
   .header {
     grid-area: header;
@@ -83,8 +83,7 @@
   }
 
   .side-panel {
-    grid-column: user-details-start / orders-end;
-    grid-row: user-details-start / orders-end;
+    grid-area: user-details;
     z-index: 4;
 
     background-color: $gray-200;
@@ -94,20 +93,17 @@
   }
 
   .user-details {
-    grid-area: user-details;
+    display: contents;
     z-index: 5;
-
-    padding: .5rem;
-    border-bottom: 1px solid $gray-400;
-
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
-    align-items: stretch;
   }
 
-  .user-details-search #search {
+  .user-details-search {
+    grid-area: user-details-search;
+    z-index: 6;
+
     font-weight: 300;
+    padding: 1rem;
+    border-bottom: 1px solid $gray-400;
   }
 
   .user-details-seperator {
@@ -126,9 +122,9 @@
     color: $gray-600;
   }
 
-  .user-search {
-    grid-area: orders;
-    z-index: 5;
+  .user-details-suggestions {
+    grid-area: user-details-suggestions;
+    z-index: 6;
 
     display: flex;
     flex-flow: column nowrap;
@@ -136,15 +132,14 @@
     overflow-y: auto;
   }
 
-  .user-search-header {
-    font-size: $font-size-lg;
+  .user-details-user {
+    grid-area: user-details-search;
+    z-index: 6;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border-bottom: 1px solid $gray-400;
   }
 
-  .user-search-users-user {
+  .user-details-suggestions-user {
     border-bottom: 1px solid $gray-400;
 
     &.highlight {

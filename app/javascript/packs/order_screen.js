@@ -118,24 +118,25 @@ document.addEventListener('turbolinks:load', () => {
       }
     };
 
-    var vueOrderScreen = new Vue({
-      el: element,
+    var userSelection = {
+      template: '#user-selection',
+      props: {
+        selectedUser: null,
+        users: {
+          type: Array,
+          required: true
+        }
+      },
+
       data: () => {
         return {
-          users: users,
-          productPrices: productPrices,
-          activity: activity,
-          selectedUser: null,
           highlightedUserIndex: -1,
           userQuery: '',
           suggestedUsers: users
         };
       },
-      methods: {
-        sendFlash: function(message, actionText, type) {
-          flash(message, actionText, type);
-        },
 
+      methods: {
         doubleToCurrency(price) {
           return `€${parseFloat(price).toFixed(2)}`;
         },
@@ -184,9 +185,32 @@ document.addEventListener('turbolinks:load', () => {
             this.selectUser(user);
           }
         }
+      }
+    };
+
+    var vueOrderScreen = new Vue({
+      el: element,
+      data: () => {
+        return {
+          users: users,
+          productPrices: productPrices,
+          activity: activity,
+          selectedUser: null
+        };
       },
+      methods: {
+        sendFlash: function(message, actionText, type) {
+          flash(message, actionText, type);
+        },
+
+        doubleToCurrency(price) {
+          return `€${parseFloat(price).toFixed(2)}`;
+        }
+      },
+
       components: {
-        'orderscreen-flash': orderscreenFlash
+        'orderscreen-flash': orderscreenFlash,
+        'user-selection': userSelection
       }
     });
   }
