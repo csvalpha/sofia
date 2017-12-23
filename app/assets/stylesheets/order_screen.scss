@@ -72,10 +72,19 @@
     }
   }
 
-  .flash-success {
-    i {
-      color: $success;
-    }
+  .flash-success i {
+    color: $success;
+  }
+
+  .flash-danger i {
+    color: $danger;
+  }
+
+  .flash-warning i {
+    color: $warning;
+  }
+  .flash-info i {
+    color: $info;
   }
 
   .flash-undo {
