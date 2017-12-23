@@ -7,6 +7,13 @@ class CreditMutationsController < ApplicationController
     authorize @credit_mutations
   end
 
+  def show
+    @credit_mutation = CreditMutation.includes(model_includes).find(params[:id])
+
+    authorize @credit_mutation
+  end
+
+
   def create; end
 
   def model_includes

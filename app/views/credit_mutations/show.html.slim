@@ -1,57 +1,25 @@
 .container
-  .row.justify-content-between.py-3
-    .col-sm-12.col-lg-6
-
-      h1 = fa_icon 'calendar', class: 'mr-2', text: @activity.title
-
-      table.table.table-sm
-        tbody
-          tr
-            th scope='row' = 'Starttijd'
-            td = @activity.humanized_start_time
-          tr
-            th scope='row' = 'Eindtijd'
-            td = @activity.humanized_end_time
-          tr
-            th scope='row' = 'Prijslijst'
-            td = link_to @activity.price_list.name, @activity.price_list
-
-    .card.col-sm-8.col-lg-4
-      .card-body
-        h2.card-title
-          = 'Streepscherm'
-
-        p.card-text
-          = 'Klik op de knop hieronder om naar het streepscherm te gaan.'
-
-        = link_to activity_orders_url(@activity), class: 'btn btn-primary btn-block'
-          = 'Naar het streepscherm'
-          = fa_icon 'calculator', class: 'ml-1'
-
-  hr
-
   .row.py-3
     .col-sm-12
       h2
-        = 'Bestellingen'
+        = 'Mutatie'
       table.table.table-striped
         thead
           tr
-            th scope='col'= '#'
-            th scope='col'= 'Timestamp'
-            th scope='col'= 'User'
-            th scope='col'= 'Order total'
-
-        tbody
-          - if @activity.orders.empty?
-            tr
-              td.text-center colspan='4'
-                p.my-1
-                  em = 'Er zijn nog geen bestellingen'
-          - else
-            - @activity.orders.each do |order|
+            th scope='col' = 'Beschrijving'
+            th scope='col' = 'Gebruiker'
+            th scope='col' = 'Activiteit'
+            th scope='col' = 'Aanmaaktijd'
+            tbody
               tr
-                th scope='row' = order.id
-                td = order.created_at.strftime('%H:%M:%S - %d %b')
-                td = link_to order.user.name, order.user
-                td = number_to_currency(order.order_total, unit: '€')
+                td
+                  = link_to @credit_mutation.description, @credit_mutation
+                td
+                  = link_to @credit_mutation.user.name, @credit_mutation.user
+                td
+                  - if @credit_mutation.activity
+                    = link_to @credit_mutation.activity&.title, @credit_mutation.activity
+                  - else
+                    = '-'
+                td
+                  = @credit_mutation.created_at
