@@ -10,12 +10,13 @@ document.addEventListener('turbolinks:load', () => {
 
   var element = document.getElementById('editMutationModal');
   if (element != null) {
+    var user = JSON.parse(element.dataset.currentMutationUser);
     var vueActivities = new Vue({
       el: element,
       data: {
-        query: '',
+        query: user.name || '',
         selectedSuggestion: {
-          id: 0
+          id: user.id || 0
         },
         open: true,
         suggestions: [],

@@ -11,6 +11,8 @@ class UsersController < ApplicationController
   def show
     @user = User.includes(model_includes).find(params[:id])
     authorize @user
+
+    @edit_mutation = CreditMutation.new(user: @user)
   end
 
   def refresh_user_list

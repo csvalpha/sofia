@@ -48,9 +48,10 @@
   .row
     .col-sm-12
       span.pull-right
-        .btn.btn-secondary
-          = fa_icon 'plus', class: 'mr-2'
+        button.btn.btn-sm.btn-primary role='button' data-toggle='modal' data-target='#editMutationModal'
+          = fa_icon 'plus', class: 'mr-1'
           = 'Nieuwe mutatie'
+      = render 'credit_mutations/modal'
 
       ul.nav.nav-tabs role='tablist' id='userTabs'
         li.nav-item
