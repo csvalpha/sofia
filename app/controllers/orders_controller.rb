@@ -7,13 +7,10 @@ class OrdersController < ApplicationController
   def index
     authorize Order
 
-    @activity = Activity.includes([:price_list, price_list: { product_price: :product }])
-                        .find(params[:activity_id])
-
     @product_prices_json = @activity.price_list.product_price
                                     .to_json(include: {
                                                product: { except: %i[created_at updated_at deleted_at] }
-                                             }, except: %i[created_at updated_at])
+                                             })
 
     @users_json = User.includes([:orders, :credit_mutations, orders: :order_rows])
                       .to_json(only: %i[name id], methods: :credit)
@@ -33,7 +30,9 @@ class OrdersController < ApplicationController
   private
 
   def set_model
-    @activity = Activity.find_by(id: params[:activity_id])
+    @activity = Activity.includes([:price_list,
+                                   price_list: { product_price: :product }])
+                        .find(params[:activity_id])
   end
 
   def permitted_attributes
