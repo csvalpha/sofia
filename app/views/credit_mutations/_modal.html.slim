@@ -20,7 +20,7 @@
 
             template
               .col-9 style="position:relative"
-                input.d-none name="edit_mutation[user_id]" v-bind:value="selectedSuggestion.id"
+                input.d-none name="credit_mutation[user_id]" v-bind:value="selectedSuggestion.id"
                 input.form-control( type="text" v-model="query" placeholder="Start typing..."
                   @input="updateValue"
                   aria-haspopup= "true" v-bind:aria-expanded="dropdownOpened"

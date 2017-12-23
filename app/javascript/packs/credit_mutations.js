@@ -8,7 +8,7 @@ Vue.use(VueResource);
 document.addEventListener('turbolinks:load', () => {
   Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-  var element = document.getElementById('activities_modal');
+  var element = document.getElementById('editMutationModal');
   if (element != null) {
     var vueActivities = new Vue({
       el: element,
@@ -23,18 +23,13 @@ document.addEventListener('turbolinks:load', () => {
       },
       computed: {
         dropdownOpened () {
-            return true;
           return this.query !== '' &&
                  this.suggestions.length !== 0 &&
                  this.open === true;
         }
       },
-        created() {
-          console.log('test!!')
-        },
       methods: {
         updateValue: function() {
-          console.log('TEST')
           if ((new Date() - this.suggestionsUpdatedAt) > 150) {
             this.updateSuggestions();
           } else if (this.open === false) {
@@ -51,7 +46,7 @@ document.addEventListener('turbolinks:load', () => {
 
         updateSuggestions: function() {
           this.suggestions = [];
-          if (this.query.length < 1) {
+          if (this.query.length < 2) {
             return;
           }
           this.$http.post('/users/search.json', { query: this.query }).then( (response) => {
