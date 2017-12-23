@@ -173,8 +173,8 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         selectUser(user) {
-          console.log(`Select ${user ? user.name : 'null'} in component`);
-          // this.selectedUser = user;
+          this.userQuery = '';
+          this.queryChange();
           this.$emit('updateuser', user);
         },
 
@@ -207,7 +207,6 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         setUser(user) {
-          console.log(`Select ${user ? user.name : 'null'} in root`);
           this.selectedUser = user;
         }
       },
