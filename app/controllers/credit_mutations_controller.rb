@@ -5,6 +5,8 @@ class CreditMutationsController < ApplicationController
   def index
     @credit_mutations = CreditMutation.includes(model_includes)
     authorize @credit_mutations
+
+    @edit_mutation = CreditMutation.new
   end
 
   def show
@@ -13,10 +15,25 @@ class CreditMutationsController < ApplicationController
     authorize @credit_mutation
   end
 
+  def create
+    @mutation = CreditMutation.new(permitted_attributes)
+    authorize @mutation
 
-  def create; end
+    if @mutation.save
+      flash[:success] = 'Successfully created mutation'
+    else
+      flash[:error] = @mutation.errors.full_messages.join(', ')
+    end
+
+    redirect_to credit_mutations_url
+  end
+
 
   def model_includes
     [:user]
+  end
+
+  def permitted_attributes
+    params.require(:credit_mutation).permit(%i[description amount user_id activity_id])
   end
 end

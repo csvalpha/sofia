@@ -22,6 +22,14 @@ class UsersController < ApplicationController
     redirect_to users_path
   end
 
+  def search
+    authorize User
+
+    @users = User.where('lower(name) LIKE ?', "%#{params[:query]&.downcase}%")
+
+    render json: @users
+  end
+
   def api_token
     return @token if @token
     options = { grant_type: 'client_credentials',
