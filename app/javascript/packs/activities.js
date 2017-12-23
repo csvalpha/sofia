@@ -15,51 +15,46 @@ document.addEventListener('turbolinks:load', () => {
       data: {
         query: '',
         selectedSuggestion: {
-          id: 0
+          id: 0,
         },
         open: false,
-        suggestions: [],
-        suggestionsUpdatedAt: null
+        allSuggestions: []
       },
       computed: {
         dropdownOpened () {
-          return this.query !== '' &&
-                 this.suggestions.length !== 0 &&
-                 this.open === true;
+          return this.open === true;
+        },
+        suggestions () {
+          const substrRegex = new RegExp(this.query, 'i');
+          return this.allSuggestions.filter(value => {
+            return substrRegex.test(value.name);
+          });
         }
       },
+      created(){
+          this.allSuggestions = [];
+          this.$http.post('/price_lists/search.json', ).then( (response) => {
+                  response.data.forEach((a) => {
+                      this.allSuggestions.push(a);
+                  });
+              }, (error) => {
+                  console.error(response);
+              }
+          );
+      },
       methods: {
-        updateValue: function() {
-          if ((new Date() - this.suggestionsUpdatedAt) > 150) {
-            this.updateSuggestions();
-          } else if (this.open === false) {
-            this.open = true;
-          }
-        },
-
         // When one of the suggestion is clicked
         suggestionClicked: function(index) {
           this.selectedSuggestion = this.suggestions[index];
-          this.query = this.selectedSuggestion.name;
           this.open = false;
         },
 
-        updateSuggestions: function() {
-          this.suggestions = [];
-          if (this.query.length < 1) {
-            return;
-          }
-          this.$http.post('/price_lists/search.json', { query: this.query }).then( (response) => {
-              response.data.forEach((a) => {
-                this.suggestions.push(a);
-              });
-              this.updateValue();
-            }, (error) => {
-              console.error(response);
-            }
-          );
-          this.suggestionsUpdatedAt = new Date();
+        openSuggestions: function() {
+          this.open = true;
         },
+        closeSuggestions: function() {
+          this.open = false;
+        }
       }
     });
   }
