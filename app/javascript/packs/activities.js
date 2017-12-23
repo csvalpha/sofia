@@ -46,15 +46,13 @@ document.addEventListener('turbolinks:load', () => {
         // When one of the suggestion is clicked
         suggestionClicked: function(index) {
           this.selectedSuggestion = this.suggestions[index];
+          this.query = this.selectedSuggestion.name;
           this.open = false;
         },
 
         openSuggestions: function() {
           this.open = true;
         },
-        closeSuggestions: function() {
-          this.open = false;
-        }
       }
     });
   }
