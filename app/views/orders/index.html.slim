@@ -87,10 +87,11 @@ template id="user-selection"
               = '{{user.name}}'
               small.ml-1 = '({{user.id}})'
           .user-details-suggestions-user-credit
-            h5 = '{{doubleToCurrency(user.credit)}}'
+            h5 v-bind:class="{ 'text-danger' : (user.credit <= 0) }"
+              = '{{doubleToCurrency(user.credit)}}'
 
   .user-details v-else=""
-    .user-details-user.row.no-gutters.p-1
+    .user-details-user.row.no-gutters.py-3.px-1
       .user-details-avatar.col-4
         = image_tag '/images/avatar_thumb_default.png', class: 'img-thumbnail rounded-circle'
       .user-details-name.col-8.pl-2.py-2
