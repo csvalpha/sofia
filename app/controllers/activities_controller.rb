@@ -10,6 +10,8 @@ class ActivitiesController < ApplicationController
       start_time: (Time.zone.now + 2.hours).beginning_of_hour,
       end_time: (Time.zone.now + 6.hours).beginning_of_hour
     )
+
+    @price_lists_json = PriceList.all.to_json(only: %i[name])
   end
 
   def create

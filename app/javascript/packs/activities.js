@@ -8,8 +8,10 @@ Vue.use(VueResource);
 document.addEventListener('turbolinks:load', () => {
   Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-  var element = document.getElementById('activities_modal');
-  if (element != null) {
+  var element = document.getElementById('editActivityModal');
+  if (element !== null) {
+    console.log(element)
+    var price_lists = JSON.parse(element.dataset.priceLists);
     var vueActivities = new Vue({
       el: element,
       data: {
@@ -18,7 +20,7 @@ document.addEventListener('turbolinks:load', () => {
           id: 0,
         },
         open: false,
-        allSuggestions: []
+        allSuggestions: price_lists
       },
       computed: {
         dropdownOpened () {
@@ -30,17 +32,6 @@ document.addEventListener('turbolinks:load', () => {
             return substrRegex.test(value.name);
           });
         }
-      },
-      created(){
-          this.allSuggestions = [];
-          this.$http.post('/price_lists/search.json', ).then( (response) => {
-                  response.data.forEach((a) => {
-                      this.allSuggestions.push(a);
-                  });
-              }, (error) => {
-                  console.error(response);
-              }
-          );
       },
       methods: {
         // When one of the suggestion is clicked
