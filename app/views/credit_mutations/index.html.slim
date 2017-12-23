@@ -1,0 +1,28 @@
+.container
+
+  .row.py-4
+    .col-sm-12
+      h1 = 'Mutaties'
+
+    .col-sm-12
+      table.table.table-striped
+        thead
+          tr
+            th scope='col' = 'Beschrijving'
+            th scope='col' = 'Gebruiker'
+            th scope='col' = 'Activiteit'
+            th scope='col' = 'Aanmaaktijd'
+        tbody
+          - @credit_mutations&.each do |mutation|
+            tr
+              td
+                = link_to mutation.description, mutation
+              td
+                = link_to mutation.user.name, mutation.user
+              td
+                - if mutation.activity
+                  = link_to mutation.activity&.title, mutation.activity
+                - else
+                  = '-'
+              td
+                = mutation.created_at

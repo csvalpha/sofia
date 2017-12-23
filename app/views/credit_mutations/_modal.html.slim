@@ -1,0 +1,38 @@
+.modal.fade id='editActivityModal' role='dialog' aria-labelledby='editActivityModalLabel' aria-hidden='true'
+  .modal-dialog role='document'
+    .modal-content
+
+      .modal-header
+        h5.modal-title
+          = @activity.persisted? ? 'Activiteit wijzigen' : 'Nieuwe activiteit'
+        button.close type='button' data-dismiss='modal' aria-label='close'
+          span aria-hidden='true' = fa_icon 'times'
+
+      = simple_form_for @activity, wrapper: :horizontal_form do |f|
+        .modal-body id='activities_modal'
+          = f.input :title, placeholder: 'Titel', required: true
+          = f.input :start_time, as: :string, order: %i[hour minute day month year]
+          = f.input :end_time, as: :string, order: %i[hour minute day month year]
+
+          .form-group.row
+            label.col-3.col-form-label for='activity_price_list'
+              abbr.mr-1 title='required' = '*'
+              = 'Prijslijst'
+
+            template
+              .col-9 style="position:relative"
+                  input.d-none name="activity[price_list_id]" v-bind:value="selectedSuggestion.id"
+                  input.form-control( type="text" v-model="query" placeholder="Start typing..."
+                                      @input="updateValue" @keydown.enter='enter'
+                                      @keydown.down='down' @keydown.up='up'
+                                      aria-haspopup="true" v-bind:aria-expanded="dropdownOpened"
+                                      required="true" autocomplete="off")
+                  .row
+                    ul.dropdown-menu.ml-3 v-bind:class="{'show':dropdownOpened}"
+                      li.dropdown-item( v-for="(suggestion, index) in suggestions"
+                                        v-on:click.prevent="suggestionClicked(index)")
+                        a href="#" = '{{ suggestion.name }}'
+
+        .modal-footer
+          button.btn.btn-secondary type='button' data-dismiss='modal' = 'Annuleren'
+          = f.button :submit, 'Activiteit opslaan', class: 'btn btn-primary'
