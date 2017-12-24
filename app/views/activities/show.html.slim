@@ -8,10 +8,10 @@
         tbody
           tr
             th scope='row' = 'Starttijd'
-            td = @activity.humanized_start_time
+            td = @model.humanized_start_time
           tr
             th scope='row' = 'Eindtijd'
-            td = @activity.humanized_end_time
+            td = @model.humanized_end_time
           tr
             th scope='row' = 'Prijslijst'
             td = link_to @model.price_list.name, @model.price_list

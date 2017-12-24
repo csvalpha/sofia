@@ -1,7 +1,4 @@
 class ActivitiesController < ApplicationController
-  before_action :authenticate_user!
-  after_action :verify_authorized
-
   def index
     super
     @new_model = Activity.new(

@@ -1,20 +1,7 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user!
-
-  after_action :verify_authorized
-
-  def index
-    @model = User.all.includes(model_includes)
-    authorize @model
-  end
-
-  def show
-    @user = User.includes(model_includes).find(params[:id])
-    authorize @user
-  end
 
   def refresh_user_list
-    authorize User
+    authorize model_class
 
     users_json.each do |user_json|
       find_or_create_user(user_json)
@@ -32,15 +19,11 @@ class UsersController < ApplicationController
     @token = JSON.parse(token_response)['access_token']
   end
 
-  def model_class
-    User
-  end
+  private
 
   def model_includes
     [:orders, :credit_mutations, orders: :order_rows]
   end
-
-  private
 
   def users_json
     JSON.parse(RestClient.get("#{Rails.application.config.x.banana_api_host}/api/users",

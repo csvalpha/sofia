@@ -4,11 +4,11 @@
 
       .modal-header
         h5.modal-title
-          = @price_list.persisted? ? 'Nieuwe prijslijst' : 'Prijslijst wijzigen'
+          = model.persisted? ? 'Nieuwe prijslijst' : 'Prijslijst wijzigen'
         button.close type='button' data-dismiss='modal' aria-label='close'
           span aria-hidden='true' = fa_icon 'times'
 
-      = simple_form_for @price_list, wrapper: :horizontal_form do |f|
+      = simple_form_for model, wrapper: :horizontal_form do |f|
         .modal-body
             = f.input :name, placeholder: 'Naam', required: true
 

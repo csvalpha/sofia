@@ -1,40 +1,27 @@
 class ProductsController < ApplicationController
-  before_action :set_model, only: %i[show update destroy]
-  before_action :authenticate_user!
-
-  after_action :verify_authorized
-
-  def show
-    authorize @product
-  end
-
   def create
-    @product = Product.new(permitted_attributes)
+    @model = model_class.new(permitted_attributes)
+    authorize @model
 
-    authorize @product
-
-    if @product.save
-      render json: @product, include: json_includes, except: json_exludes
+    if @model.save
+      render json: @model, include: json_includes, except: json_exludes
     else
-      render json: @product.errors, status: :unprocessable_entity
+      render json: @model.errors, status: :unprocessable_entity
     end
   end
 
   def update
-    authorize @product
+    authorize @model
 
-    if @product.update(permitted_attributes)
-      render json: @product, include: json_includes, except: json_exludes
+    if @model.update(permitted_attributes)
+      render json: @model, include: json_includes, except: json_exludes
     else
-      render json: @product.errors, status: :unprocessable_entity
+      render json: @model.errors, status: :unprocessable_entity
     end
   end
 
   private
 
-  def set_model
-    @product = Product.find(params[:id])
-  end
 
   def permitted_attributes
     params.require(:product)
