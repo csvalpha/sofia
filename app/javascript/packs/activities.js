@@ -8,7 +8,7 @@ Vue.use(VueResource);
 document.addEventListener('turbolinks:load', () => {
   Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-  var element = document.getElementById('editActivityModal');
+  var element = document.getElementById('edit_activitiy_modal');
   if (element !== null) {
     console.log(element)
     var price_lists = JSON.parse(element.dataset.priceLists);
