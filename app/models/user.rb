@@ -27,16 +27,11 @@ class User < ApplicationRecord
   end
 
   def update_role(memberships)
-    RolesUsers.where(user_id: id).map(&:destroy)
-    return unless memberships&.any?
-    my_roles = []
-    memberships.each do |membership_id|
-      roles = Role.where(group_uid: membership_id)
-      roles.each do |role|
-        my_roles << RolesUsers.with_deleted.find_or_create_by(role: role, user: self) if role
-      end
-      my_roles.map(&:restore)
-    end
+    roles_to_have = Role.where(group_uid: memberships)
+    roles_to_have.map { |role| RolesUsers.find_or_create_by(role: role, user: self) }
+
+    roles_not_to_have = self.roles - roles_to_have
+    roles_not_to_have.map(&:destroy)
   end
 
   def self.from_omniauth(auth)
