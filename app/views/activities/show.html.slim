@@ -2,7 +2,7 @@
   .row.justify-content-between.py-3
     .col-sm-12.col-lg-6
 
-      h1 = fa_icon 'calendar', class: 'mr-2', text: @activity.title
+      h1 = fa_icon 'calendar', class: 'mr-2', text: @model.title
 
       table.table.table-sm
         tbody
@@ -14,7 +14,7 @@
             td = @activity.humanized_end_time
           tr
             th scope='row' = 'Prijslijst'
-            td = link_to @activity.price_list.name, @activity.price_list
+            td = link_to @model.price_list.name, @model.price_list
 
     .card.col-sm-8.col-lg-4
       .card-body
@@ -24,7 +24,7 @@
         p.card-text
           = 'Klik op de knop hieronder om naar het streepscherm te gaan.'
 
-        = link_to activity_orders_url(@activity), class: 'btn btn-primary btn-block'
+        = link_to activity_orders_url(@model), class: 'btn btn-primary btn-block'
           = 'Naar het streepscherm'
           = fa_icon 'calculator', class: 'ml-1'
 
@@ -43,13 +43,13 @@
             th scope='col'= 'Order total'
 
         tbody
-          - if @activity.orders.empty?
+          - if @model.orders.empty?
             tr
               td.text-center colspan='4'
                 p.my-1
                   em = 'Er zijn nog geen bestellingen'
           - else
-            - @activity.orders.each do |order|
+            - @model.orders.each do |order|
               tr
                 th scope='row' = order.id
                 td = order.created_at.strftime('%H:%M:%S - %d %b')
