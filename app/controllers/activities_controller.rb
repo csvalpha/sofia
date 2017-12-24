@@ -2,7 +2,7 @@ class ActivitiesController < ApplicationController
   before_action :authenticate_user!
   after_action :verify_authorized
 
-  def index
+  def index # rubocop:disable Metrics/AbcSize
     @activities = Activity.includes(model_includes)
     authorize @activities
 
