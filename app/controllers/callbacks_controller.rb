@@ -5,7 +5,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
     if @user.persisted?
       sign_in(:user, @user)
       path = @user
-      path = root_path if @user&.roles.any?
+      path = root_path if @user&.roles&.any?
       redirect_to path, flash: { success: 'Authenticated with C.S.V. Alpha' }
     else
       redirect_to root_path, flash: { error: 'Authentication failed' }
