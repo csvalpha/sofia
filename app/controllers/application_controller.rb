@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
     authorize @model
   end
 
-  def create(redirect_uri = nil)
+  def create(redirect_uri = nil) # rubocop:disable Metrics/AbcSize
     @model = model_class.new(permitted_attributes)
     authorize @model
 

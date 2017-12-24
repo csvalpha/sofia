@@ -1,5 +1,4 @@
 class UsersController < ApplicationController
-
   def refresh_user_list
     authorize model_class
 

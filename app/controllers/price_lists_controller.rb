@@ -1,5 +1,4 @@
 class PriceListsController < ApplicationController
-
   def index
     recent_price_lists = PriceList.order(created_at: :desc).limit(5)
     products = Product.all.order(:id).includes(:product_prices)

@@ -16,5 +16,4 @@ class ActivitiesController < ApplicationController
   def model_params
     %i[title start_time end_time price_list_id]
   end
-
 end
