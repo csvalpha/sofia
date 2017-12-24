@@ -30,7 +30,7 @@ class User < ApplicationRecord
     roles_to_have = Role.where(group_uid: memberships)
     roles_to_have.map { |role| RolesUsers.find_or_create_by(role: role, user: self) }
 
-    roles_not_to_have = self.roles - roles_to_have
+    roles_not_to_have = roles - roles_to_have
     roles_not_to_have.map(&:destroy)
   end
 
