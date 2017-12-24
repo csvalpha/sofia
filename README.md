@@ -4,7 +4,9 @@ Alpha Tomato
 [![Build Status](https://travis-ci.com/csvalpha/alpha-tomato.svg?token=XFGWKzHpTzj88hKy9q2u&branch=staging)](https://travis-ci.com/csvalpha/alpha-tomato)
 [![codebeat badge](https://codebeat.co/badges/63a40869-8ae4-4ee9-9575-8899c402f70f)](https://codebeat.co/a/twan-coenraad/projects/github-com-csvalpha-alpha-tomato-master)
 
-Dit is de code die hoor bij het nieuwe streepsysteem, werknaam Alpha Tomato.
+The source code belonging to Alpha Tomato (workname). It is a system built with Ruby on Rails with Turbolinks and a little VueJS, used to manage orders in our own bar "Flux". Users authenticate via OAuth API (currently "Alpha Banana") to see how much credit they got left, or to be able to register new orders and/or payments.
+
+Use this repository to build upon, use as-is, learn from it, prove a point or whatever 😏
 
 ## Prerequisits
 
