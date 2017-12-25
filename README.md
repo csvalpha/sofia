@@ -4,7 +4,9 @@ Alpha Tomato
 [![Build Status](https://travis-ci.com/csvalpha/alpha-tomato.svg?token=XFGWKzHpTzj88hKy9q2u&branch=staging)](https://travis-ci.com/csvalpha/alpha-tomato)
 [![codebeat badge](https://codebeat.co/badges/63a40869-8ae4-4ee9-9575-8899c402f70f)](https://codebeat.co/a/twan-coenraad/projects/github-com-csvalpha-alpha-tomato-master)
 
-Dit is de code die hoor bij het nieuwe streepsysteem, werknaam Alpha Tomato.
+The source code belonging to Alpha Tomato (workname). It is a system built with Ruby on Rails with Turbolinks and a little VueJS, used to manage orders in our own bar "Flux". Users authenticate via OAuth API (currently "Alpha Banana") to see how much credit they got left, or to be able to register new orders and/or payments.
+
+Use this repository to build upon, use as-is, learn from it, prove a point or whatever 😏
 
 ## Prerequisits
 
@@ -47,5 +49,15 @@ Gebruikers kunnen in Tomato rollen hebben, namelijk "SB-penningmeester" en/of "H
 ```ruby
 Role.create(name: 'Treasurer', group_uid: <SB Treasurer Group UID>)
 Role.create(name: 'Main Bartender', group_uid: <Main Bartenders Group UID>)
-
 ```
+
+## Contributing
+
+When contributing, please consult with the repository owners in advance to ensure a high chance of PR-success. PR-success means you're PR is merged and you'll be mentioned in the contributors list 🎉.
+
+When submitting a PR, it'll need to be approved, but once approved (and green) you're responsible yourself for clicking the merge button and enjoying the intense feeling of satisfaction!
+
+### Contributors
+
+- [@cmitz](https://github.com/cmitz)
+- [@Matthijsy](https://github.com/Matthijsy)
