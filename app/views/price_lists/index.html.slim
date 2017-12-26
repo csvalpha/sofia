@@ -10,7 +10,7 @@
           = fa_icon 'plus', class: 'mr-1'
           = 'Nieuwe prijslijst'
 
-      = render 'modal'
+      = render :partial => 'modal', :locals => {:model => @new_model }
 
       = content_tag :table, id: 'price_lists_table', class: 'table table-striped',
         data: { price_lists: @recent_price_lists_json, products: @products_json }

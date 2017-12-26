@@ -2,22 +2,22 @@
   .row.justify-content-between.py-3
     .col-sm-12.col-lg-6
 
-      h1 = fa_icon 'user', class: 'mr-2', text: @user.name
+      h1 = fa_icon 'user', class: 'mr-2', text: @model.name
 
       table.table.table-sm
         tbody
           tr
             th scope='row' = 'Aangemaakt op'
-            td = @user.created_at.strftime('%d %B %Y %H:%M')
+            td = @model.created_at.strftime('%d %B %Y %H:%M')
           tr
             th scope='row' = 'Geüpdate op'
-            td = @user.updated_at.strftime('%d %B %Y %H:%M')
+            td = @model.updated_at.strftime('%d %B %Y %H:%M')
           tr
             th scope='row' = 'Account bron'
-            td = @user.provider || 'Handmatig aangemaakt'
+            td = @model.provider || 'Handmatig aangemaakt'
 
       h2
-        = "Saldo: #{number_to_currency(@user.credit, unit: '€')}"
+        = "Saldo: #{number_to_currency(@model.credit, unit: '€')}"
 
     .card.col-sm-8.col-lg-6
       .card-body
@@ -35,9 +35,9 @@
           = 'Je rechten zijn afhankelijk van de rollen die je in het streepsysteem hebt. '
           = 'Je rollen zijn afhankelijk van de commissies waar je in zit.'
 
-        - if @user.roles_users.any?
+        - if @model.roles_users.any?
           ul
-            - @user.roles_users.each do |role|
+            - @model.roles_users.each do |role|
               li = role.name
         - else
           p
@@ -72,13 +72,13 @@
                 th scope='col'= 'bedrag'
 
             tbody
-              - if @user.orders.empty?
+              - if @model.orders.empty?
                 tr
                   td.text-center colspan='3'
                     p.my-1
                       em = 'Deze gebruiker heeft nog geen bestellingen gedaan'
               - else
-                - @user.orders.each do |order|
+                - @model.orders.each do |order|
                   tr
                     th scope='row' = order.id
                     td = order.created_at.strftime('%H:%M:%S - %d %b')
@@ -94,13 +94,13 @@
                 th scope='col'= 'Bedrag'
 
             tbody
-              - if @user.credit_mutations.empty?
+              - if @model.credit_mutations.empty?
                 tr
                   td.text-center colspan='4'
                     p.my-1
                       em = 'Deze gebruiker heeft nog saldomutaties'
               - else
-                - @user.credit_mutations.each do |mutation|
+                - @model.credit_mutations.each do |mutation|
                   tr
                     th scope='row' = mutation.id
                     td = mutation.created_at.strftime('%H:%M:%S - %d %b')

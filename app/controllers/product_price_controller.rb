@@ -1,12 +1,6 @@
 class ProductPriceController < ApplicationController
-  before_action :set_model, only: %i[show update]
-  before_action :authenticate_user!
-
-  after_action :verify_authorized
-
   def show
-    authorize @model
-
+    super
     render json: @model
   end
 
@@ -22,7 +16,7 @@ class ProductPriceController < ApplicationController
 
   private
 
-  def permitted_attributes
-    params.require(:product_price).permit(:price)
+  def model_params
+    [:price]
   end
 end

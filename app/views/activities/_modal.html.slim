@@ -4,11 +4,11 @@
 
       .modal-header
         h5.modal-title
-          = @activity.persisted? ? 'Activiteit wijzigen' : 'Nieuwe activiteit'
+          = @new_model.persisted? ? 'Activiteit wijzigen' : 'Nieuwe activiteit'
         button.close type='button' data-dismiss='modal' aria-label='close'
           span aria-hidden='true' = fa_icon 'times'
 
-      = simple_form_for @activity, wrapper: :horizontal_form do |f|
+      = simple_form_for @new_model, wrapper: :horizontal_form do |f|
         .modal-body id='activities_modal'
           = f.input :title, placeholder: 'Titel', required: true
           = f.input :start_time, as: :string, order: %i[hour minute day month year]
