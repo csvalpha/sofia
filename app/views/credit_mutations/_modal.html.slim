@@ -1,4 +1,4 @@
-= content_tag :div, class: 'modal', id: 'editMutationModal', role: 'dialog', 'aria-labelledby'=> 'editMutationModalLabel', 'aria-hidden'=> 'true', data: { current_mutation_user: @edit_mutation.user }
+= content_tag :div, class: 'modal', id: 'editMutationModal', role: 'dialog', 'aria-labelledby'=> 'editMutationModalLabel', 'aria-hidden'=> 'true', data: { current_mutation_user: @edit_mutation.user || {} }
   .modal-dialog role='document'
     .modal-content
 
@@ -20,8 +20,8 @@
 
             template
               .col-9 style="position:relative"
-                input.d-none name="credit_mutation[user_id]" value=@edit_mutation.user.id v-bind:value="selectedSuggestion.id"
-                input.form-control( type="text" v-model="query" placeholder="Start typing..." value=@edit_mutation.user.name
+                input.d-none name="credit_mutation[user_id]" value=@edit_mutation.user&.id v-bind:value="selectedSuggestion.id"
+                input.form-control( type="text" v-model="query" placeholder="Start typing..." value=@edit_mutation.user&.name
                   @input="updateValue"
                   aria-haspopup= "true" v-bind:aria-expanded="dropdownOpened"
                   required= "true" autocomplete="off")
