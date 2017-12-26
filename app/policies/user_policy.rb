@@ -4,6 +4,6 @@ class UserPolicy < ApplicationPolicy
   end
 
   def show?
-    record == user
+    user&.treasurer? || record == user
   end
 end
