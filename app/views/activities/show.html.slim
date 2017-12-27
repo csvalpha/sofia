@@ -52,6 +52,6 @@
             - @activity.orders.each do |order|
               tr
                 th scope='row' = order.id
-                td = order.created_at.strftime('%H:%M:%S - %d %b')
+                td = order.created_at.strftime('%d %b - %H:%M')
                 td = link_to order.user.name, order.user
                 td = number_to_currency(order.order_total, unit: '€')
