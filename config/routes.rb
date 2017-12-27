@@ -20,7 +20,7 @@ Rails.application.routes.draw do
 
   resources :products, only: %i[index show create update destroy], defaults: { format: :json }
   resources :credit_mutations, only: %i[index create]
-  resources :product_price, only: %i[show update]
+  resources :product_price, only: %i[destroy]
 
   devise_scope :user do
     delete 'sign_out', to: 'devise/sessions#destroy', as: :destroy_user_session
