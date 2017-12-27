@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   resources :users, only: %i[index show create update destroy] do
     collection do
       get :refresh_user_list
+      post :search
     end
   end
 
