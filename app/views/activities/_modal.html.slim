@@ -24,8 +24,6 @@
                   input.d-none name="activity[price_list_id]" v-bind:value="selectedSuggestion.id"
                   input.form-control( type="text" v-model="query" placeholder="Start typing..."
                                       @input="openSuggestions"
-                                      @keydown.enter='enter'
-                                      @keydown.down='down' @keydown.up='up'
                                       @focus="openSuggestions"
                                       aria-haspopup="true" v-bind:aria-expanded="dropdownOpened"
                                       required="true" autocomplete="off")
