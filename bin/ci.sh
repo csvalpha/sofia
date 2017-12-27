@@ -10,6 +10,7 @@ if [ "${TYPE}" = "lint" ] || [ "${TYPE}" = "" ]; then
   RAILS_ENV=test bundle exec rails db:create db:environment:set db:schema:load
   bundle exec consistency_fail
   yarn lint
+  yarn run sass-lint -v -q
 fi
 
 if [ "${TYPE}" = "spec" ] || [ "${TYPE}" = "" ]; then
