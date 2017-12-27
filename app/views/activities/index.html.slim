@@ -21,8 +21,6 @@
             th scope='col' = 'Start Time'
             th scope='col' = 'End Time'
             th scope='col' = 'Streeplijst'
-            th scope='col' = 'Created at'
-            th scope='col' = 'Updated at'
         tbody
           - @activities&.each do |activity|
             tr
@@ -34,7 +32,3 @@
                 = activity.end_time.strftime('%d-%b %H:%M')
               td
                 = activity.price_list.name
-              td
-                = activity.created_at.strftime('%d-%b')
-              td
-                = activity.updated_at.strftime('%d-%b')
