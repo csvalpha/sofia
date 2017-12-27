@@ -14,21 +14,12 @@
       table.table.table-striped
         thead
           tr
-            th scope='col' = 'ID'
             th scope='col' = 'Naam'
-            th scope='col' = 'Toegevoegd'
             th scope='col' = 'Saldo'
-            th scope='col' = 'Account vanuit'
         tbody
           - @model.each do |user|
             tr
-              th scope='row'
-                = user.id
               td
                 = link_to user.name, user
               td
-                = user.created_at.strftime('%d-%b-%Y %H:%M')
-              td
                 = number_to_currency(user.credit, unit: '€')
-              td
-                = user.provider || 'Handmatig aangemaakt'
