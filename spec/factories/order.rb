@@ -2,6 +2,7 @@ FactoryBot.define do
   factory :order do
     activity
     user
+    author { user }
 
     trait :with_items do
       transient do

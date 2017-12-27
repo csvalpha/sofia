@@ -15,6 +15,9 @@
           tr
             th scope='row' = 'Prijslijst'
             td = link_to @activity.price_list.name, @activity.price_list
+          tr
+            th scope='row' = 'Auteur'
+            td = link_to @activity.author.name, @activity.author
 
     .card.col-sm-8.col-lg-4
       .card-body
