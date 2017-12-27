@@ -2,15 +2,18 @@
 @import 'bootstrap';
 @import 'font-awesome';
 
-@import "order_screen";
-@import "price_lists";
+@import 'order_screen';
+@import 'price_lists';
 
 
 // ANIMATIONS
-.slide-fade-enter-active, .slide-fade-leave-active {
+.slide-fade-enter-active,
+.slide-fade-leave-active {
   transition: all .3s ease;
 }
-.slide-fade-enter, .slide-fade-leave-to {
+
+.slide-fade-enter,
+.slide-fade-leave-to {
   transform: translateX(10px);
   opacity: 0;
 }

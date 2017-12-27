@@ -187,7 +187,7 @@ document.addEventListener('turbolinks:load', () => {
       }
     };
 
-    var vueOrderScreen = new Vue({
+    new Vue({
       el: element,
       data: () => {
         return {
@@ -199,7 +199,9 @@ document.addEventListener('turbolinks:load', () => {
       },
       methods: {
         sendFlash: function(message, actionText, type) {
+          /* eslint-disable no-undef */
           flash(message, actionText, type);
+          /* eslint-enable */
         },
 
         doubleToCurrency(price) {
