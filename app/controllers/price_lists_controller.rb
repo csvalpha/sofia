@@ -46,14 +46,6 @@ class PriceListsController < ApplicationController
     redirect_to @price_list
   end
 
-  def search
-    authorize PriceList
-
-    @price_lists = PriceList.where('lower(name) LIKE ?', "%#{params[:query]&.downcase}%")
-
-    render json: @price_lists
-  end
-
   private
 
   def model_includes
