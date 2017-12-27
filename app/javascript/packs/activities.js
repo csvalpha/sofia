@@ -22,14 +22,14 @@ document.addEventListener('turbolinks:load', () => {
         suggestionsUpdatedAt: null
       },
       computed: {
-        dropdownOpened () {
+        dropdownOpened() {
           return this.query !== '' &&
-                 this.suggestions.length !== 0 &&
-                 this.open === true;
+            this.suggestions.length !== 0 &&
+            this.open === true;
         }
       },
       methods: {
-        updateValue: function() {
+        updateValue: function () {
           if ((new Date() - this.suggestionsUpdatedAt) > 150) {
             this.updateSuggestions();
           } else if (this.open === false) {
@@ -38,18 +38,18 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         // When one of the suggestion is clicked
-        suggestionClicked: function(index) {
+        suggestionClicked: function (index) {
           this.selectedSuggestion = this.suggestions[index];
           this.query = this.selectedSuggestion.name;
           this.open = false;
         },
 
-        updateSuggestions: function() {
+        updateSuggestions: function () {
           this.suggestions = [];
           if (this.query.length < 1) {
             return;
           }
-          this.$http.post('/price_lists/search.json', { query: this.query }).then( (response) => {
+          this.$http.post('/price_lists/search.json', {query: this.query}).then((response) => {
             response.data.forEach((a) => {
               this.suggestions.push(a);
             });
