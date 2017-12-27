@@ -74,6 +74,6 @@ class UsersController < ApplicationController
   end
 
   def permitted_attributes
-    params.require(:user).permit(%i[name])
+    params.require(:user).permit(:name)
   end
 end

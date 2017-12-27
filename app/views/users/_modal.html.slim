@@ -4,7 +4,7 @@
 
       .modal-header
         h5.modal-title
-          = @new_user.persisted? ? 'User wijzigen' : 'Nieuwe user'
+          = @new_user.persisted? ? 'Gebruiker wijzigen' : 'Nieuwe gebruiker'
         button.close type='button' data-dismiss='modal' aria-label='close'
           span aria-hidden='true' = fa_icon 'times'
 
@@ -14,4 +14,4 @@
 
         .modal-footer
           button.btn.btn-secondary type='button' data-dismiss='modal' = 'Annuleren'
-          = f.button :submit, 'User opslaan', class: 'btn btn-primary'
+          = f.button :submit, 'Gebruiker opslaan', class: 'btn btn-primary'
