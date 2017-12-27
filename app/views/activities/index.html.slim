@@ -31,4 +31,4 @@
               td
                 = activity.end_time.strftime('%d-%b %H:%M')
               td
-                = activity.price_list.name
+                = link_to activity.price_list.name, activity.price_list
