@@ -16,5 +16,7 @@ module Tomato
     config.i18n.fallbacks = [:en]
 
     config.x.banana_api_host = ENV['BANANA_API_HOST']
+
+    config.exceptions_app = routes
   end
 end

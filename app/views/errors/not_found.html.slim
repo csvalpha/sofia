@@ -1,0 +1,9 @@
+.container
+  .row.d-flex.justify-content-center
+    .col-sm-6
+      .card
+        h5.card-header = 'Error 404'
+        .card-body
+          p.card-text
+            = 'Deze pagina bestaat niet (meer).'
+          = link_to 'Terug naar home', root_path, class: 'btn btn-primary btn-block'
