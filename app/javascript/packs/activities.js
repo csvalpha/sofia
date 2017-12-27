@@ -33,7 +33,7 @@ document.addEventListener('turbolinks:load', () => {
       },
       methods: {
         // When one of the suggestion is clicked
-        suggestionClicked: function(index) {
+        suggestionClicked: function (index) {
           this.selectedSuggestion = this.suggestions[index];
           this.query = this.selectedSuggestion.name;
           this.open = false;
