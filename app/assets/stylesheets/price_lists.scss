@@ -46,9 +46,11 @@ td {
   }
 }
 
-.products-product &:hover { // sass-lint:disable-line force-element-nesting
-  .edit-product-row i { // sass-lint:disable-line force-element-nesting
-    color: $font-color-dark;
+.products-product {
+  &:hover { // sass-lint:disable-line force-element-nesting
+    .edit-product-row i { // sass-lint:disable-line force-element-nesting
+      color: $font-color-dark;
+    }
   }
 }
 
