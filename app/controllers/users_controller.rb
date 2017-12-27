@@ -6,6 +6,8 @@ class UsersController < ApplicationController
   def index
     @model = User.all.includes(model_includes)
     authorize @model
+
+    @new_user = User.new
   end
 
   def show
@@ -13,6 +15,19 @@ class UsersController < ApplicationController
     authorize @user
 
     @new_mutation = CreditMutation.new(user: @user)
+  end
+
+  def create
+    @user = User.new(permitted_attributes)
+    authorize @user
+
+    if @user.save
+      flash[:success] = 'Successfully created user'
+    else
+      flash[:error] = @user.errors.full_messages.join(', ')
+    end
+
+    redirect_to users_path
   end
 
   def refresh_user_list
@@ -66,5 +81,9 @@ class UsersController < ApplicationController
                                               fields['last-name'])
       u.provider = 'banana_oauth2'
     end
+  end
+
+  def permitted_attributes
+    params.require(:user).permit(:name)
   end
 end
