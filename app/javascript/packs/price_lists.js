@@ -48,6 +48,8 @@ document.addEventListener('turbolinks:load', () => {
         saveProduct: function(product) {
           this.sanitizeProductInput(product);
           if (product.id) { // Existing product
+            const prices_to_remove = product.prices_to_remove;
+            delete(product.prices_to_remove);
             this.$http.put(`/products/${product.id}.json`, { product: product }).then( (response) => {
               var newProduct = response.data;
               newProduct.editing = false;
@@ -57,6 +59,9 @@ document.addEventListener('turbolinks:load', () => {
               this.errors = response.data.errors;
             }
             );
+            for (var key in prices_to_remove) {
+              this.$http.delete(`/product_price/${prices_to_remove[key].id}`);
+            }
           } else {
             this.$http.post('/products.json', { product: product }).then( (response) => {
               var index = this.products.indexOf(product);
@@ -85,10 +90,13 @@ document.addEventListener('turbolinks:load', () => {
           }
 
           this.$set(product, 'product_prices_attributes', {});
+          this.$set(product, 'product_prices_remove_attributes', {});
 
           product.product_prices.forEach((price, index) => {
             if (price && price.price && price.price > 0) {
               this.$set(product.product_prices_attributes, index, price);
+            } else if(price.id) {
+              this.$set(product.prices_to_remove, index, price);
             }
           });
 
