@@ -14,7 +14,14 @@
             td = @user.updated_at.strftime('%d %B %Y %H:%M')
           tr
             th scope='row' = 'Account bron'
-            td = @user.provider || 'Handmatig aangemaakt'
+            - if @user.provider == 'banana_oauth2'
+              td
+                a href="https://csvalpha.nl/users/#{@user.uid}"
+                  = @user.provider
+            - else
+              td = @user.provider || 'Handmatig aangemaakt'
+
+
 
       h2
         = "Saldo: #{number_to_currency(@user.credit, unit: '€')}"
@@ -48,9 +55,10 @@
   .row
     .col-sm-12
       span.pull-right
-        .btn.btn-secondary
-          = fa_icon 'plus', class: 'mr-2'
+        button.btn.btn-sm.btn-primary role='button' data-toggle='modal' data-target='#new_mutation_modal'
+          = fa_icon 'plus', class: 'mr-1'
           = 'Nieuwe mutatie'
+      = render 'mutation_modal'
 
       ul.nav.nav-tabs role='tablist' id='userTabs'
         li.nav-item
@@ -81,7 +89,7 @@
                 - @user.orders.each do |order|
                   tr
                     th scope='row' = order.id
-                    td = order.created_at.strftime('%H:%M:%S - %d %b')
+                    td = order.created_at.strftime('%d %b - %H:%M')
                     td = number_to_currency(order.order_total, unit: '€')
 
         .tab-pane id='creditMutations' role='tabpanel' aria-labelledby='creditMutations-tab'
@@ -103,6 +111,6 @@
                 - @user.credit_mutations.each do |mutation|
                   tr
                     th scope='row' = mutation.id
-                    td = mutation.created_at.strftime('%H:%M:%S - %d %b')
+                    td = mutation.created_at.strftime('%d %b - %H:%M')
                     td = mutation.description
                     td = number_to_currency(mutation.amount, unit: '€')
