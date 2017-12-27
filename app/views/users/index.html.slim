@@ -14,11 +14,14 @@
       table.table.table-striped
         thead
           tr
+            th scope='col' = 'ID'
             th scope='col' = 'Naam'
             th scope='col' = 'Saldo'
         tbody
           - @model.each do |user|
             tr
+              th scope='row'
+                = user.id
               td
                 = link_to user.name, user
               td

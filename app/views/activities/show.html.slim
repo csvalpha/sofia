@@ -37,6 +37,7 @@
       table.table.table-striped
         thead
           tr
+            th scope='col'= '#'
             th scope='col'= 'Timestamp'
             th scope='col'= 'User'
             th scope='col'= 'Order total'
@@ -50,6 +51,7 @@
           - else
             - @activity.orders.each do |order|
               tr
+                th scope='row' = order.id
                 td = order.created_at.strftime('%d %b - %H:%M')
                 td = link_to order.user.name, order.user
                 td = number_to_currency(order.order_total, unit: '€')
