@@ -1,39 +1,43 @@
 .order-screen {
-  width: 100vw;
-  height: 100vh;
-
   display: grid;
 
+  width: 100vw;
+  height: 100vh;
+  
   grid-template-columns: [header-start orders-start user-details-start user-details-search-start user-details-suggestions-start] minmax(35%, 340px) [user-details-end user-details-search-end orders-end product-grid-start user-details-suggestions-end] 1fr [header-end product-grid-end];
   grid-template-rows: [header-start] 80px [header-end user-details-start user-details-search-start product-grid-start] 240px [user-details-search-end user-details-suggestions-start orders-start ] 1fr [user-details-end user-details-suggestions-end orders-end product-grid-end];
 
+
   .header {
-    grid-area: header;
-    z-index: 10;
-
-    background-color: $gray-100;
-    color: $font-color-dark;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-
     display: flex;
+
     flex-flow: row nowrap;
     justify-content: space-between;
+    z-index: 10;
+
+    box-shadow: 0 1px 4px $transparent-200;
+    background-color: $gray-100;
+
+    color: $font-color-dark;
+
+    grid-area: header;
   }
 
   .header-nav {
+    flex-flow: row nowrap;
+    align-items: center;
     align-self: flex-start;
+    justify-content: center;
+
+    margin: 0;
+    padding: 0;
+
+    height: 100%;
 
     list-style: none;
-    font-size: $font-size-xl;
-    padding: 0;
-    margin: 0;
-    height: 100%;
-    line-height: 20pt;
 
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: center;
-    align-items: center;
+    line-height: 20pt;
+    font-size: $font-size-xl;
   }
 
   .header-nav-item {
@@ -41,34 +45,38 @@
   }
 
   .header-nav-home {
-    a.nav-link {
-      padding: 0;
-      color: $font-color-dark;
+    a {
+      nav-link {
+        padding: 0;
+        color: $font-color-dark;
+      }
     }
   }
 
   .flash {
+    display: flex;
     align-self: flex-end;
 
-    display: flex;
+    background-color: $gray-800;
     height: 100%;
 
-    font-size: $font-size-lg;
-    text-align: center;
     vertical-align: middle;
-    background-color: $gray-800;
+    text-align: center;
+
     color: $font-color-light;
+    font-size: $font-size-lg;
   }
 
   .flash-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 0 1rem;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    a:hover {
-      text-decoration: none;
+    a {
+      &:hover {
+        text-decoration: none;
+      }
     }
   }
 
@@ -92,13 +100,17 @@
   }
 
   .side-panel {
-    grid-area: user-details;
     z-index: 4;
+
+    border-right: 1px solid $gray-600;
+    box-shadow: 2px 0 4px -2px $transparent-200;
 
     background-color: $gray-200;
     color: $font-color-dark;
-    border-right: 1px solid $gray-600;
-    box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.2);
+    
+    grid-area: user-details;
+    grid-column: user-details-start / orders-end;
+    grid-row: user-details-start / orders-end;
   }
 
   .user-details {
@@ -107,18 +119,25 @@
   }
 
   .user-details-search {
-    grid-area: user-details-search;
+    display: flex;
     z-index: 6;
 
-    font-weight: 300;
-    padding: 1rem;
+    flex-flow: column nowrap;
+    align-items: stretch;
+    justify-content: center;
+
     border-bottom: 1px solid $gray-400;
+    padding: 1.5rem;
+    
+    grid-area: user-details-search;
+
   }
 
   .user-details-seperator {
     text-align: center;
-    font-size: $font-size-lg;
+
     color: $font-color-medium;
+    font-size: $font-size-lg;
   }
 
   .user-details-cash-button {
@@ -132,95 +151,98 @@
   }
 
   .user-details-suggestions {
-    grid-area: user-details-suggestions;
+    display: flex;
     z-index: 6;
 
-    display: flex;
     flex-flow: column nowrap;
 
     overflow-y: auto;
+    
+    grid-area: user-details-suggestions;
   }
 
   .user-details-user {
-    grid-area: user-details-search;
     z-index: 6;
 
     border-bottom: 1px solid $gray-400;
+    
+    grid-area: user-details-search;
   }
 
   .user-details-suggestions-user {
     border-bottom: 1px solid $gray-400;
 
-    &.highlight {
-      background-color: rgba(0,0,0,0.1);
-    }
+    &.highlight, 
     &:hover {
-      background-color: rgba(0,0,0,0.1);
+      background-color: $transparant-200;
     }
   }
 
   .orders {
-    grid-area: orders;
+    display: flex;
     z-index: 5;
 
-    display: flex;
     flex-flow: column nowrap;
     align-content: flex-start;
     justify-content: space-between;
+
+    grid-area: orders;
   }
 
   .orders-header {
-    font-size: $font-size-xl;
     text-align: center;
+
+    font-size: $font-size-xl;
   }
 
   .no-items {
     display: flex;
+    flex-grow: .5;
+
     align-items: center;
     justify-content: center;
-    flex-grow: 0.5;
 
-    font-size: $font-size-lg;
     color: $font-color-medium;
+    font-size: $font-size-lg;
   }
 
   .orders-confirmation {
+    display: flex;
+    align-items: center;
     align-self: flex-end;
+    justify-content: center;
+
+    padding: 1rem;
     width: 100%;
 
     color: $font-color-light;
-    padding: 1rem;
     font-size: $font-size-lg;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 
   .product-grid {
-    grid-area: product-grid;
-
     display: grid;
+    justify-content: flex-start;
+
+    background-color: $gray-400;
+
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: auto;
     grid-gap: 2px;
-
-    background-color: $gray-400;
-    justify-content: flex-start;
+    grid-area: product-grid;
   }
 
   .product-grid-product {
-    background-color: $gray-100;
-
     display: flex;
     flex-flow: column nowrap;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+
+    background-color: $gray-100;
   }
 
   .product-grid-product-name {
-    font-size: $font-size-lg;
-    color: $font-color-dark;
     text-align: center;
+    color: $font-color-dark;
+    font-size: $font-size-lg;
   }
 }

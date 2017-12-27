@@ -27,12 +27,11 @@ class User < ApplicationRecord
   end
 
   def update_role(memberships)
-    return unless memberships&.any?
-    my_roles = []
-    memberships.each do |membership_id|
-      role = Role.find_by(group_uid: membership_id)
-      my_roles << RolesUsers.find_or_create_by(role: role, user: self) if role
-    end
+    roles_to_have = Role.where(group_uid: memberships)
+    roles_to_have.map { |role| RolesUsers.find_or_create_by(role: role, user: self) }
+
+    roles_not_to_have = roles - roles_to_have
+    roles_not_to_have.map(&:destroy)
   end
 
   def self.from_omniauth(auth)

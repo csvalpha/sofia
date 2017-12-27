@@ -16,7 +16,7 @@ document.addEventListener('turbolinks:load', () => {
     // Make sure property exists before Vue sees the data
     products.forEach(p => p.editing = false);
 
-    var vuePriceLists = new Vue({
+    new Vue({
       el: element,
       data: () => {
         return { priceLists: priceLists, products: products };
@@ -35,7 +35,7 @@ document.addEventListener('turbolinks:load', () => {
           });
         },
 
-        newProduct: function(index) {
+        newProduct () {
           var newProduct = {
             name: '',
             requires_age: false,
@@ -48,27 +48,32 @@ document.addEventListener('turbolinks:load', () => {
         saveProduct: function(product) {
           this.sanitizeProductInput(product);
           if (product.id) { // Existing product
+            const prices_to_remove = product.prices_to_remove;
+            delete(product.prices_to_remove);
             this.$http.put(`/products/${product.id}.json`, { product: product }).then( (response) => {
-                var newProduct = response.data;
-                newProduct.editing = false;
+              var newProduct = response.data;
+              newProduct.editing = false;
 
-                this.$set(this.products, this.products.indexOf(product), newProduct);
-              }, (response) => {
-                this.errors = response.data.errors;
-              }
+              this.$set(this.products, this.products.indexOf(product), newProduct);
+            }, (response) => {
+              this.errors = response.data.errors;
+            }
             );
+            for (var key in prices_to_remove) {
+              this.$http.delete(`/product_price/${prices_to_remove[key].id}`);
+            }
           } else {
             this.$http.post('/products.json', { product: product }).then( (response) => {
-                var index = this.products.indexOf(product);
-                this.products.splice(index, 1);
+              var index = this.products.indexOf(product);
+              this.products.splice(index, 1);
 
-                var newProduct = response.data;
-                newProduct.editing = false;
+              var newProduct = response.data;
+              newProduct.editing = false;
 
-                this.products.push(newProduct);
-              }, (response) => {
-                this.errors = response.data.errors;
-              }
+              this.products.push(newProduct);
+            }, (response) => {
+              this.errors = response.data.errors;
+            }
             );
           }
         },
@@ -85,10 +90,13 @@ document.addEventListener('turbolinks:load', () => {
           }
 
           this.$set(product, 'product_prices_attributes', {});
+          this.$set(product, 'product_prices_remove_attributes', {});
 
           product.product_prices.forEach((price, index) => {
             if (price && price.price && price.price > 0) {
               this.$set(product.product_prices_attributes, index, price);
+            } else if(price.id) {
+              this.$set(product.prices_to_remove, index, price);
             }
           });
 

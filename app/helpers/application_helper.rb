@@ -15,4 +15,12 @@ module ApplicationHelper
     when 'alert' then 'alert-warning'
     end
   end
+
+  def datetime_short(datetime)
+    datetime.strftime('%d-%b %H:%M')
+  end
+
+  def date(datetime)
+    datetime.strftime('%d-%b')
+  end
 end

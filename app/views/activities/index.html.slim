@@ -7,7 +7,7 @@
       .d-flex.justify-content-between.mb-3
         p = 'De laatste 25 activiteiten'
 
-        button.btn.btn-sm.btn-primary role='button' data-toggle='modal' data-target='#editActivityModal'
+        button.btn.btn-sm.btn-primary role='button' data-toggle='modal' data-target='#edit_activity_modal'
           = fa_icon 'plus', class: 'mr-1'
           = 'Nieuwe activiteit'
 
@@ -21,20 +21,15 @@
             th scope='col' = 'Start Time'
             th scope='col' = 'End Time'
             th scope='col' = 'Streeplijst'
-            th scope='col' = 'Created at'
-            th scope='col' = 'Updated at'
         tbody
           - @activities&.each do |activity|
             tr
               td
                 = link_to activity.title, activity
               td
-                = activity.start_time.strftime('%d-%b %H:%M')
+                = datetime_short(activity.start_time)
               td
-                = activity.end_time.strftime('%d-%b %H:%M')
+                = datetime_short(activity.end_time)
               td
-                = activity.price_list.name
-              td
-                = activity.created_at.strftime('%d-%b')
-              td
-                = activity.updated_at.strftime('%d-%b')
+                = link_to activity.price_list.name, activity.price_list
+                

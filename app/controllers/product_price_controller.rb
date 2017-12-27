@@ -1,26 +1,21 @@
 class ProductPriceController < ApplicationController
-  before_action :set_model, only: %i[show update]
+  before_action :set_model, only: %i[destroy]
   before_action :authenticate_user!
 
   after_action :verify_authorized
 
-  def show
+  def destroy
     authorize @model
 
-    render json: @model
-  end
-
-  def update
-    authorize @model
-
-    if @model.update(permitted_attributes)
-      render json: @model
-    else
-      respond_bip_error(@model)
-    end
+    @model.destroy
+    head :no_content
   end
 
   private
+
+  def set_model
+    @model ||= ProductPrice.find(params[:id])
+  end
 
   def permitted_attributes
     params.require(:product_price).permit(:price)
