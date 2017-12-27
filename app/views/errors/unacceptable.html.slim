@@ -1,0 +1,9 @@
+.container
+  .row.d-flex.justify-content-center
+    .col-sm-6
+      .card
+        h5.card-header = 'Error 422'
+        .card-body
+          p.card-text
+            = 'Er is een error op de server opgetreden. Mail de ICT-commissie als dit probleem op blijft treden.'
+          = link_to 'Terug', root_path, class: 'btn btn-primary btn-block'
