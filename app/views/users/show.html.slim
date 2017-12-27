@@ -15,6 +15,10 @@
           tr
             th scope='row' = 'Account bron'
             td = @user.provider || 'Handmatig aangemaakt'
+          - if @user.provider
+            tr
+              th scope='row'= 'Account id'
+              td = @user.uid
 
       h2
         = "Saldo: #{number_to_currency(@user.credit, unit: '€')}"
