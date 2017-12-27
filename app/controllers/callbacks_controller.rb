@@ -4,8 +4,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
     if user.persisted?
       sign_in(:user, user)
-      redirect_user = User.find(user.id)
-      redirect_to user.roles.any? ? root_path : redirect_user
+      redirect_to user.roles.any? ? root_path : user_path(user.id)
     else
       redirect_to root_path, flash: { error: 'Authentication failed' }
     end
