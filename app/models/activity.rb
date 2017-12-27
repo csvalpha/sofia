@@ -1,10 +1,13 @@
 class Activity < ApplicationRecord
   has_many :orders, dependent: :destroy
   belongs_to :price_list
+  belongs_to :author, class_name: 'User'
 
   validates :title,       presence: true
   validates :start_time,  presence: true
   validates :end_time,    presence: true
+  validates :price_list,  presence: true
+  validates :author,      presence: true
   validates_datetime :end_time, after: :start_time
 
   scope :upcoming, (lambda {

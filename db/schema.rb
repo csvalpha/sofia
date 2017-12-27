@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171223204829) do
+ActiveRecord::Schema.define(version: 20171227223055) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,8 @@ ActiveRecord::Schema.define(version: 20171223204829) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "price_list_id"
+    t.bigint "author_id"
+    t.index ["author_id"], name: "index_activities_on_author_id"
     t.index ["price_list_id"], name: "index_activities_on_price_list_id"
   end
 
@@ -34,7 +36,9 @@ ActiveRecord::Schema.define(version: 20171223204829) do
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "author_id"
     t.index ["activity_id"], name: "index_credit_mutations_on_activity_id"
+    t.index ["author_id"], name: "index_credit_mutations_on_author_id"
     t.index ["user_id"], name: "index_credit_mutations_on_user_id"
   end
 
@@ -55,7 +59,9 @@ ActiveRecord::Schema.define(version: 20171223204829) do
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "author_id"
     t.index ["activity_id"], name: "index_orders_on_activity_id"
+    t.index ["author_id"], name: "index_orders_on_author_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
