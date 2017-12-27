@@ -48,8 +48,8 @@ document.addEventListener('turbolinks:load', () => {
         saveProduct: function(product) {
           this.sanitizeProductInput(product);
           if (product.id) { // Existing product
-            var remove = product.product_prices_remove_attributes
-            delete(product.product_prices_remove_attributes)
+            const remove = product.prices_to_remove;
+            delete(product.prices_to_remove);
             this.$http.put(`/products/${product.id}.json`, { product: product }).then( (response) => {
               var newProduct = response.data;
               newProduct.editing = false;
@@ -60,7 +60,7 @@ document.addEventListener('turbolinks:load', () => {
             }
             );
             for (var key in remove) {
-                this.$http.delete(`/product_price/${remove[key].id}`);
+              this.$http.delete(`/product_price/${remove[key].id}`);
             }
           } else {
             this.$http.post('/products.json', { product: product }).then( (response) => {
@@ -96,7 +96,7 @@ document.addEventListener('turbolinks:load', () => {
             if (price && price.price && price.price > 0) {
               this.$set(product.product_prices_attributes, index, price);
             } else if(price.id) {
-              this.$set(product.product_prices_remove_attributes, index, price);
+              this.$set(product.prices_to_remove, index, price);
             }
           });
 
