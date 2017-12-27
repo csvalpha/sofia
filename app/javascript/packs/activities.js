@@ -26,9 +26,8 @@ document.addEventListener('turbolinks:load', () => {
           return this.open === true;
         },
         suggestions () {
-          const substrRegex = new RegExp(this.query, 'i');
           return this.allSuggestions.filter(value => {
-            return substrRegex.test(value.name);
+            return value.name.indexOf(this.query) >= 0;
           });
         }
       },
