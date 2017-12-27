@@ -11,7 +11,7 @@ document.addEventListener('turbolinks:load', () => {
   var element = document.getElementById('edit_activity_modal');
   if (element !== null) {
     var price_lists = JSON.parse(element.dataset.priceLists);
-    var vueActivities = new Vue({
+    new Vue({
       el: element,
       data: {
         query: '',

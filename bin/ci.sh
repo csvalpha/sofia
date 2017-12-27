@@ -9,6 +9,7 @@ if [ "${TYPE}" = "lint" ] || [ "${TYPE}" = "" ]; then
   bundle-audit update && bundle-audit check
   RAILS_ENV=test bundle exec rails db:create db:environment:set db:schema:load
   bundle exec consistency_fail
+  yarn lint
 fi
 
 if [ "${TYPE}" = "spec" ] || [ "${TYPE}" = "" ]; then
