@@ -11,6 +11,8 @@ class UsersController < ApplicationController
   def show
     @user = User.includes(model_includes).find(params[:id])
     authorize @user
+
+    @new_mutation = CreditMutation.new(user: @user)
   end
 
   def refresh_user_list
@@ -20,6 +22,14 @@ class UsersController < ApplicationController
       find_or_create_user(user_json)
     end
     redirect_to users_path
+  end
+
+  def search
+    authorize User
+
+    @users = User.where('lower(name) LIKE ?', "%#{params[:query]&.downcase}%")
+
+    render json: @users
   end
 
   def api_token
