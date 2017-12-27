@@ -14,11 +14,14 @@
             td = @user.updated_at.strftime('%d %B %Y %H:%M')
           tr
             th scope='row' = 'Account bron'
-            td = @user.provider || 'Handmatig aangemaakt'
-          - if @user.provider
-            tr
-              th scope='row'= 'Account id'
-              td = @user.uid
+            - if @user.provider == 'banana_oauth2'
+              td
+                a href="https://csvalpha.nl/users/#{@user.uid}"
+                  = @user.provider
+            - else
+              td = @user.provider || 'Handmatig aangemaakt'
+
+
 
       h2
         = "Saldo: #{number_to_currency(@user.credit, unit: '€')}"
