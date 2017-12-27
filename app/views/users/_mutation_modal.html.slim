@@ -1,0 +1,21 @@
+= content_tag :div, class: 'modal', id: 'new_mutation_modal', role: 'dialog', 'aria-labelledby'=> 'new_mutation_modal_label', 'aria-hidden'=> 'true'
+  .modal-dialog role='document'
+    .modal-content
+
+      .modal-header
+        h5.modal-title
+          = "Nieuwe mutation voor #{@user.name}"
+        button.close type='button' data-dismiss='modal' aria-label='close'
+          span aria-hidden='true' = fa_icon 'times'
+
+      = simple_form_for @new_mutation, wrapper: :horizontal_form do |f|
+        .modal-body id='mutations_modal'
+          = f.input :description, placeholder: 'Beschrijving', required: true
+          = f.input :amount, as: :float
+          input.d-none name="credit_mutation[user_id]" value=@new_mutation.user&.id
+
+
+
+        .modal-footer
+          button.btn.btn-secondary type='button' data-dismiss='modal' = 'Annuleren'
+          = f.button :submit, 'Mutatie opslaan', class: 'btn btn-primary'

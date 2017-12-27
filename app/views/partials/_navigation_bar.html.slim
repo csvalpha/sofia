@@ -23,6 +23,9 @@ nav.navbar.navbar-expand-md.navbar-dark.bg-dark
         li.nav-item
           = nav_link price_lists_path, class: 'nav-link'
             = fa_icon 'beer', class: 'mr-2', text: 'Prijzen en producten'
+        li.nav-item
+          = nav_link credit_mutations_path, class: 'nav-link'
+            = fa_icon 'money', class: 'mr-2', text: 'Mutaties'
 
     - if current_user
       .navbar-nav

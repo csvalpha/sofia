@@ -8,7 +8,7 @@ Vue.use(VueResource);
 document.addEventListener('turbolinks:load', () => {
   Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-  var element = document.getElementById('activities_modal');
+  var element = document.getElementById('new_mutation_modal');
   if (element != null) {
     new Vue({
       el: element,
@@ -17,19 +17,19 @@ document.addEventListener('turbolinks:load', () => {
         selectedSuggestion: {
           id: 0
         },
-        open: false,
+        open: true,
         suggestions: [],
         suggestionsUpdatedAt: null
       },
       computed: {
-        dropdownOpened() {
+        dropdownOpened () {
           return this.query !== '' &&
-            this.suggestions.length !== 0 &&
-            this.open === true;
+                 this.suggestions.length !== 0 &&
+                 this.open === true;
         }
       },
       methods: {
-        updateValue: function () {
+        updateValue: function() {
           if ((new Date() - this.suggestionsUpdatedAt) > 150) {
             this.updateSuggestions();
           } else if (this.open === false) {
@@ -38,18 +38,18 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         // When one of the suggestion is clicked
-        suggestionClicked: function (index) {
+        suggestionClicked: function(index) {
           this.selectedSuggestion = this.suggestions[index];
           this.query = this.selectedSuggestion.name;
           this.open = false;
         },
 
-        updateSuggestions: function () {
+        updateSuggestions: function() {
           this.suggestions = [];
-          if (this.query.length < 1) {
+          if (this.query.length < 2) {
             return;
           }
-          this.$http.post('/price_lists/search.json', {query: this.query}).then((response) => {
+          this.$http.post('/users/search.json', { query: this.query }).then( (response) => {
             response.data.forEach((a) => {
               this.suggestions.push(a);
             });
