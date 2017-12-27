@@ -3,43 +3,57 @@
   text-align: center;
 }
 
-th.products-id, th.products-alcohol {
-  width: 1.75rem;
+th {
+  products-id,
+  products-alcohol {
+    width: 1.75rem;
+  }
+
+  .products-actions {
+    width: 4rem;
+  }
 }
 
-th.products-actions  {
-  width: 4rem;
-}
-td.products-new-edit-button {
-  padding: 0.5rem 1rem;
+td {
+  .products-new-edit-button {
+    padding: .5rem 1rem;
+  }
+
+  .products-new {
+    input {
+      .form-control {
+        width: 8rem;
+      }
+
+      .form-check-input {
+        margin-top: .25rem;
+      }
+    }
+  }
+
+  .products-new-price {
+    input {
+      .form-control {
+        width: 2rem;
+      }
+    }
+  }
+
+  .products-cancel-new,
+  .products-cancel-edit,
+  .products-save-new {
+    vertical-align: middle;
+  }
 }
 
-tr.products-product:hover {
-  td.edit-product-row i {
+.products-product &:hover { // sass-lint:disable-line force-element-nesting
+  .edit-product-row i { // sass-lint:disable-line force-element-nesting
     color: $font-color-dark;
   }
 }
 
-td.products-new {
-  input.form-control {
-    width: 8rem;
+button {
+  .products-button-new {
+    cursor: pointer;
   }
-
-  input.form-check-input {
-    margin-top: 0.25rem;
-  }
-}
-
-td.products-new-price {
-  input.form-control {
-    width: 2rem;
-  }
-}
-
-td.products-cancel-new, td.products-cancel-edit, td.products-save-new {
-  vertical-align: middle;
-}
-
-button.products-button-new {
-  cursor: pointer;
 }

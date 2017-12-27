@@ -13,6 +13,7 @@
   "devDependencies": {
     "eslint": "^4.14.0",
     "eslint-loader": "^1.9.0",
+    "sass-lint": "^1.12.1",
     "webpack-dev-server": "^2.9.4"
   },
   "scripts": {
