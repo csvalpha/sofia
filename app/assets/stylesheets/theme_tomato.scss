@@ -13,10 +13,11 @@ $gray-700: #495057;
 $gray-800: #343a40;
 $gray-900: #212529;
 
-
+// Transparent blacks
+$transparent-200: rgba(0, 0, 0, .2);
 
 // Typography
-$font-family-sans-serif: Roboto, "Helvetica Neue", Arial, sans-serif;
+$font-family-sans-serif: Roboto, 'Helvetica Neue', Arial, sans-serif;
 
 $font-weight-light:    300;
 $font-weight-normal:   400;
@@ -36,16 +37,16 @@ $body-color:           $font-color-dark;
 $enable-print-styles:  false;
 
 // Custom stuff
-.table-header-rotated {
-  th.rotate {
+th {
+  .rotate {
     height: 10rem;
     white-space: nowrap;
+
     > div {
-      transform:
-        translate(-9px, 0px)
-        rotate(-45deg);
+      transform: translate(-9px, 0) rotate(-45deg);
       width: 30px;
     }
+
     > div > a {
       padding: 5px 10px;
     }
