@@ -1,8 +1,19 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
-
 @import 'theme_tomato';
 @import 'bootstrap';
 @import 'font-awesome';
 
 @import 'order_screen';
 @import 'price_lists';
+
+
+// ANIMATIONS
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all .3s ease;
+}
+
+.slide-fade-enter,
+.slide-fade-leave-to {
+  transform: translateX(10px);
+  opacity: 0;
+}

@@ -15,4 +15,14 @@
 //= require jquery3
 //= require popper
 //= require bootstrap
+//= require raven-js/dist/raven.min.js
+//= require webfontloader/webfontloader
 //= require_tree .
+
+WebFont.load({
+  google: {
+    families: ['Roboto']
+  }
+});
+
+Raven.config('https://329a65545f5a4cbbb27a1c9d5433113b@sentry.io/228968').install();
