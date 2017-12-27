@@ -1,0 +1,17 @@
+.modal.fade id='edit_user_modal' role='dialog' aria-labelledby='edit_user_model_label' aria-hidden='true'
+  .modal-dialog role='document'
+    .modal-content
+
+      .modal-header
+        h5.modal-title
+          = @new_user.persisted? ? 'Gebruiker wijzigen' : 'Nieuwe gebruiker'
+        button.close type='button' data-dismiss='modal' aria-label='close'
+          span aria-hidden='true' = fa_icon 'times'
+
+      = simple_form_for @new_user, wrapper: :horizontal_form do |f|
+        .modal-body id='activities_modal'
+          = f.input :name, placeholder: 'Naam', required: true
+
+        .modal-footer
+          button.btn.btn-secondary type='button' data-dismiss='modal' = 'Annuleren'
+          = f.button :submit, 'Gebruiker opslaan', class: 'btn btn-primary'
