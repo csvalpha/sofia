@@ -5,11 +5,7 @@ Rails.application.routes.draw do
     resources :orders, only: %i[index new create destroy]
   end
 
-  resources :price_lists, only: %i[index show create update destroy] do
-    collection do
-      post :search
-    end
-  end
+  resources :price_lists, only: %i[index show create update destroy]
 
   resources :users, only: %i[index show create update destroy] do
     collection do
