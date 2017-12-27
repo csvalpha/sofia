@@ -11,7 +11,7 @@ document.addEventListener('turbolinks:load', () => {
   var element = document.getElementById('editMutationModal');
   if (element != null) {
     var user = JSON.parse(element.dataset.currentMutationUser);
-    var vueActivities = new Vue({
+    new Vue({
       el: element,
       data: {
         query: user.name || '',
@@ -51,14 +51,11 @@ document.addEventListener('turbolinks:load', () => {
             return;
           }
           this.$http.post('/users/search.json', { query: this.query }).then( (response) => {
-              response.data.forEach((a) => {
-                this.suggestions.push(a);
-              });
-              this.updateValue();
-            }, (error) => {
-              console.error(response);
-            }
-          );
+            response.data.forEach((a) => {
+              this.suggestions.push(a);
+            });
+            this.updateValue();
+          });
           this.suggestionsUpdatedAt = new Date();
         },
       }
