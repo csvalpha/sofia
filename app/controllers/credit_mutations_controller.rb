@@ -6,13 +6,7 @@ class CreditMutationsController < ApplicationController
     @credit_mutations = CreditMutation.includes(model_includes)
     authorize @credit_mutations
 
-    @edit_mutation = CreditMutation.new
-  end
-
-  def show
-    @credit_mutation = CreditMutation.includes(model_includes).find(params[:id])
-
-    authorize @credit_mutation
+    @new_mutation = CreditMutation.new
   end
 
   def create

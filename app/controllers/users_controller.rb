@@ -12,7 +12,7 @@ class UsersController < ApplicationController
     @user = User.includes(model_includes).find(params[:id])
     authorize @user
 
-    @edit_mutation = CreditMutation.new(user: @user)
+    @new_mutation = CreditMutation.new(user: @user)
   end
 
   def refresh_user_list

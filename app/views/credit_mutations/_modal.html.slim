@@ -4,7 +4,7 @@
 
       .modal-header
         h5.modal-title
-          = @edit_mutation.persisted? ? 'Mutatie wijzigen' : 'Nieuwe mutatie'
+          = @new_mutation.persisted? ? 'Mutatie wijzigen' : 'Nieuwe mutatie'
         button.close type='button' data-dismiss='modal' aria-label='close'
           span aria-hidden='true' = fa_icon 'times'
 
@@ -21,7 +21,7 @@
             template
               .col-9 style="position:relative"
                 input.d-none name="credit_mutation[user_id]" value=@edit_mutation.user&.id v-bind:value="selectedSuggestion.id"
-                input.form-control( type="text" v-model="query" placeholder="Start typing..." value=@edit_mutation.user&.name
+                input.form-control( type="text" v-model="query" placeholder="Start typing..." value=@new_mutation.user&.name
                   @input="updateValue"
                   aria-haspopup= "true" v-bind:aria-expanded="dropdownOpened"
                   required= "true" autocomplete="off")
