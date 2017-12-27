@@ -6,4 +6,8 @@ class UserPolicy < ApplicationPolicy
   def search?
     index?
   end
+
+  def show?
+    user&.treasurer? || record == user
+  end
 end

@@ -21,8 +21,6 @@
             th scope='col' = 'Start Time'
             th scope='col' = 'End Time'
             th scope='col' = 'Streeplijst'
-            th scope='col' = 'Created at'
-            th scope='col' = 'Updated at'
         tbody
           - @activities&.each do |activity|
             tr
@@ -33,8 +31,5 @@
               td
                 = datetime_short(activity.end_time)
               td
-                = activity.price_list.name
-              td
-                = date(activity.created_at)
-              td
-                = date(activity.updated_at)
+                = link_to activity.price_list.name, activity.price_list
+                
