@@ -10,7 +10,7 @@ document.addEventListener('turbolinks:load', () => {
 
   var element = document.getElementById('activities_modal');
   if (element != null) {
-    var vueActivities = new Vue({
+    new Vue({
       el: element,
       data: {
         query: '',
@@ -50,14 +50,11 @@ document.addEventListener('turbolinks:load', () => {
             return;
           }
           this.$http.post('/price_lists/search.json', { query: this.query }).then( (response) => {
-              response.data.forEach((a) => {
-                this.suggestions.push(a);
-              });
-              this.updateValue();
-            }, (error) => {
-              console.error(response);
-            }
-          );
+            response.data.forEach((a) => {
+              this.suggestions.push(a);
+            });
+            this.updateValue();
+          });
           this.suggestionsUpdatedAt = new Date();
         },
       }

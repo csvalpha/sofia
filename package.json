@@ -11,6 +11,11 @@
     "vue-turbolinks": "^2.0.0"
   },
   "devDependencies": {
+    "eslint": "^4.14.0",
+    "eslint-loader": "^1.9.0",
     "webpack-dev-server": "^2.9.4"
+  },
+  "scripts": {
+    "lint": "yarn run eslint -- --ext .js --ext .jsx app/javascript"
   }
 }
