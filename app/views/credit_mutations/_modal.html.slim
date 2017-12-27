@@ -1,4 +1,4 @@
-= content_tag :div, class: 'modal', id: 'editMutationModal', role: 'dialog', 'aria-labelledby'=> 'editMutationModalLabel', 'aria-hidden'=> 'true', data: { current_mutation_user: @edit_mutation.user || {} }
+= content_tag :div, class: 'modal', id: 'editMutationModal', role: 'dialog', 'aria-labelledby'=> 'editMutationModalLabel', 'aria-hidden'=> 'true', data: { current_mutation_user: @new_mutation.user || {} }
   .modal-dialog role='document'
     .modal-content
 
@@ -8,7 +8,7 @@
         button.close type='button' data-dismiss='modal' aria-label='close'
           span aria-hidden='true' = fa_icon 'times'
 
-      = simple_form_for @edit_mutation, wrapper: :horizontal_form do |f|
+      = simple_form_for @new_mutation, wrapper: :horizontal_form do |f|
         .modal-body id='mutations_modal'
           = f.input :description, placeholder: 'Beschrijving', required: true
           = f.input :amount, as: :float
@@ -20,7 +20,7 @@
 
             template
               .col-9 style="position:relative"
-                input.d-none name="credit_mutation[user_id]" value=@edit_mutation.user&.id v-bind:value="selectedSuggestion.id"
+                input.d-none name="credit_mutation[user_id]" value=@new_mutation.user&.id v-bind:value="selectedSuggestion.id"
                 input.form-control( type="text" v-model="query" placeholder="Start typing..." value=@new_mutation.user&.name
                   @input="updateValue"
                   aria-haspopup= "true" v-bind:aria-expanded="dropdownOpened"

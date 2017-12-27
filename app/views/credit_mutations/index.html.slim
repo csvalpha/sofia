@@ -25,7 +25,7 @@
           - @credit_mutations&.each do |mutation|
             tr
               td
-                = link_to mutation.description, mutation
+                = mutation.description
               td
                 = link_to mutation.user.name, mutation.user
               td
