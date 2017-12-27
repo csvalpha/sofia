@@ -6,11 +6,26 @@ class UsersController < ApplicationController
   def index
     @model = User.all.includes(model_includes)
     authorize @model
+
+    @new_user = User.new
   end
 
   def show
     @user = User.includes(model_includes).find(params[:id])
     authorize @user
+  end
+
+  def create
+    @user = User.new(permitted_attributes)
+    authorize @user
+
+    if @user.save
+      flash[:success] = 'Successfully created user'
+    else
+      flash[:error] = @user.errors.full_messages.join(', ')
+    end
+
+    redirect_to users_url
   end
 
   def refresh_user_list
@@ -56,5 +71,9 @@ class UsersController < ApplicationController
                                               fields['last-name'])
       u.provider = 'banana_oauth2'
     end
+  end
+
+  def permitted_attributes
+    params.require(:user).permit(%i[name])
   end
 end

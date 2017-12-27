@@ -8,6 +8,12 @@
           = link_to refresh_user_list_users_path, class: 'btn btn-primary btn-sm'
             = fa_icon 'refresh', class: 'mr-1'
             = 'Sync users'
+          button.btn.btn-sm.btn-primary role='button' data-toggle='modal' data-target='#edit_user_modal'
+            = fa_icon 'plus', class: 'mr-1'
+            = 'Nieuwe gebruiker'
+
+        = render 'modal'
+
 
   .row
     .col-sm-12
