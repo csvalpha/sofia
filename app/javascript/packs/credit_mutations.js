@@ -8,15 +8,14 @@ Vue.use(VueResource);
 document.addEventListener('turbolinks:load', () => {
   Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-  var element = document.getElementById('editMutationModal');
+  var element = document.getElementById('new_mutation_modal');
   if (element != null) {
-    var user = JSON.parse(element.dataset.currentMutationUser);
     new Vue({
       el: element,
       data: {
-        query: user.name || '',
+        query: '',
         selectedSuggestion: {
-          id: user.id || 0
+          id: 0
         },
         open: true,
         suggestions: [],
