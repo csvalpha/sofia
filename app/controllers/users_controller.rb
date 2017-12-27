@@ -25,7 +25,7 @@ class UsersController < ApplicationController
       flash[:error] = @user.errors.full_messages.join(', ')
     end
 
-    redirect_to users_url
+    redirect_to users_path
   end
 
   def refresh_user_list
