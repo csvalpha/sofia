@@ -1,5 +1,4 @@
 class OrdersController < ApplicationController
-  before_action :set_model, only: %i[index new create]
   before_action :authenticate_user!
 
   after_action :verify_authorized
@@ -7,10 +6,11 @@ class OrdersController < ApplicationController
   def index
     authorize Order
 
+    @activity = Activity.includes([:price_list, price_list: { product_price: :product }])
+                        .find(params[:activity_id])
+
     @product_prices_json = @activity.price_list.product_price
-                                    .to_json(include: {
-                                               product: { except: %i[created_at updated_at deleted_at] }
-                                             })
+                                    .to_json(include: { product: { only: %i[id name requires_age] } })
 
     @users_json = User.includes([:orders, :credit_mutations, orders: :order_rows])
                       .to_json(only: %i[name id], methods: :credit)
@@ -19,21 +19,7 @@ class OrdersController < ApplicationController
     render layout: 'order_screen'
   end
 
-  def new; end
-
-  def create; end
-
-  def model_class
-    Order
-  end
-
   private
-
-  def set_model
-    @activity = Activity.includes([:price_list,
-                                   price_list: { product_price: :product }])
-                        .find(params[:activity_id])
-  end
 
   def permitted_attributes
     params.require(:order).permit(%i[user order_row activity_id])
