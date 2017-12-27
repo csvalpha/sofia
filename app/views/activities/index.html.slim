@@ -29,12 +29,12 @@
               td
                 = link_to activity.title, activity
               td
-                = activity.start_time.strftime('%d-%b %H:%M')
+                = datetime_short(activity.start_time)
               td
-                = activity.end_time.strftime('%d-%b %H:%M')
+                = datetime_short(activity.end_time)
               td
                 = activity.price_list.name
               td
-                = activity.created_at.strftime('%d-%b')
+                = date(activity.created_at)
               td
-                = activity.updated_at.strftime('%d-%b')
+                = date(activity.updated_at)
