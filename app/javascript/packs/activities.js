@@ -8,35 +8,30 @@ Vue.use(VueResource);
 document.addEventListener('turbolinks:load', () => {
   Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-  var element = document.getElementById('activities_modal');
-  if (element != null) {
+  var element = document.getElementById('edit_activity_modal');
+  if (element !== null) {
+    var price_lists = JSON.parse(element.dataset.priceLists);
     new Vue({
       el: element,
       data: {
         query: '',
         selectedSuggestion: {
-          id: 0
+          id: 0,
         },
         open: false,
-        suggestions: [],
-        suggestionsUpdatedAt: null
+        allSuggestions: price_lists
       },
       computed: {
-        dropdownOpened() {
-          return this.query !== '' &&
-            this.suggestions.length !== 0 &&
-            this.open === true;
+        dropdownOpened () {
+          return this.open === true;
+        },
+        suggestions () {
+          return this.allSuggestions.filter(value => {
+            return value.name.indexOf(this.query) >= 0;
+          });
         }
       },
       methods: {
-        updateValue: function () {
-          if ((new Date() - this.suggestionsUpdatedAt) > 150) {
-            this.updateSuggestions();
-          } else if (this.open === false) {
-            this.open = true;
-          }
-        },
-
         // When one of the suggestion is clicked
         suggestionClicked: function (index) {
           this.selectedSuggestion = this.suggestions[index];
@@ -44,18 +39,8 @@ document.addEventListener('turbolinks:load', () => {
           this.open = false;
         },
 
-        updateSuggestions: function () {
-          this.suggestions = [];
-          if (this.query.length < 1) {
-            return;
-          }
-          this.$http.post('/price_lists/search.json', {query: this.query}).then((response) => {
-            response.data.forEach((a) => {
-              this.suggestions.push(a);
-            });
-            this.updateValue();
-          });
-          this.suggestionsUpdatedAt = new Date();
+        openSuggestions: function() {
+          this.open = true;
         },
       }
     });
