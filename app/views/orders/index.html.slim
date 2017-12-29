@@ -14,7 +14,7 @@
 
   .side-panel
 
-  user-selection v-bind:selected-user="selectedUser" :users="users" v-on:updateuser="setUser($event)"
+  user-selection :selected-user="selectedUser" :users="users" :updateuser="setUser($event)"
 
   .orders v-if="selectedUser"
     h3.orders-header.font-weight-light.py-2 = 'Bestelling'
@@ -65,7 +65,7 @@
 template id="orderscreen-flash"
   transition name="slide-fade"
     div( v-bind:class="activeNotification.typeObject"  v-if='activeNotification'
-         v-on:mouseover="mouseOver" v-on:mouseleave="mouseLeave")
+         :mouseover="mouseOver" :mouseleave="mouseLeave")
       .flash-text
 
         i v-bind:class='activeNotification.iconObject'
