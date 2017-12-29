@@ -23,16 +23,17 @@
 
       template v-for="(orderRow, index) in orderRows"
         .orders-rows-row.row.py-2
-          .orders-rows-row-product-count.col-3
-            = fa_icon 'plus-square-o', '@click': 'increaseRowAmount(orderRow)'
+          .orders-rows-row-count.col-3
+            = fa_icon 'plus-square-o', class: 'orders-rows-row-count-icon', '@click': 'increaseRowAmount(orderRow)'
             div = '{{orderRow.amount}}'
-            = fa_icon 'minus-square-o', '@click': 'decreaseRowAmount(orderRow)'
+            = fa_icon 'minus-square-o', class: 'orders-rows-row-count-icon', '@click': 'decreaseRowAmount(orderRow)'
 
           .orders-rows-row-product-name.col-6
             = '{{orderRow.productPrice.product.name}}'
           .orders-rows-row-product-price.col-3.d-flex.justify-content-between
-            span = '{{doubleToCurrency(orderRow.productPrice.price * orderRow.amount)}}'
-            span @click="dropOrderRow(index)"
+            span :title="doubleToCurrency(orderRow.productPrice.price) + ' p.s.'"
+              = '{{doubleToCurrency(orderRow.productPrice.price * orderRow.amount)}}'
+            span.order-rows-row-remove @click="dropOrderRow(index)"
               = fa_icon 'times-circle'
 
       template v-if="!orderRows.length"
@@ -47,7 +48,8 @@
         .col-1
 
     .orders-confirmation
-      button.btn.btn-block.btn-lg.btn-success.font-weight-light @click="confirmOrder"
+      button.btn.btn-block.btn-lg.btn-success.font-weight-light(
+        @click="confirmOrder" v-bind:disabled="orderConfirmButtonDisabled()")
         = 'Bestellen'
 
   .product-grid
@@ -70,7 +72,7 @@ template id="orderscreen-flash"
         i v-bind:class='activeNotification.iconObject'
         span.mr-4.font-weight-light = '{{activeNotification.message}}'
 
-        a.flash-undo href='#'
+        .flash-undo
           em = '{{activeNotification.actionText}}'
 
 template id="user-selection"

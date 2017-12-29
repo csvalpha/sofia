@@ -158,9 +158,12 @@
   }
 
   .user-details-close,
-  .order-rows-row-remove {
+  .order-rows-row-remove,
+  .orders-rows-row-count-icon {
+    color: $gray-600;
+
     &:hover {
-      color: $gray-600;
+      color: $gray-900;
     }
   }
 
@@ -225,7 +228,7 @@
     }
   }
 
-  .orders-rows-row-product-count {
+  .orders-rows-row-count {
     display: flex;
     flex-direction: row;
     align-items: center;
