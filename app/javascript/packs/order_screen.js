@@ -194,7 +194,8 @@ document.addEventListener('turbolinks:load', () => {
           users: users,
           productPrices: productPrices,
           activity: activity,
-          selectedUser: null
+          selectedUser: null,
+          orderRows: []
         };
       },
       methods: {
@@ -210,6 +211,42 @@ document.addEventListener('turbolinks:load', () => {
 
         setUser(user) {
           this.selectedUser = user;
+        },
+
+        selectProduct(productPrice) {
+          if (this.selectedUser) {
+            const orderRow = this.orderRows.filter((row) => { return row.productPrice === productPrice; })[0];
+
+            if (orderRow) {
+              orderRow.amount++;
+            } else {
+              this.orderRows.push({productPrice: productPrice, amount: 1});
+            }
+          }
+        },
+
+        dropOrderRow(index) {
+          this.$delete(this.orderRows, index);
+        },
+
+        orderTotal() {
+          return this.orderRows.map(function(row) {
+            return row.productPrice.price * row.amount;
+          }).reduce((total, amount) => total + amount, 0);
+        },
+
+        decreaseRowAmount(orderRow) {
+          if (orderRow.amount > 0) {
+            orderRow.amount--;
+          }
+        },
+
+        increaseRowAmount(orderRow) {
+          orderRow.amount++;
+        },
+
+        confirmOrder() {
+          console.log('Order confirmed');
         }
       },
 
