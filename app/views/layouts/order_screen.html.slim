@@ -9,6 +9,10 @@ html
     = javascript_pack_tag 'order_screen', 'data-turbolinks-track': 'reload'
     = csrf_meta_tags
 
+    - if Rails.env.production?
+      script
+        = "Raven.config('https://329a65545f5a4cbbb27a1c9d5433113b@sentry.io/228968').install();"
+
   body
 
     == yield
