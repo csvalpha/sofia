@@ -13,7 +13,7 @@ class OrdersController < ApplicationController
                                     .to_json(include: { product: { only: %i[id name requires_age] } })
 
     @users_json = User.includes([:orders, :credit_mutations, orders: :order_rows])
-                      .to_json(only: %i[name id], methods: :credit)
+                      .to_json(only: %i[id name], methods: :credit)
     @activity_json = @activity.to_json(only: %i[id title start_time end_time])
 
     render layout: 'order_screen'
@@ -24,7 +24,7 @@ class OrdersController < ApplicationController
     authorize @order
 
     if @order.save
-      render json: @order.to_json(include: json_includes)
+      render json: Order.includes(:order_rows, user: { orders: { order_rows: :product } }).find(@order.id).to_json(include: json_includes)
     else
       render json: @order.errors, status: :unprocessable_entity
     end
@@ -37,7 +37,7 @@ class OrdersController < ApplicationController
   end
 
   def json_includes
-    { user: { only: %i[id name] },
+    { user: { only: %i[id name], methods: :credit },
       activity: { only: %i[id title] },
       order_rows: { only: [:id, :product_count, product: { only: %i[id name credit] }] } }
   end

@@ -135,6 +135,10 @@ document.addEventListener('turbolinks:load', () => {
         };
       },
 
+      watch: {
+        'users': 'queryChange'
+      },
+
       methods: {
         doubleToCurrency(price) {
           return `€${parseFloat(price).toFixed(2)}`;
@@ -264,25 +268,28 @@ document.addEventListener('turbolinks:load', () => {
           }).then((response) => {
             const userName = response.body.user.name;
             const orderTotal = this.doubleToCurrency(response.body.order_total);
-            const additionalInfo = `${userName} ${orderTotal}`;
+            const additionalInfo = `${userName} - ${orderTotal}`;
 
-            this.sendFlash('Bestelling geplaatst', additionalInfo, 'success');
+            this.$set(this.users, this.users.indexOf(this.selectedUser), response.body.user);
+            this.$emit('updateusers');
+
+            this.sendFlash('Bestelling geplaatst.', additionalInfo, 'success');
             this.setUser(null);
           }, (error) => {
             if (error.status == 500) {
-              this.sendFlash('Server error', 'herlaadt de pagina', 'error');
+              this.sendFlash('Server error!', 'Herlaadt de pagina', 'error');
 
               try {
-                throw new Error(error.body.text)
+                throw new Error(error.body.text);
               } catch(e) {
                 /* eslint-disable no-undef */
-                Raven.captureException(e)
+                Raven.captureException(e);
                 /* eslint-enable */
               }
             } else if (error.status == 422) {
-              this.sendFlash('Error bij het opslaan', 'Opnieuw proberen', 'warning');
+              this.sendFlash('Error bij het opslaan!', 'Probeer het opnieuw', 'warning');
             } else {
-              this.sendFlash('Error', 'herlaadt de pagina', 'info');
+              this.sendFlash('Error?!', 'Herlaadt de pagina', 'info');
             }
           });
         },
