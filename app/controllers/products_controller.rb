@@ -10,7 +10,6 @@ class ProductsController < ApplicationController
 
   def create
     @product = Product.new(permitted_attributes)
-
     authorize @product
 
     if @product.save

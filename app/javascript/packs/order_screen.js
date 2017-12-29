@@ -55,8 +55,7 @@ document.addEventListener('turbolinks:load', () => {
       data: () => ({
         notificationQue: [],
         activeNotification: null,
-        timeoutVar: null,
-        notificationCounter: 1
+        timeoutVar: null
       }),
 
       created() {
@@ -68,13 +67,13 @@ document.addEventListener('turbolinks:load', () => {
       methods: {
         flash(message, actionText, type) {
           const flashData = {
-            message: `${message} #${this.notificationCounter}`,
+            message: message,
             actionText: actionText,
             type: type,
             typeObject: this.classes(this.types, type),
             iconObject: this.classes(this.icons, type)
           };
-          this.notificationCounter++;
+
           this.notificationQue.push(flashData);
           this.notificationQueChanged();
         },
@@ -200,9 +199,7 @@ document.addEventListener('turbolinks:load', () => {
       },
       methods: {
         sendFlash: function(message, actionText, type) {
-          /* eslint-disable no-undef */
-          flash(message, actionText, type);
-          /* eslint-enable */
+          window.flash(message, actionText, type);
         },
 
         doubleToCurrency(price) {
@@ -210,6 +207,9 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         setUser(user) {
+          if (!user) {
+            this.orderRows = [];
+          }
           this.selectedUser = user;
         },
 
@@ -246,7 +246,55 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         confirmOrder() {
-          console.log('Order confirmed');
+          const order = {
+            user_id: this.selectedUser.id,
+            activity_id: this.activity.id,
+            order_rows_attributes: this.orderRows.map((row) => {
+              if (row.amount) {
+                return {
+                  product_id: row.productPrice.product.id,
+                  product_count: row.amount
+                };
+              }
+            })
+          };
+
+          this.$http.post(`/activities/${this.activity.id}/orders.json`, {
+            order: order
+          }).then((response) => {
+            const userName = response.body.user.name;
+            const orderTotal = this.doubleToCurrency(response.body.order_total);
+            const additionalInfo = `${userName} ${orderTotal}`;
+
+            this.sendFlash('Bestelling geplaatst', additionalInfo, 'success');
+            this.setUser(null);
+          }, (error) => {
+            if (error.status == 500) {
+              this.sendFlash('Server error', 'herlaadt de pagina', 'error');
+
+              try {
+                throw new Error(error.body.text)
+              } catch(e) {
+                /* eslint-disable no-undef */
+                Raven.captureException(e)
+                /* eslint-enable */
+              }
+            } else if (error.status == 422) {
+              this.sendFlash('Error bij het opslaan', 'Opnieuw proberen', 'warning');
+            } else {
+              this.sendFlash('Error', 'herlaadt de pagina', 'info');
+            }
+          });
+        },
+
+        orderConfirmButtonDisabled() {
+          return !this.selectedUser || this.totalProductCount() == 0;
+        },
+
+        totalProductCount() {
+          return this.orderRows.map(function(row) {
+            return row.amount;
+          }).reduce((total, amount) => total + amount, 0);
         }
       },
 
