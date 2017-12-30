@@ -30,28 +30,57 @@
 
   hr
 
-  .row.py-3
+  .row
     .col-sm-12
-      h2
-        = 'Bestellingen'
-      table.table.table-striped
-        thead
-          tr
-            th scope='col'= '#'
-            th scope='col'= 'Timestamp'
-            th scope='col'= 'User'
-            th scope='col'= 'Order total'
+      ul.nav.nav-tabs role='tablist' id='activityTabs'
+        li.nav-item
+          a.nav-link.active (id='summary-tab' data-toggle="tab" href="#summary" role="tab"
+            aria-controls="summary" aria-selected="true")
+            = 'Samenvatting'
+        li.nav-item
+          a.nav-link (id='orders-tab' data-toggle="tab" href="#orders" role="tab"
+            aria-controls="orders" aria-selected="false")
+            = 'Bestellingen'
 
-        tbody
-          - if @activity.orders.empty?
-            tr
-              td.text-center colspan='4'
-                p.my-1
-                  em = 'Er zijn nog geen bestellingen'
-          - else
-            - @activity.orders.each do |order|
+      .tab-content.p-2 id='activityTabsContent'
+        .tab-pane.show.active id='summary' role='tabpanel' aria-labelledby='summary-tab'
+          table.table.table-striped
+            tbody
               tr
-                th scope='row' = order.id
-                td = order.created_at.strftime('%d %b - %H:%M')
-                td = link_to order.user.name, order.user
-                td = number_to_currency(order.order_total, unit: '€')
+                th scope='row' = 'Totaal mutaties'
+                td = number_to_currency(@activity.credit_mutations_total, unit: '€')
+              tr
+                th scope='row' = 'Totaal unieke producten'
+                td = @activity.sold_products.uniq.size
+              tr
+                th scope='row' = 'Totaal producten'
+                td = @activity.sold_products.size
+              tr
+                th scope='row' = 'Omzet'
+                td = number_to_currency(@activity.revenue, unit: '€')
+              tr
+                th scope='row' = 'Totaal personen'
+                td = @activity.orders.map(&:user).uniq.size
+
+        .tab-pane id='orders' role='tabpanel' aria-labelledby='orders-tab'
+          table.table.table-striped
+            thead
+              tr
+                th scope='col'= '#'
+                th scope='col'= 'Timestamp'
+                th scope='col'= 'User'
+                th scope='col'= 'Order total'
+
+            tbody
+              - if @activity.orders.empty?
+                tr
+                  td.text-center colspan='4'
+                    p.my-1
+                      em = 'Er zijn nog geen bestellingen'
+              - else
+                - @activity.orders.each do |order|
+                  tr
+                    th scope='row' = order.id
+                    td = order.created_at.strftime('%d %b - %H:%M')
+                    td = link_to order.user.name, order.user
+                    td = number_to_currency(order.order_total, unit: '€')
