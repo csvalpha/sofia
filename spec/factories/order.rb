@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :order do
     activity
     user
-    association :author, factory: :user
+    association :created_by, factory: :user
 
     trait :with_items do
       transient do

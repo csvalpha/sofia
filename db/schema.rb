@@ -23,8 +23,8 @@ ActiveRecord::Schema.define(version: 20171227223055) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "price_list_id"
-    t.bigint "author_id"
-    t.index ["author_id"], name: "index_activities_on_author_id"
+    t.bigint "created_by_id"
+    t.index ["created_by_id"], name: "index_activities_on_created_by_id"
     t.index ["price_list_id"], name: "index_activities_on_price_list_id"
   end
 
@@ -36,9 +36,9 @@ ActiveRecord::Schema.define(version: 20171227223055) do
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "author_id"
+    t.bigint "created_by_id"
     t.index ["activity_id"], name: "index_credit_mutations_on_activity_id"
-    t.index ["author_id"], name: "index_credit_mutations_on_author_id"
+    t.index ["created_by_id"], name: "index_credit_mutations_on_created_by_id"
     t.index ["user_id"], name: "index_credit_mutations_on_user_id"
   end
 
@@ -59,9 +59,9 @@ ActiveRecord::Schema.define(version: 20171227223055) do
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "author_id"
+    t.bigint "created_by_id"
     t.index ["activity_id"], name: "index_orders_on_activity_id"
-    t.index ["author_id"], name: "index_orders_on_author_id"
+    t.index ["created_by_id"], name: "index_orders_on_created_by_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
@@ -122,4 +122,7 @@ ActiveRecord::Schema.define(version: 20171227223055) do
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
+  add_foreign_key "activities", "users", column: "created_by_id"
+  add_foreign_key "credit_mutations", "users", column: "created_by_id"
+  add_foreign_key "orders", "users", column: "created_by_id"
 end

@@ -15,7 +15,7 @@ class ActivitiesController < ApplicationController
   end
 
   def create
-    @activity = Activity.new(permitted_attributes.merge(author: current_user))
+    @activity = Activity.new(permitted_attributes.merge(created_by: current_user))
     authorize @activity
 
     if @activity.save

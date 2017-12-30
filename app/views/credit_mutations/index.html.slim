@@ -33,6 +33,6 @@
                 - if mutation.activity
                   = link_to mutation.activity&.title, mutation.activity
               td
-                = link_to mutation.user.name, mutation.user
+                = link_to mutation.created_by.name, mutation.created_by
               td
                 = datetime_short(mutation.created_at)

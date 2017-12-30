@@ -16,8 +16,8 @@
             th scope='row' = 'Prijslijst'
             td = link_to @activity.price_list.name, @activity.price_list
           tr
-            th scope='row' = 'Auteur'
-            td = link_to @activity.author.name, @activity.author
+            th scope='row' = 'Gemaakt door'
+            td = link_to @activity.created_by.name, @activity.created_by
 
     .card.col-sm-8.col-lg-4
       .card-body
@@ -43,6 +43,7 @@
             th scope='col'= '#'
             th scope='col'= 'Timestamp'
             th scope='col'= 'User'
+            th scope='col' = 'Gemaakt door'
             th scope='col'= 'Order total'
 
         tbody
@@ -57,4 +58,5 @@
                 th scope='row' = order.id
                 td = order.created_at.strftime('%d %b - %H:%M')
                 td = link_to order.user.name, order.user
+                td = link_to order.created_by.name, order.created_by
                 td = number_to_currency(order.order_total, unit: '€')
