@@ -24,7 +24,7 @@ class OrdersController < ApplicationController
     authorize @order
 
     if @order.save
-      render json: Order.includes(:order_rows, user: { orders: { order_rows: :product } }).find(@order.id).to_json(include: json_includes)
+      render json: Order.includes(:order_rows, user: { orders: :order_rows }).find(@order.id).to_json(include: json_includes)
     else
       render json: @order.errors, status: :unprocessable_entity
     end
