@@ -14,7 +14,7 @@
 
   .side-panel
 
-  user-selection :selected-user="selectedUser" :users="users" :updateuser="setUser($event)"
+  user-selection :selected-user="selectedUser" :users="users" v-on:updateuser="setUser($event)"
 
   .orders v-if="selectedUser"
     h3.orders-header.font-weight-light.py-2 = 'Bestelling'
