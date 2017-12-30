@@ -91,6 +91,7 @@
                 th scope='col'= 'Timestamp'
                 th scope='col'= 'User'
                 th scope='col'= 'Order total'
+                th scope='col'= 'Producten'
 
             tbody
               - if @activity.orders.empty?
@@ -105,3 +106,10 @@
                     td = order.created_at.strftime('%d %b - %H:%M')
                     td = link_to order.user.name, order.user
                     td = number_to_currency(order.order_total, unit: '€')
+                    td
+                      - order.order_rows.each_with_index do |order_row, i|
+                        = order_row.product.name
+                        - if order_row.product_count > 1
+                          = " (#{order_row.product_count}x)"
+                        - if i < order.order_rows.size - 1
+                          = ', '
