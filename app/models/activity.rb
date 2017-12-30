@@ -7,7 +7,7 @@ class Activity < ApplicationRecord
   validates :start_time,  presence: true
   validates :end_time,    presence: true
   validates :price_list,  presence: true
-  validates :created_by,      presence: true
+  validates :created_by, presence: true
   validates_datetime :end_time, after: :start_time
 
   scope :upcoming, (lambda {
