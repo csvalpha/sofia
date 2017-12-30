@@ -8,10 +8,10 @@
         tbody
           tr
             th scope='row' = 'Starttijd'
-            td = @activity.humanized_start_time
+            td = datetime_short(@activity.start_time)
           tr
             th scope='row' = 'Eindtijd'
-            td = @activity.humanized_end_time
+            td = datetime_short(@activity.end_time)
           tr
             th scope='row' = 'Prijslijst'
             td = link_to @activity.price_list.name, @activity.price_list
@@ -52,6 +52,6 @@
             - @activity.orders.each do |order|
               tr
                 th scope='row' = order.id
-                td = order.created_at.strftime('%d %b - %H:%M')
+                td = datetime_short(order.created_at)
                 td = link_to order.user.name, order.user
                 td = number_to_currency(order.order_total, unit: '€')

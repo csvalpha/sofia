@@ -18,12 +18,4 @@ class Activity < ApplicationRecord
   })
 
   delegate :products, to: :price_list
-
-  def humanized_start_time
-    start_time.strftime('%d %B %Y %H:%M')
-  end
-
-  def humanized_end_time
-    end_time.strftime('%d %B %Y %H:%M')
-  end
 end

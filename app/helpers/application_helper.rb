@@ -20,6 +20,10 @@ module ApplicationHelper
     datetime.strftime('%d-%b %H:%M')
   end
 
+  def datetime_with_year(datetime)
+    datetime.strftime('%d-%b-%Y %H:%M')
+  end
+
   def date(datetime)
     datetime.strftime('%d-%b')
   end
