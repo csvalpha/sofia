@@ -18,6 +18,14 @@
           tr
             th scope='row' = 'Gemaakt door'
             td = link_to @activity.created_by.name, @activity.created_by
+          tr
+            th scope='row' = 'Tappers'
+            td
+              - @activity.bartenders.each_with_index do |user, i|
+                = link_to user.name, user
+                - if i < @activity.bartenders.size - 1
+                  = ', '
+
 
     .card.col-sm-8.col-lg-4
       .card-body
@@ -43,8 +51,9 @@
             th scope='col'= '#'
             th scope='col'= 'Timestamp'
             th scope='col'= 'User'
-            th scope='col' = 'Gemaakt door'
             th scope='col'= 'Order total'
+            - if @activity.bartenders.size > 1
+              th scope='col' = 'Gemaakt door'
 
         tbody
           - if @activity.orders.empty?
@@ -58,5 +67,6 @@
                 th scope='row' = order.id
                 td = order.created_at.strftime('%d %b - %H:%M')
                 td = link_to order.user.name, order.user
-                td = link_to order.created_by.name, order.created_by
                 td = number_to_currency(order.order_total, unit: '€')
+                - if @activity.bartenders.size > 1
+                  td = link_to order.created_by.name, order.created_by

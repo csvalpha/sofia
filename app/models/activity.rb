@@ -29,4 +29,8 @@ class Activity < ApplicationRecord
   def humanized_end_time
     end_time.strftime('%d %B %Y %H:%M')
   end
+
+  def bartenders
+    orders.map(&:created_by).uniq
+  end
 end
