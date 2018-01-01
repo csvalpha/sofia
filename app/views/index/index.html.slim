@@ -20,9 +20,9 @@
             p.card-text
               strong = 'Dit zijn jouw rollen in het streepsysteem'
 
-            - if current_user.roles_users.any?
+            - if current_user.roles.any?
               ul
-                - current_user.roles_users.each do |role|
+                - current_user.roles.each do |role|
                   li = role.name
             - else
               p
