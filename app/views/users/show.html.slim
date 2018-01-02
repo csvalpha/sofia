@@ -8,10 +8,10 @@
         tbody
           tr
             th scope='row' = 'Aangemaakt op'
-            td = datetime_with_year(@user.created_at)
+            td = datetime(@user.created_at)
           tr
             th scope='row' = 'Geüpdate op'
-            td = datetime_with_year(@user.updated_at)
+            td = datetime(@user.updated_at)
           tr
             th scope='row' = 'Account bron'
             - if @user.provider == 'banana_oauth2'

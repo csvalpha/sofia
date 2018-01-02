@@ -8,10 +8,10 @@
         tbody
           tr
             th scope='row' = 'Starttijd'
-            td = datetime_short(@activity.start_time)
+            td = datetime(@activity.start_time)
           tr
             th scope='row' = 'Eindtijd'
-            td = datetime_short(@activity.end_time)
+            td = datetime(@activity.end_time)
           tr
             th scope='row' = 'Prijslijst'
             td = link_to @activity.price_list.name, @activity.price_list
