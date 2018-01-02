@@ -15,6 +15,17 @@
           tr
             th scope='row' = 'Prijslijst'
             td = link_to @activity.price_list.name, @activity.price_list
+          tr
+            th scope='row' = 'Gemaakt door'
+            td = link_to @activity.created_by.name, @activity.created_by
+          tr
+            th scope='row' = 'Tappers'
+            td
+              - @activity.bartenders.each_with_index do |user, i|
+                = link_to user.name, user
+                - if i < @activity.bartenders.size - 1
+                  = ', '
+
 
     .card.col-sm-8.col-lg-4
       .card-body
@@ -92,6 +103,8 @@
                 th scope='col'= 'User'
                 th scope='col'= 'Order total'
                 th scope='col'= 'Producten'
+                - if @activity.bartenders.size > 1
+                  th scope='col' = 'Gemaakt door'
 
             tbody
               - if @activity.orders.empty?
@@ -113,3 +126,5 @@
                           = " (#{order_row.product_count}x)"
                         - if i < order.order_rows.size - 1
                           = ', '
+                    - if @activity.bartenders.size > 1
+                      td = link_to order.created_by.name, order.created_by

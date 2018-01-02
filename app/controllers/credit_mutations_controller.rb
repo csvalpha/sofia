@@ -10,7 +10,7 @@ class CreditMutationsController < ApplicationController
   end
 
   def create
-    @mutation = CreditMutation.new(permitted_attributes)
+    @mutation = CreditMutation.new(permitted_attributes.merge(created_by: current_user))
     authorize @mutation
 
     if @mutation.save

@@ -2,10 +2,13 @@ class Activity < ApplicationRecord
   has_many :orders, dependent: :destroy
   has_many :credit_mutations, dependent: :destroy
   belongs_to :price_list
+  belongs_to :created_by, class_name: 'User'
 
   validates :title,       presence: true
   validates :start_time,  presence: true
   validates :end_time,    presence: true
+  validates :price_list,  presence: true
+  validates :created_by, presence: true
   validates_datetime :end_time, after: :start_time
 
   scope :upcoming, (lambda {
@@ -38,5 +41,9 @@ class Activity < ApplicationRecord
 
   def revenue
     orders.map(&:order_rows).flatten.map(&:row_total).reduce(:+)
+  end
+
+  def bartenders
+    orders.map(&:created_by).uniq
   end
 end
