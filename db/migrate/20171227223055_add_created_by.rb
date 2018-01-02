@@ -1,4 +1,4 @@
-class AddAuthor < ActiveRecord::Migration[5.1]
+class AddCreatedBy < ActiveRecord::Migration[5.1]
   def change
     add_reference :activities, :created_by, references: :users, index: true
     add_foreign_key :activities, :users, column: :created_by_id
