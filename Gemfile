@@ -32,7 +32,7 @@ group :development, :test do
   gem 'awesome_print'
   gem 'better_errors'
   gem 'brakeman', require: false
-  gem 'bullet'
+  gem 'bullet', git: 'https://github.com/nicolas-besnard/bullet.git', branch: 'sentry'
   gem 'colorize'
   gem 'consistency_fail'
   gem 'dotenv-rails', '~> 2.2.1'

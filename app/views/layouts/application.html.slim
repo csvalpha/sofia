@@ -10,6 +10,10 @@ html
     = javascript_pack_tag 'price_lists', 'data-turbolinks-track': 'reload'
     = javascript_pack_tag 'credit_mutations', 'data-turbolinks-track': 'reload'
 
+    - if Rails.env.production?
+      script
+        = "Raven.config('https://329a65545f5a4cbbb27a1c9d5433113b@sentry.io/228968').install();"
+
     = csrf_meta_tags
 
   body

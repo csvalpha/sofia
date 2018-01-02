@@ -14,49 +14,64 @@
 
   .side-panel
 
-  user-selection v-bind:selected-user="selectedUser" :users="users" v-on:updateuser="setUser($event)"
+  user-selection :selected-user="selectedUser" :users="users" v-on:updateuser="setUser($event)"
 
   .orders v-if="selectedUser"
-    p.orders-header.font-weight-light.py-2 = 'Bestelling'
+    h3.orders-header.font-weight-light.py-2 = 'Bestelling'
 
-    - if [true].sample
-      em.no-items.font-weight-light = 'Selecteer rechts een product'
+    .orders-rows.container
 
-    - else
-      .orders-row
-        .orders-row-product-count
-          = '3'
-        .orders-row-product-name
-          = 'Bier'
-        .orders-row-product-price
-          = number_to_currency(1, unit: '€')
-        .orders-row-cancel
-          = fa_icon('remove')
+      template v-for="(orderRow, index) in orderRows"
+        .orders-rows-row.row.py-2
+          .orders-rows-row-count.col-3
+            = fa_icon 'plus-square-o lg', class: 'orders-rows-row-count-icon', '@click': 'increaseRowAmount(orderRow)'
+            div = '{{orderRow.amount}}'
+            = fa_icon 'minus-square-o lg', class: 'orders-rows-row-count-icon', '@click': 'decreaseRowAmount(orderRow)'
 
-    .orders-confirmation.bg-success
-      span.font-weight-light = 'Bestellen'
+          .orders-rows-row-product-name.col-6
+            = '{{orderRow.productPrice.product.name}}'
+          .orders-rows-row-product-price.col-3.d-flex.justify-content-between
+            span :title="doubleToCurrency(orderRow.productPrice.price) + ' p.s.'"
+              = '{{doubleToCurrency(orderRow.productPrice.price * orderRow.amount)}}'
+            span.order-rows-row-remove @click="dropOrderRow(index)"
+              = fa_icon 'times-circle lg'
+
+      template v-if="!orderRows.length"
+        p.text-center.font-weight-light.pt-3
+          em = 'Geen producten geselecteerd'
+
+    .orders-rows-total.container
+      .orders-rows-total-dividor.mb-1
+      .row.justify-content-end
+        span.col-2 = 'Totaal:'
+        span.col-3 = '{{doubleToCurrency(orderTotal())}}'
+
+    .orders-confirmation
+      button.btn.btn-block.btn-lg.btn-success.font-weight-light(
+        @click="confirmOrder" v-bind:disabled="orderConfirmButtonDisabled()")
+        = 'Bestellen'
 
   .product-grid
-    .product-grid-product v-for="price in productPrices"
-      span.product-grid-product-name.font-weight-light = '{{price.product.name}}'
-      span.product-grid-product-price = '{{doubleToCurrency(price.price)}}'
+    .product-grid-product v-for="product in productPrices" @click="selectProduct(product)"
+      span.product-grid-product-name.font-weight-light = '{{product.product.name}}'
+      span.product-grid-product-price = '{{doubleToCurrency(product.price)}}'
 
     em.no-items.font-weight-light v-if="!productPrices.length"
-        span
-          = "Nog geen prijzen beschikbaar in de prijslijst #{@activity.price_list.name}. Klik "
-          = link_to 'hier', price_lists_path
-          = ' om prijzen aan te maken.'
+      span
+        = "Nog geen prijzen beschikbaar in de prijslijst #{@activity.price_list.name}. Klik "
+        = link_to 'hier', price_lists_path
+        = ' om prijzen aan te maken.'
 
 template id="orderscreen-flash"
   transition name="slide-fade"
     div( v-bind:class="activeNotification.typeObject"  v-if='activeNotification'
-         v-on:mouseover="mouseOver" v-on:mouseleave="mouseLeave")
+         :mouseover="mouseOver" :mouseleave="mouseLeave")
       .flash-text
 
         i v-bind:class='activeNotification.iconObject'
         span.mr-4.font-weight-light = '{{activeNotification.message}}'
 
-        a.flash-undo href='#'
+        .flash-undo
           em = '{{activeNotification.actionText}}'
 
 template id="user-selection"
@@ -97,6 +112,7 @@ template id="user-selection"
       .user-details-name.col-8.pl-2.py-2
         h2.mb-3
           = '{{selectedUser.name}}'
-          span.pull-right.pr-2 = fa_icon 'times-circle', class: 'user-details-close', '@click': 'selectUser(null)'
+          span.pull-right.pr-2.user-details-close @click="selectUser(null)"
+            = fa_icon 'times-circle'
         h2 v-bind:class="{ 'text-danger' : (selectedUser.credit <= 0) }"
           = '{{doubleToCurrency(selectedUser.credit)}}'

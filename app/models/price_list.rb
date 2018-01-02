@@ -6,7 +6,8 @@ class PriceList < ApplicationRecord
   validates :name, presence: true
 
   def product_price_for(product)
-    product_price.select { |pp| pp.product == product }.first
+    @product_price ||= ProductPrice.includes(:product).where(price_list: self)
+    @product_price.select { |pp| pp.product == product }.first
   end
 
   def to_s

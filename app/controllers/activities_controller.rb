@@ -3,7 +3,7 @@ class ActivitiesController < ApplicationController
   after_action :verify_authorized
 
   def index # rubocop:disable Metrics/AbcSize
-    @activities = Activity.includes(model_includes)
+    @activities = Activity.includes([:price_list])
     authorize @activities
 
     @activity = Activity.new(
@@ -28,13 +28,9 @@ class ActivitiesController < ApplicationController
   end
 
   def show
-    @activity = Activity.includes(model_includes).find(params[:id])
+    @activity = Activity.includes([:price_list, orders: %i[user order_rows]]).find(params[:id])
 
     authorize @activity
-  end
-
-  def model_includes
-    [:price_list, orders: %i[user order_rows]]
   end
 
   private
