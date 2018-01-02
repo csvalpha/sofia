@@ -7,6 +7,6 @@ class IndexController < ApplicationController
   end
 
   def current_user
-    @current_user ||= super && User.includes(roles_users: :role).find(@current_user.id)
+    @current_user ||= super && User.find(@current_user.id)
   end
 end
