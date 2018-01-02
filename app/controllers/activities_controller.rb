@@ -29,8 +29,8 @@ class ActivitiesController < ApplicationController
 
   def show
     @activity = Activity.includes(:price_list,
-                                   { orders: [{ order_rows: [:product] }, :user] },
-                                   credit_mutations: [:user]).find(params[:id])
+                                  { orders: [{ order_rows: [:product] }, :user] },
+                                  credit_mutations: [:user]).find(params[:id])
 
     authorize @activity
   end
