@@ -21,10 +21,13 @@
           tr
             th scope='row' = 'Tappers'
             td
-              - @activity.bartenders.each_with_index do |user, i|
-                = link_to user.name, user
-                - if i < @activity.bartenders.size - 1
-                  = ', '
+              - if @activity.bartenders.size > 0
+                - @activity.bartenders.each_with_index do |user, i|
+                  = link_to user.name, user
+                  - if i < @activity.bartenders.size - 1
+                    = ', '
+              - else
+                = 'Er zijn nog geen orders aangemaakt'
 
 
     .card.col-sm-8.col-lg-4
@@ -41,32 +44,102 @@
 
   hr
 
-  .row.py-3
+  .row
     .col-sm-12
-      h2
-        = 'Bestellingen'
-      table.table.table-striped
-        thead
-          tr
-            th scope='col'= '#'
-            th scope='col'= 'Timestamp'
-            th scope='col'= 'User'
-            th scope='col'= 'Order total'
-            - if @activity.bartenders.size > 1
-              th scope='col' = 'Gemaakt door'
+      ul.nav.nav-tabs role='tablist' id='activityTabs'
+        li.nav-item
+          a.nav-link.active (id='summary-tab' data-toggle="tab" href="#summary" role="tab"
+            aria-controls="summary" aria-selected="true")
+            = 'Samenvatting'
+        li.nav-item
+          a.nav-link (id='credit_mutations-tab' data-toggle="tab" href="#credit_mutations" role="tab"
+            aria-controls="credit_mutations" aria-selected="false")
+            = 'Mutaties'
+        li.nav-item
+          a.nav-link (id='orders-tab' data-toggle="tab" href="#orders" role="tab"
+            aria-controls="orders" aria-selected="false")
+            = 'Bestellingen'
 
-        tbody
-          - if @activity.orders.empty?
-            tr
-              td.text-center colspan='4'
-                p.my-1
-                  em = 'Er zijn nog geen bestellingen'
-          - else
-            - @activity.orders.each do |order|
+      .tab-content.p-2 id='activityTabsContent'
+        .tab-pane.show.active id='summary' role='tabpanel' aria-labelledby='summary-tab'
+          table.table.table-striped
+            tbody
+              - if @activity.credit_mutations.empty? && @activity.orders.empty?
+                tr
+                  td.text-center colspan='4'
+                    p.my-1
+                      em = 'Deze borrel heeft nog geen mutaties of bestellingen'
+              - else
+                tr
+                  th scope='row' = 'Totaal mutaties'
+                  td = number_to_currency(@activity.credit_mutations_total, unit: '€')
+                tr
+                  th scope='row' = 'Totaal unieke producten'
+                  td = @activity.sold_products.uniq.size
+                tr
+                  th scope='row' = 'Totaal producten'
+                  td = @activity.sold_products.size
+                tr
+                  th scope='row' = 'Omzet'
+                  td = number_to_currency(@activity.revenue, unit: '€')
+                tr
+                  th scope='row' = 'Totaal personen'
+                  td = @activity.orders.map(&:user).uniq.size
+
+        .tab-pane id='credit_mutations' role='tabpanel' aria-labelledby='credit_mutations-tab'
+          table.table.table-striped
+            - if @activity.credit_mutations.empty?
               tr
-                th scope='row' = order.id
-                td = order.created_at.strftime('%d %b - %H:%M')
-                td = link_to order.user.name, order.user
-                td = number_to_currency(order.order_total, unit: '€')
-                - if @activity.bartenders.size > 1
-                  td = link_to order.created_by.name, order.created_by
+                td.text-center colspan='4'
+                  p.my-1
+                    em = 'Er zijn nog geen mutaties'
+            - else
+              thead
+                tr
+                  th scope='col' = 'Beschrijving'
+                  th scope='col' = 'Gebruiker'
+                  th scope='col' = 'Aanmaaktijd'
+              tbody
+                - @activity.credit_mutations&.each do |mutation|
+                  tr
+                    td
+                      = mutation.description
+                    td
+                      = link_to mutation.user.name, mutation.user
+                    td
+                      = datetime_short(mutation.created_at)
+
+        .tab-pane id='orders' role='tabpanel' aria-labelledby='orders-tab'
+          table.table.table-striped
+            - if @activity.orders.empty?
+              tr
+                td.text-center colspan='4'
+                  p.my-1
+                    em = 'Er zijn nog geen bestellingen'
+            - else
+              thead
+                tr
+                  th scope='col'= '#'
+                  th scope='col'= 'Timestamp'
+                  th scope='col'= 'User'
+                  th scope='col'= 'Order total'
+                  th scope='col'= 'Producten'
+                  - if @activity.bartenders.size > 1
+                    th scope='col' = 'Gemaakt door'
+
+              tbody
+                - @activity.orders.each do |order|
+                  tr
+                    th scope='row' = order.id
+                    td = order.created_at.strftime('%d %b - %H:%M')
+                    td = link_to order.user.name, order.user
+                    td = number_to_currency(order.order_total, unit: '€')
+                    td
+                      - order.order_rows.each_with_index do |order_row, i|
+                        = order_row.product.name
+                        - if order_row.product_count > 1
+                          = " (#{order_row.product_count}x)"
+                        - if i < order.order_rows.size - 1
+                          = ', '
+                    - if @activity.bartenders.size > 1
+                      td = link_to order.created_by.name, order.created_by
