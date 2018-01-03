@@ -2,8 +2,12 @@ import Vue from 'vue/dist/vue.esm';
 import TurbolinksAdapter from 'vue-turbolinks';
 import VueResource from 'vue-resource';
 
+import BootstrapVue from 'bootstrap-vue';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
+
 Vue.use(TurbolinksAdapter);
 Vue.use(VueResource);
+Vue.use(BootstrapVue);
 
 document.addEventListener('turbolinks:load', () => {
   Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -24,7 +28,7 @@ document.addEventListener('turbolinks:load', () => {
       props: {
         timeout: {
           type: Number,
-          default: 3000
+          default: 5000
         },
         transition: {
           type: String,
@@ -198,7 +202,10 @@ document.addEventListener('turbolinks:load', () => {
           productPrices: productPrices,
           activity: activity,
           selectedUser: null,
-          orderRows: []
+          orderRows: [],
+          creditMutationAmount: null,
+          creditMutationDescription: null,
+          creditMutationFormInvalid: false
         };
       },
       methods: {
@@ -275,23 +282,7 @@ document.addEventListener('turbolinks:load', () => {
 
             this.sendFlash('Bestelling geplaatst.', additionalInfo, 'success');
             this.setUser(null);
-          }, (error) => {
-            if (error.status == 500) {
-              this.sendFlash('Server error!', 'Herlaadt de pagina', 'error');
-
-              try {
-                throw new Error(error.body.text);
-              } catch(e) {
-                /* eslint-disable no-undef */
-                Raven.captureException(e);
-                /* eslint-enable */
-              }
-            } else if (error.status == 422) {
-              this.sendFlash('Error bij het opslaan!', 'Probeer het opnieuw', 'warning');
-            } else {
-              this.sendFlash('Error?!', 'Herlaadt de pagina', 'info');
-            }
-          });
+          }, this.handleXHRError );
         },
 
         orderConfirmButtonDisabled() {
@@ -302,6 +293,52 @@ document.addEventListener('turbolinks:load', () => {
           return this.orderRows.map(function(row) {
             return row.amount;
           }).reduce((total, amount) => total + amount, 0);
+        },
+
+        saveCreditMutation(event) {
+          this.creditMutationFormInvalid = (!this.selectedUser
+            || !this.creditMutationAmount || !this.creditMutationDescription);
+
+          if (this.creditMutationFormInvalid) {
+            // Prevent event propagation so modal stays visible
+            return event.stopPropagation();
+          }
+
+          this.$http.post('/credit_mutations.json', {
+            credit_mutation: {
+              user_id: this.selectedUser.id,
+              activity_id: this.activity.id,
+              description: this.creditMutationDescription,
+              amount: this.creditMutationAmount
+            }
+          }).then((response) => {
+            this.$set(this.users, this.users.indexOf(this.selectedUser), response.body.user);
+            this.$emit('updateusers');
+
+            this.creditMutationAmount = this.creditMutationDescription = null;
+
+            const additionalInfo = `${response.body.user.name} - ${this.doubleToCurrency(response.body.amount)}`;
+            this.sendFlash('Inleg opgeslagen.', additionalInfo, 'success');
+            this.setUser(null);
+          }, this.handleXHRError);
+        },
+
+        handleXHRError(error) {
+          if (error.status == 500) {
+            this.sendFlash('Server error!', 'Herlaadt de pagina', 'error');
+
+            try {
+              throw new Error(error.body.text);
+            } catch(e) {
+              /* eslint-disable no-undef */
+              Raven.captureException(e);
+              /* eslint-enable */
+            }
+          } else if (error.status == 422) {
+            this.sendFlash('Error bij het opslaan!', 'Probeer het opnieuw', 'warning');
+          } else {
+            this.sendFlash(`Error ${error.status}?!🤔`, 'Herlaadt de pagina', 'info');
+          }
         }
       },
 

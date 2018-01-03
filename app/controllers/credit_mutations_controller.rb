@@ -13,13 +13,25 @@ class CreditMutationsController < ApplicationController
     @mutation = CreditMutation.new(permitted_attributes)
     authorize @mutation
 
-    if @mutation.save
-      flash[:success] = 'Successfully created mutation'
-    else
-      flash[:error] = @mutation.errors.full_messages.join(', ')
-    end
+    respond_to do |format|
+      format.html do
+        if @mutation.save
+          flash[:success] = 'Successfully created mutation'
+        else
+          flash[:error] = @mutation.errors.full_messages.join(', ')
+        end
 
-    redirect_to request.referer
+        redirect_to request.referer
+      end
+
+      format.json do
+        if @mutation.save
+          render json: @mutation, include: { user: { methods: :credit } }
+        else
+          render json: @mutation.errors, status: :unprocessable_entity
+        end
+      end
+    end
   end
 
   def model_includes

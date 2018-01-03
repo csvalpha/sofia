@@ -5,7 +5,7 @@
   height: 100vh;
 
   grid-template-columns: [header-start orders-start user-details-start user-details-search-start user-details-suggestions-start] minmax(35%, 340px) [user-details-end user-details-search-end orders-end product-grid-start user-details-suggestions-end] 1fr [header-end product-grid-end];
-  grid-template-rows: [header-start] 80px [header-end user-details-start user-details-search-start product-grid-start] 240px [user-details-search-end user-details-suggestions-start orders-start ] 1fr [user-details-end user-details-suggestions-end orders-end product-grid-end];
+  grid-template-rows: [header-start] 80px [header-end user-details-start user-details-search-start product-grid-start] 180px [user-details-search-end user-details-suggestions-start orders-start ] 1fr [user-details-end user-details-suggestions-end orders-end product-grid-end];
 
 
   .header {

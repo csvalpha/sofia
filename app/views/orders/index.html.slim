@@ -1,6 +1,57 @@
 = content_tag :div, id: 'order-screen', class: 'order-screen',
   data: { users: @users_json, product_prices: @product_prices_json, activity: @activity_json }
 
+  .modal.fade( id="credit-mutation-modal" tabindex="-1" role="dialog"
+               aria-labelledby="#credit-mutation-modal-label" aria-hidden="true")
+    .modal-dialog role="document"
+      .modal-content
+        .modal-header
+          h5 class="modal-title" id="credit-mutation-modal-label"
+            = 'Inleggen'
+          button type="button" class="close" data-dismiss="modal" aria-label="Close"
+            = fa_icon 'times-circle lg', 'aria-hidden': 'true'
+
+        .modal-body
+          form.col-12.mt-2  v-bind:class="{ 'was-validated': creditMutationFormInvalid }" novalidate=""
+            .form-group.row
+              .col-4
+                label.col-form-label for="creditMutationAmountInput"
+                  = 'Inleg *'
+              .col-8
+                .input-group
+                  .input-group-prepend
+                    .input-group-text = fa_icon 'euro'
+                  input.form-control( type="text" placeholder="10.00" required=""
+                                      v-model="creditMutationAmount"
+                                      id="creditMutationAmountInput")
+                  .invalid-feedback
+                    = 'Bedrag is verplicht'
+
+            .form-group.row
+              .col-4
+                label.col-form-label for="creditMutationDescriptionInput"
+                  = 'Beschrijving *'
+              .col-8
+                input.form-control( type="text" v-model="creditMutationDescription" required=""
+                                    id="creditMutationDescriptionInput")
+                .invalid-feedback
+                  = 'Beschrijving is verplicht'
+
+            fieldset disabled="true"
+              .form-group.row
+                label.col-4.col-form-label
+                  = 'Activiteit *'
+                .col-8
+                  input.form-control type="text" v-bind:value="activity.title"
+                  small.form-text.text-muted
+                    = 'Omdat deze inleg aangemaakt wordt tijdens een activiteit kan je dit niet aanpassen'
+
+        .modal-footer
+          button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close"
+            = 'Annuleren'
+          button type="sumbit" class="btn btn-primary" @click="saveCreditMutation($event)" data-dismiss="modal"
+            = 'Aanmaken'
+
   nav.header
     ul.header-nav
       li.header-nav-item.header-nav-home
@@ -58,7 +109,7 @@
 
     em.no-items.font-weight-light v-if="!productPrices.length"
       span
-        = "Nog geen prijzen beschikbaar in de prijslijst #{@activity.price_list.name}. Klik "
+        = "Nog geen producten beschikbaar in de prijslijst #{@activity.price_list.name}. Klik "
         = link_to 'hier', price_lists_path
         = ' om prijzen aan te maken.'
 
@@ -83,12 +134,6 @@ template id="user-selection"
              @keyup.up="decreaseHighlightedUserIndex"
              @keyup.down="increaseHighlightedUserIndex")
 
-      em.user-details-seperator.font-weight-light.py-2 = 'of'
-
-      .user-details-cash-button
-        button.btn.btn-secondary.btn-lg.font-weight-light
-          = 'Contant betalen'
-
     .user-details-suggestions
       .user-details-suggestions-user.row.no-gutters(
           v-for="(user, index) in suggestedUsers"
@@ -106,13 +151,19 @@ template id="user-selection"
               = '{{doubleToCurrency(user.credit)}}'
 
   .user-details v-else=""
-    .user-details-user.row.no-gutters.py-3.px-1
-      .user-details-avatar.col-4
-        = image_tag '/images/avatar_thumb_default.png', class: 'img-thumbnail rounded-circle'
-      .user-details-name.col-8.pl-2.py-2
-        h2.mb-3
-          = '{{selectedUser.name}}'
-          span.pull-right.pr-2.user-details-close @click="selectUser(null)"
-            = fa_icon 'times-circle'
-        h2 v-bind:class="{ 'text-danger' : (selectedUser.credit <= 0) }"
-          = '{{doubleToCurrency(selectedUser.credit)}}'
+    .user-details-user.container
+      .row.py-3
+        .user-details-avatar.col-4.px-1
+          = image_tag '/images/avatar_thumb_default.png', class: 'img-thumbnail rounded-circle'
+        .user-details-name.col-8
+          h2.mb-3
+            = '{{selectedUser.name}}'
+            span.pull-right.pr-2.user-details-close @click="selectUser(null)"
+              = fa_icon 'times-circle'
+
+          h2 v-bind:class="{ 'text-danger' : (selectedUser.credit <= 0) }"
+            = '{{doubleToCurrency(selectedUser.credit)}}'
+
+          button.btn.btn-secondary data-toggle="modal" data-target="#credit-mutation-modal"
+            = fa_icon 'money', class: 'mr-1'
+            = 'Geld inleggen'
