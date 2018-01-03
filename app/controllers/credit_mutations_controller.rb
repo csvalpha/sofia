@@ -35,7 +35,7 @@ class CreditMutationsController < ApplicationController
   end
 
   def model_includes
-    %i[user activity]
+    %i[user activity created_by]
   end
 
   def permitted_attributes

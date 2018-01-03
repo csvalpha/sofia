@@ -1,12 +1,9 @@
 .container
-
-  .row.py-4
-    .col-sm-12
+  .row.pt-4
+    .col-sm-12.d-flex.justify-content-between.align-items-center
       h1 = 'Activities'
 
-      .d-flex.justify-content-between.mb-3
-        p = 'De laatste 25 activiteiten'
-
+      - if current_user&.treasurer? || current_user&.main_bartender?
         button.btn.btn-sm.btn-primary role='button' data-toggle='modal' data-target='#edit_activity_modal'
           = fa_icon 'plus', class: 'mr-1'
           = 'Nieuwe activiteit'
@@ -32,4 +29,3 @@
                 = datetime_short(activity.end_time)
               td
                 = link_to activity.price_list.name, activity.price_list
-                
