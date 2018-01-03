@@ -11,7 +11,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user = User.includes(model_includes).find(params[:id])
+    @user = User.includes([activities: [orders: [order_rows: [:product]]]]).find(params[:id])
     authorize @user
 
     @new_mutation = CreditMutation.new(user: @user)

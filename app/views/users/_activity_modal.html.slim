@@ -1,0 +1,37 @@
+div.modal#activity_orders_model role='dialog' aria_hidden='true'
+  .modal-dialog role='document'
+    .modal-content
+      template v-if='selectedActivity'
+        .modal-header
+          h5.modal-title
+            = '{{selectedActivity.title}}'
+          button.close type='button' data-dismiss='modal' aria-label='close'
+            span aria-hidden='true' = fa_icon 'times'
+
+        .modal-body id='activities_modal'
+          table.table.table-striped
+            thead
+              tr
+                td #
+                td Product
+                td Aantal
+                td Per stuk
+                td Totaal
+            tbody v-for="order in selectedActivity.orders"
+              tr
+                tr v-for="row in order.order_rows"
+                  td = '{{row.id}}'
+                  td = '{{row.product.name}}'
+                  td = '{{row.product_count}}'
+                  td = '{{row.price_per_product}}'
+                  td = '{{row.row_total}}'
+                tr.table-success
+                  td colspan='4'
+                    = "Afgerekend om "
+                    = '{{order.created_at}}'
+                  td = '{{order.order_total}}'
+
+
+
+      .modal-footer
+        button.btn.btn-secondary type='button' data-dismiss='modal' = 'Sluiten'
