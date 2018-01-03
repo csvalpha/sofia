@@ -20,7 +20,7 @@ class OrdersController < ApplicationController
   end
 
   def create
-    @order = Order.new(permitted_attributes)
+    @order = Order.new(permitted_attributes.merge(created_by: current_user))
     authorize @order
 
     if @order.save
