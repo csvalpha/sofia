@@ -1,5 +1,6 @@
 class Activity < ApplicationRecord
   has_many :orders, dependent: :destroy
+  has_many :credit_mutations, dependent: :destroy
   belongs_to :price_list
   belongs_to :created_by, class_name: 'User'
 
@@ -21,6 +22,18 @@ class Activity < ApplicationRecord
   })
 
   delegate :products, to: :price_list
+
+  def credit_mutations_total
+    credit_mutations.map(&:amount).reduce(:+)
+  end
+
+  def sold_products
+    orders.map(&:order_rows).flatten.map(&:product)
+  end
+
+  def revenue
+    orders.map(&:order_rows).flatten.map(&:row_total).reduce(:+)
+  end
 
   def bartenders
     orders.map(&:created_by).uniq
