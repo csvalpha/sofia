@@ -68,20 +68,20 @@
   user-selection :selected-user="selectedUser" :users="users" v-on:updateuser="setUser($event)"
 
   .orders v-if="selectedUser"
-    h3.orders-header.font-weight-light.py-2 = 'Bestelling'
+    h4.orders-header.font-weight-light.py-2 = 'Bestelling'
 
     .orders-rows.container
 
       template v-for="(orderRow, index) in orderRows"
         .orders-rows-row.row.py-2
-          .orders-rows-row-count.col-3
+          .orders-rows-row-count.col-3.px-1.px-md-2.px-lg-3
             = fa_icon 'plus-square-o lg', class: 'orders-rows-row-count-icon', '@click': 'increaseRowAmount(orderRow)'
             div = '{{orderRow.amount}}'
             = fa_icon 'minus-square-o lg', class: 'orders-rows-row-count-icon', '@click': 'decreaseRowAmount(orderRow)'
 
           .orders-rows-row-product-name.col-6
             = '{{orderRow.productPrice.product.name}}'
-          .orders-rows-row-product-price.col-3.d-flex.justify-content-between
+          .orders-rows-row-product-price.col-3.px-1.px-lg-3.d-flex.justify-content-between
             span :title="doubleToCurrency(orderRow.productPrice.price) + ' p.s.'"
               = '{{doubleToCurrency(orderRow.productPrice.price * orderRow.amount)}}'
             span.order-rows-row-remove @click="dropOrderRow(index)"
@@ -94,8 +94,8 @@
     .orders-rows-total.container
       .orders-rows-total-dividor.mb-1
       .row.justify-content-end
-        span.col-2 = 'Totaal:'
-        span.col-3 = '{{doubleToCurrency(orderTotal())}}'
+        span.col-3 = 'Totaal:'
+        span.col-3.px-2 = '{{doubleToCurrency(orderTotal())}}'
 
     .orders-confirmation
       button.btn.btn-block.btn-lg.btn-success.font-weight-light(
@@ -156,12 +156,12 @@ template id="user-selection"
         .user-details-avatar.col-4.px-1
           = image_tag '/images/avatar_thumb_default.png', class: 'img-thumbnail rounded-circle'
         .user-details-name.col-8
-          h2.mb-3
+          h3.mb-3
             = '{{selectedUser.name}}'
             span.pull-right.pr-2.user-details-close @click="selectUser(null)"
               = fa_icon 'times-circle'
 
-          h2 v-bind:class="{ 'text-danger' : (selectedUser.credit <= 0) }"
+          h3 v-bind:class="{ 'text-danger' : (selectedUser.credit <= 0) }"
             = '{{doubleToCurrency(selectedUser.credit)}}'
 
           button.btn.btn-secondary data-toggle="modal" data-target="#credit-mutation-modal"
