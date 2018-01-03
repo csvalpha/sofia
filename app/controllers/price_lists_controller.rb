@@ -17,7 +17,7 @@ class PriceListsController < ApplicationController
   end
 
   def show
-    @price_list = PriceList.includes(model_includes).find(params[:id])
+    @price_list = PriceList.includes([:activities]).find(params[:id])
     @products = Product.all.order(:id)
     authorize @price_list
   end
@@ -47,10 +47,6 @@ class PriceListsController < ApplicationController
   end
 
   private
-
-  def model_includes
-    [:product_price, :activities, product_price: :product]
-  end
 
   def permitted_attributes
     params.require(:price_list).permit(:name)

@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   devise :omniauthable, omniauth_providers: [:banana_oauth2]
   has_many :orders, dependent: :destroy
+  has_many :order_rows, through: :orders, dependent: :destroy
   has_many :credit_mutations, dependent: :destroy
 
   has_many :roles_users, class_name: 'RolesUsers', dependent: :destroy
@@ -11,7 +12,7 @@ class User < ApplicationRecord
   scope :in_banana, (-> { where(provider: 'banana_oauth2') })
 
   def credit
-    credit_mutations.map(&:amount).sum - orders.map(&:order_total).sum
+    credit_mutations.map(&:amount).sum - order_rows.map(&:row_total).sum
   end
 
   def roles
