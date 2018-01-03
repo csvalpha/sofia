@@ -9,27 +9,18 @@ class CreditMutationsController < ApplicationController
     @new_mutation = CreditMutation.new
   end
 
-  def create
+  def create # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     @mutation = CreditMutation.new(permitted_attributes.merge(created_by: current_user))
     authorize @mutation
 
     respond_to do |format|
-      format.html do
-        if @mutation.save
-          flash[:success] = 'Successfully created mutation'
-        else
-          flash[:error] = @mutation.errors.full_messages.join(', ')
-        end
+      if @mutation.save
+        format.html { redirect_to request.referer, success: 'Successfully created mutation' }
+        format.json { render json: @mutation, include: { user: { methods: :credit } } }
 
-        redirect_to request.referer
-      end
-
-      format.json do
-        if @mutation.save
-          render json: @mutation, include: { user: { methods: :credit } }
-        else
-          render json: @mutation.errors, status: :unprocessable_entity
-        end
+      else
+        format.html { redirect_to request.referer, error: @mutation.errors.full_messages.join(', ') }
+        format.json { render json: @mutation.errors, status: :unprocessable_entity }
       end
     end
   end

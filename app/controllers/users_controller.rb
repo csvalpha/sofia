@@ -62,7 +62,7 @@ class UsersController < ApplicationController
   end
 
   def model_includes
-    [:credit_mutations, :order_rows]
+    %i[credit_mutations order_rows]
   end
 
   private
