@@ -88,7 +88,7 @@
                       em = 'Deze gebruiker heeft nog geen bestellingen op activiteiten gedaan'
               - else
                 - @user.activities.uniq.each do |activity|
-                  tr @click="openModal(#{activity.to_json(:include => {:orders => {:include => {:order_rows => {:include => :product, :methods => :row_total}}}})})"
+                  tr @click="openModal(#{activity.to_json(:include => {:orders => {:include => {:order_rows => {:include => :product, :methods => :row_total}}, :methods => :created_at_time}})})"
                     th scope='row' = activity.id
                     td = activity.title
                     td = activity.humanized_start_time

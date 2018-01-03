@@ -11,4 +11,8 @@ class Order < ApplicationRecord
   def order_total
     @sum ||= order_rows.map(&:row_total).sum
   end
+
+  def created_at_time
+    created_at.strftime('%H:%M')
+  end
 end
