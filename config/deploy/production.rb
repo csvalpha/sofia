@@ -1,6 +1,7 @@
 set :branch, :master
 set :deploy_to, '/opt/projects/alpha-tomato-production'
 
+# disable docker:compose:down for initial deploy
 before :"deploy:started", 'docker:compose:down'
 after :"docker:deploy:compose:start", 'docker:deploy:compose:migrate'
 
