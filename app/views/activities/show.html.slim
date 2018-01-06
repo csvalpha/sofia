@@ -116,7 +116,6 @@
                   th scope='col' = 'User'
                   th scope='col' = 'Order total'
                   th scope='col' = 'Producten'
-                  th scope='col' = 'Gemaakt door'
 
               tbody
                 - @activity.orders.each do |order|
@@ -132,5 +131,3 @@
                           = " (#{order_row.product_count}x)"
                         - if i < order.order_rows.size - 1
                           = ', '
-                    - if @activity.bartenders.any?
-                      td = link_to order.created_by.name, order.created_by
