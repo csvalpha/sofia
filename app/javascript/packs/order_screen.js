@@ -200,7 +200,7 @@ document.addEventListener('turbolinks:load', () => {
           selectedUser: null,
           orderRows: [],
           creditMutationAmount: null,
-          creditMutationDescription: null,
+          creditMutationDescription: 'Inleg contant',
           creditMutationFormInvalid: false
         };
       },
@@ -311,7 +311,8 @@ document.addEventListener('turbolinks:load', () => {
             this.$set(this.users, this.users.indexOf(this.selectedUser), response.body.user);
             this.$emit('updateusers');
 
-            this.creditMutationAmount = this.creditMutationDescription = null;
+            this.creditMutationAmount = null;
+            this.creditMutationDescription = 'Inleg contant';
 
             const additionalInfo = `${response.body.user.name} - ${this.doubleToCurrency(response.body.amount)}`;
             this.sendFlash('Inleg opgeslagen.', additionalInfo, 'success');
