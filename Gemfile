@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'bcrypt', '~> 3.1.7'
-gem 'bootstrap', '~> 4.0.0.beta2'
+gem 'bootstrap', '~> 4.0.0.beta3'
 gem 'coffee-rails', '~> 4.2'
 gem 'devise', '~> 4.3.0'
 gem 'devise-i18n', '~> 1.5'
