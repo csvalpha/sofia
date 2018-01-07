@@ -13,7 +13,7 @@
       - if @price_list.activities.any?
         p
           = "Laatstgebruikt bij \"#{@price_list.activities.last.title}\" "
-          = "op #{@price_list.activities.last.humanized_start_time}"
+          = "op #{datetime_short(@price_list.activities.last.start_time)}"
       - else
         p = 'List is nog nooit gebruikt bij een activiteit'
 

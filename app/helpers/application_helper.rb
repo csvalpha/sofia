@@ -17,10 +17,14 @@ module ApplicationHelper
   end
 
   def datetime_short(datetime)
-    datetime.strftime('%d-%b %H:%M')
+    datetime.strftime('%d-%m %H:%M')
+  end
+
+  def datetime(datetime)
+    datetime.strftime('%d %B %Y %H:%M')
   end
 
   def date(datetime)
-    datetime.strftime('%d-%b')
+    datetime.strftime('%d-%b-%y')
   end
 end

@@ -8,10 +8,10 @@
         tbody
           tr
             th scope='row' = 'Aangemaakt op'
-            td = @user.created_at.strftime('%d %B %Y %H:%M')
+            td = datetime(@user.created_at)
           tr
             th scope='row' = 'Geüpdate op'
-            td = @user.updated_at.strftime('%d %B %Y %H:%M')
+            td = datetime(@user.updated_at)
           tr
             th scope='row' = 'Account bron'
             - if @user.provider == 'banana_oauth2'
@@ -89,7 +89,7 @@
                 - @user.orders.each do |order|
                   tr
                     th scope='row' = order.id
-                    td = order.created_at.strftime('%d %b - %H:%M')
+                    td = datetime_short(order.created_at)
                     td = number_to_currency(order.order_total, unit: '€')
 
         .tab-pane id='creditMutations' role='tabpanel' aria-labelledby='creditMutations-tab'
@@ -111,6 +111,6 @@
                 - @user.credit_mutations.each do |mutation|
                   tr
                     th scope='row' = mutation.id
-                    td = mutation.created_at.strftime('%d %b - %H:%M')
+                    td = datetime_short(mutation.created_at)
                     td = mutation.description
                     td = number_to_currency(mutation.amount, unit: '€')
