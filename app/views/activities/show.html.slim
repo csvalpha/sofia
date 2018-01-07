@@ -1,6 +1,6 @@
 .container
-  .row.justify-content-between.py-3
-    .col-sm-12.col-lg-6
+  .row.justify-content-between
+    .col-sm-12.col-md-6.py-2
 
       h1 = fa_icon 'calendar', class: 'mr-2', text: @activity.title
 
@@ -8,10 +8,10 @@
         tbody
           tr
             th scope='row' = 'Starttijd'
-            td = @activity.humanized_start_time
+            td = datetime(@activity.start_time)
           tr
             th scope='row' = 'Eindtijd'
-            td = @activity.humanized_end_time
+            td = datetime(@activity.end_time)
           tr
             th scope='row' = 'Prijslijst'
             td = link_to @activity.price_list.name, @activity.price_list
@@ -22,13 +22,11 @@
             th scope='row' = 'Tappers'
             td = @activity.bartenders.map(&:name).join(', ')
 
-    .card.col-sm-8.col-lg-4
+    .card.col-sm-12.col-md-6.col-lg-4.py-2.align-self-start
       .card-body
-        h2.card-title
-          = 'Streepscherm'
+        h2.card-title = 'Streepscherm'
 
-        p.card-text
-          = 'Klik op de knop hieronder om naar het streepscherm te gaan.'
+        p.card-text = 'Je kan bestellingen plaatsen in het streepscherm.'
 
         = link_to activity_orders_url(@activity), class: 'btn btn-primary btn-block'
           = 'Naar het streepscherm'
@@ -46,7 +44,7 @@
         li.nav-item
           a.nav-link (id='credit_mutations-tab' data-toggle="tab" href="#credit_mutations" role="tab"
             aria-controls="credit_mutations" aria-selected="false")
-            = 'Mutaties'
+            = 'Inleg en correcties'
         li.nav-item
           a.nav-link (id='orders-tab' data-toggle="tab" href="#orders" role="tab"
             aria-controls="orders" aria-selected="false")
@@ -60,10 +58,10 @@
                 tr
                   td.text-center colspan='4'
                     p.my-1
-                      em = 'Deze borrel heeft nog geen mutaties of bestellingen'
+                      em = 'Er zijn nog geen bestellingen en er is nog niet ingelegd'
               - else
                 tr
-                  th scope='row' = 'Totaal mutaties'
+                  th scope='row' = 'Totaal aan inleg en correcties'
                   td = number_to_currency(@activity.credit_mutations_total, unit: '€')
                 tr
                   th scope='row' = 'Totaal unieke producten'
@@ -84,7 +82,7 @@
               tr
                 td.text-center colspan='4'
                   p.my-1
-                    em = 'Er zijn nog geen mutaties'
+                    em = 'Er zijn nog geen correcties en er is nog niet ingelegd'
             - else
               thead
                 tr

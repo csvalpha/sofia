@@ -1,6 +1,6 @@
 .container
-  .row.justify-content-between.py-3
-    .col-sm-12.col-lg-6
+  .row.justify-content-between
+    .col-sm-12.col-md-6.py-2
 
       h1 = fa_icon 'user', class: 'mr-2', text: @user.name
 
@@ -8,58 +8,54 @@
         tbody
           tr
             th scope='row' = 'Aangemaakt op'
-            td = @user.created_at.strftime('%d %B %Y %H:%M')
-          tr
-            th scope='row' = 'Geüpdate op'
-            td = @user.updated_at.strftime('%d %B %Y %H:%M')
-          tr
-            th scope='row' = 'Account bron'
+            td.text-right = datetime @user.created_at
+          tr 
+            th scope='row' = 'Accountbron'
             - if @user.provider == 'banana_oauth2'
-              td
-                a href="https://csvalpha.nl/users/#{@user.uid}"
-                  = @user.provider
+              td.text-right = link_to 'C.S.V. Alpha', "https://csvalpha.nl/users/#{@user.uid}"
             - else
-              td = @user.provider || 'Handmatig aangemaakt'
+              td.text-right = @user.provider || 'Handmatig aangemaakt'
 
-
+      - if current_user.treasurer?
+        button.btn.btn-sm.btn-secondary.pull-right role='button' data-toggle='modal' data-target='#new_mutation_modal'
+          = fa_icon 'plus', class: 'mr-1'
+          = 'Inleggen'
 
       h2
-        = "Saldo: #{number_to_currency(@user.credit, unit: '€')}"
+        span.mr-1 = 'Saldo:'
+        span class=('text-danger' if @user.credit <= 0)
+          = number_to_currency(@user.credit, unit: '€')
 
-    .card.col-sm-8.col-lg-6
-      .card-body
-        button.btn.btn-small.pull-right (type= 'button' data-toggle= 'collapse'
-          data-target= '#roleSyncDescription' aria-controls='roleSyncDescription' aria-expanded='false')
-          = fa_icon 'question-circle'
+      = render 'mutation_modal'
 
-        h2.card-title
-          = 'Rollen'
+    .col-sm-12.col-md-6.py-2
+      .card
+        .card-body
+          button.btn.btn-small.pull-right (type= 'button' data-toggle= 'collapse'
+            data-target= '#roleSyncDescription' aria-controls='roleSyncDescription' aria-expanded='false')
+            = fa_icon 'question-circle'
 
-        p.alert.alert-light.card-text.collapse id='roleSyncDescription'
-          = 'Rollen worden gesynchroniseerd als de gebruiker zelf inlogt'
+          h2.card-title
+            = 'Rollen'
 
-        p.card-text
-          = 'Je rechten zijn afhankelijk van de rollen die je in het streepsysteem hebt. '
-          = 'Je rollen zijn afhankelijk van de commissies waar je in zit.'
+          p.alert.alert-light.card-text.collapse id='roleSyncDescription'
+            = 'Rollen worden gesynchroniseerd als de gebruiker zelf inlogt'
 
-        - if @user.roles_users.any?
-          ul
-            - @user.roles_users.each do |role|
-              li = role.name
-        - else
-          p
-            = 'Deze gebruiker heeft geen speciale rollen binnen het streepsysteem.'
+          p.card-text.d-none.d-md-block
+            = 'Je rechten zijn afhankelijk van de rollen die je in het streepsysteem hebt. '
+            = 'Je rollen worden bepaald aan de hand van de groepen waar je in zit in de Alpha website.'
+
+          - if @user.roles_users.any?
+            ul
+              - @user.roles_users.each do |role|
+                li = role.name
+          - else
+            p = 'Deze gebruiker heeft geen speciale rollen binnen het streepsysteem.'
 
   hr
 
   .row
     .col-sm-12
-      span.pull-right
-        button.btn.btn-sm.btn-primary role='button' data-toggle='modal' data-target='#new_mutation_modal'
-          = fa_icon 'plus', class: 'mr-1'
-          = 'Nieuwe mutatie'
-      = render 'mutation_modal'
-
       ul.nav.nav-tabs role='tablist' id='userTabs'
         li.nav-item
           a.nav-link.active (id='orders-tab' data-toggle="tab" href="#orders" role="tab"
@@ -68,11 +64,11 @@
         li.nav-item
           a.nav-link (id='creditMutations-tab' data-toggle="tab" href="#creditMutations" role="tab"
             aria-controls="creditMutations" aria-selected="false")
-            = 'Saldomutaties'
+            = 'Inleg en saldocorrecties'
 
       .tab-content.p-2 id='userTabsContent'
         .tab-pane.show.active id='orders' role='tabpanel' aria-labelledby='orders-tab'
-          table.table.table-striped
+          table.table.table-striped.table-responsive-md
             thead
               tr
                 th scope='col'= '#'
@@ -89,11 +85,11 @@
                 - @user.orders.each do |order|
                   tr
                     th scope='row' = order.id
-                    td = order.created_at.strftime('%d %b - %H:%M')
+                    td = datetime_short order.created_at
                     td = number_to_currency(order.order_total, unit: '€')
 
         .tab-pane id='creditMutations' role='tabpanel' aria-labelledby='creditMutations-tab'
-          table.table.table-striped
+          table.table.table-striped.table-responsive-md
             thead
               tr
                 th scope='col'= '#'
@@ -106,11 +102,11 @@
                 tr
                   td.text-center colspan='4'
                     p.my-1
-                      em = 'Deze gebruiker heeft nog saldomutaties'
+                      em = 'Deze gebruiker heeft nog niet ingelegd en er zijn nog geen correcties'
               - else
                 - @user.credit_mutations.each do |mutation|
                   tr
                     th scope='row' = mutation.id
-                    td = mutation.created_at.strftime('%d %b - %H:%M')
+                    td = datetime_short mutation.created_at
                     td = mutation.description
                     td = number_to_currency(mutation.amount, unit: '€')

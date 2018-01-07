@@ -31,13 +31,4 @@ RSpec.describe Activity, type: :model do
     it { expect(Activity.upcoming).to include future_activity }
     it { expect(Activity.upcoming).not_to include past_activity }
   end
-
-  describe '#humanized_time' do
-    subject(:activity) do
-      FactoryBot.build_stubbed(:activity, start_time: '2017-12-20'.to_date, end_time: '2017-12-21'.to_date)
-    end
-
-    it { expect(activity.humanized_start_time).to eq '20 December 2017 00:00' }
-    it { expect(activity.humanized_end_time).to eq '21 December 2017 00:00' }
-  end
 end

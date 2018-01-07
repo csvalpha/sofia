@@ -2,7 +2,7 @@
   .row
     .col-sm-12.p-3.text-center
 
-      span class="tomato-header"
+      h1.tomato-header
         = 'Alpha Tomato '
         = image_tag '/images/tomato.png', alt: 'Tomato icon', title: ':tomato:'
 
@@ -46,7 +46,7 @@
 
               ol
                 - @upcoming_activities.each do |activity|
-                  li = link_to "#{activity.title} – #{activity.humanized_start_time}", activity
+                  li = link_to "#{activity.title} – #{datetime_short(activity.start_time)}", activity
 
               - if @current_activities&.any?
                 hr
@@ -59,7 +59,7 @@
                       = fa_icon 'calculator', class: 'mr-1'
                       = activity.title
                       br
-                      small = activity.humanized_start_time
+                      small = datetime_short(activity.start_time)
 
     - else
       = render partial: 'partials/login_prompt'

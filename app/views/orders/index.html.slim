@@ -59,7 +59,7 @@
           = fa_icon 'home'
       li.header-nav-item
         span.mr-3 = @activity.title
-        small.font-weight-light.d-inline-block = @activity.humanized_start_time
+        small.font-weight-light.d-inline-block = date(@activity.start_time)
 
     orderscreen-flash
 
