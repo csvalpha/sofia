@@ -25,9 +25,6 @@
         tbody
           - @model.each do |user|
             tr
-              th scope='row'
-                = user.id
-              td
-                = link_to user.name, user
-              td
-                = number_to_currency(user.credit, unit: '€')
+              th scope='row' = user.id
+              td = link_to user.name, user
+              td class=('text-danger' if user.credit <= 0) = number_to_currency(user.credit, unit: '€')
