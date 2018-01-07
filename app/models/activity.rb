@@ -32,7 +32,7 @@ class Activity < ApplicationRecord
   end
 
   def revenue
-    orders.map(&:order_rows).flatten.map(&:row_total).reduce(:+)
+    orders.map(&:order_rows).flatten.map(&:row_total).reduce(:+) || 0
   end
 
   def bartenders
