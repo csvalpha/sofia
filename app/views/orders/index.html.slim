@@ -55,8 +55,8 @@
   nav.header
     ul.header-nav
       li.header-nav-item.header-nav-home
-        = link_to root_path, class: 'nav-link'
-          = fa_icon 'home'
+        = link_to @activity, class: 'nav-link'
+          = fa_icon 'caret-left'
       li.header-nav-item
         span.mr-3 = @activity.title
         small.font-weight-light.d-inline-block = date(@activity.start_time)
