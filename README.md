@@ -48,7 +48,7 @@ Gebruikers kunnen in Tomato rollen hebben, namelijk "SB-penningmeester" en/of "H
 
 ```ruby
 Role.create(role_type: :treasurer, group_uid: <SB Treasurer Group UID>)
-Role.create(name: :main_bartender, group_uid: <Main Bartenders Group UID>)
+Role.create(role_type: :main_bartender, group_uid: <Main Bartenders Group UID>)
 ```
 
 ## Contributing
