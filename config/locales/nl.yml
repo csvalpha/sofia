@@ -4,3 +4,4 @@ nl:
       default: '%d-%m %H:%M'
       long: '%d %B %Y %H:%M'
       date_only: '%d-%b-%y'
+      time_only: '%H:%M'
