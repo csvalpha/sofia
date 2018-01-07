@@ -1,5 +1,5 @@
-.container
-  .row.py-4
+.container.py-2
+  .row
     .col-sm-12
       h1 = 'Prijslijsten'
 
@@ -12,14 +12,14 @@
 
       = render 'modal'
 
-      = content_tag :table, id: 'price_lists_table', class: 'table table-striped',
+      = content_tag :table, id: 'price_lists_table', class: 'table table-striped table-responsive-md',
         data: { price_lists: @recent_price_lists_json, products: @products_json }
 
         thead.table-header-rotated.products
           tr
             th.products-id scope='col' = 'ID'
             th.products-name scope='col' = 'Product'
-            th.products-alcohol.rotate scope='col'
+            th.products-alcohol scope='col'
               div = '18+'
             th.products-pricelist.rotate scope='col' v-for='priceList in priceLists'
               .center-text v-bind:title='"Lijst ID: " + priceList.id'
