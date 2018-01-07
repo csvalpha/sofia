@@ -1,4 +1,8 @@
 class UserPolicy < ApplicationPolicy
+  def index?
+    user&.treasurer?
+  end
+
   def refresh_user_list?
     user&.treasurer?
   end
