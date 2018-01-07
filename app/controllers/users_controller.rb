@@ -75,12 +75,18 @@ class UsersController < ApplicationController
 
   def find_or_create_user(user_json)
     fields = user_json['attributes']
-    User.find_or_create_by(uid: user_json['id']) do |u|
-      u.name = User.full_name_from_attributes(fields['first-name'],
-                                              fields['last-name-prefix-name'],
-                                              fields['last-name'])
-      u.provider = 'banana_oauth2'
-    end
+    u = User.find_or_create_by(uid: user_json['id'])
+    u.name = User.full_name_from_attributes(fields['first-name'],
+                                            fields['last-name-prefix-name'],
+                                            fields['last-name'])
+    u.provider = 'banana_oauth2'
+    u.avatar_uid = avatar_uid_from_thumb_url(fields['avatar-thumb-url'])
+    u.save
+  end
+
+  def avatar_uid_from_thumb_url(url)
+    return nil unless url
+    url.split('thumb_')[1].split('.png')[0]
   end
 
   def permitted_attributes

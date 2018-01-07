@@ -140,7 +140,7 @@ template id="user-selection"
           @click="selectUser(user)" v-bind:class="{ highlight : (highlightedUserIndex == index) }"
           @mouseover="highlightedUserIndex = -1" @mouseleave="resetHighlight")
         .user-details-suggestions-user-avatar.col-4
-          = image_tag '/images/avatar_thumb_default.png', class: 'img-thumbnail rounded-circle'
+          img v-bind:src="user.avatar_thumb_url" class='img-thumbnail rounded-circle'
         .user-details-suggestions-user-details.col-8.px-3
           .user-details-suggestions-user-name
             h4.pt-2
