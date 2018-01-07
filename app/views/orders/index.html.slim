@@ -148,7 +148,7 @@ template id="user-selection"
     .user-details-user.container
       .row.py-3
         .user-details-avatar.col-4.px-1
-          = image_tag '/images/avatar_thumb_default.png', class: 'img-thumbnail rounded-circle'
+          img v-bind:src="selectedUser.avatar_thumb_url" class='img-thumbnail rounded-circle'
         .user-details-name.col-8
           h3.mb-3
             = '{{selectedUser.name}}'
