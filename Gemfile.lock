@@ -442,7 +442,7 @@ DEPENDENCIES
   puma (~> 3.7)
   pundit (~> 1.1.0)
   rails (~> 5.1.4)
-  rails-i18n (~> 5.0.0)
+  rails-i18n (~> 5.0.1)
   rest-client (~> 2.0.2)
   rspec-rails
   rubocop (~> 0.50.0)
