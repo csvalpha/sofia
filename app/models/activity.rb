@@ -23,14 +23,6 @@ class Activity < ApplicationRecord
 
   delegate :products, to: :price_list
 
-  def humanized_start_time
-    start_time.strftime('%d %B %Y %H:%M')
-  end
-
-  def humanized_end_time
-    end_time.strftime('%d %B %Y %H:%M')
-  end
-
   def credit_mutations_total
     credit_mutations.map(&:amount).reduce(:+) || 0
   end

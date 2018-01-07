@@ -8,13 +8,13 @@
         tbody
           tr
             th scope='row' = 'Aangemaakt op'
-            td.text-right = datetime_short @user.created_at
-          tr
+            td.text-right = datetime @user.created_at
+          tr 
             th scope='row' = 'Accountbron'
             - if @user.provider == 'banana_oauth2'
               td.text-right = link_to 'C.S.V. Alpha', "https://csvalpha.nl/users/#{@user.uid}"
             - else
-              tdtext-right = @user.provider || 'Handmatig aangemaakt'
+              td.text-right = @user.provider || 'Handmatig aangemaakt'
 
       - if current_user.treasurer?
         button.btn.btn-sm.btn-secondary.pull-right role='button' data-toggle='modal' data-target='#new_mutation_modal'
