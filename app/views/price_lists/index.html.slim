@@ -1,10 +1,10 @@
 .container
   .row.py-4
     .col-sm-12
-      h1 = 'Prijzen en producten'
+      h1 = 'Prijslijsten'
 
-      .d-flex.justify-content-between.mb-3
-        p = 'Hier worden de vijf nieuwste prijslijsten getoond.'
+      .d-flex.justify-content-between.mb-3.align-items-center
+        span = 'Hier worden de vijf nieuwste prijslijsten en alle producten getoond.'
 
         button.btn.btn-sm.btn-primary role='button' data-toggle='modal' data-target='#editPriceListModal'
           = fa_icon 'plus', class: 'mr-1'

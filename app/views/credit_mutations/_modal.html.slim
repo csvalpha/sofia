@@ -4,7 +4,7 @@
 
       .modal-header
         h5.modal-title
-          = @new_mutation.persisted? ? 'Mutatie wijzigen' : 'Nieuwe mutatie'
+          = @new_mutation.persisted? ? 'Inleg wijzigen' : 'Nieuwe inleg'
         button.close type='button' data-dismiss='modal' aria-label='close'
           span aria-hidden='true' = fa_icon 'times'
 
@@ -34,4 +34,4 @@
 
         .modal-footer
           button.btn.btn-secondary type='button' data-dismiss='modal' = 'Annuleren'
-          = f.button :submit, 'Mutatie opslaan', class: 'btn btn-primary'
+          = f.button :submit, 'Inleg opslaan', class: 'btn btn-primary'

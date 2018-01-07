@@ -7,7 +7,7 @@
         span
           = link_to refresh_user_list_users_path, class: 'btn btn-primary btn-sm mr-1'
             = fa_icon 'refresh', class: 'mr-1'
-            = 'Sync users'
+            span.d-none.d-md-inline.ml-1 = 'Synchroniseer gebruikers'
           button.btn.btn-sm.btn-primary role='button' data-toggle='modal' data-target='#edit_user_modal'
             = fa_icon 'plus', class: 'mr-1'
             = 'Nieuwe gebruiker'
