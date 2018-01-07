@@ -27,4 +27,8 @@ module ApplicationHelper
   def date(datetime)
     datetime.strftime('%d-%b-%y')
   end
+
+  def time(datetime)
+    datetime.strftime('%H:%M')
+  end
 end
