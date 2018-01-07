@@ -24,7 +24,7 @@ class Activity < ApplicationRecord
   delegate :products, to: :price_list
 
   def credit_mutations_total
-    credit_mutations.map(&:amount).reduce(:+)
+    credit_mutations.map(&:amount).reduce(:+) || 0
   end
 
   def sold_products
