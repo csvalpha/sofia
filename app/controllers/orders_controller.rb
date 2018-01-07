@@ -12,7 +12,7 @@ class OrdersController < ApplicationController
     @product_prices_json = @activity.price_list.product_price
                                     .to_json(include: { product: { only: %i[id name requires_age] } })
 
-    @users_json = User.includes([:orders, :credit_mutations, orders: :order_rows])
+    @users_json = User.includes(%i[credit_mutations order_rows])
                       .to_json(only: %i[id name], methods: :credit)
     @activity_json = @activity.to_json(only: %i[id title start_time end_time])
 
@@ -20,7 +20,7 @@ class OrdersController < ApplicationController
   end
 
   def create
-    @order = Order.new(permitted_attributes)
+    @order = Order.new(permitted_attributes.merge(created_by: current_user))
     authorize @order
 
     if @order.save
