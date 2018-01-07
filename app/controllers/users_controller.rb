@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   after_action :verify_authorized
 
   def index
-    @model = User.all.includes(model_includes)
+    @model = User.all.includes(model_includes).order(:name)
     authorize @model
 
     @new_user = User.new
