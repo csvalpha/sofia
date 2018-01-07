@@ -8,10 +8,10 @@
         tbody
           tr
             th scope='row' = 'Starttijd'
-            td = datetime(@activity.start_time)
+            td = l @activity.start_time, format: :long
           tr
             th scope='row' = 'Eindtijd'
-            td = datetime(@activity.end_time)
+            td = l @activity.end_time, format: :long
           tr
             th scope='row' = 'Prijslijst'
             td = link_to @activity.price_list.name, @activity.price_list
@@ -97,7 +97,7 @@
                     td
                       = link_to mutation.user.name, mutation.user
                     td
-                      = datetime_short(mutation.created_at)
+                      = l mutation.created_at
 
         .tab-pane id='orders' role='tabpanel' aria-labelledby='orders-tab'
           table.table.table-striped
@@ -119,7 +119,7 @@
                 - @activity.orders.each do |order|
                   tr
                     th scope='row' = order.id
-                    td = datetime_short order.created_at
+                    td = l order.created_at
                     td = link_to order.user.name, order.user
                     td = number_to_currency(order.order_total, unit: '€')
                     td
