@@ -146,9 +146,6 @@ template id="user-selection"
             h4.pt-2
               = '{{user.name}}'
               small.ml-1 = '({{user.id}})'
-          .user-details-suggestions-user-credit
-            h5 v-bind:class="{ 'text-danger' : (user.credit <= 0) }"
-              = '{{doubleToCurrency(user.credit)}}'
 
   .user-details v-else=""
     .user-details-user.container
