@@ -13,7 +13,7 @@
   .row.d-flex.justify-content-around
 
     - if current_user
-      .col-sm-6
+      .col-12.col-md-6
         .card
           h5.card-header = "Welkom, #{current_user.name}"
           .card-body
@@ -30,7 +30,7 @@
                 = 'je kan hier wel je saldo en bestelgeschiedenis zien'
 
     - if current_user
-      .col-sm-6
+      .col-12.col-md-6
         .card
           h4.card-header
             = fa_icon 'calendar', class: 'mr-1'
