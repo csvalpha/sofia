@@ -9,10 +9,10 @@
           tr
             th scope='row' = 'Aangemaakt op'
             td.text-right = l @user.created_at, format: :long
-          tr 
+          tr
             th scope='row' = 'Accountbron'
             - if @user.provider == 'banana_oauth2'
-              td.text-right = link_to 'C.S.V. Alpha', "https://csvalpha.nl/users/#{@user.uid}"
+              td.text-right = link_to 'C.S.V. Alpha', "#{Rails.application.config.x.banana_api_host}/users/#{@user.uid}"
             - else
               td.text-right = @user.provider || 'Handmatig aangemaakt'
 
