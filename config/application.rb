@@ -12,8 +12,7 @@ module Tomato
     config.time_zone = 'Amsterdam'
 
     config.i18n.default_locale = :nl
-    config.i18n.available_locales = %i[en nl]
-    config.i18n.fallbacks = [:en]
+    config.i18n.fallbacks = [:nl]
 
     config.x.banana_api_host = ENV['BANANA_API_HOST']
 
