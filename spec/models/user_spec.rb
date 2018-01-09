@@ -152,4 +152,14 @@ RSpec.describe User, type: :model do
       it { expect(user.roles).not_to include role}
     end
   end
+
+  describe 'full_name_from_attributes' do
+    context 'when with all attributes' do
+      it { expect(User.full_name_from_attributes('first', 'middle', 'last')). to eq 'first middle last'}
+    end
+
+    context 'when without middle name' do
+      it { expect(User.full_name_from_attributes('first', '', 'last')). to eq 'first last'}
+    end
+  end
 end
