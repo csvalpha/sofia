@@ -39,7 +39,6 @@ group :development, :test do
   gem 'dotenv-rails', '~> 2.2.1'
   gem 'guard-livereload', '~> 2.5'
   gem 'guard-rspec', require: false
-  gem 'simplecov', require: false
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'rspec-rails'
