@@ -11,7 +11,7 @@ class Activity < ApplicationRecord
   validates :created_by, presence: true
   validates_datetime :end_time, after: :start_time
 
-  validate :activity_not_long_ago
+  validate :validate_closed
   before_update :updatable?
 
   scope :upcoming, (lambda {
@@ -45,16 +45,14 @@ class Activity < ApplicationRecord
     end_time + 1.month
   end
 
-  def activity_not_long_ago
-    return true unless closed?
-    errors.add(:base, 'activity ended longer then a month ago, altering is not allowed anymore')
-    false
+  def validate_closed
+    errors.add(:base, 'activity ended longer then a month ago, altering is not allowed anymore') if closed?
   end
 
   private
 
   def updatable?
-    throw(:abort) unless activity_not_long_ago
+    throw(:abort) if closed?
   end
 
 

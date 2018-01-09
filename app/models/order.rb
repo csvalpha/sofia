@@ -16,7 +16,7 @@ class Order < ApplicationRecord
   private
 
   def activity_allows_orders
-    return true if activity&.activity_not_long_ago
+    return true unless activity&.closed?
     errors.add(:activity, 'closed longer then a month ago, cannot create new orders')
     false
   end

@@ -7,4 +7,12 @@ class CreditMutation < ApplicationRecord
   validates :user, presence: true
   validates :created_by, presence: true
   validates :amount, presence: true
+  validate :activity_allows_orders
+
+  def activity_allows_orders
+    return true unless activity
+    return true unless activity.closed?
+    errors.add(:activity, 'closed longer then a month ago, cannot create new orders')
+    false
+  end
 end
