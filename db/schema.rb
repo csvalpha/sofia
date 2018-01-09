@@ -119,7 +119,7 @@ ActiveRecord::Schema.define(version: 20180107221009) do
     t.datetime "updated_at", null: false
     t.string "provider"
     t.string "uid"
-    t.string "avatar_uid"
+    t.string "avatar_thumb_url"
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 

@@ -19,11 +19,6 @@ class User < ApplicationRecord
     @roles ||= roles_users.includes(:role).map(&:role).flatten.uniq
   end
 
-  def avatar_thumb_url
-    return '/images/avatar_thumb_default.png' unless avatar_uid
-    "#{Rails.application.config.x.banana_api_host}/api/uploads/users/1/avatar/thumb_#{avatar_uid}.png"
-  end
-
   def treasurer?
     roles.map(&:name).include?('Treasurer')
   end
