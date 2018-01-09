@@ -7,8 +7,8 @@ FactoryBot.define do
     price_list
 
     trait :closed do
-      start_time { Faker::Time.between(3.months.ago, 2.month.ago).beginning_of_minute}
-      end_time { Faker::Time.between(2.months.ago, 1.month.ago).beginning_of_minute}
+      start_time { Faker::Time.between(3.months.ago, 2.months.ago).beginning_of_minute }
+      end_time { Faker::Time.between(2.months.ago, 1.month.ago).beginning_of_minute }
     end
   end
 end

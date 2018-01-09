@@ -37,7 +37,11 @@ RSpec.describe Activity, type: :model do
     end
 
     context 'when start time is after end time' do
-      subject(:activity) { FactoryBot.build_stubbed(:activity, start_time: Time.zone.now + 1.second, end_time: Time.zone.now ) }
+      subject(:activity) do
+        FactoryBot.build_stubbed(:activity,
+                                 start_time: Time.zone.now + 1.second,
+                                 end_time: Time.zone.now)
+      end
 
       it { expect(activity).not_to be_valid }
     end
@@ -47,20 +51,20 @@ RSpec.describe Activity, type: :model do
     context 'when within a month' do
       subject(:activity) { FactoryBot.build(:activity) }
 
-      it {expect(activity.update_attributes(title: 'a new one')).to eq true}
+      it { expect(activity.update_attributes(title: 'a new one')).to eq true }
     end
 
     context 'when after a month' do
       subject(:activity) { FactoryBot.build(:activity, :closed) }
 
-      it {expect(activity.update_attributes(title: 'a new one')).to eq false}
+      it { expect(activity.update_attributes(title: 'a new one')).to eq false }
     end
-
   end
 
   describe '#close_date' do
     subject(:activity) { FactoryBot.build(:activity) }
-    it { expect(activity.close_date).to eq activity.end_time + 1.month}
+
+    it { expect(activity.close_date).to eq activity.end_time + 1.month }
   end
 
   describe '.upcoming' do

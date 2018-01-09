@@ -31,10 +31,10 @@ RSpec.describe CreditMutation, type: :model do
     end
 
     context 'when with a closed activity' do
-      let(:activity) { FactoryBot.build(:activity, :closed)}
-      let(:mutation) { FactoryBot.build(:credit_mutation, activity: activity)}
+      let(:activity) { FactoryBot.build(:activity, :closed) }
+      let(:mutation) { FactoryBot.build(:credit_mutation, activity: activity) }
 
-      it { expect(mutation).not_to be_valid}
+      it { expect(mutation).not_to be_valid }
     end
   end
 end

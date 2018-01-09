@@ -25,10 +25,10 @@ RSpec.describe Order, type: :model do
     end
 
     context 'when with closed activity' do
-      let(:activity) { FactoryBot.build(:activity, :closed)}
-      let(:order) { FactoryBot.build(:order, activity: activity)}
+      let(:activity) { FactoryBot.build(:activity, :closed) }
+      let(:order) { FactoryBot.build(:order, activity: activity) }
 
-      it { expect(order).not_to be_valid}
+      it { expect(order).not_to be_valid }
     end
   end
 

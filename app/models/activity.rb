@@ -54,6 +54,4 @@ class Activity < ApplicationRecord
   def updatable?
     throw(:abort) if closed?
   end
-
-
 end
