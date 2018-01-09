@@ -75,12 +75,13 @@ class UsersController < ApplicationController
 
   def find_or_create_user(user_json)
     fields = user_json['attributes']
-    User.find_or_create_by(uid: user_json['id']) do |u|
-      u.name = User.full_name_from_attributes(fields['first-name'],
-                                              fields['last-name-prefix-name'],
-                                              fields['last-name'])
-      u.provider = 'banana_oauth2'
-    end
+    u = User.find_or_initialize_by(uid: user_json['id'])
+    u.name = User.full_name_from_attributes(fields['first-name'],
+                                            fields['last-name-prefix-name'],
+                                            fields['last-name'])
+    u.provider = 'banana_oauth2'
+    u.avatar_thumb_url = fields['avatar-thumb-url']
+    u.save
   end
 
   def permitted_attributes
