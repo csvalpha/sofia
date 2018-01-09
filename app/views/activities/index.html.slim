@@ -25,9 +25,9 @@
               td
                 = link_to activity.title, activity
               td
-                = datetime_short(activity.start_time)
+                = l activity.start_time
               td
-                = datetime_short(activity.end_time)
+                = l activity.end_time
               td
                 = link_to activity.price_list.name, activity.price_list
               td

@@ -10,10 +10,9 @@
         p.mb-0 = 'Vakmanschap is meesterschap'
         footer.blockquote-footer = 'Gerard Brummer, Grolsch'
 
-  .row.d-flex.justify-content-around
-
+  .row
     - if current_user
-      .col-sm-6
+      .col-12.col-md-6.mb-2
         .card
           h5.card-header = "Welkom, #{current_user.name}"
           .card-body
@@ -29,8 +28,7 @@
                 = 'Je hebt geen speciale rollen binnen het streepsysteem, '
                 = 'je kan hier wel je saldo en bestelgeschiedenis zien'
 
-    - if current_user
-      .col-sm-6
+      .col-12.col-md-6.mb-2
         .card
           h4.card-header
             = fa_icon 'calendar', class: 'mr-1'
@@ -46,7 +44,7 @@
 
               ol
                 - @upcoming_activities.each do |activity|
-                  li = link_to "#{activity.title} – #{datetime_short(activity.start_time)}", activity
+                  li = link_to "#{activity.title} – #{l activity.start_time}", activity
 
               - if @current_activities&.any?
                 hr
@@ -59,7 +57,7 @@
                       = fa_icon 'calculator', class: 'mr-1'
                       = activity.title
                       br
-                      small = datetime_short(activity.start_time)
+                      small = l activity.start_time
 
     - else
       = render partial: 'partials/login_prompt'

@@ -25,11 +25,11 @@ class User < ApplicationRecord
   end
 
   def treasurer?
-    roles.map(&:name).include?('Treasurer')
+    @treasurer ||= roles.map(&:treasurer?).any?
   end
 
   def main_bartender?
-    roles.map(&:name).include?('Main Bartender')
+    @main_bartender ||= roles.map(&:main_bartender?).any?
   end
 
   def update_role(memberships)
