@@ -19,7 +19,7 @@ RSpec.describe User, type: :model do
 
       before { user }
 
-      it { expect(User.in_banana).to include user}
+      it { expect(User.in_banana).to include user }
     end
 
     context 'when not in banana' do
@@ -27,7 +27,7 @@ RSpec.describe User, type: :model do
 
       before { user }
 
-      it { expect(User.in_banana).not_to include user}
+      it { expect(User.in_banana).not_to include user }
     end
   end
 
@@ -46,12 +46,67 @@ RSpec.describe User, type: :model do
 
   describe '#roles' do
     subject(:user) { FactoryBot.create(:user) }
-    let(:role) { FactoryBot.create(:role)}
+
+    let(:role) { FactoryBot.create(:role) }
 
     before do
       FactoryBot.create(:roles_users, role: role, user: user)
     end
 
-    it { expect(user.roles).to match_array [role]}
+    it { expect(user.roles).to match_array [role] }
+  end
+
+  describe '#avatar_thumb_or_default_url' do
+    context 'when with avatar thumb url' do
+      subject(:user) { FactoryBot.create(:user, avatar_thumb_url: '/test.png') }
+
+      it { expect(user.avatar_thumb_or_default_url).to eq "#{Rails.application.config.x.banana_api_host}/test.png" }
+    end
+
+    context 'when without avatar thumb url' do
+      subject(:user) { FactoryBot.create(:user) }
+
+      it { expect(user.avatar_thumb_or_default_url).to eq '/images/avatar_thumb_default.png' }
+    end
+  end
+
+  describe '#treasurer?' do
+    context 'when with treasurer role' do
+      subject(:user) { FactoryBot.create(:user) }
+
+      let(:role) { FactoryBot.create(:role, role_type: :treasurer) }
+
+      before do
+        FactoryBot.create(:roles_users, role: role, user: user)
+      end
+
+      it { expect(user.treasurer?).to eq true }
+    end
+
+    context 'when without treasurer role' do
+      subject(:user) { FactoryBot.create(:user) }
+
+      it { expect(user.treasurer?).to eq false }
+    end
+  end
+
+  describe '#main_bartender?' do
+    context 'when with main_bartender role' do
+      subject(:user) { FactoryBot.create(:user) }
+
+      let(:role) { FactoryBot.create(:role, role_type: :main_bartender) }
+
+      before do
+        FactoryBot.create(:roles_users, role: role, user: user)
+      end
+
+      it { expect(user.main_bartender?).to eq true }
+    end
+
+    context 'when without main_bartender role' do
+      subject(:user) { FactoryBot.create(:user) }
+
+      it { expect(user.main_bartender?).to eq false }
+    end
   end
 end
