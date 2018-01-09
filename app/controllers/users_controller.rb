@@ -80,13 +80,8 @@ class UsersController < ApplicationController
                                             fields['last-name-prefix-name'],
                                             fields['last-name'])
     u.provider = 'banana_oauth2'
-    u.avatar_uid = avatar_uid_from_thumb_url(fields['avatar-thumb-url'])
+    u.avatar_thumb_url = fields['avatar-thumb-url']
     u.save
-  end
-
-  def avatar_uid_from_thumb_url(url)
-    return nil unless url
-    url.split('thumb_')[1].split('.png')[0]
   end
 
   def permitted_attributes
