@@ -133,7 +133,7 @@ document.addEventListener('turbolinks:load', () => {
             }
 
             this.sendFlash('Bestelling geplaatst.', additionalInfo, 'success');
-            this.orderRows = []
+            this.orderRows = [];
             if(!this.keepUserSelected){
               this.setUser(null);
             }
@@ -177,7 +177,7 @@ document.addEventListener('turbolinks:load', () => {
             this.creditMutationDescription = 'Inleg contant';
             const additionalInfo = `${response.body.user.name} - ${this.doubleToCurrency(response.body.amount)}`;
             this.sendFlash('Inleg opgeslagen.', additionalInfo, 'success');
-            this.orderRows = []
+            this.orderRows = [];
             if(!this.keepUserSelected) {
               this.setUser(null);
             }
