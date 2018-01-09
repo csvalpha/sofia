@@ -11,14 +11,12 @@ class Activity < ApplicationRecord
   validates :created_by, presence: true
   validates_datetime :end_time, after: :start_time
 
+  validate :activity_not_long_ago
+  before_update :updatable?
+
   scope :upcoming, (lambda {
     where('(start_time < ? and end_time > ?) or start_time > ?', Time.zone.now,
           Time.zone.now, Time.zone.now).order(:start_time, :end_time)
-  })
-
-  scope :current, (lambda {
-    where('(start_time < ? and end_time > ?)', Time.zone.now,
-          Time.zone.now).order(:start_time, :end_time)
   })
 
   delegate :products, to: :price_list
@@ -38,4 +36,18 @@ class Activity < ApplicationRecord
   def bartenders
     orders.map(&:created_by).uniq
   end
+
+  def activity_not_long_ago
+    return true if end_time && Time.zone.now < end_time + 1.month
+    errors.add(:base, 'activity closed longer then a month ago, altering is not allowed anymore')
+    false
+  end
+
+  private
+
+  def updatable?
+    throw(:abort) unless is_updateable?
+  end
+
+
 end
