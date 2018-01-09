@@ -51,7 +51,7 @@ RSpec.describe Activity, type: :model do
     end
 
     context 'when after a month' do
-      subject(:activity) { FactoryBot.build(:activity, start_time: Time.zone.now - 2.months, end_time: Time.zone.now - 1.month) }
+      subject(:activity) { FactoryBot.build(:activity, :closed) }
 
       it {expect(activity.update_attributes(title: 'a new one')).to eq false}
     end

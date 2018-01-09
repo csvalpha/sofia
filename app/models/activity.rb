@@ -37,16 +37,20 @@ class Activity < ApplicationRecord
     orders.map(&:created_by).uniq
   end
 
+  def closed?
+    end_time && Time.zone.now >= end_time + 1.month
+  end
+
   def activity_not_long_ago
-    return true if end_time && Time.zone.now < end_time + 1.month
-    errors.add(:base, 'activity closed longer then a month ago, altering is not allowed anymore')
+    return true unless closed?
+    errors.add(:base, 'activity ended longer then a month ago, altering is not allowed anymore')
     false
   end
 
   private
 
   def updatable?
-    throw(:abort) unless is_updateable?
+    throw(:abort) unless activity_not_long_ago
   end
 
 

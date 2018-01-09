@@ -7,8 +7,17 @@ class Order < ApplicationRecord
   accepts_nested_attributes_for :order_rows
 
   validates :activity, :user, :created_by, presence: true
+  validate :activity_allows_orders
 
   def order_total
     @sum ||= order_rows.map(&:row_total).sum
+  end
+
+  private
+
+  def activity_allows_orders
+    return true if activity&.activity_not_long_ago
+    errors.add(:activity, 'closed longer then a month ago, cannot create new orders')
+    false
   end
 end
