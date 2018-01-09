@@ -40,8 +40,8 @@ class User < ApplicationRecord
     roles_users_not_to_have.map(&:destroy)
   end
 
-  # ::nocov::
   # TODO: Spec this method
+  # :nocov:
   def self.from_omniauth(auth)
     user = where(provider: auth.provider, uid: auth.uid).first_or_create do |u|
       u.name = auth[:info][:name]
@@ -49,7 +49,7 @@ class User < ApplicationRecord
     user.update_role(auth[:info][:memberships])
     user
   end
-  # ::nocov::
+  # :nocov:
 
   def self.full_name_from_attributes(first_name, last_name_prefix, last_name)
     [first_name, last_name_prefix, last_name].reject(&:blank?).join(' ')
