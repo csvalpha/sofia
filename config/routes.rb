@@ -1,20 +1,20 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: 'callbacks' }
 
-  resources :activities, only: %i[index show create update destroy] do
-    resources :orders, only: %i[index new create destroy]
+  resources :activities, only: %i[index show create update] do
+    resources :orders, only: %i[index create]
   end
 
-  resources :price_lists, only: %i[index show create update destroy]
+  resources :price_lists, only: %i[index create update]
 
-  resources :users, only: %i[index show create update destroy] do
+  resources :users, only: %i[index show create] do
     collection do
       get :refresh_user_list
       post :search
     end
   end
 
-  resources :products, only: %i[index show create update destroy], defaults: { format: :json }
+  resources :products, only: %i[index show create update], defaults: { format: :json }
   resources :credit_mutations, only: %i[index create]
   resources :product_price, only: %i[destroy]
 
