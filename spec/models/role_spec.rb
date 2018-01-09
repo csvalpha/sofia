@@ -1,0 +1,35 @@
+require 'rails_helper'
+
+RSpec.describe Role, type: :model do
+  subject(:role) { FactoryBot.build_stubbed(:role) }
+
+  describe '#valid' do
+    it { expect(role).to be_valid }
+
+    context 'when without role_type' do
+      subject(:role) { FactoryBot.build_stubbed(:role, role_type: nil) }
+
+      it { expect(role).not_to be_valid }
+    end
+
+    context 'when without group_uid' do
+      subject(:role) { FactoryBot.build_stubbed(:role, group_uid: nil) }
+
+      it { expect(role).not_to be_valid }
+    end
+  end
+
+  describe '#name' do
+    context 'treasurer' do
+      subject(:role) { FactoryBot.build_stubbed(:role, role_type: :treasurer) }
+
+      it { expect(role.name).to eq 'Penningmeester'}
+    end
+
+    context 'main bartender' do
+      subject(:role) { FactoryBot.build_stubbed(:role, role_type: :main_bartender) }
+
+      it { expect(role.name).to eq 'Hoofdtapper'}
+    end
+  end
+end
