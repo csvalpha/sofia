@@ -1,0 +1,6 @@
+FactoryBot.define do
+  factory :role do
+    role_type { [:treasurer, :main_bartender].sample }
+    group_uid { rand(0..100) }
+  end
+end

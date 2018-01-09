@@ -13,6 +13,24 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '.in_banana' do
+    context 'when in banana' do
+      subject(:user) { FactoryBot.create(:user, provider: 'banana_oauth2') }
+
+      before { user }
+
+      it { expect(User.in_banana).to include user}
+    end
+
+    context 'when not in banana' do
+      subject(:user) { FactoryBot.create(:user, provider: 'another_provider') }
+
+      before { user }
+
+      it { expect(User.in_banana).not_to include user}
+    end
+  end
+
   describe '#credit' do
     subject(:user) { FactoryBot.create(:user) }
 
@@ -24,5 +42,16 @@ RSpec.describe User, type: :model do
     end
 
     it { expect(user.credit).to eq(-1.23) }
+  end
+
+  describe '#roles' do
+    subject(:user) { FactoryBot.create(:user) }
+    let(:role) { FactoryBot.create(:role)}
+
+    before do
+      FactoryBot.create(:roles_users, role: role, user: user)
+    end
+
+    it { expect(user.roles).to match_array [role]}
   end
 end
