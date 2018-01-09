@@ -8,10 +8,10 @@
         tbody
           tr
             th scope='row' = 'Starttijd'
-            td = datetime(@activity.start_time)
+            td = l @activity.start_time, format: :long
           tr
             th scope='row' = 'Eindtijd'
-            td = datetime(@activity.end_time)
+            td = l @activity.end_time, format: :long
           tr
             th scope='row' = 'Prijslijst'
             td = link_to @activity.price_list.name, @activity.price_list
@@ -94,7 +94,7 @@
                 - @activity.credit_mutations.each do |mutation|
                   tr
                     th scope='row' = mutation.id
-                    td = time mutation.created_at
+                    td = l mutation.created_at, format: :time_only
                     td = link_to mutation.user.name, mutation.user
                     td = number_to_currency(mutation.amount, unit: '€')
 
@@ -118,7 +118,7 @@
                 - @activity.orders.each do |order|
                   tr
                     th scope='row' = order.id
-                    td = time order.created_at
+                    td = l order.created_at, format: :time_only
                     td = link_to order.user.name, order.user
                     td = number_to_currency(order.order_total, unit: '€')
                     td
