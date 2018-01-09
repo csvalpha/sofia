@@ -42,9 +42,6 @@ Rails/HttpPositionalArguments:
 Rails/ReversibleMigration:
   Enabled: false
 
-Rails/InverseOf:
-  Enabled: false
-
 RSpec/LeadingSubject:
   Enabled: false
 

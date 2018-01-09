@@ -2,7 +2,7 @@ class Activity < ApplicationRecord
   has_many :orders, dependent: :destroy
   has_many :credit_mutations, dependent: :destroy
   belongs_to :price_list
-  belongs_to :created_by, class_name: 'User'
+  belongs_to :created_by, class_name: 'User', inverse_of: :activities
 
   validates :title,       presence: true
   validates :start_time,  presence: true
