@@ -58,7 +58,12 @@ RSpec.describe Activity, type: :model do
 
   end
 
-  describe '#upcoming' do
+  describe '#close_date' do
+    subject(:activity) { FactoryBot.build(:activity) }
+    it { expect(activity.close_date).to eq activity.end_time + 1.month}
+  end
+
+  describe '.upcoming' do
     let(:past_activity) do
       FactoryBot.create(:activity, start_time: 2.days.ago, end_time: 1.day.ago)
     end

@@ -38,7 +38,11 @@ class Activity < ApplicationRecord
   end
 
   def closed?
-    end_time && Time.zone.now >= end_time + 1.month
+    end_time && Time.zone.now >= close_date
+  end
+
+  def close_date
+    end_time + 1.month
   end
 
   def activity_not_long_ago
