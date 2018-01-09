@@ -34,10 +34,10 @@ class User < ApplicationRecord
 
   def update_role(memberships)
     roles_to_have = Role.where(group_uid: memberships)
-    roles_to_have.map { |role| RolesUsers.find_or_create_by(role: role, user: self) }
+    roles_users_to_have = roles_to_have.map { |role| RolesUsers.find_or_create_by(role: role, user: self) }
 
-    roles_not_to_have = roles - roles_to_have
-    roles_not_to_have.map(&:destroy)
+    roles_users_not_to_have = roles_users - roles_users_to_have
+    roles_users_not_to_have.map(&:destroy)
   end
 
   def self.from_omniauth(auth)

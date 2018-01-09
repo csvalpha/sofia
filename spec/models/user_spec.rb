@@ -45,15 +45,33 @@ RSpec.describe User, type: :model do
   end
 
   describe '#roles' do
-    subject(:user) { FactoryBot.create(:user) }
+    context 'when with a role' do
+      subject(:user) { FactoryBot.create(:user) }
 
-    let(:role) { FactoryBot.create(:role) }
+      let(:role) { FactoryBot.create(:role) }
 
-    before do
-      FactoryBot.create(:roles_users, role: role, user: user)
+      before do
+        FactoryBot.create(:roles_users, role: role, user: user)
+      end
+
+      it { expect(user.roles).to match_array [role] }
     end
 
-    it { expect(user.roles).to match_array [role] }
+    context 'when with a destroyed role' do
+      subject(:user) { FactoryBot.create(:user) }
+
+      let(:role) { FactoryBot.create(:role) }
+      let(:roles_users) { FactoryBot.create(:roles_users, role: role, user: user) }
+
+      before do
+        roles_users
+        roles_users.destroy
+      end
+
+      it { expect(user.roles).not_to match_array [role] }
+    end
+
+
   end
 
   describe '#avatar_thumb_or_default_url' do
@@ -107,6 +125,31 @@ RSpec.describe User, type: :model do
       subject(:user) { FactoryBot.create(:user) }
 
       it { expect(user.main_bartender?).to eq false }
+    end
+  end
+
+  describe '#update_role' do
+    context 'when getting new roles' do
+      subject(:user) { FactoryBot.create(:user) }
+      let(:role) { FactoryBot.create(:role)}
+
+      before do
+        user.update_role([role.group_uid])
+      end
+
+      it { expect(user.roles).to include role}
+    end
+
+    context 'when losing roles' do
+      subject(:user) { FactoryBot.create(:user) }
+      let(:role) { FactoryBot.create(:role)}
+
+      before do
+        user.update_role([role.group_uid])
+        user.update_role([])
+      end
+
+      it { expect(user.roles).not_to include role}
     end
   end
 end
