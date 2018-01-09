@@ -49,7 +49,6 @@ class User < ApplicationRecord
     user.update_role(auth[:info][:memberships])
     user
   end
-  # :nocov:
 
   def self.full_name_from_attributes(first_name, last_name_prefix, last_name)
     [first_name, last_name_prefix, last_name].reject(&:blank?).join(' ')

@@ -70,8 +70,6 @@ RSpec.describe User, type: :model do
 
       it { expect(user.roles).not_to match_array [role] }
     end
-
-
   end
 
   describe '#avatar_thumb_or_default_url' do
@@ -131,35 +129,37 @@ RSpec.describe User, type: :model do
   describe '#update_role' do
     context 'when getting new roles' do
       subject(:user) { FactoryBot.create(:user) }
-      let(:role) { FactoryBot.create(:role)}
+
+      let(:role) { FactoryBot.create(:role) }
 
       before do
         user.update_role([role.group_uid])
       end
 
-      it { expect(user.roles).to include role}
+      it { expect(user.roles).to include role }
     end
 
     context 'when losing roles' do
       subject(:user) { FactoryBot.create(:user) }
-      let(:role) { FactoryBot.create(:role)}
+
+      let(:role) { FactoryBot.create(:role) }
 
       before do
         user.update_role([role.group_uid])
         user.update_role([])
       end
 
-      it { expect(user.roles).not_to include role}
+      it { expect(user.roles).not_to include role }
     end
   end
 
   describe 'full_name_from_attributes' do
     context 'when with all attributes' do
-      it { expect(User.full_name_from_attributes('first', 'middle', 'last')). to eq 'first middle last'}
+      it { expect(User.full_name_from_attributes('first', 'middle', 'last')). to eq 'first middle last' }
     end
 
     context 'when without middle name' do
-      it { expect(User.full_name_from_attributes('first', '', 'last')). to eq 'first last'}
+      it { expect(User.full_name_from_attributes('first', '', 'last')). to eq 'first last' }
     end
   end
 end
