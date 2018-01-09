@@ -8,10 +8,10 @@
         tbody
           tr
             th scope='row' = 'Starttijd'
-            td = datetime(@activity.start_time)
+            td = l @activity.start_time, format: :long
           tr
             th scope='row' = 'Eindtijd'
-            td = datetime(@activity.end_time)
+            td = l @activity.end_time, format: :long
           tr
             th scope='row' = 'Prijslijst'
             td = link_to @activity.price_list.name, @activity.price_list
@@ -86,18 +86,17 @@
             - else
               thead
                 tr
-                  th scope='col' = 'Beschrijving'
+                  th scope='col' = '#'
+                  th scope='col' = 'Tijd'
                   th scope='col' = 'Gebruiker'
-                  th scope='col' = 'Aanmaaktijd'
+                  th scope='col' = 'Bedrag'
               tbody
-                - @activity.credit_mutations&.each do |mutation|
+                - @activity.credit_mutations.each do |mutation|
                   tr
-                    td
-                      = mutation.description
-                    td
-                      = link_to mutation.user.name, mutation.user
-                    td
-                      = datetime_short(mutation.created_at)
+                    th scope='row' = mutation.id
+                    td = l mutation.created_at, format: :time_only
+                    td = link_to mutation.user.name, mutation.user
+                    td = number_to_currency(mutation.amount, unit: '€')
 
         .tab-pane id='orders' role='tabpanel' aria-labelledby='orders-tab'
           table.table.table-striped
@@ -110,16 +109,16 @@
               thead
                 tr
                   th scope='col' = '#'
-                  th scope='col' = 'Timestamp'
-                  th scope='col' = 'User'
-                  th scope='col' = 'Order total'
+                  th scope='col' = 'Tijd'
+                  th scope='col' = 'Gebruiker'
+                  th scope='col' = 'Bedrag'
                   th scope='col' = 'Producten'
 
               tbody
                 - @activity.orders.each do |order|
                   tr
                     th scope='row' = order.id
-                    td = datetime_short order.created_at
+                    td = l order.created_at, format: :time_only
                     td = link_to order.user.name, order.user
                     td = number_to_currency(order.order_total, unit: '€')
                     td
