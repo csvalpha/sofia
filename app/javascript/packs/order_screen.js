@@ -34,6 +34,7 @@ document.addEventListener('turbolinks:load', () => {
           activity: activity,
           selectedUser: null,
           payWithCash: false,
+          keepUserSelected: false,
           orderRows: [],
           creditMutationAmount: null,
           creditMutationDescription: 'Inleg contant',
@@ -132,7 +133,10 @@ document.addEventListener('turbolinks:load', () => {
             }
 
             this.sendFlash('Bestelling geplaatst.', additionalInfo, 'success');
-            this.setUser(null);
+            this.orderRows = []
+            if(!this.keepUserSelected){
+              this.setUser(null);
+            }
           }, this.handleXHRError );
         },
 
@@ -173,6 +177,10 @@ document.addEventListener('turbolinks:load', () => {
             this.creditMutationDescription = 'Inleg contant';
             const additionalInfo = `${response.body.user.name} - ${this.doubleToCurrency(response.body.amount)}`;
             this.sendFlash('Inleg opgeslagen.', additionalInfo, 'success');
+            this.orderRows = []
+            if(!this.keepUserSelected) {
+              this.setUser(null);
+            }
           }, this.handleXHRError);
         },
 
