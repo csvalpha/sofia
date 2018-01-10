@@ -15,7 +15,7 @@ class OrdersController < ApplicationController
                                     .to_json(include: { product: { only: %i[id name requires_age] } })
 
     @users_json = User.includes(%i[credit_mutations order_rows]).order(:name)
-                      .to_json(only: %i[id name], methods: :credit)
+                      .to_json(only: %i[id name], methods: %i[credit avatar_thumb_or_default_url])
     @activity_json = @activity.to_json(only: %i[id title start_time end_time])
 
     render layout: 'order_screen'
