@@ -20,13 +20,13 @@ RSpec.describe Role, type: :model do
   end
 
   describe '#name' do
-    context 'treasurer' do
+    context 'when treasurer' do
       subject(:role) { FactoryBot.build_stubbed(:role, role_type: :treasurer) }
 
       it { expect(role.name).to eq 'Penningmeester' }
     end
 
-    context 'main bartender' do
+    context 'when main bartender' do
       subject(:role) { FactoryBot.build_stubbed(:role, role_type: :main_bartender) }
 
       it { expect(role.name).to eq 'Hoofdtapper' }
