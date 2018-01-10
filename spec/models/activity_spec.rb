@@ -48,23 +48,26 @@ RSpec.describe Activity, type: :model do
   end
 
   describe 'cannot alter an activity after a month' do
+    before { activity.title = "#{activity.title}_new" }
+
     context 'when within a month' do
       subject(:activity) { FactoryBot.build(:activity) }
 
-      it { expect(activity.update_attributes(title: 'a new one')).to eq true }
+      it { expect(activity).to be_valid }
     end
 
     context 'when after a month' do
-      subject(:activity) { FactoryBot.build(:activity, :closed) }
+      subject(:activity) { FactoryBot.build(:activity, :expired) }
 
-      it { expect(activity.update_attributes(title: 'a new one')).to eq false }
+      it { expect(activity).not_to be_valid }
     end
   end
 
-  describe '#close_date' do
-    subject(:activity) { FactoryBot.build(:activity) }
+  describe '#expiration_date' do
+    subject(:activity) { FactoryBot.build(:activity, start_time: 51.days.ago, end_time: 50.days.ago) }
 
-    it { expect(activity.close_date).to eq activity.end_time + 1.month }
+    it { expect(activity.expiration_date).to eq activity.end_time + 1.month }
+    it { expect(activity.expired?).to be true }
   end
 
   describe '.upcoming' do

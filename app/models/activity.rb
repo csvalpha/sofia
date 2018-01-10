@@ -4,15 +4,11 @@ class Activity < ApplicationRecord
   belongs_to :price_list
   belongs_to :created_by, class_name: 'User'
 
-  validates :title,       presence: true
-  validates :start_time,  presence: true
-  validates :end_time,    presence: true
-  validates :price_list,  presence: true
-  validates :created_by, presence: true
+  validates :title, :start_time, :end_time, :price_list, :created_by, presence: true
+
   validates_datetime :end_time, after: :start_time
 
-  validate :validate_closed
-  before_update :updatable?
+  validate :activity_not_expired
 
   scope :upcoming, (lambda {
     where('(start_time < ? and end_time > ?) or start_time > ?', Time.zone.now,
@@ -37,21 +33,18 @@ class Activity < ApplicationRecord
     orders.map(&:created_by).uniq
   end
 
-  def closed?
-    end_time && Time.zone.now >= close_date
+  def expired?
+    return false if end_time.blank?
+    (end_time + 1.month) < Time.zone.now
   end
 
-  def close_date
+  def expiration_date
     end_time + 1.month
-  end
-
-  def validate_closed
-    errors.add(:base, 'activity ended longer then a month ago, altering is not allowed anymore') if closed?
   end
 
   private
 
-  def updatable?
-    throw(:abort) if closed?
+  def activity_not_expired
+    errors.add(:base, 'Activity was changed after expiration date') if expired? && changed?
   end
 end

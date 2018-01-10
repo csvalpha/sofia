@@ -7,7 +7,8 @@ class Order < ApplicationRecord
   accepts_nested_attributes_for :order_rows
 
   validates :activity, :user, :created_by, presence: true
-  validate :activity_allows_orders
+
+  validate :activity_not_expired
 
   def order_total
     @sum ||= order_rows.map(&:row_total).sum
@@ -15,9 +16,7 @@ class Order < ApplicationRecord
 
   private
 
-  def activity_allows_orders
-    return true unless activity&.closed?
-    errors.add(:activity, 'closed longer then a month ago, cannot create new orders')
-    false
+  def activity_not_expired
+    errors.add(:base, 'Activity has expired') if (persisted? || new_record?) && changed? && activity.expired?
   end
 end

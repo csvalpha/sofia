@@ -14,7 +14,7 @@
             td = l @activity.end_time, format: :long
           tr
             th scope='row' = 'Sluit op'
-            td = l @activity.close_date, format: :long
+            td = l @activity.expiration_date, format: :long
           tr
             th scope='row' = 'Prijslijst'
             td = link_to @activity.price_list.name, @activity.price_list
@@ -29,11 +29,11 @@
       .card-body
         h2.card-title = 'Streepscherm'
 
-        - if @activity.closed?
+        - if @activity.expired?
           .card-text
             div class='alert alert-danger'
-              = 'Deze activiteit is langer dan een maand geleden afgelopen.'
-              = 'Er kunnen geen nieuwe bestellingen/inleg meer worden toegevoegd'
+              = 'Deze activiteit is langer dan een maand geleden afgelopen. Er kunnen geen nieuwe '
+              = 'bestellingen worden geplaatst en geen saldocorrecties meer worden toegevoegd'
         - else
           p.card-text = 'Je kan bestellingen plaatsen in het streepscherm.'
 

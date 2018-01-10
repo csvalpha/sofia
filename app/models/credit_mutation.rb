@@ -3,16 +3,14 @@ class CreditMutation < ApplicationRecord
   belongs_to :activity, optional: true
   belongs_to :created_by, class_name: 'User'
 
-  validates :description, presence: true
-  validates :user, presence: true
-  validates :created_by, presence: true
-  validates :amount, presence: true
-  validate :activity_allows_orders
+  validates :description, :user, :created_by, :amount, presence: true
 
-  def activity_allows_orders
-    return true unless activity
-    return true unless activity.closed?
-    errors.add(:activity, 'closed longer then a month ago, cannot create new orders')
-    false
+  validate :activity_not_expired
+
+  def activity_not_expired
+    errors.add(:base, 'Activity has expired') if activity.present? &&
+                                                 (persisted? || new_record?) &&
+                                                 changed? &&
+                                                 activity.expired?
   end
 end
