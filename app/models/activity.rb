@@ -35,7 +35,7 @@ class Activity < ApplicationRecord
 
   def expired?
     return false if end_time.blank?
-    (end_time + 1.month) < Time.zone.now
+    Time.zone.now > expiration_date
   end
 
   def expiration_date
