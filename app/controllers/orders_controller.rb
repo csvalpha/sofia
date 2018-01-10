@@ -9,8 +9,6 @@ class OrdersController < ApplicationController
     @activity = Activity.includes([:price_list, price_list: { product_price: :product }])
                         .find(params[:activity_id])
 
-    redirect_to @activity if @activity.expired?
-
     @product_prices_json = @activity.price_list.product_price
                                     .to_json(include: { product: { only: %i[id name requires_age] } })
 
