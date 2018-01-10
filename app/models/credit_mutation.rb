@@ -8,9 +8,7 @@ class CreditMutation < ApplicationRecord
   validate :activity_not_expired
 
   def activity_not_expired
-    errors.add(:base, 'Activity has expired') if activity.present? &&
-                                                 (persisted? || new_record?) &&
-                                                 changed? &&
-                                                 activity.expired?
+    return if activity.blank?
+    errors.add(:activity, 'has expired') if changed? && activity.expired?
   end
 end

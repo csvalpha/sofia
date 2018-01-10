@@ -17,6 +17,6 @@ class Order < ApplicationRecord
   private
 
   def activity_not_expired
-    errors.add(:base, 'Activity has expired') if (persisted? || new_record?) && changed? && activity.expired?
+    errors.add(:activity, 'has expired') if changed? && activity.expired?
   end
 end
