@@ -36,6 +36,6 @@ class Activity < ApplicationRecord
   end
 
   def bartenders
-    orders.map(&:created_by).uniq
+    orders.map(&:created_by).uniq || []
   end
 end
