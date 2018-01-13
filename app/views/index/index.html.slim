@@ -1,15 +1,6 @@
+= render partial: 'partials/tomato_quote'
+
 .container.py-sm-3
-  .row
-    .col-sm-12.p-3.text-center
-
-      h1.tomato-header
-        = 'Alpha Tomato '
-        = image_tag '/images/tomato.png', alt: 'Tomato icon', title: ':tomato:'
-
-      blockquote.blockquote.text-center
-        p.mb-0 = 'Vakmanschap is meesterschap'
-        footer.blockquote-footer = 'Gerard Brummer, Grolsch'
-
   .row
     - if current_user&.treasurer? || current_user&.main_bartender?
       .col-12.col-md-6.mb-2
