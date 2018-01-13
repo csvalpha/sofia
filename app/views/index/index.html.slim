@@ -48,12 +48,11 @@
     - elsif current_user
       .col-12.col-md-4.mb-2.mx-auto
         .card
-          h4.card-header
-            = 'Saldo'
+          h4.card-header = "Welkom, #{current_user.name}"
 
           .card-body
             p
-              = 'Je hebt geen speciale rollen binnen het streepsysteem, '
+              = 'Je hebt geen speciale rollen binnen het streepsysteem; '
               = 'je kan hier wel je saldo en bestelgeschiedenis zien'
 
             = link_to current_user, class: 'btn btn-primary btn-block'
