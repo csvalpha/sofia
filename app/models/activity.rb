@@ -16,11 +16,6 @@ class Activity < ApplicationRecord
           Time.zone.now, Time.zone.now).order(:start_time, :end_time)
   })
 
-  scope :current, (lambda {
-    where('(start_time < ? and end_time > ?)', Time.zone.now,
-          Time.zone.now).order(:start_time, :end_time)
-  })
-
   delegate :products, to: :price_list
 
   def credit_mutations_total
