@@ -33,7 +33,7 @@ class User < ApplicationRecord
     @main_bartender ||= roles.map(&:main_bartender?).any?
   end
 
-  def update_role(memberships)
+  def update_role(groups)
     roles_to_have = Role.where(group_uid: groups)
     roles_users_to_have = roles_to_have.map { |role| RolesUsers.find_or_create_by(role: role, user: self) }
 
