@@ -17,6 +17,12 @@ RSpec.describe Activity, type: :model do
 
       it { expect(activity).not_to be_valid }
     end
+
+    context 'when without created_by' do
+      subject(:activity) { FactoryBot.build_stubbed(:activity, created_by: nil) }
+
+      it { expect(activity).not_to be_valid }
+    end
   end
 
   describe '.upcoming' do

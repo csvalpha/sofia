@@ -12,7 +12,7 @@ FactoryBot.define do
       with_all_products true
     end
 
-    trait :with_specific_products do
+    trait :with_products do
       with_specific_products true
     end
 

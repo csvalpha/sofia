@@ -19,7 +19,7 @@ RSpec.describe Order, type: :model do
     end
   end
 
-  describe '#calculate_product_price_total' do
+  describe '#order_total' do
     context 'when without rows' do
       subject(:order) { FactoryBot.create(:order) }
 
@@ -27,20 +27,19 @@ RSpec.describe Order, type: :model do
     end
 
     context 'when with one row' do
-      let(:price_list) { FactoryBot.create(:price_list) }
       let(:product) { FactoryBot.create(:product) }
+      let(:price_list) { FactoryBot.create(:price_list, :with_products, products: [product]) }
 
       let(:activity) { FactoryBot.create(:activity, price_list: price_list) }
 
       subject(:order) { FactoryBot.create(:order, activity: activity) }
 
       before do
-        FactoryBot.create(:product_price, price_list: price_list, product: product, price: 2.30)
         FactoryBot.create(:order_row, order: order, product: product, product_count: 2)
         order.reload
       end
 
-      it { expect(order.order_total).to eq(2 * 2.30) }
+      it { expect(order.order_total).to eq(2 * price_list.product_price_for(product).price) }
     end
   end
 end
