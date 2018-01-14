@@ -17,9 +17,15 @@ RSpec.describe Activity, type: :model do
 
       it { expect(activity).not_to be_valid }
     end
+
+    context 'when without created_by' do
+      subject(:activity) { FactoryBot.build_stubbed(:activity, created_by: nil) }
+
+      it { expect(activity).not_to be_valid }
+    end
   end
 
-  describe '#upcoming' do
+  describe '.upcoming' do
     let(:past_activity) do
       FactoryBot.create(:activity, start_time: 2.days.ago, end_time: 1.day.ago)
     end
@@ -30,5 +36,63 @@ RSpec.describe Activity, type: :model do
 
     it { expect(Activity.upcoming).to include future_activity }
     it { expect(Activity.upcoming).not_to include past_activity }
+  end
+
+  describe '#credit_mutations_total' do
+    context 'when without credit mutations' do
+      subject(:activity) { FactoryBot.build(:activity) }
+
+      it { expect(activity.credit_mutations_total).to eq 0 }
+    end
+
+    context 'when with credit mutations' do
+      subject(:activity) { FactoryBot.create(:activity) }
+
+      before do
+        FactoryBot.create(:credit_mutation, activity: activity, amount: 10)
+        FactoryBot.create(:credit_mutation, activity: activity, amount: 50)
+      end
+
+      it { expect(activity.credit_mutations_total).to eq 60 }
+    end
+  end
+
+  describe '#sold_products' do
+    subject(:activity) { FactoryBot.create(:activity) }
+
+    let(:product) { activity.price_list.products.sample }
+    let(:order) { FactoryBot.create(:order, activity: activity) }
+
+    before do
+      FactoryBot.create(:order_row, product: product, order: order)
+    end
+
+    it { expect(activity.sold_products).to match_array [product] }
+  end
+
+  describe '#revenue' do
+    subject(:activity) { FactoryBot.create(:activity) }
+
+    let(:product) { activity.price_list.products.sample }
+    let(:product_price) { activity.price_list.product_price_for(product).price }
+    let(:order) { FactoryBot.create(:order, activity: activity) }
+
+    before do
+      FactoryBot.create(:order_row, product: product, order: order, product_count: 2)
+    end
+
+    it { expect(activity.revenue).to eq product_price * 2 }
+  end
+
+  describe '#bartenders' do
+    subject(:activity) { FactoryBot.create(:activity) }
+
+    let(:bartender) { FactoryBot.create(:user) }
+
+    before do
+      FactoryBot.create(:order, created_by: bartender, activity: activity)
+    end
+
+    it { expect(activity.bartenders).to match_array [bartender] }
   end
 end

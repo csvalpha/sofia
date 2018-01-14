@@ -8,8 +8,8 @@ module OmniAuth
 
       option :client_options,
              site: Rails.application.config.x.banana_api_host,
-             authorize_url: '/api/oauth/authorize',
-             token_url: '/api/oauth/token'
+             authorize_url: '/api/v1/oauth/authorize',
+             token_url: '/api/v1/oauth/token'
 
       uid { raw_info['id'] }
 
@@ -20,13 +20,12 @@ module OmniAuth
           name: full_name(raw_info),
           avatar_url: raw_info['attributes']['avatar-url'],
           avatar_thumb_url: raw_info['attributes']['avatar-thumb-url'],
-          memberships: memberships_from_json(raw_info['relationships']['groups']['data'])
+          groups: groups_from_json(raw_info['relationships']['groups']['data'])
         }
       end
 
       def raw_info
-        headers = { accept: 'application/vnd.csvalpha.nl; version=1' }
-        @raw_info ||= JSON.parse(access_token.get('/api/users/me', headers: headers).body)['data']
+        @raw_info ||= JSON.parse(access_token.get('/api/v1/users?filter[me]&include="groups"').body)['data'][0]
       end
 
       # https://github.com/intridea/omniauth-oauth2/issues/81
@@ -40,8 +39,8 @@ module OmniAuth
                                        raw_info['attributes']['last-name'])
       end
 
-      def memberships_from_json(json)
-        json.map { |membership| membership['id'] }
+      def groups_from_json(json)
+        json.map { |group| group['id'] }
       end
     end
   end

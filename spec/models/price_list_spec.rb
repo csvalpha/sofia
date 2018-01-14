@@ -24,4 +24,10 @@ RSpec.describe PriceList, type: :model do
 
     it { expect(price_list.product_price_for(product).price).to eq 8 }
   end
+
+  describe '#to_s' do
+    subject(:price_list) { FactoryBot.create(:price_list) }
+
+    it { expect(price_list.to_s).to eq price_list.name }
+  end
 end
