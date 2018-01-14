@@ -33,8 +33,8 @@ class User < ApplicationRecord
     @main_bartender ||= roles.map(&:main_bartender?).any?
   end
 
-  def update_role(memberships)
-    roles_to_have = Role.where(group_uid: memberships)
+  def update_role(groups)
+    roles_to_have = Role.where(group_uid: groups)
     roles_to_have.map { |role| RolesUsers.find_or_create_by(role: role, user: self) }
 
     roles_not_to_have = roles - roles_to_have
@@ -45,7 +45,7 @@ class User < ApplicationRecord
     user = where(provider: auth.provider, uid: auth.uid).first_or_create do |u|
       u.name = auth[:info][:name]
     end
-    user.update_role(auth[:info][:memberships])
+    user.update_role(auth[:info][:groups])
     user
   end
 
