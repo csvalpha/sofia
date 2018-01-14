@@ -2,19 +2,20 @@
 
   .row.py-4
     .col-sm-12
-      h1 = 'Mutaties'
+      h1 = 'Inleg en saldocorrecties'
 
-      .d-flex.justify-content-between.mb-3
-        p = 'De laatste 25 activiteiten'
+      .d-flex.justify-content-between.mb-3.align-items-center
+        span
+          = 'Alle bedragen die ingelegd zijn bij activiteiten, inleg die handmatig ingevoerd is, en gedane correcties.'
 
         button.btn.btn-sm.btn-primary role='button' data-toggle='modal' data-target='#new_mutation_modal'
           = fa_icon 'plus', class: 'mr-1'
-          = 'Nieuwe mutatie'
+          = 'Nieuwe inleg of correctie'
 
         = render 'modal'
 
     .col-sm-12
-      table.table.table-striped
+      table.table.table-striped.table-responsive-md
         thead
           tr
             th scope='col' = 'Beschrijving'
@@ -35,4 +36,4 @@
               td
                 = link_to mutation.created_by.name, mutation.created_by
               td
-                = datetime_short(mutation.created_at)
+                = l mutation.created_at

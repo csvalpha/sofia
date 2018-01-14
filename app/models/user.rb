@@ -3,8 +3,9 @@ class User < ApplicationRecord
   has_many :orders, dependent: :destroy
   has_many :order_rows, through: :orders, dependent: :destroy
   has_many :credit_mutations, dependent: :destroy
+  has_many :activities, dependent: :destroy
 
-  has_many :roles_users, class_name: 'RolesUsers', dependent: :destroy
+  has_many :roles_users, class_name: 'RolesUsers', dependent: :destroy, inverse_of: :user
 
   validates :name, presence: true
   validates :uid, uniqueness: true, allow_blank: true
@@ -19,12 +20,17 @@ class User < ApplicationRecord
     @roles ||= roles_users.includes(:role).map(&:role).flatten.uniq
   end
 
+  def avatar_thumb_or_default_url
+    return '/images/avatar_thumb_default.png' unless avatar_thumb_url
+    "#{Rails.application.config.x.banana_api_host}#{avatar_thumb_url}"
+  end
+
   def treasurer?
-    roles.map(&:name).include?('Treasurer')
+    @treasurer ||= roles.map(&:treasurer?).any?
   end
 
   def main_bartender?
-    roles.map(&:name).include?('Main Bartender')
+    @main_bartender ||= roles.map(&:main_bartender?).any?
   end
 
   def update_role(groups)

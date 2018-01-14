@@ -6,11 +6,11 @@
       - if current_user&.treasurer?
         span
           = link_to refresh_user_list_users_path, class: 'btn btn-primary btn-sm mr-1'
-            = fa_icon 'refresh', class: 'mr-1'
-            = 'Sync users'
+            = fa_icon 'refresh'
+            span.d-none.d-md-inline.ml-1 = 'Synchroniseer gebruikers'
           button.btn.btn-sm.btn-primary role='button' data-toggle='modal' data-target='#edit_user_modal'
-            = fa_icon 'plus', class: 'mr-1'
-            = 'Nieuwe gebruiker'
+            = fa_icon 'plus'
+            span.d-none.d-md-inline.ml-1 = 'Nieuwe gebruiker'
 
         = render 'modal'
 
@@ -25,9 +25,6 @@
         tbody
           - @model.each do |user|
             tr
-              th scope='row'
-                = user.id
-              td
-                = link_to user.name, user
-              td
-                = number_to_currency(user.credit, unit: '€')
+              th scope='row' = user.id
+              td = link_to user.name, user
+              td class=('text-danger' if user.credit <= 0) = number_to_currency(user.credit, unit: '€')

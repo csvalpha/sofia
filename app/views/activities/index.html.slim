@@ -1,21 +1,21 @@
 .container
   .row.pt-4
     .col-sm-12.d-flex.justify-content-between.align-items-center
-      h1 = 'Activities'
+      h1 = 'Activiteiten'
 
       button.btn.btn-sm.btn-primary role='button' data-toggle='modal' data-target='#edit_activity_modal'
-        = fa_icon 'plus', class: 'mr-1'
-        = 'Nieuwe activiteit'
+        = fa_icon 'plus'
+        span.d-none.d-md-inline.ml-1 = 'Nieuwe activiteit'
 
     = render 'modal'
 
     .col-sm-12
-      table.table.table-striped
+      table.table.table-striped.table-responsive-md
         thead
           tr
             th scope='col' = 'Name'
-            th scope='col' = 'Start Time'
-            th scope='col' = 'End Time'
+            th scope='col' = 'Starttijd'
+            th scope='col' = 'Endtijd'
             th scope='col' = 'Streeplijst'
             th scope='col' = 'Aangemaakt door'
 
@@ -25,9 +25,9 @@
               td
                 = link_to activity.title, activity
               td
-                = datetime_short(activity.start_time)
+                = l activity.start_time
               td
-                = datetime_short(activity.end_time)
+                = l activity.end_time
               td
                 = link_to activity.price_list.name, activity.price_list
               td

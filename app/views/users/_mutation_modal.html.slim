@@ -4,12 +4,16 @@
 
       .modal-header
         h5.modal-title
-          = "Nieuwe mutation voor #{@user.name}"
+          = "Inleg aanmaken voor #{@user.name}"
         button.close type='button' data-dismiss='modal' aria-label='close'
           span aria-hidden='true' = fa_icon 'times'
 
       = simple_form_for @new_mutation, wrapper: :horizontal_form do |f|
         .modal-body id='mutations_modal'
+          p.modal-text
+            = 'Je kan hier registreren dat iemand geld heeft ingelegd. Je kan hier ook negatieve bedragen invullen '
+            = 'om zo een saldo te corrigeren.'
+
           = f.input :description, placeholder: 'Beschrijving', required: true
           = f.input :amount, as: :float
           input.d-none name="credit_mutation[user_id]" value=@new_mutation.user&.id
@@ -18,4 +22,4 @@
 
         .modal-footer
           button.btn.btn-secondary type='button' data-dismiss='modal' = 'Annuleren'
-          = f.button :submit, 'Mutatie opslaan', class: 'btn btn-primary'
+          = f.button :submit, 'Inleg opslaan', class: 'btn btn-primary'

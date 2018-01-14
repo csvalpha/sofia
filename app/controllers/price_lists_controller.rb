@@ -16,12 +16,6 @@ class PriceListsController < ApplicationController
                                       except: %i[created_at updated_at deleted_at])
   end
 
-  def show
-    @price_list = PriceList.includes([:activities]).find(params[:id])
-    @products = Product.all.order(:id)
-    authorize @price_list
-  end
-
   def create
     @price_list = PriceList.new(permitted_attributes)
     authorize @price_list

@@ -9,7 +9,7 @@ class AddOrdersAndRenameTransactionToOrderItems < ActiveRecord::Migration[5.1]
       t.timestamps
     end
 
-    create_table :order_rows do |t|
+    create_table :order_rows do |t| # rubocop:disable CreateTableWithTimestamps
       t.references :order, null: false
       t.references :product, null: false
 

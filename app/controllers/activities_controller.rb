@@ -3,7 +3,7 @@ class ActivitiesController < ApplicationController
   after_action :verify_authorized
 
   def index # rubocop:disable Metrics/AbcSize
-    @activities = Activity.includes(%i[price_list created_by])
+    @activities = Activity.includes(%i[price_list created_by]).order(start_time: :desc)
     authorize @activities
 
     @activity = Activity.new(

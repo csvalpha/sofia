@@ -55,11 +55,11 @@
   nav.header
     ul.header-nav
       li.header-nav-item.header-nav-home
-        = link_to root_path, class: 'nav-link'
-          = fa_icon 'home'
+        = link_to @activity, class: 'nav-link'
+          = fa_icon 'chevron-left'
       li.header-nav-item
         span.mr-3 = @activity.title
-        small.font-weight-light.d-inline-block = datetime_short(@activity)
+        small.font-weight-light.d-inline-block = l @activity.start_time, format: :date_only
 
     orderscreen-flash
 
@@ -134,27 +134,21 @@ template id="user-selection"
              @keyup.up="decreaseHighlightedUserIndex"
              @keyup.down="increaseHighlightedUserIndex")
 
-    .user-details-suggestions
-      .user-details-suggestions-user.row.no-gutters(
+    .user-details-suggestions.container
+      .user-details-suggestions-user.row.justify-content-center.align-items-center(
           v-for="(user, index) in suggestedUsers"
           @click="selectUser(user)" v-bind:class="{ highlight : (highlightedUserIndex == index) }"
           @mouseover="highlightedUserIndex = -1" @mouseleave="resetHighlight")
         .user-details-suggestions-user-avatar.col-4
-          = image_tag '/images/avatar_thumb_default.png', class: 'img-thumbnail rounded-circle'
-        .user-details-suggestions-user-details.col-8.px-3
-          .user-details-suggestions-user-name
-            h4.pt-2
-              = '{{user.name}}'
-              small.ml-1 = '({{user.id}})'
-          .user-details-suggestions-user-credit
-            h5 v-bind:class="{ 'text-danger' : (user.credit <= 0) }"
-              = '{{doubleToCurrency(user.credit)}}'
+          img v-bind:src="user.avatar_thumb_or_default_url" onerror="this.src = '/images/avatar_thumb_default.png';" class= 'img-thumbnail rounded-circle'
+        h4.user-details-suggestions-user-name.col-8.m-0
+          = '{{user.name}}'
 
   .user-details v-else=""
     .user-details-user.container
       .row.py-3
         .user-details-avatar.col-4.px-1
-          = image_tag '/images/avatar_thumb_default.png', class: 'img-thumbnail rounded-circle'
+          img v-bind:src="selectedUser.avatar_thumb_or_default_url" onerror="this.src = '/images/avatar_thumb_default.png';" class= 'img-thumbnail rounded-circle'
         .user-details-name.col-8
           h3.mb-3
             = '{{selectedUser.name}}'
