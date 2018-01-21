@@ -4,7 +4,7 @@ class Product < ApplicationRecord
   validates :name, presence: true
   validates :requires_age, inclusion: [true, false]
   validates :category, presence: true, inclusion: {
-      in: %w[bier fris gedestilleerd wijn food sigaren]
+    in: %w[bier fris gedestilleerd wijn food sigaren]
   }
 
   accepts_nested_attributes_for :product_prices
