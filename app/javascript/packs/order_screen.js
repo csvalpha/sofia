@@ -140,7 +140,7 @@ document.addEventListener('turbolinks:load', () => {
       },
 
       updated: function(){
-        $('#user-search-bar').focus()
+        this.$refs.userSearchBar.focus();
       },
 
       methods: {
