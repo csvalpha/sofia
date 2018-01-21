@@ -1,7 +1,7 @@
 class CreditMutation < ApplicationRecord
   belongs_to :user
   belongs_to :activity, optional: true
-  belongs_to :created_by, class_name: 'User'
+  belongs_to :created_by, class_name: 'User', inverse_of: :credit_mutations
 
   validates :description, :user, :created_by, :amount, presence: true
 

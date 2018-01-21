@@ -3,8 +3,9 @@ class User < ApplicationRecord
   has_many :orders, dependent: :destroy
   has_many :order_rows, through: :orders, dependent: :destroy
   has_many :credit_mutations, dependent: :destroy
+  has_many :activities, dependent: :destroy
 
-  has_many :roles_users, class_name: 'RolesUsers', dependent: :destroy
+  has_many :roles_users, class_name: 'RolesUsers', dependent: :destroy, inverse_of: :user
 
   validates :name, presence: true
   validates :uid, uniqueness: true, allow_blank: true
@@ -32,19 +33,21 @@ class User < ApplicationRecord
     @main_bartender ||= roles.map(&:main_bartender?).any?
   end
 
-  def update_role(memberships)
-    roles_to_have = Role.where(group_uid: memberships)
-    roles_to_have.map { |role| RolesUsers.find_or_create_by(role: role, user: self) }
+  def update_role(groups)
+    roles_to_have = Role.where(group_uid: groups)
+    roles_users_to_have = roles_to_have.map { |role| RolesUsers.find_or_create_by(role: role, user: self) }
 
-    roles_not_to_have = roles - roles_to_have
-    roles_not_to_have.map(&:destroy)
+    roles_users_not_to_have = roles_users - roles_users_to_have
+    roles_users_not_to_have.map(&:destroy)
   end
 
+  # TODO: Spec this method
+  # :nocov:
   def self.from_omniauth(auth)
     user = where(provider: auth.provider, uid: auth.uid).first_or_create do |u|
       u.name = auth[:info][:name]
     end
-    user.update_role(auth[:info][:memberships])
+    user.update_role(auth[:info][:groups])
     user
   end
 

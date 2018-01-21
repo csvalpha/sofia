@@ -1,6 +1,7 @@
-# rubocop:disable Metrics/MethodLength
 module Slackistrano
   class CustomMessaging < Messaging::Base
+    # rubocop:disable Metrics/MethodLength
+
     def branch
       "<https://github.com/csvalpha/alpha-tomato/tree/#{fetch(:branch)}|\`#{fetch(:branch)}\`>"
     end
@@ -93,5 +94,7 @@ module Slackistrano
         ]
       }
     end
+
+    # rubocop:enable Metrics/MethodLength
   end
 end

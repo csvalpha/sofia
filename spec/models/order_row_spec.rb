@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe OrderRow, type: :model do
-  subject(:order_row) { FactoryBot.build(:order_row) }
+  subject(:order_row) { FactoryBot.create(:order_row) }
 
   describe '#valid' do
     it { expect(order_row).to be_valid }
@@ -19,19 +19,42 @@ RSpec.describe OrderRow, type: :model do
 
       it { expect(order_row).not_to be_valid }
     end
+
+    context 'when changing price_per_product' do
+      let(:new_price) { order_row.price_per_product + 1.00 }
+
+      before { order_row.assign_attributes(price_per_product: new_price) }
+
+      it { expect(order_row).not_to be_valid }
+    end
   end
 
   describe '#copy_product_price' do
+    let(:product) { FactoryBot.create(:product) }
+    let(:price_list) { FactoryBot.create(:price_list) }
+    let(:activity) { FactoryBot.create(:activity, price_list: price_list) }
+    let(:order) { FactoryBot.create(:order, activity: activity) }
+    let!(:product_price) do
+      FactoryBot.create(:product_price, price_list: price_list, product: product, price: 2.00)
+    end
+
+    subject!(:order_row) { FactoryBot.create(:order_row, order: order, product: product) }
+
     context 'when with a product' do
-      let(:product) { FactoryBot.create(:product) }
-      let(:price_list) { FactoryBot.create(:price_list) }
-      let(:activity) { FactoryBot.create(:activity, price_list: price_list) }
-      let(:order) { FactoryBot.create(:order, activity: activity) }
+      it { expect(order_row.price_per_product).to eq(2.00) }
+    end
 
-      subject(:order_row) { FactoryBot.create(:order_row, order: order, product: product) }
-
+    context 'when product_price changes after creation' do
       before do
-        FactoryBot.create(:product_price, price_list: price_list, product: product, price: 2.00)
+        product_price.update(price: 44.00)
+      end
+
+      it { expect(order_row.price_per_product).to eq(2.00) }
+    end
+
+    context 'when product_price is deleted after creation' do
+      before do
+        product_price.delete
       end
 
       it { expect(order_row.price_per_product).to eq(2.00) }
@@ -40,16 +63,16 @@ RSpec.describe OrderRow, type: :model do
 
   describe '#available_products' do
     context 'when with an order' do
-      let(:available_products) { FactoryBot.create_list(:product, 5) }
-      let(:not_available_product) { FactoryBot.create(:product) }
-
-      let(:price_list) { FactoryBot.create(:price_list, :with_specific_products, products: available_products) }
+      let(:all_products) { FactoryBot.create_list(:product, 5) }
+      let(:price_list) { FactoryBot.create(:price_list, :with_products, products: all_products) }
       let(:activity) { FactoryBot.create(:activity, price_list: price_list) }
       let(:order) { FactoryBot.create(:order, activity: activity) }
 
       subject(:order_row) { FactoryBot.create(:order_row, order: order) }
 
-      it { expect(order_row.available_products).to match_array(available_products) }
+      before { FactoryBot.create(:product) }
+
+      it { expect(order_row.available_products).to match_array(all_products) }
     end
   end
 end

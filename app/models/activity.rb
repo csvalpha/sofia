@@ -2,7 +2,7 @@ class Activity < ApplicationRecord
   has_many :orders, dependent: :destroy
   has_many :credit_mutations, dependent: :destroy
   belongs_to :price_list
-  belongs_to :created_by, class_name: 'User'
+  belongs_to :created_by, class_name: 'User', inverse_of: :activities
 
   validates :title, :start_time, :end_time, :price_list, :created_by, presence: true
 
@@ -13,11 +13,6 @@ class Activity < ApplicationRecord
   scope :upcoming, (lambda {
     where('(start_time < ? and end_time > ?) or start_time > ?', Time.zone.now,
           Time.zone.now, Time.zone.now).order(:start_time, :end_time)
-  })
-
-  scope :current, (lambda {
-    where('(start_time < ? and end_time > ?)', Time.zone.now,
-          Time.zone.now).order(:start_time, :end_time)
   })
 
   delegate :products, to: :price_list
@@ -35,7 +30,7 @@ class Activity < ApplicationRecord
   end
 
   def bartenders
-    orders.map(&:created_by).uniq
+    orders.map(&:created_by).uniq || []
   end
 
   def expired?
