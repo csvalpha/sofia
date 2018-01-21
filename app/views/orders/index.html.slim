@@ -132,7 +132,8 @@ template id="user-selection"
              v-model="userQuery"
              @input="queryChange" @keyup.enter.prevent="selectHighlightedUser"
              @keyup.up="decreaseHighlightedUserIndex"
-             @keyup.down="increaseHighlightedUserIndex")
+             @keyup.down="increaseHighlightedUserIndex"
+             autofocus)
 
     .user-details-suggestions.container
       .user-details-suggestions-user.row.justify-content-center.align-items-center(
