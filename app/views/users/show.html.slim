@@ -42,15 +42,15 @@
             = 'Rollen worden gesynchroniseerd als de gebruiker zelf inlogt'
 
           p.card-text.d-none.d-md-block
-            = 'Je rechten zijn afhankelijk van de rollen die je in het streepsysteem hebt. '
-            = 'Je rollen worden bepaald aan de hand van de groepen waar je in zit in de Alpha website.'
+            = 'Rechten zijn afhankelijk van de rollen die een gebruiker in het streepsysteem heeft. '
+            = 'Rollen worden bepaald aan de hand van de groepen waar een gebruiker lid van is in de Alpha website.'
 
           - if @user.roles_users.any?
             ul
               - @user.roles_users.each do |role|
                 li = role.name
           - else
-            p = 'Deze gebruiker heeft geen speciale rollen binnen het streepsysteem.'
+            p = "#{@user.name} heeft geen speciale rollen binnen het streepsysteem."
 
   hr
 
@@ -80,7 +80,7 @@
                 tr
                   td.text-center colspan='3'
                     p.my-1
-                      em = 'Deze gebruiker heeft nog geen bestellingen gedaan'
+                      em = "#{@user.name} heeft nog geen bestellingen gedaan"
               - else
                 - @user.orders.each do |order|
                   tr
@@ -102,7 +102,7 @@
                 tr
                   td.text-center colspan='4'
                     p.my-1
-                      em = 'Deze gebruiker heeft nog niet ingelegd en er zijn nog geen correcties'
+                      em = "#{@user.name} heeft nog niet ingelegd en er zijn nog geen correcties"
               - else
                 - @user.credit_mutations.each do |mutation|
                   tr
