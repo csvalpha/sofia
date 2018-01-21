@@ -21,6 +21,7 @@
             th.products-name scope='col' = 'Product'
             th.products-alcohol scope='col'
               div = '18+'
+            th.products-category scope='col' = 'Categorie'
             th.products-pricelist.rotate scope='col' v-for='priceList in priceLists'
               .center-text v-bind:title='"Lijst ID: " + priceList.id'
                 a v-bind:href='"/price_lists/" + priceList.id' = '{{ priceList.name }}'
@@ -35,13 +36,22 @@
                 span v-if='product.id' title='Cancel' = fa_icon 'undo lg'
                 span v-else='' title='Remove' = fa_icon 'times lg'
 
-              td.products-new colspan='2'
+              td.products-new
                 .input-group
                   input.form-control type='text' v-model='product.name' placeholder='Productnaam'
-                  .input-group-addon
-                    label.form-check-label
-                      input.form-check-input type='checkbox' v-model='product.requires_age'
-                      span = '18+'
+              td.products-new
+                .input-group-addon
+                  label.form-check-label
+                    input.form-check-input type='checkbox' v-model='product.requires_age'
+                    span = '18+'
+              td.products-new
+                select v-model='product.category'
+                  option = 'bier'
+                  option = 'fris'
+                  option = 'gedestilleerd'
+                  option = 'wijn'
+                  option = 'food'
+                  option = 'sigaren'
 
               td.products-new-price v-for='priceList in priceLists'
                 .input-group
@@ -54,6 +64,7 @@
               td  = '{{ product.name }}'
               td.center-text
                 span v-if='product.requires_age' = fa_icon 'check'
+              td  = '{{ product.category }}'
 
               td.product-price.center-text v-for='priceList in priceLists'
                 span v-bind:title='product.name + " in lijst " + priceList.name'
