@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'bcrypt', '~> 3.1.11'
 gem 'bootstrap', '~> 4.0.0.beta3'
+gem 'coffee-rails', '~> 4.2'
 gem 'devise', '~> 4.4.0'
 gem 'devise-i18n', '~> 1.5'
 gem 'factory_bot_rails', '~> 4.8.2'

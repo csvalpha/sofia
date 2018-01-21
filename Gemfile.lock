@@ -84,6 +84,13 @@ GEM
       capistrano (>= 3.9.0)
       sidekiq (>= 3.4)
     coderay (1.1.2)
+    coffee-rails (4.2.2)
+      coffee-script (>= 2.2.0)
+      railties (>= 4.0.0)
+    coffee-script (2.4.1)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.12.2)
     colorize (0.8.1)
     concurrent-ruby (1.0.5)
     connection_pool (2.2.1)
@@ -409,6 +416,7 @@ DEPENDENCIES
   capistrano (= 3.9.1)
   capistrano-docker!
   capistrano-sidekiq
+  coffee-rails (~> 4.2)
   colorize
   consistency_fail
   devise (~> 4.4.0)
