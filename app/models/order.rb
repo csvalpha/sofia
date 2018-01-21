@@ -8,7 +8,7 @@ class Order < ApplicationRecord
 
   validates :activity, :user, :created_by, presence: true
 
-  validate :activity_not_expired
+  validate :activity_not_locked
 
   def order_total
     @sum ||= order_rows.map(&:row_total).sum
@@ -16,7 +16,7 @@ class Order < ApplicationRecord
 
   private
 
-  def activity_not_expired
-    errors.add(:activity, 'has expired') if changed? && activity.expired?
+  def activity_not_locked
+    errors.add(:activity, 'has been locked') if changed? && activity.locked?
   end
 end

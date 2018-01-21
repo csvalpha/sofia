@@ -5,10 +5,10 @@ class CreditMutation < ApplicationRecord
 
   validates :description, :user, :created_by, :amount, presence: true
 
-  validate :activity_not_expired
+  validate :activity_not_locked
 
-  def activity_not_expired
+  def activity_not_locked
     return if activity.blank?
-    errors.add(:activity, 'has expired') if changed? && activity.expired?
+    errors.add(:activity, 'has been locked') if changed? && activity.locked?
   end
 end

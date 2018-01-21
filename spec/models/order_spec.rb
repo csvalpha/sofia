@@ -24,8 +24,8 @@ RSpec.describe Order, type: :model do
       it { expect(order).not_to be_valid }
     end
 
-    context 'when with expired activity' do
-      let(:activity) { FactoryBot.build(:activity, :expired) }
+    context 'when with locked activity' do
+      let(:activity) { FactoryBot.build(:activity, :locked) }
       let(:order) { FactoryBot.build(:order, activity: activity) }
 
       it { expect(order).not_to be_valid }

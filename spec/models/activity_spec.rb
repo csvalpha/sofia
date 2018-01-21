@@ -57,17 +57,17 @@ RSpec.describe Activity, type: :model do
     end
 
     context 'when after a month' do
-      subject(:activity) { FactoryBot.build(:activity, :expired) }
+      subject(:activity) { FactoryBot.build(:activity, :locked) }
 
       it { expect(activity).not_to be_valid }
     end
   end
 
-  describe '#expiration_date' do
+  describe '#lock_date' do
     subject(:activity) { FactoryBot.build(:activity, start_time: 51.days.ago, end_time: 50.days.ago) }
 
-    it { expect(activity.expiration_date).to eq activity.end_time + 1.month }
-    it { expect(activity.expired?).to be true }
+    it { expect(activity.lock_date).to eq activity.end_time + 1.month }
+    it { expect(activity.locked?).to be true }
   end
 
   describe '.upcoming' do

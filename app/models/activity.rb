@@ -8,7 +8,7 @@ class Activity < ApplicationRecord
 
   validates_datetime :end_time, after: :start_time
 
-  validate :activity_not_expired
+  validate :activity_not_locked
 
   scope :upcoming, (lambda {
     where('(start_time < ? and end_time > ?) or start_time > ?', Time.zone.now,
@@ -38,18 +38,18 @@ class Activity < ApplicationRecord
     orders.map(&:created_by).uniq || []
   end
 
-  def expired?
+  def locked?
     return false if end_time.blank?
-    Time.zone.now > expiration_date
+    Time.zone.now > lock_date
   end
 
-  def expiration_date
+  def lock_date
     end_time + 1.month
   end
 
   private
 
-  def activity_not_expired
-    errors.add(:base, 'Activity was changed after expiration date') if expired? && changed?
+  def activity_not_locked
+    errors.add(:base, 'Activity cannot be changed after lock date') if locked? && changed?
   end
 end
