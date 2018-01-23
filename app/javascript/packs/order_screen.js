@@ -139,6 +139,10 @@ document.addEventListener('turbolinks:load', () => {
         'users': 'queryChange'
       },
 
+      updated: function(){
+        this.$refs.userSearchBar.focus();
+      },
+
       methods: {
         doubleToCurrency(price) {
           return `€${parseFloat(price).toFixed(2)}`;
