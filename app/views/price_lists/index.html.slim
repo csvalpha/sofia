@@ -46,12 +46,8 @@
                     span = '18+'
               td.products-new
                 select v-model='product.category'
-                  option = 'bier'
-                  option = 'fris'
-                  option = 'gedestilleerd'
-                  option = 'wijn'
-                  option = 'food'
-                  option = 'sigaren'
+                  - Product.categories.each do |category|
+                    option = category[0]
 
               td.products-new-price v-for='priceList in priceLists'
                 .input-group
