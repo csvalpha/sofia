@@ -5,7 +5,7 @@ class Product < ApplicationRecord
   validates :requires_age, inclusion: [true, false]
   validates :category, presence: true
 
-  enum category: {bier: 0, fris: 1, gedestileerd: 2, wijn: 3, eten: 4, sigaren: 5}
+  enum category: { bier: 0, fris: 1, gedestileerd: 2, wijn: 3, eten: 4, sigaren: 5 }
 
   accepts_nested_attributes_for :product_prices
 end
