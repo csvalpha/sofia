@@ -1,41 +1,41 @@
-products = []
-product_names_with_alcohol = ['Bier (glas)', 'Bier (pul)', 'Bier (pitcher)', 'Speciaalbier', 'Sterke drank',
-                              'Dure Whisky', 'Weduwe Joustra Beerenburg', 'Wijn (glas)', 'Wijn (fles)', '12+1',
-                              'Sigaar', 'Sigaar (duur)']
+require_relative './seeds/products.rb'
 
-product_names_without_alcohol = ['Fris', 'Fris (klein)', 'Red Bull', 'Tosti', 'Nootjes', 'Chips']
+p 'Seeding products...'
+products = seed_products
 
-product_names_with_alcohol.each do |name|
-  products << Product.create(name: name, requires_age: true)
+p 'Seeding price lists...'
+price_lists_names = ['BSA', 'Inkoopprijs', 'Extern']
+price_lists = []
+price_lists_names.each do |name|
+  price_lists << FactoryBot.create(:price_list, :with_all_products, name: name)
 end
 
-product_names_without_alcohol.each do |name|
-  products << Product.create(name: name, requires_age: false)
-end
-
-activities = []
-4.times do
-  activities << FactoryBot.create(:activity)
-end
-
+p 'Seeding users...'
 users = []
 5.times do
   users << FactoryBot.create(:user)
 end
 
-activities.each do |activity|
-  products.each do |product|
-    FactoryBot.create(:product_price, product: product, price_list: activity.price_list)
-  end
+p 'Seeding activities...'
+activities = []
+4.times do
+  activities << FactoryBot.create(:activity, price_list: price_lists.sample, created_by: users.sample)
 end
 
+p 'Seeding orders...'
 activities.each do |activity|
   5.times do
-    FactoryBot.create(:order, :with_items,
-                      products: activity.products.sample(5), activity: activity, user: users.sample)
+    FactoryBot.create(:order, :with_items, products: activity.products.sample(2),
+                      activity: activity, user: users.sample, created_by: users.sample)
   end
 end
 
+p 'Seeding credit mutations...'
 users.each do |user|
-  FactoryBot.create_list(:credit_mutation, 3, user: user)
+  FactoryBot.create_list(:credit_mutation, 3, user: user, created_by: users.sample)
 end
+
+p 'Seeding roles...'
+Role.create(role_type: :treasurer, group_uid: 3)
+Role.create(role_type: :main_bartender, group_uid: 3)
+Role.create(role_type: :main_bartender, group_uid: 2)
