@@ -129,10 +129,12 @@ template id="user-selection"
   .user-details v-if="!selectedUser"
     .user-details-search.d-flex.flex-column.justify-content-center
       input( placeholder="Gebruiker zoeken" class="form-control form-control-lg"
+             ref='userSearchBar'
              v-model="userQuery"
              @input="queryChange" @keyup.enter.prevent="selectHighlightedUser"
              @keyup.up="decreaseHighlightedUserIndex"
-             @keyup.down="increaseHighlightedUserIndex")
+             @keyup.down="increaseHighlightedUserIndex"
+             autofocus)
 
     .user-details-suggestions.container
       .user-details-suggestions-user.row.justify-content-center.align-items-center(
