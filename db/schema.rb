@@ -89,8 +89,7 @@ ActiveRecord::Schema.define(version: 20180121150413) do
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "requires_age", default: false, null: false
-    t.string "category", default: "bier", null: false
+    t.integer "category", default: 0, null: false
   end
 
   create_table "roles", force: :cascade do |t|

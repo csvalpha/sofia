@@ -19,19 +19,17 @@
           tr
             th.products-id scope='col' = 'ID'
             th.products-name scope='col' = 'Product'
-            th.products-alcohol scope='col'
-              div = '18+'
             th.products-category scope='col' = 'Categorie'
             th.products-pricelist.rotate scope='col' v-for='priceList in priceLists'
-              .center-text v-bind:title='"Lijst ID: " + priceList.id'
-                a v-bind:href='"/price_lists/" + priceList.id' = '{{ priceList.name }}'
+              .center-text v-bind:title='priceList.name'
+                span = '{{ priceList.name }}'
             th.products-actions v-if='priceLists.length > 0'
 
         tbody
           tr.products-product{ v-for='product in products' v-on:dblclick='editProduct(product)'
                                @keyup.esc='cancelEditProduct(product)' @keyup.enter='saveProduct(product)'}
 
-            template v-if='product.editing'
+            template v-if='product.editing || true'
               td.products-cancel-edit v-on:click='cancelEditProduct(product)'
                 span v-if='product.id' title='Cancel' = fa_icon 'undo lg'
                 span v-else='' title='Remove' = fa_icon 'times lg'
@@ -39,19 +37,13 @@
               td.products-new
                 .input-group
                   input.form-control type='text' v-model='product.name' placeholder='Productnaam'
+
               td.products-new
-                .input-group-addon
-                  label.form-check-label
-                    input.form-check-input type='checkbox' v-model='product.requires_age'
-                    span = '18+'
-              td.products-new
-                select v-model='product.category'
-                  option = 'bier'
-                  option = 'fris'
-                  option = 'gedestilleerd'
-                  option = 'wijn'
-                  option = 'food'
-                  option = 'sigaren'
+                .input-group
+                  select.form-control v-model='product.category'
+                    - Product.categories.each do |category|
+                      = content_tag :option, value: category.first
+                        = t category.first
 
               td.products-new-price v-for='priceList in priceLists'
                 .input-group
@@ -61,10 +53,8 @@
 
             template v-else=''
               th scope='row' = '{{ product.id }}'
-              td  = '{{ product.name }}'
-              td.center-text
-                span v-if='product.requires_age' = fa_icon 'check'
-              td  = '{{ product.category }}'
+              td = '{{ product.name }}'
+              td = '{{ product.category }}'
 
               td.product-price.center-text v-for='priceList in priceLists'
                 span v-bind:title='product.name + " in lijst " + priceList.name'
