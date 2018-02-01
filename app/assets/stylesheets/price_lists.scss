@@ -4,44 +4,46 @@
 }
 
 th {
-  products-id,
-  products-alcohol {
+  &.products-id,
+  &.products-alcohol {
     width: 1.75rem;
   }
 
-  .products-actions {
+  &.products-actions {
     width: 4rem;
   }
 }
 
 td {
-  .products-new-edit-button {
+  &.products-new-edit-button {
     padding: .5rem 1rem;
   }
 
-  .products-new {
+  &.products-new {
     input {
-      .form-control {
-        width: 8rem;
+      &.form-control {
+        width: 6rem;
       }
+    }
 
-      .form-check-input {
-        margin-top: .25rem;
+    select {
+      &.form-control {
+        width: 4rem;
       }
     }
   }
 
-  .products-new-price {
+  &.products-new-price {
     input {
-      .form-control {
+      &.form-control {
         width: 2rem;
       }
     }
   }
 
-  .products-cancel-new,
-  .products-cancel-edit,
-  .products-save-new {
+  &.products-cancel-new,
+  &.products-cancel-edit,
+  &.products-save-new {
     vertical-align: middle;
   }
 }
@@ -51,11 +53,5 @@ td {
     .edit-product-row i { // sass-lint:disable-line force-element-nesting
       color: $font-color-dark;
     }
-  }
-}
-
-button {
-  .products-button-new {
-    cursor: pointer;
   }
 }
