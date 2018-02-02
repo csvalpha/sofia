@@ -6,15 +6,6 @@ GIT
     capistrano-docker (0.2.11)
       capistrano (>= 3.3)
 
-GIT
-  remote: https://github.com/nicolas-besnard/bullet.git
-  revision: 9a38c2f07d1468677979118cde55173383d9e844
-  branch: sentry
-  specs:
-    bullet (5.7.0)
-      activesupport (>= 3.0.0)
-      uniform_notifier (~> 1.11.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -74,6 +65,9 @@ GEM
       sass (>= 3.5.2)
     brakeman (4.1.1)
     builder (3.2.3)
+    bullet (5.7.2)
+      activesupport (>= 3.0.0)
+      uniform_notifier (~> 1.11.0)
     byebug (9.1.0)
     capistrano (3.9.1)
       airbrussh (>= 1.0.0)
@@ -309,7 +303,7 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
-    rubocop-rspec (1.22.1)
+    rubocop-rspec (1.22.2)
       rubocop (>= 0.52.1)
     ruby-progressbar (1.9.0)
     ruby_dep (1.5.0)
@@ -324,7 +318,7 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
-    sentry-raven (2.7.1)
+    sentry-raven (2.7.2)
       faraday (>= 0.7.6, < 1.0)
     shellany (0.0.1)
     sidekiq (5.0.5)
@@ -412,7 +406,7 @@ DEPENDENCIES
   better_errors
   bootstrap (~> 4.0.0.beta3)
   brakeman
-  bullet!
+  bullet
   capistrano (= 3.9.1)
   capistrano-docker!
   capistrano-sidekiq
