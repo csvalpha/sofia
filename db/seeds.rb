@@ -33,7 +33,8 @@ end
 
 p 'Seeding credit mutations...'
 users.each do |user|
-  FactoryBot.create_list(:credit_mutation, 3, user: user, created_by: users.sample)
+  FactoryBot.create_list(:credit_mutation, 3, user: user, created_by: users.sample,
+                                              activity: (activities + [nil]).sample)
 end
 
 p 'Seeding roles...'
