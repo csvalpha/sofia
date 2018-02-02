@@ -64,17 +64,12 @@
                   th scope='row' = 'Totaal aan inleg en correcties'
                   td = number_to_currency(@activity.credit_mutations_total, unit: '€')
                 tr
-                  th scope='row' = 'Totaal unieke producten'
-                  td = @activity.sold_products.uniq.size
-                tr
-                  th scope='row' = 'Totaal producten'
-                  td = @activity.sold_products.size
-                tr
-                  th scope='row' = 'Omzet'
+                  th scope='row' = 'Totale omzet'
                   td = number_to_currency(@activity.revenue, unit: '€')
-                tr
-                  th scope='row' = 'Totaal personen'
-                  td = @activity.orders.map(&:user).uniq.size
+                - Product.categories.each do |category|
+                  tr
+                    th scope='row' = "Omzet #{t category.first}"
+                    td = number_to_currency(@activity.revenue_by_category(category), unit: '€')
 
         .tab-pane id='credit_mutations' role='tabpanel' aria-labelledby='credit_mutations-tab'
           table.table.table-striped

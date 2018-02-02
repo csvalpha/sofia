@@ -35,6 +35,11 @@ class Activity < ApplicationRecord
     orders.map(&:order_rows).flatten.map(&:row_total).reduce(:+) || 0
   end
 
+  def revenue_by_category(category)
+    rows = orders.map { |order| order.order_rows.by_category(category) }
+    rows.flatten.map(&:row_total).reduce(:+) || 0
+  end
+
   def bartenders
     orders.map(&:created_by).uniq || []
   end
