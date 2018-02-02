@@ -29,7 +29,7 @@
           tr.products-product{ v-for='product in products' v-on:dblclick='editProduct(product)'
                                @keyup.esc='cancelEditProduct(product)' @keyup.enter='saveProduct(product)'}
 
-            template v-if='product.editing || true'
+            template v-if='product.editing'
               td.products-cancel-edit v-on:click='cancelEditProduct(product)'
                 span v-if='product.id' title='Cancel' = fa_icon 'undo lg'
                 span v-else='' title='Remove' = fa_icon 'times lg'
