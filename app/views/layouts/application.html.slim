@@ -24,9 +24,4 @@ html
 
     = render partial: 'partials/flash'
 
-    - if Rails.application.config.x.tomato_host == 'staging.tomato.csvalpha.nl'
-      = image_tag '/images/staging_label.png', class: 'environment-label'
-    - elsif Rails.application.config.x.tomato_host != 'tomato.csvalpha.nl'
-      = image_tag '/images/dev_label.png', class: 'environment-label'
-
     == yield
