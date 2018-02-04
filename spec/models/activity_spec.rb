@@ -47,16 +47,16 @@ RSpec.describe Activity, type: :model do
     end
   end
 
-  describe 'cannot alter an activity after a month' do
+  describe 'cannot alter an activity after two months' do
     before { activity.title = "#{activity.title}_new" }
 
-    context 'when within a month' do
+    context 'when within two months' do
       subject(:activity) { FactoryBot.build(:activity) }
 
       it { expect(activity).to be_valid }
     end
 
-    context 'when after a month' do
+    context 'when after two months' do
       subject(:activity) { FactoryBot.build(:activity, :locked) }
 
       it { expect(activity).not_to be_valid }
@@ -64,10 +64,16 @@ RSpec.describe Activity, type: :model do
   end
 
   describe '#lock_date' do
-    subject(:activity) { FactoryBot.build(:activity, start_time: 51.days.ago, end_time: 50.days.ago) }
+    subject(:activity) { FactoryBot.build(:activity, start_time: (2.months + 3.days).ago, end_time: (2.months + 2.days).ago) }
 
-    it { expect(activity.lock_date).to eq activity.end_time + 1.month }
+    it { expect(activity.lock_date).to eq activity.end_time + 2.months }
     it { expect(activity.locked?).to be true }
+
+    context 'when with recent activity' do
+      subject(:activity) { FactoryBot.build(:activity) }
+
+      it { expect(activity.locked?).to be false }
+    end
   end
 
   describe '.upcoming' do

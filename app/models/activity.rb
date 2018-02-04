@@ -39,12 +39,11 @@ class Activity < ApplicationRecord
   end
 
   def locked?
-    return false if end_time.blank?
-    Time.zone.now > lock_date
+    end_time && Time.zone.now > lock_date
   end
 
   def lock_date
-    end_time + 1.month
+    end_time + 2.months
   end
 
   private
