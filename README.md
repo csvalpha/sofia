@@ -46,9 +46,12 @@ Vervolgens kopieer je de uid en secret naar de `.env` in Tomato (als `banana_cli
 
 Gebruikers kunnen in Tomato rollen hebben, namelijk "SB-penningmeester" en/of "Hoofdtapper". Een gebruiker kan ook inloggen zonder rol. Deze rollen worden afgeleid van de groepen waar een gebruiker in zit, die groepen zijn opgeslagen in de Banana API.
 
+Rollen worden bij het seeden aangemaakt op de volgende manier:
+
 ```ruby
-Role.create(role_type: :treasurer, group_uid: <SB Treasurer Group UID>)
-Role.create(role_type: :main_bartender, group_uid: <Main Bartenders Group UID>)
+Role.create(role_type: :treasurer, group_uid: 3)
+Role.create(role_type: :main_bartender, group_uid: 3)
+Role.create(role_type: :main_bartender, group_uid: 2)
 ```
 
 ## Contributing

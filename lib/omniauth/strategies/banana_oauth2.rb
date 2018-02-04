@@ -18,14 +18,14 @@ module OmniAuth
           uid: raw_info['id'],
           username: raw_info['attributes']['username'],
           name: full_name(raw_info),
-          avatar_url: raw_info['attributes']['avatar-url'],
-          avatar_thumb_url: raw_info['attributes']['avatar-thumb-url'],
-          groups: groups_from_json(raw_info['relationships']['groups']['data'])
+          avatar_url: raw_info['attributes']['avatar_url'],
+          avatar_thumb_url: raw_info['attributes']['avatar_thumb_url'],
+          groups: groups_from_json(raw_info['relationships']['active_groups']['data'])
         }
       end
 
       def raw_info
-        @raw_info ||= JSON.parse(access_token.get('/api/v1/users?filter[me]&include="groups"').body)['data'][0]
+        @raw_info ||= JSON.parse(access_token.get('/api/v1/users?filter[me]&include="active_groups"').body)['data'][0]
       end
 
       # https://github.com/intridea/omniauth-oauth2/issues/81
@@ -34,9 +34,9 @@ module OmniAuth
       end
 
       def full_name(raw_info)
-        User.full_name_from_attributes(raw_info['attributes']['first-name'],
-                                       raw_info['attributes']['last-name-prefix'],
-                                       raw_info['attributes']['last-name'])
+        User.full_name_from_attributes(raw_info['attributes']['first_name'],
+                                       raw_info['attributes']['last_name_prefix'],
+                                       raw_info['attributes']['last_name'])
       end
 
       def groups_from_json(json)

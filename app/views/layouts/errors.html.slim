@@ -6,10 +6,6 @@ html
 
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
 
-    = javascript_pack_tag 'activities', 'data-turbolinks-track': 'reload'
-    = javascript_pack_tag 'price_lists', 'data-turbolinks-track': 'reload'
-    = javascript_pack_tag 'credit_mutations', 'data-turbolinks-track': 'reload'
-
     meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"
 
     - if Rails.env.production?
@@ -24,9 +20,15 @@ html
 
     = render partial: 'partials/flash'
 
-    == yield
+    = render partial: 'partials/tomato_quote'
 
-    - if Rails.application.config.x.tomato_host == 'staging.tomato.csvalpha.nl'
-      = image_tag '/images/staging_label.png', class: 'environment-label'
-    - elsif Rails.application.config.x.tomato_host != 'tomato.csvalpha.nl'
-      = image_tag '/images/dev_label.png', class: 'environment-label'
+    .container
+      .row
+        .col-12.col-md-6.mx-auto
+          .card
+            h4.card-header = 'Whoops, sorry!'
+            .card-body
+              p.card-text
+                == yield
+
+              = link_to 'Terug naar home', root_path, class: 'btn btn-primary btn-block'

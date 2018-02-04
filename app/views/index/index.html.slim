@@ -1,17 +1,8 @@
+= render partial: 'partials/tomato_quote'
+
 .container.py-sm-3
   .row
-    .col-sm-12.p-3.text-center
-
-      h1.tomato-header
-        = 'Alpha Tomato '
-        = image_tag '/images/tomato.png', alt: 'Tomato icon', title: ':tomato:'
-
-      blockquote.blockquote.text-center
-        p.mb-0 = 'Vakmanschap is meesterschap'
-        footer.blockquote-footer = 'Gerard Brummer, Grolsch'
-
-  .row
-    - if current_user
+    - if current_user&.treasurer? || current_user&.main_bartender?
       .col-12.col-md-6.mb-2
         .card
           h5.card-header = "Welkom, #{current_user.name}"
@@ -19,14 +10,9 @@
             p.card-text
               strong = 'Dit zijn jouw rollen in het streepsysteem'
 
-            - if current_user.roles.any?
-              ul
-                - current_user.roles.each do |role|
-                  li = role.name
-            - else
-              p
-                = 'Je hebt geen speciale rollen binnen het streepsysteem, '
-                = 'je kan hier wel je saldo en bestelgeschiedenis zien'
+            ul
+              - current_user.roles.each do |role|
+                li = role.name
 
       .col-12.col-md-6.mb-2
         .card
@@ -58,6 +44,20 @@
                       = activity.title
                       br
                       small = l activity.start_time
+
+    - elsif current_user
+      .col-12.col-md-4.mb-2.mx-auto
+        .card
+          h4.card-header = "Welkom, #{current_user.name}"
+
+          .card-body
+            p
+              = 'Je hebt geen speciale rollen binnen het streepsysteem; '
+              = 'je kan hier wel je saldo en bestelgeschiedenis zien'
+
+            = link_to current_user, class: 'btn btn-primary btn-block'
+              = fa_icon 'user', class: 'mr-1'
+              = 'Naar mijn account'
 
     - else
       = render partial: 'partials/login_prompt'
