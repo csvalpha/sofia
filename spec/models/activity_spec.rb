@@ -64,7 +64,9 @@ RSpec.describe Activity, type: :model do
   end
 
   describe '#lock_date' do
-    subject(:activity) { FactoryBot.build(:activity, start_time: (2.months + 3.days).ago, end_time: (2.months + 2.days).ago) }
+    let(:start_time) { (2.months + 3.days).ago }
+
+    subject(:activity) { FactoryBot.build(:activity, start_time: start_time, end_time: start_time + 4.hours) }
 
     it { expect(activity.lock_date).to eq activity.end_time + 2.months }
     it { expect(activity.locked?).to be true }
