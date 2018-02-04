@@ -10,7 +10,7 @@ class OrdersController < ApplicationController
                         .find(params[:activity_id])
 
     @product_prices_json = @activity.price_list.product_price
-                                    .to_json(include: { product: { only: %i[id name requires_age] } })
+                                    .to_json(include: { product: { only: %i[id name category] } })
 
     @users_json = User.includes(%i[credit_mutations order_rows]).order(:name)
                       .to_json(only: %i[id name], methods: %i[credit avatar_thumb_or_default_url])

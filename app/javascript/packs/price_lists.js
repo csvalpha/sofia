@@ -38,7 +38,7 @@ document.addEventListener('turbolinks:load', () => {
         newProduct () {
           var newProduct = {
             name: '',
-            requires_age: false,
+            category: 0,
             editing: true,
             product_prices: [],
           };

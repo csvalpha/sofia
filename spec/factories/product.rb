@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :product do
     name { Faker::Book.title }
-    requires_age { false }
+    category { %i[beer non_alcoholic distilled wine food tobacco].sample }
   end
 end
