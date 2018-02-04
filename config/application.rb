@@ -14,8 +14,7 @@ module Tomato
     config.i18n.default_locale = :nl
     config.i18n.fallbacks = [:nl]
 
-    config.x.banana_api_host  = ENV['BANANA_API_HOST']
-    config.x.tomato_host      = ENV['TOMATO_HOST']
+    config.x.banana_api_host = ENV['BANANA_API_HOST']
 
     config.exceptions_app = routes
   end
