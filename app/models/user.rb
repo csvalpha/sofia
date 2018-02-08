@@ -3,7 +3,7 @@ class User < ApplicationRecord
   has_many :orders, dependent: :destroy
   has_many :order_rows, through: :orders, dependent: :destroy
   has_many :credit_mutations, dependent: :destroy
-  has_many :activities, dependent: :destroy
+  has_many :activities, dependent: :destroy, foreign_key: "created_by_id"
 
   has_many :roles_users, class_name: 'RolesUsers', dependent: :destroy, inverse_of: :user
 
