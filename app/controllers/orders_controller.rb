@@ -9,8 +9,7 @@ class OrdersController < ApplicationController
     @activity = Activity.includes([:price_list, price_list: { product_price: :product }])
                         .find(params[:activity_id])
 
-    @product_prices_json = @activity.price_list.product_price
-                                    .to_json(include: { product: { only: %i[id name category] } })
+    @product_prices_json = sorted_product_price(@activity).to_json(include: { product: { only: %i[id name category] } })
 
     @users_json = User.includes(%i[credit_mutations order_rows]).order(:name)
                       .to_json(only: %i[id name], methods: %i[credit avatar_thumb_or_default_url])
@@ -33,6 +32,10 @@ class OrdersController < ApplicationController
   end
 
   private
+
+  def sorted_product_price(activity)
+    activity.price_list.product_price.sort_by { |p| p.product.id }
+  end
 
   def permitted_attributes
     params.require(:order).permit(%i[user_id activity_id], order_rows_attributes: %i[id product_id product_count])
