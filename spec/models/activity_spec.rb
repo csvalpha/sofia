@@ -18,10 +18,63 @@ RSpec.describe Activity, type: :model do
       it { expect(activity).not_to be_valid }
     end
 
-    context 'when without created_by' do
+    context 'when without a start time' do
+      subject(:activity) { FactoryBot.build_stubbed(:activity, start_time: nil) }
+
+      it { expect(activity).not_to be_valid }
+    end
+
+    context 'when without an end time' do
+      subject(:activity) { FactoryBot.build_stubbed(:activity, end_time: nil) }
+
+      it { expect(activity).not_to be_valid }
+    end
+
+    context 'when without a created by' do
       subject(:activity) { FactoryBot.build_stubbed(:activity, created_by: nil) }
 
       it { expect(activity).not_to be_valid }
+    end
+
+    context 'when start time is after end time' do
+      subject(:activity) do
+        FactoryBot.build_stubbed(:activity,
+                                 start_time: Time.zone.now + 1.second,
+                                 end_time: Time.zone.now)
+      end
+
+      it { expect(activity).not_to be_valid }
+    end
+  end
+
+  describe 'cannot alter an activity after two months' do
+    before { activity.title = "#{activity.title}_new" }
+
+    context 'when within two months' do
+      subject(:activity) { FactoryBot.build(:activity) }
+
+      it { expect(activity).to be_valid }
+    end
+
+    context 'when after two months' do
+      subject(:activity) { FactoryBot.build(:activity, :locked) }
+
+      it { expect(activity).not_to be_valid }
+    end
+  end
+
+  describe '#lock_date' do
+    let(:start_time) { (2.months + 3.days).ago }
+
+    subject(:activity) { FactoryBot.build(:activity, start_time: start_time, end_time: start_time + 4.hours) }
+
+    it { expect(activity.lock_date).to eq activity.end_time + 2.months }
+    it { expect(activity.locked?).to be true }
+
+    context 'when with recent activity' do
+      subject(:activity) { FactoryBot.build(:activity) }
+
+      it { expect(activity.locked?).to be false }
     end
   end
 

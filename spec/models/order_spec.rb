@@ -17,6 +17,19 @@ RSpec.describe Order, type: :model do
 
       it { expect(order).not_to be_valid }
     end
+
+    context 'when without created by' do
+      subject(:order) { FactoryBot.build_stubbed(:order, created_by: nil) }
+
+      it { expect(order).not_to be_valid }
+    end
+
+    context 'when with locked activity' do
+      let(:activity) { FactoryBot.build(:activity, :locked) }
+      let(:order) { FactoryBot.build(:order, activity: activity) }
+
+      it { expect(order).not_to be_valid }
+    end
   end
 
   describe '#order_total' do
