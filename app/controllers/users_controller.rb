@@ -68,18 +68,18 @@ class UsersController < ApplicationController
   private
 
   def users_json
-    JSON.parse(RestClient.get("#{Rails.application.config.x.banana_api_host}/api/v1/users",
+    JSON.parse(RestClient.get("#{Rails.application.config.x.banana_api_host}/api/v1/users?filter[group]=Leden",
                               'Authorization' => "Bearer #{api_token}"))['data']
   end
 
   def find_or_create_user(user_json)
     fields = user_json['attributes']
     u = User.find_or_initialize_by(uid: user_json['id'])
-    u.name = User.full_name_from_attributes(fields['first-name'],
-                                            fields['last-name-prefix-name'],
-                                            fields['last-name'])
+    u.name = User.full_name_from_attributes(fields['first_name'],
+                                            fields['last_name_prefix'],
+                                            fields['last_name'])
     u.provider = 'banana_oauth2'
-    u.avatar_thumb_url = fields['avatar-thumb-url']
+    u.avatar_thumb_url = fields['avatar_thumb_url']
     u.save
   end
 

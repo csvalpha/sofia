@@ -8,7 +8,15 @@ class Order < ApplicationRecord
 
   validates :activity, :user, :created_by, presence: true
 
+  validate :activity_not_locked
+
   def order_total
     @sum ||= order_rows.map(&:row_total).sum
+  end
+
+  private
+
+  def activity_not_locked
+    errors.add(:activity, 'has been locked') if changed? && activity.locked?
   end
 end

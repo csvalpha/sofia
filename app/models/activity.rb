@@ -4,12 +4,11 @@ class Activity < ApplicationRecord
   belongs_to :price_list
   belongs_to :created_by, class_name: 'User', inverse_of: :activities
 
-  validates :title,       presence: true
-  validates :start_time,  presence: true
-  validates :end_time,    presence: true
-  validates :price_list,  presence: true
-  validates :created_by, presence: true
+  validates :title, :start_time, :end_time, :price_list, :created_by, presence: true
+
   validates_datetime :end_time, after: :start_time
+
+  validate :activity_not_locked
 
   scope :upcoming, (lambda {
     where('(start_time < ? and end_time > ?) or start_time > ?', Time.zone.now,
@@ -42,5 +41,19 @@ class Activity < ApplicationRecord
 
   def bartenders
     orders.map(&:created_by).uniq || []
+  end
+
+  def locked?
+    end_time && Time.zone.now > lock_date
+  end
+
+  def lock_date
+    end_time + 2.months
+  end
+
+  private
+
+  def activity_not_locked
+    errors.add(:base, 'Activity cannot be changed after lock date') if locked? && changed?
   end
 end
