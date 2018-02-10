@@ -42,7 +42,7 @@ class OrdersController < ApplicationController
   end
 
   def json_includes
-    { user: { only: %i[id name], methods: :credit },
+    { user: { only: %i[id name], methods: %i[credit avatar_thumb_or_default_url] },
       activity: { only: %i[id title] },
       order_rows: { only: [:id, :product_count, product: { only: %i[id name credit] }] } }
   end
