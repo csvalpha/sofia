@@ -116,14 +116,13 @@
     align-items: stretch;
     justify-content: flex-start;
 
-    overflow-y: auto;
     z-index: 4;
 
     border-right: 1px solid $gray-600;
     box-shadow: 2px 0 4px -2px $transparent-200;
-
     background-color: $gray-200;
     color: $font-color-dark;
+    overflow-y: auto;
 
     grid-area: user-details;
   }
@@ -132,16 +131,16 @@
     display: flex;
     flex-flow: column nowrap;
 
-    overflow-y: auto;
     z-index: 5;
+    overflow-y: auto;
   }
 
   .user-details-search {
     display: flex;
     flex-flow: column nowrap;
+    flex-shrink: 0;
     align-items: stretch;
     justify-content: center;
-    flex-shrink: 0;
 
     z-index: 6;
 

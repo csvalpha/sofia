@@ -163,6 +163,8 @@ template id="user-selection"
           @click="selectUser(user)" v-bind:class="{ highlight : (highlightedUserIndex == index) }"
           @mouseover="highlightedUserIndex = -1" @mouseleave="resetHighlight")
         .user-details-suggestions-user-avatar.col-4
-          img v-bind:src="user.avatar_thumb_or_default_url" onerror="this.src = '/images/avatar_thumb_default.png';" class='img-thumbnail rounded-circle'
+          img( v-bind:src="user.avatar_thumb_or_default_url"
+               onerror="this.src = '/images/avatar_thumb_default.png';"
+               class='img-thumbnail rounded-circle')
         h4.user-details-suggestions-user-name.col-8.m-0
           = '{{user.name}}'
