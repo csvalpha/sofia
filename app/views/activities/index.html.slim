@@ -10,25 +10,26 @@
     = render 'modal'
 
     .col-sm-12
-      table.table.table-striped.table-responsive-md
-        thead
-          tr
-            th scope='col' = 'Name'
-            th scope='col' = 'Starttijd'
-            th scope='col' = 'Endtijd'
-            th scope='col' = 'Streeplijst'
-            th scope='col' = 'Aangemaakt door'
-
-        tbody
-          - @activities&.each do |activity|
+      .table-responsive
+        table.table.table-striped
+          thead
             tr
-              td
-                = link_to activity.title, activity
-              td
-                = l activity.start_time
-              td
-                = l activity.end_time
-              td
-                = activity.price_list.name
-              td
-                = link_to activity.created_by.name, activity.created_by
+              th scope='col' = 'Name'
+              th scope='col' = 'Starttijd'
+              th scope='col' = 'Endtijd'
+              th scope='col' = 'Streeplijst'
+              th scope='col' = 'Aangemaakt door'
+
+          tbody
+            - @activities&.each do |activity|
+              tr
+                td
+                  = link_to activity.title, activity
+                td
+                  = l activity.start_time
+                td
+                  = l activity.end_time
+                td
+                  = activity.price_list.name
+                td
+                  = link_to activity.created_by.name, activity.created_by

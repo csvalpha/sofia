@@ -68,45 +68,47 @@
 
       .tab-content.p-2 id='userTabsContent'
         .tab-pane.show.active id='orders' role='tabpanel' aria-labelledby='orders-tab'
-          table.table.table-striped.table-responsive-md
-            thead
-              tr
-                th scope='col'= '#'
-                th scope='col'= 'Datum'
-                th scope='col'= 'bedrag'
-
-            tbody
-              - if @user.orders.empty?
+          .table-responsive
+            table.table.table-striped
+              thead
                 tr
-                  td.text-center colspan='3'
-                    p.my-1
-                      em = "#{@user.name} heeft nog geen bestellingen gedaan"
-              - else
-                - @user.orders.each do |order|
+                  th scope='col'= '#'
+                  th scope='col'= 'Datum'
+                  th scope='col'= 'bedrag'
+
+              tbody
+                - if @user.orders.empty?
                   tr
-                    th scope='row' = order.id
-                    td = l order.created_at
-                    td = number_to_currency(order.order_total, unit: '€')
+                    td.text-center colspan='3'
+                      p.my-1
+                        em = "#{@user.name} heeft nog geen bestellingen gedaan"
+                - else
+                  - @user.orders.each do |order|
+                    tr
+                      th scope='row' = order.id
+                      td = l order.created_at
+                      td = number_to_currency(order.order_total, unit: '€')
 
         .tab-pane id='creditMutations' role='tabpanel' aria-labelledby='creditMutations-tab'
-          table.table.table-striped.table-responsive-md
-            thead
-              tr
-                th scope='col'= '#'
-                th scope='col'= 'Datum'
-                th scope='col'= 'Beschrijving'
-                th scope='col'= 'Bedrag'
-
-            tbody
-              - if @user.credit_mutations.empty?
+          .table-responsive
+            table.table.table-striped
+              thead
                 tr
-                  td.text-center colspan='4'
-                    p.my-1
-                      em = "#{@user.name} heeft nog niet ingelegd en er zijn nog geen correcties"
-              - else
-                - @user.credit_mutations.each do |mutation|
+                  th scope='col'= '#'
+                  th scope='col'= 'Datum'
+                  th scope='col'= 'Beschrijving'
+                  th scope='col'= 'Bedrag'
+
+              tbody
+                - if @user.credit_mutations.empty?
                   tr
-                    th scope='row' = mutation.id
-                    td = l mutation.created_at
-                    td = mutation.description
-                    td = number_to_currency(mutation.amount, unit: '€')
+                    td.text-center colspan='4'
+                      p.my-1
+                        em = "#{@user.name} heeft nog niet ingelegd en er zijn nog geen correcties"
+                - else
+                  - @user.credit_mutations.each do |mutation|
+                    tr
+                      th scope='row' = mutation.id
+                      td = l mutation.created_at
+                      td = mutation.description
+                      td = number_to_currency(mutation.amount, unit: '€')
