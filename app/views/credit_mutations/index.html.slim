@@ -15,25 +15,26 @@
         = render 'modal'
 
     .col-sm-12
-      table.table.table-striped.table-responsive-md
-        thead
-          tr
-            th scope='col' = 'Beschrijving'
-            th scope='col' = 'Gebruiker'
-            th scope='col' = 'Activiteit'
-            th scope='col' = 'Geregistreerd door'
-            th scope='col' = 'Aangemaakt op'
-        tbody
-          - @credit_mutations&.each do |mutation|
+      .table-responsive
+        table.table.table-striped
+          thead
             tr
-              td
-                = mutation.description
-              td
-                = link_to mutation.user.name, mutation.user
-              td
-                - if mutation.activity
-                  = link_to mutation.activity&.title, mutation.activity
-              td
-                = link_to mutation.created_by.name, mutation.created_by
-              td
-                = l mutation.created_at
+              th scope='col' = 'Beschrijving'
+              th scope='col' = 'Gebruiker'
+              th scope='col' = 'Activiteit'
+              th scope='col' = 'Geregistreerd door'
+              th scope='col' = 'Aangemaakt op'
+          tbody
+            - @credit_mutations&.each do |mutation|
+              tr
+                td
+                  = mutation.description
+                td
+                  = link_to mutation.user.name, mutation.user
+                td
+                  - if mutation.activity
+                    = link_to mutation.activity&.title, mutation.activity
+                td
+                  = link_to mutation.created_by.name, mutation.created_by
+                td
+                  = l mutation.created_at
