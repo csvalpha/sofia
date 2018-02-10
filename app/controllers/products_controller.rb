@@ -13,7 +13,7 @@ class ProductsController < ApplicationController
     authorize @product
 
     if @product.save
-      render json: @product, include: json_includes, except: json_exludes
+      render json: @product, include: json_includes, except: json_exludes, methods: :t_category
     else
       render json: @product.errors, status: :unprocessable_entity
     end
@@ -23,7 +23,7 @@ class ProductsController < ApplicationController
     authorize @product
 
     if @product.update(permitted_attributes)
-      render json: @product, include: json_includes, except: json_exludes
+      render json: @product, include: json_includes, except: json_exludes, methods: :t_category
     else
       render json: @product.errors, status: :unprocessable_entity
     end

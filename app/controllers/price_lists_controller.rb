@@ -12,8 +12,11 @@ class PriceListsController < ApplicationController
     @price_list = PriceList.new
 
     @recent_price_lists_json = recent_price_lists.to_json(except: %i[created_at updated_at deleted_at])
-    @products_json = products.to_json(include: { product_prices: { except: %i[created_at updated_at deleted_at] } },
-                                      except: %i[created_at updated_at deleted_at])
+    @products_json = products.to_json(
+      include: { product_prices: { except: %i[created_at updated_at deleted_at] } },
+      methods: :t_category,
+      except: %i[created_at updated_at deleted_at]
+    )
   end
 
   def create

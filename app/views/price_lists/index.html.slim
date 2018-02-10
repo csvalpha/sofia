@@ -54,7 +54,7 @@
             template v-else=''
               th scope='row' = '{{ product.id }}'
               td = '{{ product.name }}'
-              td = '{{ product.category }}'
+              td = '{{ product.t_category }}'
 
               td.product-price.center-text v-for='priceList in priceLists'
                 span v-bind:title='product.name + " in lijst " + priceList.name'

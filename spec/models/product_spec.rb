@@ -18,4 +18,10 @@ RSpec.describe Product, type: :model do
       it { expect(product).not_to be_valid }
     end
   end
+
+  describe 't_category' do
+    subject(:product) { FactoryBot.build(:product, category: :beer) }
+
+    it { expect(product.t_category).to eq 'bier' }
+  end
 end

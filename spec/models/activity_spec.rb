@@ -91,6 +91,19 @@ RSpec.describe Activity, type: :model do
     it { expect(Activity.upcoming).not_to include past_activity }
   end
 
+  describe '.current' do
+    let(:past_activity) do
+      FactoryBot.create(:activity, start_time: 2.days.ago, end_time: 1.day.ago)
+    end
+
+    subject(:current_activity) do
+      FactoryBot.create(:activity, start_time: 1.hour.ago, end_time: 2.hours.from_now)
+    end
+
+    it { expect(Activity.current).to include current_activity }
+    it { expect(Activity.current).not_to include past_activity }
+  end
+
   describe '#credit_mutations_total' do
     context 'when without credit mutations' do
       subject(:activity) { FactoryBot.build(:activity) }
@@ -135,6 +148,24 @@ RSpec.describe Activity, type: :model do
     end
 
     it { expect(activity.revenue).to eq product_price * 2 }
+  end
+
+  describe '#revenue_by_category' do
+    subject(:activity) { FactoryBot.create(:activity) }
+
+    let(:product) { FactoryBot.create(:product, category: :beer) }
+    let(:other_product) { FactoryBot.create(:product, category: :wine) }
+    let(:order) { FactoryBot.create(:order, activity: activity) }
+
+    before do
+      FactoryBot.create(:product_price, price_list: activity.price_list, product: product, price: 2)
+      FactoryBot.create(:product_price, price_list: activity.price_list, product: other_product, price: 3)
+
+      FactoryBot.create(:order_row, order: order, product: product, product_count: 1)
+      FactoryBot.create(:order_row, order: order, product: other_product, product_count: 1)
+    end
+
+    it { expect(activity.revenue_by_category(:beer)).to eq 2 }
   end
 
   describe '#bartenders' do
