@@ -47,7 +47,7 @@ RSpec.describe Activity, type: :model do
     end
   end
 
-  describe 'cannot alter an activity when locked' do
+  describe 'cannot alter an activity after two months' do
     before { activity.title = "#{activity.title}_new" }
 
     context 'when within two months' do
@@ -60,20 +60,6 @@ RSpec.describe Activity, type: :model do
       subject(:activity) { FactoryBot.build(:activity, :locked) }
 
       it { expect(activity).not_to be_valid }
-    end
-  end
-
-  describe 'cannot destroy an activity when locked' do
-    context 'when within two months' do
-      subject(:activity) { FactoryBot.build(:activity) }
-
-      it { expect(activity.destroy).to eq activity }
-    end
-
-    context 'when after two months' do
-      subject(:activity) { FactoryBot.build(:activity, :locked) }
-
-      it { expect(activity.destroy).to eq false }
     end
   end
 
