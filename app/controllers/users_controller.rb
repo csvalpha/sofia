@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   after_action :verify_authorized
 
   def index
-    @model = User.all.includes(model_includes)
+    @model = User.all.includes(model_includes).order(:name)
     authorize @model
 
     @new_user = User.new
@@ -52,7 +52,7 @@ class UsersController < ApplicationController
     options = { grant_type: 'client_credentials',
                 client_id: Rails.application.secrets.fetch(:banana_client_id),
                 client_secret: Rails.application.secrets.fetch(:banana_client_secret) }
-    token_response = RestClient.post "#{Rails.application.config.x.banana_api_host}/api/oauth/token", options
+    token_response = RestClient.post "#{Rails.application.config.x.banana_api_host}/api/v1/oauth/token", options
 
     @token = JSON.parse(token_response)['access_token']
   end
@@ -62,25 +62,25 @@ class UsersController < ApplicationController
   end
 
   def model_includes
-    [:orders, :credit_mutations, orders: :order_rows]
+    %i[credit_mutations order_rows]
   end
 
   private
 
   def users_json
-    JSON.parse(RestClient.get("#{Rails.application.config.x.banana_api_host}/api/users",
-                              'Accept' => 'application/vnd.csvalpha.nl; version=1',
+    JSON.parse(RestClient.get("#{Rails.application.config.x.banana_api_host}/api/v1/users?filter[group]=Leden",
                               'Authorization' => "Bearer #{api_token}"))['data']
   end
 
   def find_or_create_user(user_json)
     fields = user_json['attributes']
-    User.find_or_create_by(uid: user_json['id']) do |u|
-      u.name = User.full_name_from_attributes(fields['first-name'],
-                                              fields['last-name-prefix-name'],
-                                              fields['last-name'])
-      u.provider = 'banana_oauth2'
-    end
+    u = User.find_or_initialize_by(uid: user_json['id'])
+    u.name = User.full_name_from_attributes(fields['first_name'],
+                                            fields['last_name_prefix'],
+                                            fields['last_name'])
+    u.provider = 'banana_oauth2'
+    u.avatar_thumb_url = fields['avatar_thumb_url']
+    u.save
   end
 
   def permitted_attributes

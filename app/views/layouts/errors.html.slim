@@ -1,0 +1,34 @@
+doctype html
+html
+  head
+    title = 'Tomato – Streepsysteem der C.S.V. Alpha'
+    = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
+
+    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+
+    meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"
+
+    - if Rails.env.production?
+      script
+        = "Raven.config(\'https://329a65545f5a4cbbb27a1c9d5433113b@sentry.io/228968\').install();"
+
+    = csrf_meta_tags
+
+  body
+
+    = render partial: 'partials/navigation_bar'
+
+    = render partial: 'partials/flash'
+
+    = render partial: 'partials/tomato_quote'
+
+    .container
+      .row
+        .col-12.col-md-6.mx-auto
+          .card
+            h4.card-header = 'Whoops, sorry!'
+            .card-body
+              p.card-text
+                == yield
+
+              = link_to 'Terug naar home', root_path, class: 'btn btn-primary btn-block'

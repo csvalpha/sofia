@@ -1,5 +1,5 @@
 class ProductsController < ApplicationController
-  before_action :set_model, only: %i[show update destroy]
+  before_action :set_model, only: %i[show update]
   before_action :authenticate_user!
 
   after_action :verify_authorized
@@ -13,7 +13,7 @@ class ProductsController < ApplicationController
     authorize @product
 
     if @product.save
-      render json: @product, include: json_includes, except: json_exludes
+      render json: @product, include: json_includes, except: json_exludes, methods: :t_category
     else
       render json: @product.errors, status: :unprocessable_entity
     end
@@ -23,7 +23,7 @@ class ProductsController < ApplicationController
     authorize @product
 
     if @product.update(permitted_attributes)
-      render json: @product, include: json_includes, except: json_exludes
+      render json: @product, include: json_includes, except: json_exludes, methods: :t_category
     else
       render json: @product.errors, status: :unprocessable_entity
     end
@@ -37,7 +37,7 @@ class ProductsController < ApplicationController
 
   def permitted_attributes
     params.require(:product)
-          .permit(%i[name requires_age], product_prices_attributes: %i[id product_id price_list_id price])
+          .permit(%i[name category], product_prices_attributes: %i[id product_id price_list_id price])
   end
 
   def json_includes

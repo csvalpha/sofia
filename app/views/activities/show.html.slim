@@ -1,6 +1,6 @@
 .container
-  .row.justify-content-between.py-3
-    .col-sm-12.col-lg-6
+  .row.justify-content-between
+    .col-sm-12.col-md-6.py-2
 
       h1 = fa_icon 'calendar', class: 'mr-2', text: @activity.title
 
@@ -8,39 +8,38 @@
         tbody
           tr
             th scope='row' = 'Starttijd'
-            td = @activity.humanized_start_time
+            td = l @activity.start_time, format: :long
           tr
             th scope='row' = 'Eindtijd'
-            td = @activity.humanized_end_time
+            td = l @activity.end_time, format: :long
+          tr
+            th scope='row' = 'Vergrendelt op'
+            td = l @activity.lock_date, format: :long
           tr
             th scope='row' = 'Prijslijst'
-            td = link_to @activity.price_list.name, @activity.price_list
+            td = @activity.price_list.name
           tr
             th scope='row' = 'Gemaakt door'
             td = link_to @activity.created_by.name, @activity.created_by
           tr
             th scope='row' = 'Tappers'
-            td
-              - if @activity.bartenders.size > 0
-                - @activity.bartenders.each_with_index do |user, i|
-                  = link_to user.name, user
-                  - if i < @activity.bartenders.size - 1
-                    = ', '
-              - else
-                = 'Er zijn nog geen orders aangemaakt'
+            td = @activity.bartenders.map(&:name).join(', ')
 
-
-    .card.col-sm-8.col-lg-4
+    .card.col-sm-12.col-md-6.col-lg-4.py-2.align-self-start
       .card-body
-        h2.card-title
-          = 'Streepscherm'
+        h2.card-title = 'Streepscherm'
 
-        p.card-text
-          = 'Klik op de knop hieronder om naar het streepscherm te gaan.'
+        - if @activity.locked?
+          .card-text
+            div class='alert alert-danger'
+              = 'Deze activiteit is langer dan een maand geleden afgelopen. Er kunnen geen nieuwe '
+              = 'bestellingen worden geplaatst en geen saldocorrecties meer worden toegevoegd'
+        - else
+          p.card-text = 'Je kan bestellingen plaatsen in het streepscherm.'
 
-        = link_to activity_orders_url(@activity), class: 'btn btn-primary btn-block'
-          = 'Naar het streepscherm'
-          = fa_icon 'calculator', class: 'ml-1'
+          = link_to activity_orders_url(@activity), class: 'btn btn-primary btn-block'
+            = 'Naar het streepscherm'
+            = fa_icon 'calculator', class: 'ml-1'
 
   hr
 
@@ -54,7 +53,7 @@
         li.nav-item
           a.nav-link (id='credit_mutations-tab' data-toggle="tab" href="#credit_mutations" role="tab"
             aria-controls="credit_mutations" aria-selected="false")
-            = 'Mutaties'
+            = 'Inleg en correcties'
         li.nav-item
           a.nav-link (id='orders-tab' data-toggle="tab" href="#orders" role="tab"
             aria-controls="orders" aria-selected="false")
@@ -62,84 +61,77 @@
 
       .tab-content.p-2 id='activityTabsContent'
         .tab-pane.show.active id='summary' role='tabpanel' aria-labelledby='summary-tab'
-          table.table.table-striped
-            tbody
-              - if @activity.credit_mutations.empty? && @activity.orders.empty?
+          .table-responsive
+            table.table.table-striped
+              tbody
+                - if @activity.credit_mutations.empty? && @activity.orders.empty?
+                  tr
+                    td.text-center colspan='4'
+                      p.my-1
+                        em = 'Er zijn nog geen bestellingen en er is nog niet ingelegd'
+                - else
+                  tr
+                    th scope='row' = 'Totaal aan inleg en correcties'
+                    td = number_to_currency(@activity.credit_mutations_total, unit: '€')
+                  tr
+                    th scope='row' = 'Totale omzet'
+                    td = number_to_currency(@activity.revenue, unit: '€')
+                  - Product.categories.each do |category|
+                    tr
+                      td.text-right = "Omzet #{t category.first}"
+                      td = number_to_currency(@activity.revenue_by_category(category), unit: '€')
+
+        .tab-pane id='credit_mutations' role='tabpanel' aria-labelledby='credit_mutations-tab'
+          .table-responsive
+            table.table.table-striped
+              - if @activity.credit_mutations.empty?
                 tr
                   td.text-center colspan='4'
                     p.my-1
-                      em = 'Deze borrel heeft nog geen mutaties of bestellingen'
+                      em = 'Er zijn nog geen correcties en er is nog niet ingelegd'
               - else
-                tr
-                  th scope='row' = 'Totaal mutaties'
-                  td = number_to_currency(@activity.credit_mutations_total, unit: '€')
-                tr
-                  th scope='row' = 'Totaal unieke producten'
-                  td = @activity.sold_products.uniq.size
-                tr
-                  th scope='row' = 'Totaal producten'
-                  td = @activity.sold_products.size
-                tr
-                  th scope='row' = 'Omzet'
-                  td = number_to_currency(@activity.revenue, unit: '€')
-                tr
-                  th scope='row' = 'Totaal personen'
-                  td = @activity.orders.map(&:user).uniq.size
-
-        .tab-pane id='credit_mutations' role='tabpanel' aria-labelledby='credit_mutations-tab'
-          table.table.table-striped
-            - if @activity.credit_mutations.empty?
-              tr
-                td.text-center colspan='4'
-                  p.my-1
-                    em = 'Er zijn nog geen mutaties'
-            - else
-              thead
-                tr
-                  th scope='col' = 'Beschrijving'
-                  th scope='col' = 'Gebruiker'
-                  th scope='col' = 'Aanmaaktijd'
-              tbody
-                - @activity.credit_mutations&.each do |mutation|
+                thead
                   tr
-                    td
-                      = mutation.description
-                    td
-                      = link_to mutation.user.name, mutation.user
-                    td
-                      = datetime_short(mutation.created_at)
+                    th scope='col' = '#'
+                    th scope='col' = 'Tijd'
+                    th scope='col' = 'Gebruiker'
+                    th scope='col' = 'Bedrag'
+                tbody
+                  - @activity.credit_mutations.each do |mutation|
+                    tr
+                      th scope='row' = mutation.id
+                      td = l mutation.created_at, format: :time_only
+                      td = link_to mutation.user.name, mutation.user
+                      td = number_to_currency(mutation.amount, unit: '€')
 
         .tab-pane id='orders' role='tabpanel' aria-labelledby='orders-tab'
-          table.table.table-striped
-            - if @activity.orders.empty?
-              tr
-                td.text-center colspan='4'
-                  p.my-1
-                    em = 'Er zijn nog geen bestellingen'
-            - else
-              thead
+          .table-responsive
+            table.table.table-striped
+              - if @activity.orders.empty?
                 tr
-                  th scope='col'= '#'
-                  th scope='col'= 'Timestamp'
-                  th scope='col'= 'User'
-                  th scope='col'= 'Order total'
-                  th scope='col'= 'Producten'
-                  - if @activity.bartenders.size > 1
-                    th scope='col' = 'Gemaakt door'
-
-              tbody
-                - @activity.orders.each do |order|
+                  td.text-center colspan='4'
+                    p.my-1
+                      em = 'Er zijn nog geen bestellingen'
+              - else
+                thead
                   tr
-                    th scope='row' = order.id
-                    td = order.created_at.strftime('%d %b - %H:%M')
-                    td = link_to order.user.name, order.user
-                    td = number_to_currency(order.order_total, unit: '€')
-                    td
-                      - order.order_rows.each_with_index do |order_row, i|
-                        = order_row.product.name
-                        - if order_row.product_count > 1
-                          = " (#{order_row.product_count}x)"
-                        - if i < order.order_rows.size - 1
-                          = ', '
-                    - if @activity.bartenders.size > 1
-                      td = link_to order.created_by.name, order.created_by
+                    th scope='col' = '#'
+                    th scope='col' = 'Tijd'
+                    th scope='col' = 'Gebruiker'
+                    th scope='col' = 'Bedrag'
+                    th scope='col' = 'Producten'
+
+                tbody
+                  - @activity.orders.each do |order|
+                    tr
+                      th scope='row' = order.id
+                      td = l order.created_at, format: :time_only
+                      td = link_to order.user.name, order.user
+                      td = number_to_currency(order.order_total, unit: '€')
+                      td
+                        - order.order_rows.each_with_index do |order_row, i|
+                          = order_row.product.name
+                          - if order_row.product_count > 1
+                            = " (#{order_row.product_count}x)"
+                          - if i < order.order_rows.size - 1
+                            = ', '

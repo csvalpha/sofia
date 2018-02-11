@@ -11,9 +11,11 @@ html
     = javascript_pack_tag 'user', 'data-turbolinks-track': 'reload'
     = javascript_pack_tag 'credit_mutations', 'data-turbolinks-track': 'reload'
 
+    meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"
+
     - if Rails.env.production?
       script
-        = "Raven.config('https://329a65545f5a4cbbb27a1c9d5433113b@sentry.io/228968').install();"
+        = "Raven.config(\'https://329a65545f5a4cbbb27a1c9d5433113b@sentry.io/228968\').install();"
 
     = csrf_meta_tags
 
@@ -24,3 +26,8 @@ html
     = render partial: 'partials/flash'
 
     == yield
+
+    - if Rails.application.config.x.tomato_host == 'staging.tomato.csvalpha.nl'
+      = image_tag '/images/staging_label.png', class: 'environment-label'
+    - elsif Rails.application.config.x.tomato_host != 'tomato.csvalpha.nl'
+      = image_tag '/images/dev_label.png', class: 'environment-label'

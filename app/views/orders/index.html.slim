@@ -1,55 +1,107 @@
 = content_tag :div, id: 'order-screen', class: 'order-screen',
   data: { users: @users_json, product_prices: @product_prices_json, activity: @activity_json }
 
+  .modal.fade( id="credit-mutation-modal" tabindex="-1" role="dialog"
+               aria-labelledby="#credit-mutation-modal-label" aria-hidden="true")
+    .modal-dialog role="document"
+      .modal-content
+        .modal-header
+          h5 class="modal-title" id="credit-mutation-modal-label"
+            = 'Inleggen'
+          button type="button" class="close" data-dismiss="modal" aria-label="Close"
+            = fa_icon 'times-circle lg', 'aria-hidden': 'true'
+
+        .modal-body
+          form.col-12.mt-2  v-bind:class="{ 'was-validated': creditMutationFormInvalid }" novalidate=""
+            .form-group.row
+              .col-4
+                label.col-form-label for="creditMutationAmountInput"
+                  = 'Inleg *'
+              .col-8
+                .input-group
+                  .input-group-prepend
+                    .input-group-text = fa_icon 'euro'
+                  input.form-control( type="text" placeholder="10.00" required=""
+                                      v-model="creditMutationAmount"
+                                      id="creditMutationAmountInput")
+                  .invalid-feedback
+                    = 'Bedrag is verplicht'
+
+            .form-group.row
+              .col-4
+                label.col-form-label for="creditMutationDescriptionInput"
+                  = 'Beschrijving *'
+              .col-8
+                input.form-control( type="text" v-model="creditMutationDescription" required=""
+                                    placeholder="Inleg contant" id="creditMutationDescriptionInput")
+                .invalid-feedback
+                  = 'Beschrijving is verplicht'
+
+            fieldset disabled="true"
+              .form-group.row
+                label.col-4.col-form-label
+                  = 'Activiteit *'
+                .col-8
+                  input.form-control type="text" v-bind:value="activity.title"
+                  small.form-text.text-muted
+                    = 'Omdat deze inleg aangemaakt wordt tijdens een activiteit kan je dit niet aanpassen'
+
+        .modal-footer
+          button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close"
+            = 'Annuleren'
+          button type="sumbit" class="btn btn-primary" @click="saveCreditMutation($event)" data-dismiss="modal"
+            = 'Aanmaken'
+
   nav.header
     ul.header-nav
       li.header-nav-item.header-nav-home
-        = link_to root_path, class: 'nav-link'
-          = fa_icon 'home'
+        = link_to @activity, class: 'nav-link'
+          = fa_icon 'chevron-left'
       li.header-nav-item
         span.mr-3 = @activity.title
-        small.font-weight-light.d-inline-block = @activity.humanized_start_time
+        small.font-weight-light.d-inline-block = l @activity.start_time, format: :date_only
 
     orderscreen-flash
 
   .side-panel
 
-  user-selection :selected-user="selectedUser" :users="users" v-on:updateuser="setUser($event)"
+    user-selection :selected-user="selectedUser" :users="users" v-on:updateuser="setUser($event)"
 
-  .orders v-if="selectedUser"
-    h3.orders-header.font-weight-light.py-2 = 'Bestelling'
+    .orders v-if="selectedUser"
+      h4.orders-header.font-weight-light.py-2 = 'Bestelling'
 
-    .orders-rows.container
+      .orders-rows.container
 
-      template v-for="(orderRow, index) in orderRows"
-        .orders-rows-row.row.py-2
-          .orders-rows-row-count.col-3
-            = fa_icon 'plus-square-o lg', class: 'orders-rows-row-count-icon', '@click': 'increaseRowAmount(orderRow)'
-            div = '{{orderRow.amount}}'
-            = fa_icon 'minus-square-o lg', class: 'orders-rows-row-count-icon', '@click': 'decreaseRowAmount(orderRow)'
+        template v-for="(orderRow, index) in orderRows"
+          .orders-rows-row.row.py-2
+            .orders-rows-row-count.col-3.px-1.px-md-2.px-lg-3
+              = fa_icon 'plus-square-o lg', class: 'orders-rows-row-count-icon', '@click': 'increaseRowAmount(orderRow)'
+              div = '{{orderRow.amount}}'
+              = fa_icon('minus-square-o lg', class: 'orders-rows-row-count-icon',
+                        '@click': 'decreaseRowAmount(orderRow)')
 
-          .orders-rows-row-product-name.col-6
-            = '{{orderRow.productPrice.product.name}}'
-          .orders-rows-row-product-price.col-3.d-flex.justify-content-between
-            span :title="doubleToCurrency(orderRow.productPrice.price) + ' p.s.'"
-              = '{{doubleToCurrency(orderRow.productPrice.price * orderRow.amount)}}'
-            span.order-rows-row-remove @click="dropOrderRow(index)"
-              = fa_icon 'times-circle lg'
+            .orders-rows-row-product-name.col-6
+              = '{{orderRow.productPrice.product.name}}'
+            .orders-rows-row-product-price.col-3.px-1.px-lg-3.d-flex.justify-content-between
+              span :title="doubleToCurrency(orderRow.productPrice.price) + ' p.s.'"
+                = '{{doubleToCurrency(orderRow.productPrice.price * orderRow.amount)}}'
+              span.order-rows-row-remove @click="dropOrderRow(index)"
+                = fa_icon 'times-circle lg'
 
-      template v-if="!orderRows.length"
-        p.text-center.font-weight-light.pt-3
-          em = 'Geen producten geselecteerd'
+        template v-if="!orderRows.length"
+          p.text-center.font-weight-light.pt-3
+            em = 'Geen producten geselecteerd'
 
-    .orders-rows-total.container
-      .orders-rows-total-dividor.mb-1
-      .row.justify-content-end
-        span.col-2 = 'Totaal:'
-        span.col-3 = '{{doubleToCurrency(orderTotal())}}'
+      .orders-rows-total.container
+        .orders-rows-total-dividor.mb-1
+        .row.justify-content-end
+          span.col-3 = 'Totaal:'
+          span.col-3.px-2 = '{{doubleToCurrency(orderTotal())}}'
 
-    .orders-confirmation
-      button.btn.btn-block.btn-lg.btn-success.font-weight-light(
-        @click="confirmOrder" v-bind:disabled="orderConfirmButtonDisabled()")
-        = 'Bestellen'
+      .orders-confirmation
+        button.btn.btn-block.btn-lg.btn-success.font-weight-light(
+          @click="confirmOrder" v-bind:disabled="orderConfirmButtonDisabled()")
+          = 'Bestellen'
 
   .product-grid
     .product-grid-product v-for="product in productPrices" @click="selectProduct(product)"
@@ -58,7 +110,7 @@
 
     em.no-items.font-weight-light v-if="!productPrices.length"
       span
-        = "Nog geen prijzen beschikbaar in de prijslijst #{@activity.price_list.name}. Klik "
+        = "Nog geen producten beschikbaar in de prijslijst #{@activity.price_list.name}. Klik "
         = link_to 'hier', price_lists_path
         = ' om prijzen aan te maken.'
 
@@ -75,44 +127,44 @@ template id="orderscreen-flash"
           em = '{{activeNotification.actionText}}'
 
 template id="user-selection"
-  .user-details v-if="!selectedUser"
+  .user-details v-if="selectedUser"
+    .user-details-user.container
+      .row.py-3
+        .user-details-avatar.col-4.px-1
+          img( v-bind:src="selectedUser.avatar_thumb_or_default_url"
+               onerror="this.src = '/images/avatar_thumb_default.png';"
+               class='img-thumbnail rounded-circle')
+        .user-details-name.col-8
+          h3.mb-3
+            = '{{selectedUser.name}}'
+            span.pull-right.pr-2.user-details-close @click="selectUser(null)"
+              = fa_icon 'times-circle'
+
+          h3 v-bind:class="{ 'text-danger' : (selectedUser.credit <= 0) }"
+            = '{{doubleToCurrency(selectedUser.credit)}}'
+
+          button.btn.btn-secondary data-toggle="modal" data-target="#credit-mutation-modal"
+            = fa_icon 'money', class: 'mr-1'
+            = 'Geld inleggen'
+
+  .user-details v-else=""
     .user-details-search.d-flex.flex-column.justify-content-center
       input( placeholder="Gebruiker zoeken" class="form-control form-control-lg"
+             ref='userSearchBar'
              v-model="userQuery"
              @input="queryChange" @keyup.enter.prevent="selectHighlightedUser"
              @keyup.up="decreaseHighlightedUserIndex"
-             @keyup.down="increaseHighlightedUserIndex")
+             @keyup.down="increaseHighlightedUserIndex"
+             autofocus)
 
-      em.user-details-seperator.font-weight-light.py-2 = 'of'
-
-      .user-details-cash-button
-        button.btn.btn-secondary.btn-lg.font-weight-light
-          = 'Contant betalen'
-
-    .user-details-suggestions
-      .user-details-suggestions-user.row.no-gutters(
+    .user-details-suggestions.container
+      .user-details-suggestions-user.row.justify-content-center.align-items-center(
           v-for="(user, index) in suggestedUsers"
           @click="selectUser(user)" v-bind:class="{ highlight : (highlightedUserIndex == index) }"
           @mouseover="highlightedUserIndex = -1" @mouseleave="resetHighlight")
         .user-details-suggestions-user-avatar.col-4
-          = image_tag '/images/avatar_thumb_default.png', class: 'img-thumbnail rounded-circle'
-        .user-details-suggestions-user-details.col-8.px-3
-          .user-details-suggestions-user-name
-            h4.pt-2
-              = '{{user.name}}'
-              small.ml-1 = '({{user.id}})'
-          .user-details-suggestions-user-credit
-            h5 v-bind:class="{ 'text-danger' : (user.credit <= 0) }"
-              = '{{doubleToCurrency(user.credit)}}'
-
-  .user-details v-else=""
-    .user-details-user.row.no-gutters.py-3.px-1
-      .user-details-avatar.col-4
-        = image_tag '/images/avatar_thumb_default.png', class: 'img-thumbnail rounded-circle'
-      .user-details-name.col-8.pl-2.py-2
-        h2.mb-3
-          = '{{selectedUser.name}}'
-          span.pull-right.pr-2.user-details-close @click="selectUser(null)"
-            = fa_icon 'times-circle'
-        h2 v-bind:class="{ 'text-danger' : (selectedUser.credit <= 0) }"
-          = '{{doubleToCurrency(selectedUser.credit)}}'
+          img( v-bind:src="user.avatar_thumb_or_default_url"
+               onerror="this.src = '/images/avatar_thumb_default.png';"
+               class='img-thumbnail rounded-circle')
+        h4.user-details-suggestions-user-name.col-8.m-0
+          = '{{user.name}}'

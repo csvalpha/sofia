@@ -3,27 +3,30 @@ class CreditMutationsController < ApplicationController
   after_action :verify_authorized
 
   def index
-    @credit_mutations = CreditMutation.includes(model_includes)
+    @credit_mutations = CreditMutation.includes(model_includes).order(created_at: :desc)
     authorize @credit_mutations
 
     @new_mutation = CreditMutation.new
   end
 
-  def create
+  def create # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     @mutation = CreditMutation.new(permitted_attributes.merge(created_by: current_user))
     authorize @mutation
 
-    if @mutation.save
-      flash[:success] = 'Successfully created mutation'
-    else
-      flash[:error] = @mutation.errors.full_messages.join(', ')
-    end
+    respond_to do |format|
+      if @mutation.save
+        format.html { redirect_to request.referer, success: 'Successfully created mutation' }
+        format.json { render json: @mutation, include: { user: { methods: :credit } } }
 
-    redirect_to request.referer
+      else
+        format.html { redirect_to request.referer, error: @mutation.errors.full_messages.join(', ') }
+        format.json { render json: @mutation.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   def model_includes
-    %i[user activity]
+    %i[user activity created_by]
   end
 
   def permitted_attributes

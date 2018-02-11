@@ -1,14 +1,14 @@
 source 'https://rubygems.org'
 
-gem 'bcrypt', '~> 3.1.7'
-gem 'bootstrap', '~> 4.0.0.beta2'
+gem 'bcrypt', '~> 3.1.11'
+gem 'bootstrap', '~> 4.0.0.beta3'
 gem 'coffee-rails', '~> 4.2'
-gem 'devise', '~> 4.3.0'
+gem 'devise', '~> 4.4.0'
 gem 'devise-i18n', '~> 1.5'
 gem 'factory_bot_rails', '~> 4.8.2'
-gem 'faker', '~> 1.8.4'
+gem 'faker', '~> 1.8.7'
 gem 'font-awesome-rails', '~> 4.7'
-gem 'jbuilder', '~> 2.5'
+gem 'jbuilder', '~> 2.7'
 gem 'jquery-rails', '~> 4.3.1'
 gem 'mini_racer', '~> 0.1.14'
 gem 'omniauth', '~> 1.7'
@@ -18,21 +18,22 @@ gem 'pg', '~> 0.21.0'
 gem 'puma', '~> 3.7'
 gem 'pundit', '~> 1.1.0'
 gem 'rails', '~> 5.1.4'
+gem 'rails-i18n', '~> 5.0.1'
 gem 'rest-client', '~> 2.0.2'
 gem 'sass-rails', '~> 5.0'
 gem 'sentry-raven', '~> 2.3'
 gem 'simple_form', '~> 3.5.0'
 gem 'slim', '~> 3.0.8'
-gem 'turbolinks', '~> 5.0.1'
+gem 'turbolinks', '~> 5.1'
 gem 'uglifier', '>= 1.3.0'
 gem 'validates_timeliness', '~> 4.0'
-gem 'webpacker', '~> 3.0.2'
+gem 'webpacker', '~> 3.2'
 
 group :development, :test do
   gem 'awesome_print'
   gem 'better_errors'
   gem 'brakeman', require: false
-  gem 'bullet', git: 'https://github.com/nicolas-besnard/bullet.git', branch: 'sentry'
+  gem 'bullet'
   gem 'colorize'
   gem 'consistency_fail'
   gem 'dotenv-rails', '~> 2.2.1'
@@ -55,7 +56,7 @@ group :development do
 end
 
 group :test do
-  gem 'rubocop', '~> 0.50.0', require: false
+  gem 'rubocop', '~> 0.52', require: false
   gem 'rubocop-rspec', require: false
   gem 'simplecov', require: false
   gem 'terminal-notifier-guard'

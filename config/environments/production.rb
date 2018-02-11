@@ -82,7 +82,9 @@ Rails.application.configure do
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
-  config.action_mailer.default_url_options = { scheme: 'https', host: 'tomato.csvalpha.nl' }
+  config.action_mailer.default_url_options = {
+    scheme: 'https', host: Rails.application.config.x.tomato_host || 'tomato.csvalpha.nl'
+  }
 
   if ENV['RAILS_LOG_TO_STDOUT'].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
@@ -92,9 +94,4 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
-
-  config.after_initialize do
-    Bullet.enable = true
-    Bullet.sentry = true
-  end
 end

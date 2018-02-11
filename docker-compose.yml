@@ -10,7 +10,7 @@ services:
     env_file: .env
     build: .
     ports:
-      - "9494:5000"
+      - "${LISTEN_ON_PORT}:5000"
     depends_on:
       - db
     environment:

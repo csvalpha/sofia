@@ -1,10 +1,10 @@
-.container.py-sm-1
+.container.py-1
   .row
-    .col-6.mx-auto
+    .col-12.col-md-6.mx-auto
       - flash.each do |key, value|
         .row
           .col-12.text-center
-            = content_tag :div, class: "alert alert-dismissible fade show  #{flash_class(key)}", role: 'alert'
+            .alert.alert-dismissible.fade.show class=(flash_class key) role='alert'
               = value
               button.close type='button' data-dismiss='alert' aria-label='Close'
                 span aria-hidden='true' = fa_icon 'times'

@@ -2,37 +2,39 @@
 
   .row.py-4
     .col-sm-12
-      h1 = 'Mutaties'
+      h1 = 'Inleg en saldocorrecties'
 
-      .d-flex.justify-content-between.mb-3
-        p = 'De laatste 25 activiteiten'
+      .d-flex.justify-content-between.mb-3.align-items-center
+        span
+          = 'Alle bedragen die ingelegd zijn bij activiteiten, inleg die handmatig ingevoerd is, en gedane correcties.'
 
         button.btn.btn-sm.btn-primary role='button' data-toggle='modal' data-target='#new_mutation_modal'
           = fa_icon 'plus', class: 'mr-1'
-          = 'Nieuwe mutatie'
+          = 'Nieuwe inleg of correctie'
 
         = render 'modal'
 
     .col-sm-12
-      table.table.table-striped
-        thead
-          tr
-            th scope='col' = 'Beschrijving'
-            th scope='col' = 'Gebruiker'
-            th scope='col' = 'Activiteit'
-            th scope='col' = 'Auteur'
-            th scope='col' = 'Aanmaaktijd'
-        tbody
-          - @credit_mutations&.each do |mutation|
+      .table-responsive
+        table.table.table-striped
+          thead
             tr
-              td
-                = mutation.description
-              td
-                = link_to mutation.user.name, mutation.user
-              td
-                - if mutation.activity
-                  = link_to mutation.activity&.title, mutation.activity
-              td
-                = link_to mutation.created_by.name, mutation.created_by
-              td
-                = datetime_short(mutation.created_at)
+              th scope='col' = 'Beschrijving'
+              th scope='col' = 'Gebruiker'
+              th scope='col' = 'Activiteit'
+              th scope='col' = 'Geregistreerd door'
+              th scope='col' = 'Aangemaakt op'
+          tbody
+            - @credit_mutations&.each do |mutation|
+              tr
+                td
+                  = mutation.description
+                td
+                  = link_to mutation.user.name, mutation.user
+                td
+                  - if mutation.activity
+                    = link_to mutation.activity&.title, mutation.activity
+                td
+                  = link_to mutation.created_by.name, mutation.created_by
+                td
+                  = l mutation.created_at
