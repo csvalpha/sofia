@@ -58,16 +58,16 @@ RSpec.describe Order, type: :model do
 
   describe '#destroy' do
     context 'when without locked activity' do
-      let(:order) { FactoryBot.create(:order)}
+      let(:order) { FactoryBot.create(:order) }
 
-      it { expect(order.destroy).to eq order}
+      it { expect(order.destroy).to eq order }
     end
 
     context 'when with locked activity' do
-      let(:activity) { FactoryBot.build(:activity, :locked)}
-      let(:order) { FactoryBot.build(:order, activity: activity)}
+      let(:activity) { FactoryBot.build(:activity, :locked) }
+      let(:order) { FactoryBot.build(:order, activity: activity) }
 
-      it { expect(order.destroy).to eq false}
+      it { expect(order.destroy).to eq false }
     end
   end
 end
