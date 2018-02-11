@@ -7,8 +7,9 @@ class Order < ApplicationRecord
   accepts_nested_attributes_for :order_rows
 
   validates :activity, :user, :created_by, presence: true
-
   validate :activity_not_locked
+
+  before_destroy :destroyable?
 
   def order_total
     @sum ||= order_rows.map(&:row_total).sum
@@ -18,5 +19,9 @@ class Order < ApplicationRecord
 
   def activity_not_locked
     errors.add(:activity, 'has been locked') if changed? && activity.locked?
+  end
+
+  def destroyable?
+    throw(:abort) if activity.locked?
   end
 end
