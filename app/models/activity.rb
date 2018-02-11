@@ -67,8 +67,7 @@ class Activity < ApplicationRecord
   end
 
   def product_total_for_user(user, product)
-    orders.where(user: user).map {
-        |order| order.order_rows.where(product: product)
-    }.flatten.map(&:product_count).reduce(&:+)
+    rows = orders.where(user: user).map { |order| order.order_rows.where(product: product) }
+    rows.flatten.map(&:product_count).reduce(&:+)
   end
 end

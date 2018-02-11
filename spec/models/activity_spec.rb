@@ -80,11 +80,11 @@ RSpec.describe Activity, type: :model do
 
   describe '#products_total_for_user' do
     let(:product) { FactoryBot.create(:product, name: 'beer') }
-    let(:not_ordered_product) { FactoryBot.create(:product)}
-    let(:user) { FactoryBot.create(:user)}
-    let(:user_order) { FactoryBot.create(:order, user: user, activity: activity)}
+    let(:not_ordered_product) { FactoryBot.create(:product) }
+    let(:user) { FactoryBot.create(:user) }
+    let(:user_order) { FactoryBot.create(:order, user: user, activity: activity) }
 
-    subject(:activity) { FactoryBot.create(:activity)}
+    subject(:activity) { FactoryBot.create(:activity) }
 
     before do
       FactoryBot.create(:product_price, product: product, price_list: activity.price_list)
@@ -93,7 +93,7 @@ RSpec.describe Activity, type: :model do
       FactoryBot.create(:order, :with_items, products: [product, not_ordered_product], activity: activity)
     end
 
-    it { expect(activity.products_total_for_user(user)).to eq ({ 'beer'=>2 })}
+    it { expect(activity.products_total_for_user(user)).to eq('beer' => 2) }
   end
 
   describe '.upcoming' do
