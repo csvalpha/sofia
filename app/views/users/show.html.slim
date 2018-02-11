@@ -60,7 +60,7 @@
         li.nav-item
           a.nav-link.active (id='orders-tab' data-toggle="tab" href="#orders" role="tab"
             aria-controls="orders" aria-selected="true")
-            = 'Activiteiten'
+            = 'Bestellingen'
         li.nav-item
           a.nav-link (id='creditMutations-tab' data-toggle="tab" href="#creditMutations" role="tab"
             aria-controls="creditMutations" aria-selected="false")
@@ -85,12 +85,16 @@
                         em = "#{@user.name} heeft nog geen bestellingen gedaan"
                 - else
                   - @user.activities.uniq.each do |activity|
-                    tr @click="openModal(#{activity.to_json(:include => {:orders => {:include => {:order_rows => {:include => :product, :methods => :row_total}}, :methods => :created_at_time}})})"
+                    tr
                       th scope='row' = activity.id
-                      td = activity.title
-                      td = t activity.start_time
+                      td = link_to activity.title, activity
+                      td = l activity.start_time
                       td = activity.orders.where(user: @user).map(&:order_total).reduce(:+)
-                    = render 'activity_modal'tal, unit: '€')
+                    - activity.products_total_for_user(@user).each do |product, total|
+                      tr
+                        th
+                        td = "#{total}x #{product}"
+                        td colspan=2
 
         .tab-pane id='creditMutations' role='tabpanel' aria-labelledby='creditMutations-tab'
           .table-responsive

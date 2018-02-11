@@ -51,12 +51,6 @@ class Activity < ApplicationRecord
     end_time + 2.months
   end
 
-  private
-
-  def activity_not_locked
-    errors.add(:base, 'Activity cannot be changed after lock date') if locked? && changed?
-  end
-
   def products_total_for_user(user)
     totals = {}
     sold_products.each do |product|
@@ -66,10 +60,15 @@ class Activity < ApplicationRecord
     totals
   end
 
+  private
+
+  def activity_not_locked
+    errors.add(:base, 'Activity cannot be changed after lock date') if locked? && changed?
+  end
+
   def product_total_for_user(user, product)
     orders.where(user: user).map {
         |order| order.order_rows.where(product: product)
     }.flatten.map(&:product_count).reduce(&:+)
-
   end
 end
