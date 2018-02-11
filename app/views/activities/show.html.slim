@@ -126,7 +126,8 @@
                     tr
                       th scope='row'
                         -if current_user&.treasurer? && !@activity.locked?
-                          = link_to '', activity_order_url(@activity, order), method: :delete, :class => 'fa fa-trash'
+                          = link_to '', activity_order_url(@activity, order), method: :delete, :class => 'fa fa-trash',
+                                  data: { :confirm => 'Weet je zeker dat je deze bestelling wil verwijderen?' }
                         = order.id
                       td = l order.created_at, format: :time_only
                       td = link_to order.user.name, order.user
