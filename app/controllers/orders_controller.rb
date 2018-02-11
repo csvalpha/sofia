@@ -36,7 +36,7 @@ class OrdersController < ApplicationController
     authorize @order
 
     @order.destroy
-    head :no_content
+    redirect_to @order.activity
   end
 
   private

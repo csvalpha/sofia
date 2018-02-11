@@ -124,7 +124,10 @@
                 tbody
                   - @activity.orders.each do |order|
                     tr
-                      th scope='row' = order.id
+                      th scope='row'
+                        -if current_user&.treasurer? && !@activity.locked?
+                          = link_to '', activity_order_url(@activity, order), method: :delete, :class => 'fa fa-trash'
+                        = order.id
                       td = l order.created_at, format: :time_only
                       td = link_to order.user.name, order.user
                       td = number_to_currency(order.order_total, unit: '€')
