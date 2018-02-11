@@ -17,19 +17,10 @@ div.modal#activity_orders_model role='dialog' aria_hidden='true'
                 td Aantal
                 td Per stuk
                 td Totaal
-            tbody v-for="order in selectedActivity.orders"
+            tbody v-for="product, total in selectedActivity.products_total_for_user"
               tr
-                tr v-for="row in order.order_rows"
-                  td = '{{row.id}}'
-                  td = '{{row.product.name}}'
-                  td = '{{row.product_count}}'
-                  td = '{{row.price_per_product}}'
-                  td = '{{row.row_total}}'
-                tr.table-success
-                  td colspan='4'
-                    = "Afgerekend om "
-                    = '{{order.created_at_time}}'
-                  td = '{{order.order_total}}'
+                td = '{{product}}'
+                td = '{{total}}'
 
 
 

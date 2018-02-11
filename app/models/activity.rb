@@ -46,4 +46,20 @@ class Activity < ApplicationRecord
   def bartenders
     orders.map(&:created_by).uniq
   end
+
+  def products_total_for_user(user)
+    totals = {}
+    sold_products.each do |product|
+      total = product_total_for_user(user, product)
+      totals[product.name] = total if total
+    end
+    totals
+  end
+
+  def product_total_for_user(user, product)
+    orders.where(user: user).map {
+        |order| order.order_rows.where(product: product)
+    }.flatten.map(&:product_count).reduce(&:+)
+
+  end
 end
