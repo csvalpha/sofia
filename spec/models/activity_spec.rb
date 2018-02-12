@@ -123,19 +123,6 @@ RSpec.describe Activity, type: :model do
     end
   end
 
-  describe '#sold_products' do
-    subject(:activity) { FactoryBot.create(:activity) }
-
-    let(:product) { activity.price_list.products.sample }
-    let(:order) { FactoryBot.create(:order, activity: activity) }
-
-    before do
-      FactoryBot.create(:order_row, product: product, order: order)
-    end
-
-    it { expect(activity.sold_products).to match_array [product] }
-  end
-
   describe '#revenue' do
     subject(:activity) { FactoryBot.create(:activity) }
 
