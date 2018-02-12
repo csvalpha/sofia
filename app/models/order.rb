@@ -6,8 +6,9 @@ class Order < ApplicationRecord
   has_many :order_rows, dependent: :destroy
   accepts_nested_attributes_for :order_rows
 
-  validates :activity, :user, :created_by, presence: true
+  validates :activity, :created_by, presence: true
 
+  validate :user_or_cash
   validate :activity_not_locked
 
   def order_total
@@ -15,6 +16,10 @@ class Order < ApplicationRecord
   end
 
   private
+
+  def user_or_cash
+    errors.add(:order, 'must belong to a user or was paid in cash') unless user || paid_with_cash
+  end
 
   def activity_not_locked
     errors.add(:activity, 'has been locked') if changed? && activity.locked?

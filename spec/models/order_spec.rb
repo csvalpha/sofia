@@ -6,10 +6,16 @@ RSpec.describe Order, type: :model do
   describe '#valid' do
     it { expect(order).to be_valid }
 
-    context 'when without user' do
+    context 'when without user and without paid_with_cash' do
       subject(:order) { FactoryBot.build_stubbed(:order, user: nil) }
 
       it { expect(order).not_to be_valid }
+    end
+
+    context 'when without user with paid_with_cash' do
+      subject(:order) { FactoryBot.build_stubbed(:order, :cash) }
+
+      it { expect(order).to be_valid }
     end
 
     context 'when without activity' do
