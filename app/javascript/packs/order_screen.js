@@ -121,6 +121,7 @@ document.addEventListener('turbolinks:load', () => {
       template: '#user-selection',
       props: {
         selectedUser: null,
+        payWithCash: false,
         users: {
           type: Array,
           required: true
@@ -140,7 +141,10 @@ document.addEventListener('turbolinks:load', () => {
       },
 
       updated: function(){
-        this.$refs.userSearchBar.focus();
+        const input = this.$refs.userSearchBar;
+        if (input) {
+          input.focus();
+        }
       },
 
       methods: {
@@ -190,6 +194,12 @@ document.addEventListener('turbolinks:load', () => {
             var user = this.searchUsersResult(this.userQuery)[this.highlightedUserIndex];
             this.selectUser(user);
           }
+        },
+
+        selectCash() {
+          this.userQuery = '';
+          this.queryChange();
+          this.$emit('selectcash', 'pay_with_cash');
         }
       }
     };
@@ -202,6 +212,7 @@ document.addEventListener('turbolinks:load', () => {
           productPrices: productPrices,
           activity: activity,
           selectedUser: null,
+          payWithCash: false,
           orderRows: [],
           creditMutationAmount: null,
           creditMutationDescription: 'Inleg contant',
@@ -221,11 +232,17 @@ document.addEventListener('turbolinks:load', () => {
           if (!user) {
             this.orderRows = [];
           }
+
+          this.payWithCash = false;
           this.selectedUser = user;
         },
 
+        selectCash() {
+          this.payWithCash = true;
+        },
+
         selectProduct(productPrice) {
-          if (this.selectedUser) {
+          if (this.selectedUser || this.payWithCash) {
             const orderRow = this.orderRows.filter((row) => { return row.productPrice === productPrice; })[0];
 
             if (orderRow) {
@@ -257,28 +274,41 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         confirmOrder() {
-          const order = {
-            user_id: this.selectedUser.id,
-            activity_id: this.activity.id,
-            order_rows_attributes: this.orderRows.map((row) => {
-              if (row.amount) {
-                return {
-                  product_id: row.productPrice.product.id,
-                  product_count: row.amount
-                };
-              }
-            })
-          };
+          let order = {};
+          const order_rows_attributes = this.orderRows.map((row) => {
+            if (row.amount) {
+              return {
+                product_id: row.productPrice.product.id,
+                product_count: row.amount
+              };
+            }
+          });
+
+          if (this.payWithCash) {
+            order = {
+              paid_with_cash: true,
+              activity_id: this.activity.id,
+              order_rows_attributes
+            };
+          } else {
+            order = {
+              user_id: this.selectedUser.id,
+              activity_id: this.activity.id,
+              order_rows_attributes
+            };
+          }
 
           this.$http.post(`/activities/${this.activity.id}/orders.json`, {
             order: order
           }).then((response) => {
-            const userName = response.body.user.name;
+            const user = response.body.user;
             const orderTotal = this.doubleToCurrency(response.body.order_total);
-            const additionalInfo = `${userName} - ${orderTotal}`;
+            const additionalInfo = `${user ? user.userName : 'Contant'} - ${orderTotal}`;
 
-            this.$set(this.users, this.users.indexOf(this.selectedUser), response.body.user);
-            this.$emit('updateusers');
+            if (user) {
+              this.$set(this.users, this.users.indexOf(this.selectedUser), response.body.user);
+              this.$emit('updateusers');
+            }
 
             this.sendFlash('Bestelling geplaatst.', additionalInfo, 'success');
             this.setUser(null);
@@ -286,7 +316,7 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         orderConfirmButtonDisabled() {
-          return !this.selectedUser || this.totalProductCount() == 0;
+          return !(this.selectedUser || this.payWithCash) || this.totalProductCount() == 0;
         },
 
         totalProductCount() {

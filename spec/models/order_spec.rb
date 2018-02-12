@@ -13,7 +13,7 @@ RSpec.describe Order, type: :model do
     end
 
     context 'when without user with paid_with_cash' do
-      subject(:order) { FactoryBot.build_stubbed(:order, :cash) }
+      subject(:order) { FactoryBot.build_stubbed(:order, user: nil, paid_with_cash: true) }
 
       it { expect(order).to be_valid }
     end

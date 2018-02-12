@@ -16,7 +16,7 @@ class CreditMutationsController < ApplicationController
     respond_to do |format|
       if @mutation.save
         format.html { redirect_to request.referer, success: 'Successfully created mutation' }
-        format.json { render json: @mutation, include: { user: { methods: :credit } } }
+        format.json { render json: @mutation, include: { user: { methods: %i[credit avatar_thumb_or_default_url] } } }
 
       else
         format.html { redirect_to request.referer, error: @mutation.errors.full_messages.join(', ') }

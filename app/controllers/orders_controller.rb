@@ -38,7 +38,7 @@ class OrdersController < ApplicationController
   end
 
   def permitted_attributes
-    params.require(:order).permit(%i[user_id activity_id], order_rows_attributes: %i[id product_id product_count])
+    params.require(:order).permit(%i[user_id paid_with_cash activity_id], order_rows_attributes: %i[id product_id product_count])
   end
 
   def json_includes
