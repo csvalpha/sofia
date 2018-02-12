@@ -151,11 +151,11 @@ template id="user-selection"
   .user-details v-else-if="payWithCash"
     .user-details-user.container.py-3
       .row.justify-content-end
-        .col-8.d-flex.flex-column.align-items-center
+        .col-10.d-flex.flex-column.align-items-center
           h1.display-3.py-2 = fa_icon 'money lg'
-          h4.font-weight-light
+          h4.font-weight-light.text-center
             em = 'Bestelling contant betalen'
-        h3.col-2.pr-2.user-details-close @click="selectUser(null)"
+        h3.col-1.pr-2.user-details-close @click="selectUser(null)"
           = fa_icon 'times-circle', class: 'pull-right'
 
   .user-details v-else=""
