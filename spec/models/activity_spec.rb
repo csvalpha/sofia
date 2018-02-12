@@ -137,6 +137,21 @@ RSpec.describe Activity, type: :model do
     it { expect(activity.revenue).to eq product_price * 2 }
   end
 
+  describe '#revenue_paid_with_cash' do
+    subject(:activity) { FactoryBot.create(:activity) }
+
+    let(:product) { activity.price_list.products.sample }
+    let(:product_price) { activity.price_list.product_price_for(product).price }
+    let(:order) { FactoryBot.create(:order, :cash, activity: activity) }
+
+    before do
+      FactoryBot.create(:order_row, product: product, order: order, product_count: 2)
+      FactoryBot.create(:order, activity: activity)
+    end
+
+    it { expect(activity.revenue_paid_with_cash).to eq product_price * 2 }
+  end
+
   describe '#revenue_by_category' do
     subject(:activity) { FactoryBot.create(:activity) }
 
