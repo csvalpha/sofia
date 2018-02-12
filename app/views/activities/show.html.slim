@@ -80,7 +80,7 @@
                   tbody
                     - Product.categories.each do |category|
                       tr
-                        td = "#{(t category.first).capitalize}"
+                        td = t(category.first).capitalize
                         td.text-right = number_to_currency(@activity.revenue_by_category(category), unit: '€')
                     tr
                       th scope='row' = 'Totaal'
