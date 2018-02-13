@@ -7,6 +7,7 @@ class Order < ApplicationRecord
   accepts_nested_attributes_for :order_rows
 
   validates :activity, :created_by, presence: true
+  validates :paid_with_cash, inclusion: [true, false]
 
   validate :user_or_cash
   validate :activity_not_locked
