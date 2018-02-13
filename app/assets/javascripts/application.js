@@ -21,6 +21,6 @@
 
 WebFont.load({
   google: {
-    families: ['Roboto']
+    families: ['Roboto:300,400']
   }
 });

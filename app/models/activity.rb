@@ -26,12 +26,12 @@ class Activity < ApplicationRecord
     credit_mutations.map(&:amount).reduce(:+) || 0
   end
 
-  def sold_products
-    orders.map(&:order_rows).flatten.map(&:product)
-  end
-
   def revenue
     orders.map(&:order_rows).flatten.map(&:row_total).reduce(:+) || 0
+  end
+
+  def revenue_paid_with_cash
+    orders.select(&:paid_with_cash).map(&:order_rows).flatten.map(&:row_total).reduce(:+) || 0
   end
 
   def revenue_by_category(category)
