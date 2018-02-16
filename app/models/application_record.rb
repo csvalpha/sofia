@@ -1,4 +1,6 @@
 class ApplicationRecord < ActiveRecord::Base
-  acts_as_paranoid
   self.abstract_class = true
+
+  acts_as_paranoid
+  has_paper_trail
 end
