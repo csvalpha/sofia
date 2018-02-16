@@ -175,7 +175,8 @@ template id="user-selection"
       .user-details-suggestions-user.row.justify-content-center.align-items-center(
           v-for="(user, index) in suggestedUsers"
           @click="selectUser(user)" v-bind:class="{ highlight : (highlightedUserIndex == index) }"
-          @mouseover="highlightedUserIndex = -1" @mouseleave="resetHighlight")
+          @mouseover="highlightedUserIndex = -1" @mouseleave="resetHighlight"
+          :ref="`suggestedUser${index}`")
         .user-details-suggestions-user-avatar.col-4
           img( v-bind:src="user.avatar_thumb_or_default_url"
                onerror="this.src = '/images/avatar_thumb_default.png';"

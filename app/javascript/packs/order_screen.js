@@ -174,13 +174,19 @@ document.addEventListener('turbolinks:load', () => {
         increaseHighlightedUserIndex() {
           if ((this.highlightedUserIndex + 1) < this.suggestedUsers.length) {
             this.highlightedUserIndex++;
+            this.scrollToUser();
           }
         },
 
         decreaseHighlightedUserIndex() {
           if ((this.highlightedUserIndex) > 0) {
             this.highlightedUserIndex--;
+            this.scrollToUser();
           }
+        },
+
+        scrollToUser() {
+          this.$refs[`suggestedUser${this.highlightedUserIndex}`][0].scrollIntoView({block: 'nearest'});
         },
 
         selectUser(user) {
