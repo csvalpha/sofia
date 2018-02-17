@@ -85,6 +85,9 @@
             .orders-rows-row-product-price.col-3.px-1.px-lg-3.d-flex.justify-content-between
               span :title="doubleToCurrency(orderRow.productPrice.price) + ' p.s.'"
                 = '{{doubleToCurrency(orderRow.productPrice.price * orderRow.amount)}}'
+              span.fa-stack v-if="selectedUser && selectedUser.minor_age && orderRow.productPrice.product.requires_age"
+                i class="fa fa-circle fa-stack-2x"
+                span class="fa fa-stack-1x fa-inverse fa-plus18"
               span.order-rows-row-remove @click="dropOrderRow(index)"
                 = fa_icon 'times-circle lg'
 
