@@ -101,8 +101,9 @@
           span.col-3 = 'Totaal:'
           span.col-3.px-2 = '{{doubleToCurrency(orderTotal())}}'
 
-      div v-if="selectedUser.minor_age" class="alert alert-danger"
-        = 'Deze gebruiker is minderjarig!'
+      .minor-warning v-if="selectedUser.minor_age"
+        div.alert.alert-danger.col-12
+          = 'Deze gebruiker is minderjarig!'
 
       .orders-confirmation
         button.btn.btn-block.btn-lg.btn-success.font-weight-light(

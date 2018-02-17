@@ -20,14 +20,14 @@
 
 // Source: jsfiddle.net/mwj2tagh
 .fa-plus18{
-  font-family: "helvetica neue", Helvetica, Arial, Sans-Serif;
   text-align: center;
+  font-family: "helvetica neue", Helvetica, Arial, Sans-Serif;
   font-size: 80%;
   font-weight: bold;
-}
 
-.fa-plus18:before {
-  content: "18+"
+  &:before {
+    content: "18+"
+  }
 }
 
 .environment-label {
