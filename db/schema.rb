@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180121150413) do
+ActiveRecord::Schema.define(version: 20180217143821) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -89,7 +89,8 @@ ActiveRecord::Schema.define(version: 20180121150413) do
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "category", default: 0, null: false
+    t.boolean "requires_age", default: false, null: false
+    t.integer "category", default: 0
   end
 
   create_table "roles", force: :cascade do |t|
@@ -120,6 +121,8 @@ ActiveRecord::Schema.define(version: 20180121150413) do
     t.string "provider"
     t.string "uid"
     t.string "avatar_thumb_url"
+    t.string "email"
+    t.date "birthday"
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
