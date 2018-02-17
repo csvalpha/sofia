@@ -80,6 +80,8 @@ class UsersController < ApplicationController
                                             fields['last_name'])
     u.provider = 'banana_oauth2'
     u.avatar_thumb_url = fields['avatar_thumb_url']
+    u.email = fields['email']
+    u.birthday = fields['birthday']
     u.save
   end
 

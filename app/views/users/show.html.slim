@@ -6,6 +6,14 @@
 
       table.table.table-sm
         tbody
+          - if @user.email
+            tr
+              th scope='row' = 'Email'
+              td.text-right = @user.email
+          - if @user.birthday
+            tr
+              th scope='row' = 'Geboortedatum'
+              td.text-right = l @user.birthday, format: :long
           tr
             th scope='row' = 'Aangemaakt op'
             td.text-right = l @user.created_at, format: :long
