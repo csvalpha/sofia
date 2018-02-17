@@ -1,9 +1,11 @@
 import Vue from 'vue/dist/vue.esm';
 import TurbolinksAdapter from 'vue-turbolinks';
 import VueResource from 'vue-resource';
+import Flash from '../flash.vue';
 
 Vue.use(TurbolinksAdapter);
 Vue.use(VueResource);
+Vue.use(Flash);
 
 document.addEventListener('turbolinks:load', () => {
   Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -17,104 +19,6 @@ document.addEventListener('turbolinks:load', () => {
     window.flash = function(message, actionText, type) {
       const event = new CustomEvent('flash', { detail: { message: message, actionText: actionText, type: type } } );
       dispatchEvent(event);
-    };
-
-    var orderscreenFlash = {
-      template: '#orderscreen-flash',
-      props: {
-        timeout: {
-          type: Number,
-          default: 5000
-        },
-        transition: {
-          type: String,
-          default: 'slide-fade'
-        },
-        types: {
-          type: Object,
-          default: () => ({
-            base:    'flash',
-            success: 'flash-success',
-            error:   'flash-danger',
-            warning: 'flash-warning',
-            info:    'flash-info'
-          })
-        },
-        icons: {
-          type: Object,
-          default: () => ({
-            base:    'fa fa-lg mr-2',
-            error:   'fa-exclamation-circle',
-            success: 'fa-check-circle',
-            info:    'fa-info-circle',
-            warning: 'fa-exclamation-circle',
-          })
-        },
-      },
-
-      data: () => ({
-        notificationQue: [],
-        activeNotification: null,
-        timeoutVar: null
-      }),
-
-      created() {
-        addEventListener('flash', (flash) => {
-          this.flash(flash.detail.message, flash.detail.actionText, flash.detail.type);
-        });
-      },
-
-      methods: {
-        flash(message, actionText, type) {
-          const flashData = {
-            message: message,
-            actionText: actionText,
-            type: type,
-            typeObject: this.classes(this.types, type),
-            iconObject: this.classes(this.icons, type)
-          };
-
-          this.notificationQue.push(flashData);
-          this.notificationQueChanged();
-        },
-
-        classes(propObject, type) {
-          let classes = {};
-          if(propObject.hasOwnProperty('base')) {
-            classes[propObject.base] = true;
-          }
-          if (propObject.hasOwnProperty(type)) {
-            classes[propObject[type]] = true;
-          }
-          return classes;
-        },
-
-        hideCurrentNotification() {
-          this.activeNotification = null;
-          this.notificationQueChanged();
-        },
-
-        notificationQueChanged() {
-          if (!this.activeNotification && this.notificationQue.length > 0) {
-            const newNotification = this.notificationQue.shift();
-            this.activeNotification = null;
-
-            // Small delay for UX purposes
-            setTimeout(() => {
-              this.activeNotification = newNotification;
-            }, 100);
-            this.timeoutVar = setTimeout(this.hideCurrentNotification, this.timeout);
-          }
-        },
-
-        mouseOver() {
-          clearTimeout(this.timeoutVar);
-        },
-
-        mouseLeave() {
-          this.timeoutVar = setTimeout(this.hideCurrentNotification, this.timeout);
-        }
-      }
     };
 
     var userSelection = {
@@ -309,7 +213,7 @@ document.addEventListener('turbolinks:load', () => {
           }).then((response) => {
             const user = response.body.user;
             const orderTotal = this.doubleToCurrency(response.body.order_total);
-            const additionalInfo = `${user ? user.userName : 'Contant'} - ${orderTotal}`;
+            const additionalInfo = `${user ? user.name : 'Contant'} - ${orderTotal}`;
 
             if (user) {
               this.$set(this.users, this.users.indexOf(this.selectedUser), response.body.user);
@@ -380,7 +284,7 @@ document.addEventListener('turbolinks:load', () => {
       },
 
       components: {
-        'orderscreen-flash': orderscreenFlash,
+        Flash,
         'user-selection': userSelection
       }
     });
