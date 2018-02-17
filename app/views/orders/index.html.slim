@@ -98,15 +98,21 @@
           span.col-3 = 'Totaal:'
           span.col-3.px-2 = '{{doubleToCurrency(orderTotal())}}'
 
+      div v-if="selectedUser.minor_age" class="alert alert-danger"
+        = 'Deze gebruiker is minderjarig!'
+
       .orders-confirmation
         button.btn.btn-block.btn-lg.btn-success.font-weight-light(
           @click="confirmOrder" v-bind:disabled="orderConfirmButtonDisabled()")
           = 'Bestellen'
 
   .product-grid
-    .product-grid-product v-for="product in productPrices" @click="selectProduct(product)"
-      span.product-grid-product-name.font-weight-light = '{{product.product.name}}'
-      span.product-grid-product-price = '{{doubleToCurrency(product.price)}}'
+    .product-grid-product v-for="productPrice in productPrices" @click="selectProduct(productPrice)" v-bind:class="{ 'minor-age-product' : (selectedUser && selectedUser.minor_age && productPrice.product.requires_age) }"
+      span.product-grid-product-name.font-weight-light = '{{productPrice.product.name}}'
+      span.product-grid-product-price = '{{doubleToCurrency(productPrice.price)}}'
+      span.fa-stack v-if="selectedUser && selectedUser.minor_age && productPrice.product.requires_age"
+        i class="fa fa-circle fa-stack-2x"
+        span class="fa fa-stack-1x fa-inverse fa-plus18"
 
     em.no-items.font-weight-light v-if="!productPrices.length"
       span
@@ -142,6 +148,7 @@ template id="user-selection"
 
           h3 v-bind:class="{ 'text-danger' : (selectedUser.credit <= 0) }"
             = '{{doubleToCurrency(selectedUser.credit)}}'
+
 
           button.btn.btn-secondary data-toggle="modal" data-target="#credit-mutation-modal"
             = fa_icon 'money', class: 'mr-1'

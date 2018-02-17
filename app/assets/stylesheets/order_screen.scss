@@ -286,6 +286,14 @@
     }
   }
 
+  .minor-age-product{
+    background-color: $gray-500;
+
+    &:hover {
+      background-color: $gray-600;
+    }
+  }
+
   .product-grid-product-name {
     text-align: center;
     color: $font-color-dark;
