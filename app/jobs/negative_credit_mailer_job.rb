@@ -1,10 +1,16 @@
-class NegativeCreditMailer < ApplicationJob
+class NegativeCreditMailerJob < ApplicationJob
   queue_as :default
 
   def perform
     users = User.all.select { |user| user.credit.negative? }
-    users.each do |user|
+    mail_users = users.select { |user| user.email.present? }
+    mail_users.each do |user|
       CreditMailer.negative_credit_mail(user).deliver_later
+    end
+    no_mail_users = users.select { |user| user.email.nil? }
+    User.all.select { |user| user.treasurer? }.each do |treasurer|
+      puts treasurer.email
+      CreditMailer.treasurer_report(treasurer, no_mail_users, mail_users.size).deliver_later
     end
   end
 end

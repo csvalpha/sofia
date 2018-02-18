@@ -1,0 +1,13 @@
+Beste <%= @treasurer.name %>
+
+Er is namens u een geautomatiseerde saldo mail verstuurd naar alle gebruikers die negatief staan. Op dit moment staan er <%= @send_to_count %> gebruikers negatief.
+
+<% if @mail_unknown_user.any? %>
+  De volgende gebruikers hebben helaas geen mailadres bekend in het systeem. Zolang deze niet bekend is zal er geen saldo mail naar hen worden verstuurd.
+  <% @mail_unknown_user.each do |user| %>
+      - <%= user.name %>
+  <% end %>
+
+<% end %>
+Met vriendelijke groet,
+Webmeester C.S.V. Alpha
