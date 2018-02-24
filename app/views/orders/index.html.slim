@@ -52,6 +52,9 @@
           button type="sumbit" class="btn btn-primary" @click="saveCreditMutation($event)" data-dismiss="modal"
             = 'Aanmaken'
 
+  b-modal id="modal1" size="lg" title="Bestelgeschiedenis"
+    p = 'Bestelgeschiedenis'
+
   nav.header
     ul.header-nav
       li.header-nav-item.header-nav-home
@@ -60,6 +63,10 @@
       li.header-nav-item
         span.mr-3 = @activity.title
         small.font-weight-light.d-inline-block = l @activity.start_time, format: :date_only
+
+    b-btn.m-3 variant="outline-secondary" v-b-modal.modal1=""
+      = fa_icon 'history lg', class: 'mr-1'
+      = 'Bestelgeschiedenis'
 
     flash
 
@@ -114,72 +121,3 @@
         = "Nog geen producten beschikbaar in de prijslijst #{@activity.price_list.name}. Klik "
         = link_to 'hier', price_lists_path
         = ' om prijzen aan te maken.'
-
-template id="orderscreen-flash"
-  transition name="slide-fade"
-    div( v-bind:class="activeNotification.typeObject"  v-if='activeNotification'
-         :mouseover="mouseOver" :mouseleave="mouseLeave")
-      .flash-text
-
-        i v-bind:class='activeNotification.iconObject'
-        span.mr-4.font-weight-light = '{{activeNotification.message}}'
-
-        .flash-undo
-          em = '{{activeNotification.actionText}}'
-
-template id="user-selection"
-  .user-details v-if="selectedUser"
-    .user-details-user.container
-      .row.py-3
-        .user-details-avatar.col-4.px-1
-          img( v-bind:src="selectedUser.avatar_thumb_or_default_url"
-               onerror="this.src = '/images/avatar_thumb_default.png';"
-               class='img-thumbnail rounded-circle')
-        .user-details-name.col-8
-          h3.mb-3
-            = '{{selectedUser.name}}'
-            span.pull-right.pr-2.user-details-close @click="selectUser(null)"
-              = fa_icon 'times-circle'
-
-          h3 v-bind:class="{ 'text-danger' : (selectedUser.credit <= 0) }"
-            = '{{doubleToCurrency(selectedUser.credit)}}'
-
-          button.btn.btn-secondary data-toggle="modal" data-target="#credit-mutation-modal"
-            = fa_icon 'money', class: 'mr-1'
-            = 'Geld inleggen'
-
-  .user-details v-else-if="payWithCash"
-    .user-details-user.container.py-3
-      .row.justify-content-end
-        .col-10.d-flex.flex-column.align-items-center
-          h1.display-3.py-2 = fa_icon 'money lg'
-          h4.font-weight-light.text-center
-            em = 'Bestelling contant betalen'
-        h3.col-1.pr-2.user-details-close @click="selectUser(null)"
-          = fa_icon 'times-circle', class: 'pull-right'
-
-  .user-details v-else=""
-    .user-details-search
-      input( placeholder="Gebruiker zoeken" class="form-control form-control-lg"
-             ref='userSearchBar'
-             v-model="userQuery"
-             @input="queryChange" @keyup.enter.prevent="selectHighlightedUser"
-             @keyup.up="decreaseHighlightedUserIndex"
-             @keyup.down="increaseHighlightedUserIndex"
-             autofocus)
-      button.btn.btn-secondary.mt-3 @click="selectCash"
-        = fa_icon 'money', class: 'mr-1'
-        = 'Betaal contant'
-
-    .user-details-suggestions.container
-      .user-details-suggestions-user.row.justify-content-center.align-items-center(
-          v-for="(user, index) in suggestedUsers"
-          @click="selectUser(user)" v-bind:class="{ highlight : (highlightedUserIndex == index) }"
-          @mouseover="highlightedUserIndex = -1" @mouseleave="resetHighlight"
-          :ref="`suggestedUser${index}`")
-        .user-details-suggestions-user-avatar.col-4
-          img( v-bind:src="user.avatar_thumb_or_default_url"
-               onerror="this.src = '/images/avatar_thumb_default.png';"
-               class='img-thumbnail rounded-circle')
-        h4.user-details-suggestions-user-name.col-8.m-0
-          = '{{user.name}}'

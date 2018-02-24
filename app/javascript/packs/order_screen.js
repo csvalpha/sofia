@@ -1,11 +1,14 @@
 import Vue from 'vue/dist/vue.esm';
 import TurbolinksAdapter from 'vue-turbolinks';
 import VueResource from 'vue-resource';
+import BootstrapVue from 'bootstrap-vue';
+
 import Flash from '../flash.vue';
+import UserSelection from '../orderscreen/userselection.vue';
 
 Vue.use(TurbolinksAdapter);
 Vue.use(VueResource);
-Vue.use(Flash);
+Vue.use(BootstrapVue);
 
 document.addEventListener('turbolinks:load', () => {
   Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -19,99 +22,6 @@ document.addEventListener('turbolinks:load', () => {
     window.flash = function(message, actionText, type) {
       const event = new CustomEvent('flash', { detail: { message: message, actionText: actionText, type: type } } );
       dispatchEvent(event);
-    };
-
-    var userSelection = {
-      template: '#user-selection',
-      props: {
-        selectedUser: null,
-        payWithCash: false,
-        users: {
-          type: Array,
-          required: true
-        }
-      },
-
-      data: () => {
-        return {
-          highlightedUserIndex: -1,
-          userQuery: '',
-          suggestedUsers: users
-        };
-      },
-
-      watch: {
-        'users': 'queryChange'
-      },
-
-      updated: function(){
-        const input = this.$refs.userSearchBar;
-        if (input) {
-          input.focus();
-        }
-      },
-
-      methods: {
-        doubleToCurrency(price) {
-          return `€${parseFloat(price).toFixed(2)}`;
-        },
-
-        queryChange() {
-          this.suggestedUsers = this.searchUsersResult();
-          this.resetHighlight();
-        },
-
-        searchUsersResult: function() {
-          return this.users.filter((user) => {
-            return user.name.toLowerCase().indexOf(this.userQuery.toLowerCase()) !== -1;
-          });
-        },
-
-        resetHighlight() {
-          if (this.userQuery.length === 0) {
-            this.highlightedUserIndex = -1;
-          } else {
-            this.highlightedUserIndex = 0;
-          }
-        },
-
-        increaseHighlightedUserIndex() {
-          if ((this.highlightedUserIndex + 1) < this.suggestedUsers.length) {
-            this.highlightedUserIndex++;
-            this.scrollToUser();
-          }
-        },
-
-        decreaseHighlightedUserIndex() {
-          if ((this.highlightedUserIndex) > 0) {
-            this.highlightedUserIndex--;
-            this.scrollToUser();
-          }
-        },
-
-        scrollToUser() {
-          this.$refs[`suggestedUser${this.highlightedUserIndex}`][0].scrollIntoView({block: 'nearest'});
-        },
-
-        selectUser(user) {
-          this.userQuery = '';
-          this.queryChange();
-          this.$emit('updateuser', user);
-        },
-
-        selectHighlightedUser() {
-          if (this.searchUsersResult(this.userQuery).length > 0){
-            var user = this.searchUsersResult(this.userQuery)[this.highlightedUserIndex];
-            this.selectUser(user);
-          }
-        },
-
-        selectCash() {
-          this.userQuery = '';
-          this.queryChange();
-          this.$emit('selectcash', 'pay_with_cash');
-        }
-      }
     };
 
     new Vue({
@@ -285,7 +195,7 @@ document.addEventListener('turbolinks:load', () => {
 
       components: {
         Flash,
-        'user-selection': userSelection
+        UserSelection
       }
     });
   }
