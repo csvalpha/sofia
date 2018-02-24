@@ -1,56 +1,49 @@
 = content_tag :div, id: 'order-screen', class: 'order-screen',
   data: { users: @users_json, product_prices: @product_prices_json, activity: @activity_json }
 
-  .modal.fade( id="credit-mutation-modal" tabindex="-1" role="dialog"
-               aria-labelledby="#credit-mutation-modal-label" aria-hidden="true")
-    .modal-dialog role="document"
-      .modal-content
-        .modal-header
-          h5 class="modal-title" id="credit-mutation-modal-label"
-            = 'Inleggen'
-          button type="button" class="close" data-dismiss="modal" aria-label="Close"
-            = fa_icon 'times-circle lg', 'aria-hidden': 'true'
+  b-modal id="credit-mutation-modal" ref="creditMutationModal" title='Inleggen'
+    form.col-12.mt-2  :class="{ 'was-validated': creditMutationFormInvalid }" novalidate=""
+      .form-group.row
+        .col-4
+          label.col-form-label for="creditMutationAmountInput"
+            = 'Inleg *'
+        .col-8
+          .input-group
+            .input-group-prepend
+              .input-group-text = fa_icon 'euro'
+            input.form-control( type="text" placeholder="10.00" required=""
+                                v-model="creditMutationAmount"
+                                id="creditMutationAmountInput")
+            .invalid-feedback
+              = 'Bedrag is verplicht'
 
-        .modal-body
-          form.col-12.mt-2  v-bind:class="{ 'was-validated': creditMutationFormInvalid }" novalidate=""
-            .form-group.row
-              .col-4
-                label.col-form-label for="creditMutationAmountInput"
-                  = 'Inleg *'
-              .col-8
-                .input-group
-                  .input-group-prepend
-                    .input-group-text = fa_icon 'euro'
-                  input.form-control( type="text" placeholder="10.00" required=""
-                                      v-model="creditMutationAmount"
-                                      id="creditMutationAmountInput")
-                  .invalid-feedback
-                    = 'Bedrag is verplicht'
+      .form-group.row
+        .col-4
+          label.col-form-label for="creditMutationDescriptionInput"
+            = 'Beschrijving *'
+        .col-8
+          input.form-control( type="text" v-model="creditMutationDescription" required=""
+                              placeholder="Inleg contant" id="creditMutationDescriptionInput")
+          .invalid-feedback
+            = 'Beschrijving is verplicht'
 
-            .form-group.row
-              .col-4
-                label.col-form-label for="creditMutationDescriptionInput"
-                  = 'Beschrijving *'
-              .col-8
-                input.form-control( type="text" v-model="creditMutationDescription" required=""
-                                    placeholder="Inleg contant" id="creditMutationDescriptionInput")
-                .invalid-feedback
-                  = 'Beschrijving is verplicht'
+      fieldset disabled="true"
+        .form-group.row
+          label.col-4.col-form-label
+            = 'Activiteit *'
+          .col-8
+            input.form-control type="text" :value="activity.title"
+            small.form-text.text-muted
+              = 'Omdat deze inleg aangemaakt wordt tijdens een activiteit kan je dit niet aanpassen'
 
-            fieldset disabled="true"
-              .form-group.row
-                label.col-4.col-form-label
-                  = 'Activiteit *'
-                .col-8
-                  input.form-control type="text" v-bind:value="activity.title"
-                  small.form-text.text-muted
-                    = 'Omdat deze inleg aangemaakt wordt tijdens een activiteit kan je dit niet aanpassen'
+    div slot='modal-footer'
+      button type="button" class="btn btn-secondary mr-1" data-dismiss="modal" aria-label="Close"
+        = 'Annuleren'
+      button type="sumbit" class="btn btn-primary" @click="saveCreditMutation($event)"
+        = 'Inleg aanmaken'
 
-        .modal-footer
-          button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close"
-            = 'Annuleren'
-          button type="sumbit" class="btn btn-primary" @click="saveCreditMutation($event)" data-dismiss="modal"
-            = 'Aanmaken'
+  b-modal id="modal1" size="lg" title="Bestelgeschiedenis"
+    p = 'Bestelgeschiedenis'
 
   nav.header
     ul.header-nav
@@ -60,6 +53,10 @@
       li.header-nav-item
         span.mr-3 = @activity.title
         small.font-weight-light.d-inline-block = l @activity.start_time, format: :date_only
+
+    b-btn.m-3 variant="outline-secondary" v-b-modal.modal1=""
+      = fa_icon 'history lg', class: 'mr-1'
+      = 'Bestelgeschiedenis'
 
     flash
 
@@ -101,7 +98,7 @@
 
       .orders-confirmation
         button.btn.btn-block.btn-lg.btn-success(
-          @click="confirmOrder" v-bind:disabled="orderConfirmButtonDisabled()")
+          @click="confirmOrder" :disabled="orderConfirmButtonDisabled()")
           = 'Bestelling plaatsen'
 
   .product-grid
@@ -114,72 +111,3 @@
         = "Nog geen producten beschikbaar in de prijslijst #{@activity.price_list.name}. Klik "
         = link_to 'hier', price_lists_path
         = ' om prijzen aan te maken.'
-
-template id="orderscreen-flash"
-  transition name="slide-fade"
-    div( v-bind:class="activeNotification.typeObject"  v-if='activeNotification'
-         :mouseover="mouseOver" :mouseleave="mouseLeave")
-      .flash-text
-
-        i v-bind:class='activeNotification.iconObject'
-        span.mr-4.font-weight-light = '{{activeNotification.message}}'
-
-        .flash-undo
-          em = '{{activeNotification.actionText}}'
-
-template id="user-selection"
-  .user-details v-if="selectedUser"
-    .user-details-user.container
-      .row.py-3
-        .user-details-avatar.col-4.px-1
-          img( v-bind:src="selectedUser.avatar_thumb_or_default_url"
-               onerror="this.src = '/images/avatar_thumb_default.png';"
-               class='img-thumbnail rounded-circle')
-        .user-details-name.col-8
-          h3.mb-3
-            = '{{selectedUser.name}}'
-            span.pull-right.pr-2.user-details-close @click="selectUser(null)"
-              = fa_icon 'times-circle'
-
-          h3 v-bind:class="{ 'text-danger' : (selectedUser.credit <= 0) }"
-            = '{{doubleToCurrency(selectedUser.credit)}}'
-
-          button.btn.btn-secondary data-toggle="modal" data-target="#credit-mutation-modal"
-            = fa_icon 'money', class: 'mr-1'
-            = 'Geld inleggen'
-
-  .user-details v-else-if="payWithCash"
-    .user-details-user.container.py-3
-      .row.justify-content-end
-        .col-10.d-flex.flex-column.align-items-center
-          h1.display-3.py-2 = fa_icon 'money lg'
-          h4.font-weight-light.text-center
-            em = 'Bestelling contant betalen'
-        h3.col-1.pr-2.user-details-close @click="selectUser(null)"
-          = fa_icon 'times-circle', class: 'pull-right'
-
-  .user-details v-else=""
-    .user-details-search
-      input( placeholder="Gebruiker zoeken" class="form-control form-control-lg"
-             ref='userSearchBar'
-             v-model="userQuery"
-             @input="queryChange" @keyup.enter.prevent="selectHighlightedUser"
-             @keyup.up="decreaseHighlightedUserIndex"
-             @keyup.down="increaseHighlightedUserIndex"
-             autofocus)
-      button.btn.btn-secondary.mt-3 @click="selectCash"
-        = fa_icon 'money', class: 'mr-1'
-        = 'Betaal contant'
-
-    .user-details-suggestions.container
-      .user-details-suggestions-user.row.justify-content-center.align-items-center(
-          v-for="(user, index) in suggestedUsers"
-          @click="selectUser(user)" v-bind:class="{ highlight : (highlightedUserIndex == index) }"
-          @mouseover="highlightedUserIndex = -1" @mouseleave="resetHighlight"
-          :ref="`suggestedUser${index}`")
-        .user-details-suggestions-user-avatar.col-4
-          img( v-bind:src="user.avatar_thumb_or_default_url"
-               onerror="this.src = '/images/avatar_thumb_default.png';"
-               class='img-thumbnail rounded-circle')
-        h4.user-details-suggestions-user-name.col-8.m-0
-          = '{{user.name}}'
