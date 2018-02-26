@@ -86,6 +86,6 @@ class UsersController < ApplicationController
   end
 
   def permitted_attributes
-    params.require(:user).permit(:name)
+    params.require(:user).permit(%w[name email])
   end
 end
