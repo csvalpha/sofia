@@ -3,6 +3,8 @@ class Role < ApplicationRecord
 
   validates :role_type, :group_uid, presence: true
   has_many :roles_users, class_name: 'RolesUsers', dependent: :destroy, inverse_of: :role
+  has_many :users, through: :roles_users
+
 
   def name
     if treasurer?

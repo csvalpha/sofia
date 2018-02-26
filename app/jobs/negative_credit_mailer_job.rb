@@ -8,8 +8,7 @@ class NegativeCreditMailerJob < ApplicationJob
       CreditMailer.negative_credit_mail(user).deliver_later
     end
     no_mail_users = users.select { |user| user.email.nil? }
-    User.all.select { |user| user.treasurer? }.each do |treasurer|
-      puts treasurer.email
+    User.treasurer.each do |treasurer|
       CreditMailer.treasurer_report(treasurer, no_mail_users, mail_users.size).deliver_later
     end
   end

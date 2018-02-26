@@ -31,6 +31,21 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '.treasurer' do
+    context 'when treasurer' do
+      subject(:user) {FactoryBot.create(:user)}
+      let(:treasurer_role) { FactoryBot.create(:role, role_type: :treasurer)}
+
+      before { FactoryBot.create(:roles_users, user: user, role: treasurer_role)}
+
+      it { expect(User.treasurer).to include user}
+    end
+
+    context 'when not treasurer' do
+      it { expect(User.treasurer).not_to include user}
+    end
+  end
+
   describe '#credit' do
     subject(:user) { FactoryBot.create(:user) }
 

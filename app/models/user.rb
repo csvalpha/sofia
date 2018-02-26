@@ -6,18 +6,16 @@ class User < ApplicationRecord
   has_many :activities, dependent: :destroy, foreign_key: 'created_by_id', inverse_of: :created_by
 
   has_many :roles_users, class_name: 'RolesUsers', dependent: :destroy, inverse_of: :user
+  has_many :roles, through: :roles_users
 
   validates :name, presence: true
   validates :uid, uniqueness: true, allow_blank: true
 
   scope :in_banana, (-> { where(provider: 'banana_oauth2') })
+  scope :treasurer, (-> {joins(:roles).merge(Role.treasurer)})
 
   def credit
     credit_mutations.map(&:amount).sum - order_rows.map(&:row_total).sum
-  end
-
-  def roles
-    @roles ||= roles_users.includes(:role).map(&:role).flatten.uniq
   end
 
   def avatar_thumb_or_default_url
