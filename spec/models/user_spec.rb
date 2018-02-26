@@ -11,6 +11,21 @@ RSpec.describe User, type: :model do
 
       it { expect(user).not_to be_valid }
     end
+
+    context 'when without an email' do
+      context 'when external user' do
+        subject(:user) { FactoryBot.build_stubbed(:user, email: nil, provider: 'some_provider') }
+
+        it { expect(user).to be_valid }
+      end
+
+      context 'when manually created user' do
+        subject(:user) { FactoryBot.build_stubbed(:user, email: nil) }
+
+        it { expect(user).not_to be_valid }
+      end
+
+    end
   end
 
   describe '.in_banana' do
@@ -57,6 +72,20 @@ RSpec.describe User, type: :model do
     end
 
     it { expect(user.credit).to eq(-1.23) }
+  end
+
+  describe '#external??' do
+    context 'when external' do
+      subject(:user) { FactoryBot.create(:user, provider: 'some_external_source') }
+
+      it { expect(user.external?).to eq true}
+    end
+
+    context 'when internal' do
+      subject(:user) { FactoryBot.create(:user, provider: nil) }
+
+      it { expect(user.external?).to eq false}
+    end
   end
 
   describe '#roles' do
