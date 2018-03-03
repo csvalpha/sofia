@@ -21,6 +21,8 @@
 
 WebFont.load({
   google: {
-    families: ['Roboto']
+    families: ['Roboto:300,400']
   }
 });
+
+Raven.config('https://329a65545f5a4cbbb27a1c9d5433113b@sentry.io/228968').install();

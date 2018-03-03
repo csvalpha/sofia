@@ -5,10 +5,10 @@ class Activity < ApplicationRecord
   belongs_to :created_by, class_name: 'User', inverse_of: :activities
 
   validates :title, :start_time, :end_time, :price_list, :created_by, presence: true
-
   validates_datetime :end_time, after: :start_time
-
   validate :activity_not_locked
+
+  before_destroy :destroyable?
 
   scope :upcoming, (lambda {
     where('(start_time < ? and end_time > ?) or start_time > ?', Time.zone.now,
@@ -32,6 +32,10 @@ class Activity < ApplicationRecord
 
   def revenue
     orders.map(&:order_rows).flatten.map(&:row_total).reduce(:+) || 0
+  end
+
+  def revenue_paid_with_cash
+    orders.select(&:paid_with_cash).map(&:order_rows).flatten.map(&:row_total).reduce(:+) || 0
   end
 
   def revenue_by_category(category)
@@ -69,5 +73,9 @@ class Activity < ApplicationRecord
   def product_total_for_user(user, product)
     rows = orders.where(user: user).map { |order| order.order_rows.where(product: product) }
     rows.flatten.map(&:product_count).reduce(&:+)
+  end
+
+  def destroyable?
+    throw(:abort) if locked?
   end
 end

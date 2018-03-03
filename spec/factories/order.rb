@@ -4,6 +4,13 @@ FactoryBot.define do
     user
     association :created_by, factory: :user
 
+    trait :cash do
+      after(:build) do |order|
+        order.user = nil
+        order.paid_with_cash = true
+      end
+    end
+
     trait :with_items do
       transient do
         products []
