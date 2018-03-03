@@ -6,10 +6,16 @@ RSpec.describe Order, type: :model do
   describe '#valid' do
     it { expect(order).to be_valid }
 
-    context 'when without user' do
+    context 'when without user and without paid_with_cash' do
       subject(:order) { FactoryBot.build_stubbed(:order, user: nil) }
 
       it { expect(order).not_to be_valid }
+    end
+
+    context 'when without user with paid_with_cash' do
+      subject(:order) { FactoryBot.build_stubbed(:order, user: nil, paid_with_cash: true) }
+
+      it { expect(order).to be_valid }
     end
 
     context 'when without activity' do
@@ -53,6 +59,21 @@ RSpec.describe Order, type: :model do
       end
 
       it { expect(order.order_total).to eq(2 * price_list.product_price_for(product).price) }
+    end
+  end
+
+  describe '#destroy' do
+    context 'when without locked activity' do
+      let(:order) { FactoryBot.create(:order) }
+
+      it { expect(order.destroy).to eq order }
+    end
+
+    context 'when with locked activity' do
+      let(:activity) { FactoryBot.build(:activity, :locked) }
+      let(:order) { FactoryBot.build(:order, activity: activity) }
+
+      it { expect(order.destroy).to eq false }
     end
   end
 end

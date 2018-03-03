@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180217143821) do
+ActiveRecord::Schema.define(version: 20180216205757) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,11 +55,12 @@ ActiveRecord::Schema.define(version: 20180217143821) do
   create_table "orders", force: :cascade do |t|
     t.decimal "order_total", precision: 8, scale: 2
     t.bigint "activity_id", null: false
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "created_by_id"
+    t.boolean "paid_with_cash", default: false, null: false
     t.index ["activity_id"], name: "index_orders_on_activity_id"
     t.index ["created_by_id"], name: "index_orders_on_created_by_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
@@ -89,8 +90,7 @@ ActiveRecord::Schema.define(version: 20180217143821) do
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "requires_age", default: false, null: false
-    t.integer "category", default: 0
+    t.integer "category", default: 0, null: false
   end
 
   create_table "roles", force: :cascade do |t|
@@ -121,9 +121,17 @@ ActiveRecord::Schema.define(version: 20180217143821) do
     t.string "provider"
     t.string "uid"
     t.string "avatar_thumb_url"
-    t.string "email"
-    t.date "birthday"
     t.index ["uid"], name: "index_users_on_uid", unique: true
+  end
+
+  create_table "versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.string "event", null: false
+    t.string "whodunnit"
+    t.text "object"
+    t.datetime "created_at"
+    t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
   add_foreign_key "activities", "users", column: "created_by_id"

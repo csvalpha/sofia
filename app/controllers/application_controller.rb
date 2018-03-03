@@ -2,6 +2,8 @@ class ApplicationController < ActionController::Base
   include Pundit
 
   before_action :set_raven_context
+  before_action :set_paper_trail_whodunnit
+
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   protect_from_forgery with: :exception
