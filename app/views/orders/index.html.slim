@@ -65,10 +65,11 @@
 
   .side-panel
 
-    user-selection :selected-user="selectedUser" :users="users" v-on:updateuser="setUser($event)"
+    user-selection( :selected-user="selectedUser" :users="users" :pay-with-cash="payWithCash"
+                    v-on:updateuser="setUser($event)" v-on:selectcash="selectCash")
 
-    .orders v-if="selectedUser"
-      h4.orders-header.font-weight-light.py-2 = 'Bestelling'
+    .orders v-if="selectedUser || payWithCash"
+      h4.orders-header.py-4 = 'Bestelling'
 
       .orders-rows.container
 
@@ -98,27 +99,27 @@
       .orders-rows-total.container
         .orders-rows-total-dividor.mb-1
         .row.justify-content-end
-          span.col-3 = 'Totaal:'
-          span.col-3.px-2 = '{{doubleToCurrency(orderTotal())}}'
+          h4.col-3 = 'Totaal:'
+          h4.col-3.px-2 = '{{doubleToCurrency(orderTotal())}}'
 
       .minor-warning v-if="selectedUser.minor_age"
         div.alert.alert-danger.col-12
           = 'Deze gebruiker is minderjarig!'
 
       .orders-confirmation
-        button.btn.btn-block.btn-lg.btn-success.font-weight-light(
+        button.btn.btn-block.btn-lg.btn-success(
           @click="confirmOrder" v-bind:disabled="orderConfirmButtonDisabled()")
-          = 'Bestellen'
+          = 'Bestelling plaatsen'
 
   .product-grid
     .product-grid-product v-for="productPrice in productPrices" @click="selectProduct(productPrice)" v-bind:class="{ 'minor-age-product' : (selectedUser && selectedUser.minor_age && productPrice.product.requires_age) }"
-      span.product-grid-product-name.font-weight-light = '{{productPrice.product.name}}'
+      span.product-grid-product-name = '{{productPrice.product.name}}'
       span.product-grid-product-price = '{{doubleToCurrency(productPrice.price)}}'
       span.fa-stack v-if="selectedUser && selectedUser.minor_age && productPrice.product.requires_age"
         i class="fa fa-circle fa-stack-2x"
         span class="fa fa-stack-1x fa-inverse fa-plus18"
 
-    em.no-items.font-weight-light v-if="!productPrices.length"
+    em.no-items v-if="!productPrices.length"
       span
         = "Nog geen producten beschikbaar in de prijslijst #{@activity.price_list.name}. Klik "
         = link_to 'hier', price_lists_path
@@ -158,8 +159,18 @@ template id="user-selection"
             = fa_icon 'money', class: 'mr-1'
             = 'Geld inleggen'
 
+  .user-details v-else-if="payWithCash"
+    .user-details-user.container.py-3
+      .row.justify-content-end
+        .col-10.d-flex.flex-column.align-items-center
+          h1.display-3.py-2 = fa_icon 'money lg'
+          h4.font-weight-light.text-center
+            em = 'Bestelling contant betalen'
+        h3.col-1.pr-2.user-details-close @click="selectUser(null)"
+          = fa_icon 'times-circle', class: 'pull-right'
+
   .user-details v-else=""
-    .user-details-search.d-flex.flex-column.justify-content-center
+    .user-details-search
       input( placeholder="Gebruiker zoeken" class="form-control form-control-lg"
              ref='userSearchBar'
              v-model="userQuery"
@@ -167,12 +178,16 @@ template id="user-selection"
              @keyup.up="decreaseHighlightedUserIndex"
              @keyup.down="increaseHighlightedUserIndex"
              autofocus)
+      button.btn.btn-secondary.mt-3 @click="selectCash"
+        = fa_icon 'money', class: 'mr-1'
+        = 'Betaal contant'
 
     .user-details-suggestions.container
       .user-details-suggestions-user.row.justify-content-center.align-items-center(
           v-for="(user, index) in suggestedUsers"
           @click="selectUser(user)" v-bind:class="{ highlight : (highlightedUserIndex == index) }"
-          @mouseover="highlightedUserIndex = -1" @mouseleave="resetHighlight")
+          @mouseover="highlightedUserIndex = -1" @mouseleave="resetHighlight"
+          :ref="`suggestedUser${index}`")
         .user-details-suggestions-user-avatar.col-4
           img( v-bind:src="user.avatar_thumb_or_default_url"
                onerror="this.src = '/images/avatar_thumb_default.png';"

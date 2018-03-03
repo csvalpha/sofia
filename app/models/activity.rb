@@ -5,10 +5,10 @@ class Activity < ApplicationRecord
   belongs_to :created_by, class_name: 'User', inverse_of: :activities
 
   validates :title, :start_time, :end_time, :price_list, :created_by, presence: true
-
   validates_datetime :end_time, after: :start_time
-
   validate :activity_not_locked
+
+  before_destroy :destroyable?
 
   scope :upcoming, (lambda {
     where('(start_time < ? and end_time > ?) or start_time > ?', Time.zone.now,
@@ -26,12 +26,12 @@ class Activity < ApplicationRecord
     credit_mutations.map(&:amount).reduce(:+) || 0
   end
 
-  def sold_products
-    orders.map(&:order_rows).flatten.map(&:product)
-  end
-
   def revenue
     orders.map(&:order_rows).flatten.map(&:row_total).reduce(:+) || 0
+  end
+
+  def revenue_paid_with_cash
+    orders.select(&:paid_with_cash).map(&:order_rows).flatten.map(&:row_total).reduce(:+) || 0
   end
 
   def revenue_by_category(category)
@@ -55,5 +55,9 @@ class Activity < ApplicationRecord
 
   def activity_not_locked
     errors.add(:base, 'Activity cannot be changed after lock date') if locked? && changed?
+  end
+
+  def destroyable?
+    throw(:abort) if locked?
   end
 end
