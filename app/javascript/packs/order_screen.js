@@ -279,6 +279,12 @@ document.addEventListener('turbolinks:load', () => {
           orderRow.amount++;
         },
 
+        selectedRequiresAgeProduct() {
+          return this.orderRows.filter((row) => {
+            return row.productPrice.product.requires_age;
+          }).length > 0;
+        },
+
         confirmOrder() {
           let order = {};
           const order_rows_attributes = this.orderRows.map((row) => {
