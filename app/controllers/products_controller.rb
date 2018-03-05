@@ -4,10 +4,6 @@ class ProductsController < ApplicationController
 
   after_action :verify_authorized
 
-  def show
-    authorize @product
-  end
-
   def create
     @product = Product.new(permitted_attributes)
     authorize @product
