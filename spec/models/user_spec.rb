@@ -24,7 +24,6 @@ RSpec.describe User, type: :model do
 
         it { expect(user).not_to be_valid }
       end
-
     end
   end
 
@@ -48,16 +47,17 @@ RSpec.describe User, type: :model do
 
   describe '.treasurer' do
     context 'when treasurer' do
-      subject(:user) {FactoryBot.create(:user)}
-      let(:treasurer_role) { FactoryBot.create(:role, role_type: :treasurer)}
+      subject(:user) { FactoryBot.create(:user) }
 
-      before { FactoryBot.create(:roles_users, user: user, role: treasurer_role)}
+      let(:treasurer_role) { FactoryBot.create(:role, role_type: :treasurer) }
 
-      it { expect(User.treasurer).to include user}
+      before { FactoryBot.create(:roles_users, user: user, role: treasurer_role) }
+
+      it { expect(User.treasurer).to include user }
     end
 
     context 'when not treasurer' do
-      it { expect(User.treasurer).not_to include user}
+      it { expect(User.treasurer).not_to include user }
     end
   end
 
@@ -78,13 +78,13 @@ RSpec.describe User, type: :model do
     context 'when external' do
       subject(:user) { FactoryBot.create(:user, provider: 'some_external_source') }
 
-      it { expect(user.external?).to eq true}
+      it { expect(user.external?).to eq true }
     end
 
     context 'when internal' do
       subject(:user) { FactoryBot.create(:user, provider: nil) }
 
-      it { expect(user.external?).to eq false}
+      it { expect(user.external?).to eq false }
     end
   end
 

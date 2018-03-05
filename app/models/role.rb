@@ -5,7 +5,6 @@ class Role < ApplicationRecord
   has_many :roles_users, class_name: 'RolesUsers', dependent: :destroy, inverse_of: :role
   has_many :users, through: :roles_users
 
-
   def name
     if treasurer?
       'Penningmeester'

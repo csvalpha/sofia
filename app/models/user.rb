@@ -13,7 +13,7 @@ class User < ApplicationRecord
   validates :email, presence: true, unless: :external?
 
   scope :in_banana, (-> { where(provider: 'banana_oauth2') })
-  scope :treasurer, (-> {joins(:roles).merge(Role.treasurer)})
+  scope :treasurer, (-> { joins(:roles).merge(Role.treasurer) })
 
   def credit
     credit_mutations.map(&:amount).sum - order_rows.map(&:row_total).sum
