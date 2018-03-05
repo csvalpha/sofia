@@ -144,7 +144,11 @@
                 tbody
                   - @activity.orders.each do |order|
                     tr
-                      th scope='row' = order.id
+                      th scope='row'
+                        -if current_user&.treasurer? && !@activity.locked?
+                          = link_to '', activity_order_url(@activity, order), method: :delete, :class => 'fa fa-trash',
+                                  data: { :confirm => 'Weet je zeker dat je deze bestelling wil verwijderen?' }
+                        = order.id
                       td = l order.created_at, format: :time_only
                       td
                         - if order.user.present?

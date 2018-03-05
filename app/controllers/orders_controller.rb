@@ -31,6 +31,14 @@ class OrdersController < ApplicationController
     end
   end
 
+  def destroy
+    @order = Order.find(params[:id])
+    authorize @order
+
+    @order.destroy
+    redirect_to @order.activity
+  end
+
   private
 
   def sorted_product_price(activity)
