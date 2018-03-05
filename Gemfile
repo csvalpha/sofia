@@ -15,11 +15,11 @@ gem 'omniauth', '~> 1.7'
 gem 'omniauth-oauth2', '~> 1.4'
 gem 'paper_trail', '~> 8.1.1'
 gem 'paranoia', '~> 2.2'
-gem 'pg', '~> 0.21.0'
+gem 'pg', '~> 1.0'
 gem 'puma', '~> 3.7'
 gem 'pundit', '~> 1.1.0'
 gem 'rails', '~> 5.1.4'
-gem 'rails-i18n', '~> 5.0.1'
+gem 'rails-i18n', '~> 5.1'
 gem 'rest-client', '~> 2.0.2'
 gem 'sass-rails', '~> 5.0'
 gem 'sentry-raven', '~> 2.3'
@@ -64,7 +64,7 @@ group :test do
 end
 
 group :deploy do
-  gem 'capistrano', '= 3.9.1' # keep version in sync with version locked in ./config/deploy.rb
+  gem 'capistrano', '= 3.10.1' # keep version in sync with version locked in ./config/deploy.rb
   gem 'capistrano-docker', git: 'https://github.com/netguru/capistrano-docker.git', tag: 'v0.2.11'
   gem 'slackistrano', '~> 3.8.1'
 end
