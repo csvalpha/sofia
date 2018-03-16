@@ -5,6 +5,7 @@ import BootstrapVue from 'bootstrap-vue';
 
 import Flash from '../flash.vue';
 import UserSelection from '../orderscreen/userselection.vue';
+import OrderHistory from '../orderscreen/orderhistory.vue';
 
 Vue.use(TurbolinksAdapter);
 Vue.use(VueResource);
@@ -196,7 +197,8 @@ document.addEventListener('turbolinks:load', () => {
 
       components: {
         Flash,
-        UserSelection
+        UserSelection,
+        OrderHistory
       }
     });
   }

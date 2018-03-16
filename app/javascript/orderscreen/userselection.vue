@@ -94,8 +94,7 @@ export default {
     }
   },
 
-  data: () => {
-    console.log(this.users);
+  data: function () {
     return {
       highlightedUserIndex: -1,
       userQuery: '',
@@ -107,7 +106,7 @@ export default {
     'users': 'queryChange'
   },
 
-  updated: function(){
+  updated: function() {
     const input = this.$refs.userSearchBar;
     input && input.focus();
   },
