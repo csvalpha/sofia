@@ -35,7 +35,26 @@ class ActivitiesController < ApplicationController
     authorize @activity
   end
 
+  def order_screen
+    authorize Activity
+
+    @activity = Activity.includes([:price_list, price_list: { product_price: :product }])
+                        .find(params[:id])
+
+    @product_prices_json = sorted_product_price(@activity).to_json(include: { product: { only: %i[id name category] } })
+
+    @users_json = User.includes(%i[credit_mutations order_rows]).order(:name)
+                      .to_json(only: %i[id name], methods: %i[credit avatar_thumb_or_default_url])
+    @activity_json = @activity.to_json(only: %i[id title start_time end_time])
+
+    render layout: 'order_screen'
+  end
+
   private
+
+  def sorted_product_price(activity)
+    activity.price_list.product_price.sort_by { |p| p.product.id }
+  end
 
   def permitted_attributes
     params.require(:activity).permit(%i[title start_time end_time price_list_id])

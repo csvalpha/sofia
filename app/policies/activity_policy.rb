@@ -7,7 +7,7 @@ class ActivityPolicy < ApplicationPolicy
     user&.treasurer?
   end
 
-  def send_credit_mail?
-    user&.treasurer?
+  def order_screen?
+    user&.treasurer? || user&.main_bartender?
   end
 end

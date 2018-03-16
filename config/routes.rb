@@ -3,6 +3,9 @@ Rails.application.routes.draw do
 
   resources :activities, only: %i[index show create update] do
     resources :orders, only: %i[index create]
+    member do
+      get :order_screen
+    end
   end
 
   resources :price_lists, only: %i[index create update]

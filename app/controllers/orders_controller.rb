@@ -6,16 +6,9 @@ class OrdersController < ApplicationController
   def index
     authorize Order
 
-    @activity = Activity.includes([:price_list, price_list: { product_price: :product }])
-                        .find(params[:activity_id])
-
-    @product_prices_json = sorted_product_price(@activity).to_json(include: { product: { only: %i[id name category] } })
-
-    @users_json = User.includes(%i[credit_mutations order_rows]).order(:name)
-                      .to_json(only: %i[id name], methods: %i[credit avatar_thumb_or_default_url])
-    @activity_json = @activity.to_json(only: %i[id title start_time end_time])
-
-    render layout: 'order_screen'
+    render json: Order.includes(
+      :order_rows, user: { orders: :order_rows }
+    ).where(activity: permitted_attributes[:activity]).to_json(include: json_includes)
   end
 
   def create
@@ -32,10 +25,6 @@ class OrdersController < ApplicationController
   end
 
   private
-
-  def sorted_product_price(activity)
-    activity.price_list.product_price.sort_by { |p| p.product.id }
-  end
 
   def permitted_attributes
     params.require(:order).permit(%i[user_id paid_with_cash activity_id],
