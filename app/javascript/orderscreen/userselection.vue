@@ -82,6 +82,8 @@
 </template>
 
 <script>
+import removeAccents from 'remove-accents';
+
 export default {
   props: {
     selectedUser: null,
@@ -121,7 +123,7 @@ export default {
 
     searchUsersResult: function() {
       return this.users.filter((user) => {
-        return user.name.toLowerCase().indexOf(this.userQuery.toLowerCase()) !== -1;
+        return removeAccents(user.name.toLowerCase()).indexOf(removeAccents(this.userQuery.toLowerCase())) !== -1;
       });
     },
 
