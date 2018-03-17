@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :products, only: %i[index show create update], defaults: { format: :json }
+  resources :products, only: %i[create update], defaults: { format: :json }
   resources :credit_mutations, only: %i[index create]
   resources :product_price, only: %i[destroy]
 
