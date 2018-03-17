@@ -3,8 +3,10 @@
   "private": true,
   "dependencies": {
     "@rails/webpacker": "^3.2.2",
+    "axios": "^0.18.0",
     "bootstrap": "4.0.0",
     "bootstrap-vue": "^2.0.0-rc.1",
+    "moment": "^2.21.0",
     "postcss-smart-import": "^0.7.6",
     "raven-js": "^3.21.0",
     "vue": "^2.5.13",
