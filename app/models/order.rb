@@ -12,6 +12,8 @@ class Order < ApplicationRecord
   validate :user_or_cash
   validate :activity_not_locked
 
+  before_destroy :destroyable?
+
   def order_total
     @sum ||= order_rows.map(&:row_total).sum
   end
@@ -24,5 +26,9 @@ class Order < ApplicationRecord
 
   def activity_not_locked
     errors.add(:activity, 'has been locked') if changed? && activity.locked?
+  end
+
+  def destroyable?
+    throw(:abort) if activity.locked?
   end
 end
