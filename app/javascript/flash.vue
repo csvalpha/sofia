@@ -117,5 +117,5 @@ export default {
       this.timeoutVar = setTimeout(this.hideCurrentNotification, this.timeout);
     }
   }
-}
+};
 </script>

@@ -13,7 +13,6 @@
 </template>
 
 <script>
-import BootstrapVue from 'bootstrap-vue';
 import Spinner from 'vue-simple-spinner';
 import axios from 'axios';
 import moment from 'moment';
@@ -54,15 +53,14 @@ export default {
   },
 
   methods: {
-    ordersProvider(_ctx) {
+    ordersProvider() {
       let promise = axios.get(`/activities/${this.activity.id}/orders.json`);
 
       return promise.then((response) => {
         const orders = response.data;
 
         return orders;
-      }, (error) => {
-        console.error(error);
+      }, () => {
         return [];
       });
     },
@@ -83,7 +81,7 @@ export default {
   components: {
     Spinner
   }
-}
+};
 </script>
 
 <style lang="css">

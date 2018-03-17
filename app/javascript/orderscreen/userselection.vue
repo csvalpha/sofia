@@ -64,7 +64,7 @@
 
     <div class="user-details-suggestions container">
       <div class="user-details-suggestions-user row justify-content-center align-items-center"
-           v-for="(user, index) in suggestedUsers" :class="{ highlight : (highlightedUserIndex == index) }"
+           v-for="(user, index) in suggestedUsers" :key="index" :class="{ highlight : (highlightedUserIndex == index) }"
            @click="selectUser(user)" @mouseover="highlightedUserIndex = -1" @mouseleave="resetHighlight"
            :ref="`suggestedUser${index}`">
         <div class="user-details-suggestions-user-avatar col-4">
@@ -82,8 +82,6 @@
 </template>
 
 <script>
-import BootstrapVue from 'bootstrap-vue';
-
 export default {
   props: {
     selectedUser: null,
@@ -172,7 +170,7 @@ export default {
       this.$emit('selectcash', 'pay_with_cash');
     }
   }
-}
+};
 </script>
 
 <style lang="css">

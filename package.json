@@ -6,6 +6,7 @@
     "axios": "^0.18.0",
     "bootstrap": "4.0.0",
     "bootstrap-vue": "^2.0.0-rc.1",
+    "eslint-plugin-vue": "^4.3.0",
     "moment": "^2.21.0",
     "postcss-smart-import": "^0.7.6",
     "raven-js": "^3.21.0",
