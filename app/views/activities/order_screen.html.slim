@@ -42,8 +42,8 @@
       button type="sumbit" class="btn btn-primary" @click="saveCreditMutation($event)"
         = 'Inleg aanmaken'
 
-  b-modal id="modal1" size="lg" title="Bestelgeschiedenis"
-    order-history :activity="activity" :reload-orders="reloadOrders"
+  b-modal id="modal1" title="Bestelgeschiedenis" size="lg" lazy=true ok-only="" ok-title="Sluiten"
+    order-history :activity="activity"
 
   nav.header
     ul.header-nav

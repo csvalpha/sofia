@@ -6,9 +6,9 @@ class OrdersController < ApplicationController
   def index
     authorize Order
 
-    render json: Order.includes(
-      :order_rows, user: { orders: :order_rows }
-    ).where(activity: permitted_attributes[:activity]).to_json(include: json_includes)
+    @orders = Order.where(activity: params.require(:activity_id)).includes(:order_rows, :user)
+
+    render json: @orders.to_json(only: [:id, :created_at, :order_total], include: { order_rows: { only: [:id, :product_count, product: { only: %i[id name credit] }] }, user: { only: :name }} )
   end
 
   def create
