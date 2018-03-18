@@ -73,15 +73,17 @@
                onerror="this.src = '/images/avatar_thumb_default.png';">
         </div>
 
-        <h4 class="user-details-suggestions-user-name col-8 m-0">
-          {{user.name}}
-        </h4>
+        <h4 class="user-details-suggestions-user-name col-8 m-0" v-html="$options.filters.highlightedName(user.name, userQuery)" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import removeAccents from 'remove-accents';
+import match from 'autosuggest-highlight/match';
+import parse from 'autosuggest-highlight/parse';
+
 export default {
   props: {
     selectedUser: null,
@@ -109,6 +111,25 @@ export default {
     input && input.focus();
   },
 
+  filters: {
+    highlightedName(name, query) {
+      if (query === '') {
+        return name
+      };
+
+      let result = '';
+      parse(name, match(name, query)).map((string) => {
+        if(string.highlight) {
+          result += `<strong class="highlight">${string.text}</strong>`;
+        } else {
+          result += string.text;
+        }
+      });
+
+      return result;
+    },
+  },
+
   methods: {
     doubleToCurrency(price) {
       return `€${parseFloat(price).toFixed(2)}`;
@@ -119,9 +140,13 @@ export default {
       this.resetHighlight();
     },
 
+    normalizeString(string) {
+      return removeAccents(string).toLowerCase();
+    },
+
     searchUsersResult: function() {
       return this.users.filter((user) => {
-        return user.name.toLowerCase().indexOf(this.userQuery.toLowerCase()) !== -1;
+        return this.normalizeString(user.name).indexOf(this.normalizeString(this.userQuery)) !== -1;
       });
     },
 
