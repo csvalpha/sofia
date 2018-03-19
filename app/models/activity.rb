@@ -26,17 +26,18 @@ class Activity < ApplicationRecord
     credit_mutations.map(&:amount).reduce(:+) || 0
   end
 
-  def revenue
-    orders.map(&:order_rows).flatten.map(&:row_total).reduce(:+) || 0
+  def revenue_hash
+    @revenue_hash ||= orders.group_by(&:paid_with_cash).map { |h|
+      [h[0] ? :cash : :not_cash, h[1].map(&:order_rows)
+                                     .flatten
+                                     .map(&:row_total).reduce(:+)]
+    }.to_h
   end
 
-  def revenue_paid_with_cash
-    orders.select(&:paid_with_cash).map(&:order_rows).flatten.map(&:row_total).reduce(:+) || 0
-  end
-
-  def revenue_by_category(category)
-    rows = orders.map { |order| order.order_rows.by_category(category) }
-    rows.flatten.map(&:row_total).reduce(:+) || 0
+  def revenue_by_category
+    @totals_hash ||= orders.map(&:order_rows).flatten.group_by {
+      |r| r.product.category
+    }.map { |cat| cat[1] = cat[1].map(&:row_total).sum; cat }.to_h
   end
 
   def bartenders
