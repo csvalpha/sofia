@@ -66,15 +66,16 @@
             aria-controls="creditMutations" aria-selected="false")
             = 'Inleg en saldocorrecties'
 
-      .tab-content.p-2 id='userTabsContent'
+      .tab-content.p-2 id='user_tabs_content'
         .tab-pane.show.active id='orders' role='tabpanel' aria-labelledby='orders-tab'
           .table-responsive
             table.table.table-striped
               thead
                 tr
                   th scope='col'= '#'
+                  th scope='col'= 'Titel'
                   th scope='col'= 'Datum'
-                  th scope='col'= 'bedrag'
+                  th scope='col'= 'Uitgegeven'
 
               tbody
                 - if @user.orders.empty?
@@ -83,11 +84,17 @@
                       p.my-1
                         em = "#{@user.name} heeft nog geen bestellingen gedaan"
                 - else
-                  - @user.orders.each do |order|
+                  - @user.activities.uniq.each do |activity|
                     tr
-                      th scope='row' = order.id
-                      td = l order.created_at
-                      td = number_to_currency(order.order_total, unit: '€')
+                      th scope='row' = activity.id
+                      td = link_to activity.title, activity
+                      td = l activity.start_time
+                      td = activity.orders.where(user: @user).map(&:order_total).reduce(:+)
+                    - activity.products_total_for_user(@user).each do |product, total|
+                      tr
+                        th
+                        td = "#{total}x #{product}"
+                        td colspan=2
 
         .tab-pane id='creditMutations' role='tabpanel' aria-labelledby='creditMutations-tab'
           .table-responsive

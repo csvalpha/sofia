@@ -2,8 +2,8 @@ class User < ApplicationRecord
   devise :omniauthable, omniauth_providers: [:banana_oauth2]
   has_many :orders, dependent: :destroy
   has_many :order_rows, through: :orders, dependent: :destroy
+  has_many :activities, through: :orders, dependent: :destroy
   has_many :credit_mutations, dependent: :destroy
-  has_many :activities, dependent: :destroy, foreign_key: 'created_by_id', inverse_of: :created_by
 
   has_many :roles_users, class_name: 'RolesUsers', dependent: :destroy, inverse_of: :user
 

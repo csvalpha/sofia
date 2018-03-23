@@ -26,6 +26,10 @@ class Activity < ApplicationRecord
     credit_mutations.map(&:amount).reduce(:+) || 0
   end
 
+  def sold_products
+    orders.map(&:order_rows).flatten.map(&:product)
+  end
+
   def revenue
     orders.map(&:order_rows).flatten.map(&:row_total).reduce(:+) || 0
   end
@@ -51,10 +55,24 @@ class Activity < ApplicationRecord
     end_time + 2.months
   end
 
+  def products_total_for_user(user)
+    totals = {}
+    sold_products.each do |product|
+      total = product_total_for_user(user, product)
+      totals[product.name] = total if total
+    end
+    totals
+  end
+
   private
 
   def activity_not_locked
     errors.add(:base, 'Activity cannot be changed after lock date') if locked? && changed?
+  end
+
+  def product_total_for_user(user, product)
+    rows = orders.where(user: user).map { |order| order.order_rows.where(product: product) }
+    rows.flatten.map(&:product_count).reduce(&:+)
   end
 
   def destroyable?
