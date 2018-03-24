@@ -19,7 +19,6 @@
           tr
             th.products-id scope='col' = 'ID'
             th.products-name scope='col' = 'Product'
-            th.products-requires-age scope='col' = '18+'
             th.products-category scope='col' = 'Categorie'
             th.products-pricelist.rotate scope='col' v-for='priceList in priceLists'
               .center-text v-bind:title='priceList.name'
@@ -40,12 +39,6 @@
                   input.form-control type='text' v-model='product.name' placeholder='Productnaam'
 
               td.products-new
-                .input-group-addon
-                  label.form-check-label
-                    input.form-check-input type='checkbox' v-model='product.requires_age'
-                    span = '18+'
-
-              td.products-new
                 .input-group
                   select.form-control v-model='product.category'
                     - Product.categories.each do |category|
@@ -61,9 +54,6 @@
             template v-else=''
               th scope='row' = '{{ product.id }}'
               td = '{{ product.name }}'
-              td.center-text
-                span v-if='product.requires_age' = fa_icon 'check'
-                span v-if='!product.requires_age' = fa_icon 'times'
               td = '{{ product.t_category }}'
 
               td.product-price.center-text v-for='priceList in priceLists'
