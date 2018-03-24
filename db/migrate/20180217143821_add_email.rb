@@ -1,4 +1,4 @@
-class AddEmailAndBirthday < ActiveRecord::Migration[5.1]
+class AddEmail < ActiveRecord::Migration[5.1]
   def change
     add_column :users, :email, :string
   end
