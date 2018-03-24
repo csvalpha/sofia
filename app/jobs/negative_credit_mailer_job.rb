@@ -2,29 +2,30 @@ class NegativeCreditMailerJob < ApplicationJob
   queue_as :default
 
   def perform
-    users = users_with_negative_credit
-    success_count = send_credit_mail(users)
-    send_report(users, success_count)
+    send_credit_mail
+    send_deliver_report
   end
 
   private
 
   def users_with_negative_credit
-    User.all.select { |user| user.credit.negative? }
+    @users_with_negative_credit ||= User.all.select { |user| user.credit.negative? }
   end
 
-  def send_credit_mail(negative_users)
-    mail_users = negative_users.select { |user| user.email.present? }
-    mail_users.each do |user|
+  def negative_users_with_mail
+    @negative_users_with_mail ||= users_with_negative_credit.select { |user| user.email.present? }
+  end
+
+  def send_credit_mail
+    negative_users_with_mail.each do |user|
       CreditMailer.negative_credit_mail(user).deliver_later
     end
-    mail_users.size
   end
 
-  def send_report(negative_users, success_count)
-    no_mail_users = negative_users.select { |user| user.email.nil? }
+  def send_deliver_report
+    no_mail_users = users_with_negative_credit.select { |user| user.email.nil? }
     User.treasurer.each do |treasurer|
-      CreditMailer.credit_delivery_report_mail(treasurer, no_mail_users, success_count).deliver_later
+      CreditMailer.credit_delivery_report_mail(treasurer, no_mail_users, negative_users_with_mail.size).deliver_later
     end
   end
 end
