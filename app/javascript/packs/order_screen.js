@@ -279,7 +279,7 @@ document.addEventListener('turbolinks:load', () => {
           orderRow.amount++;
         },
 
-        selectedRequiresAgeProduct() {
+        orderRequiresAge() {
           return this.orderRows.filter((row) => {
             return row.productPrice.product.requires_age;
           }).length > 0;

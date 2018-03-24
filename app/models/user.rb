@@ -33,7 +33,6 @@ class User < ApplicationRecord
   end
 
   def minor
-    return true
     return false unless age
     age < 18
   end
