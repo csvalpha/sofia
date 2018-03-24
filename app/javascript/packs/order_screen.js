@@ -170,17 +170,15 @@ document.addEventListener('turbolinks:load', () => {
             this.$set(this.users, this.users.indexOf(this.selectedUser), response.body.user);
             this.$emit('updateusers');
 
-            this.setUser(null);
+            if(!this.keepUserSelected) {
+              this.setUser(null);
+            }
             this.$refs.creditMutationModal.hide();
 
             this.creditMutationAmount = null;
             this.creditMutationDescription = 'Inleg contant';
             const additionalInfo = `${response.body.user.name} - ${this.doubleToCurrency(response.body.amount)}`;
             this.sendFlash('Inleg opgeslagen.', additionalInfo, 'success');
-            this.orderRows = [];
-            if(!this.keepUserSelected) {
-              this.setUser(null);
-            }
           }, this.handleXHRError);
         },
 

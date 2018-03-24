@@ -54,9 +54,20 @@
         span.mr-3 = @activity.title
         small.font-weight-light.d-inline-block = l @activity.start_time, format: :date_only
 
-    b-btn.m-3 variant="outline-secondary" v-b-modal.modal1=""
-      = fa_icon 'history lg', class: 'mr-1'
-      = 'Bestelgeschiedenis'
+      li.header-nav-item.dropdown
+        button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+          = fa_icon 'bars'
+
+
+    div.row.col-lg-4.pull-right style='flex-direction: row-reverse'
+      b-btn.m-3 variant="outline-secondary" v-b-modal.modal1=""
+              = fa_icon 'history lg', class: 'mr-1'
+              = 'Bestelgeschiedenis'
+
+      b-btn.m-3 variant="outline-secondary" v-on:click='keepUserSelected = !keepUserSelected'
+        span v-if='keepUserSelected' = fa_icon 'check-square lg', class: 'mr-1'
+        span v-if='!keepUserSelected' = fa_icon 'square lg', class: 'mr-1'
+        span = 'Gebruiker geselecteerd laten'
 
     flash
 
