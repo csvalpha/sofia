@@ -60,20 +60,6 @@ RSpec.describe User, type: :model do
     it { expect(user.credit).to eq(-1.23) }
   end
 
-  describe '#external??' do
-    context 'when external' do
-      subject(:user) { FactoryBot.create(:user, provider: 'some_external_source') }
-
-      it { expect(user.external?).to eq true }
-    end
-
-    context 'when internal' do
-      subject(:user) { FactoryBot.create(:user, provider: nil) }
-
-      it { expect(user.external?).to eq false }
-    end
-  end
-
   describe '#roles' do
     context 'when with a role' do
       subject(:user) { FactoryBot.create(:user) }

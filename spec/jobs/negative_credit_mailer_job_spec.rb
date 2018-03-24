@@ -3,10 +3,14 @@ require 'rails_helper'
 RSpec.describe NegativeCreditMailerJob, type: :job do
   describe '#perform' do
     let(:user) { FactoryBot.create(:user) }
-    let(:negative_user) { FactoryBot.create(:user) }
+    let(:negative_user) { FactoryBot.create(:user, email: 'user@csvalpha.nl') }
     let(:mail_unknown_negative_user) { FactoryBot.create(:user, email: nil, provider: 'some_external_source') }
     let(:mail_unknown_user) { FactoryBot.create(:user, email: nil, provider: 'some_external_source') }
-    let(:treasurer) { FactoryBot.create(:user, roles: [FactoryBot.create(:role, role_type: :treasurer)]) }
+    let(:treasurer) do
+      FactoryBot.create(:user,
+                        roles: [FactoryBot.create(:role, role_type: :treasurer)],
+                        email: 'treasurer@csvalpha.nl')
+    end
     let(:mail) { ActionMailer::Base.deliveries }
 
     subject(:job) do
@@ -27,7 +31,7 @@ RSpec.describe NegativeCreditMailerJob, type: :job do
 
     it { expect(mail.size).to eq 2 }
     it { expect(mail.first.to.first).to eq negative_user.email }
-    it { expect(mail.first.body.to_s).to include '-2' }
+    it { expect(mail.first.body.to_s).to include "http://testhost:1337/users/#{negative_user.id}" }
     it { expect(mail.second.to.first).to eq treasurer.email }
     it { expect(mail.second.body.to_s).to include mail_unknown_negative_user.name }
     it { expect(mail.second.body.to_s).not_to include mail_unknown_user.name }
