@@ -9,11 +9,11 @@ class NegativeCreditMailerJob < ApplicationJob
   private
 
   def users_with_negative_credit
-    @users_with_negative_credit ||= User.all.select { |user| user.credit.negative? }
+    User.all.select { |user| user.credit.negative? }
   end
 
   def negative_users_with_mail
-    @negative_users_with_mail ||= users_with_negative_credit.select { |user| user.email.present? }
+    users_with_negative_credit.select { |user| user.email.present? }
   end
 
   def send_credit_mail
