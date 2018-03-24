@@ -1,9 +1,15 @@
 import Vue from 'vue/dist/vue.esm';
 import TurbolinksAdapter from 'vue-turbolinks';
 import VueResource from 'vue-resource';
+import BootstrapVue from 'bootstrap-vue';
+
+import Flash from '../flash.vue';
+import UserSelection from '../orderscreen/userselection.vue';
+import OrderHistory from '../orderscreen/orderhistory.vue';
 
 Vue.use(TurbolinksAdapter);
 Vue.use(VueResource);
+Vue.use(BootstrapVue);
 
 document.addEventListener('turbolinks:load', () => {
   Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -17,197 +23,6 @@ document.addEventListener('turbolinks:load', () => {
     window.flash = function(message, actionText, type) {
       const event = new CustomEvent('flash', { detail: { message: message, actionText: actionText, type: type } } );
       dispatchEvent(event);
-    };
-
-    var orderscreenFlash = {
-      template: '#orderscreen-flash',
-      props: {
-        timeout: {
-          type: Number,
-          default: 5000
-        },
-        transition: {
-          type: String,
-          default: 'slide-fade'
-        },
-        types: {
-          type: Object,
-          default: () => ({
-            base:    'flash',
-            success: 'flash-success',
-            error:   'flash-danger',
-            warning: 'flash-warning',
-            info:    'flash-info'
-          })
-        },
-        icons: {
-          type: Object,
-          default: () => ({
-            base:    'fa fa-lg mr-2',
-            error:   'fa-exclamation-circle',
-            success: 'fa-check-circle',
-            info:    'fa-info-circle',
-            warning: 'fa-exclamation-circle',
-          })
-        },
-      },
-
-      data: () => ({
-        notificationQue: [],
-        activeNotification: null,
-        timeoutVar: null
-      }),
-
-      created() {
-        addEventListener('flash', (flash) => {
-          this.flash(flash.detail.message, flash.detail.actionText, flash.detail.type);
-        });
-      },
-
-      methods: {
-        flash(message, actionText, type) {
-          const flashData = {
-            message: message,
-            actionText: actionText,
-            type: type,
-            typeObject: this.classes(this.types, type),
-            iconObject: this.classes(this.icons, type)
-          };
-
-          this.notificationQue.push(flashData);
-          this.notificationQueChanged();
-        },
-
-        classes(propObject, type) {
-          let classes = {};
-          if(propObject.hasOwnProperty('base')) {
-            classes[propObject.base] = true;
-          }
-          if (propObject.hasOwnProperty(type)) {
-            classes[propObject[type]] = true;
-          }
-          return classes;
-        },
-
-        hideCurrentNotification() {
-          this.activeNotification = null;
-          this.notificationQueChanged();
-        },
-
-        notificationQueChanged() {
-          if (!this.activeNotification && this.notificationQue.length > 0) {
-            const newNotification = this.notificationQue.shift();
-            this.activeNotification = null;
-
-            // Small delay for UX purposes
-            setTimeout(() => {
-              this.activeNotification = newNotification;
-            }, 100);
-            this.timeoutVar = setTimeout(this.hideCurrentNotification, this.timeout);
-          }
-        },
-
-        mouseOver() {
-          clearTimeout(this.timeoutVar);
-        },
-
-        mouseLeave() {
-          this.timeoutVar = setTimeout(this.hideCurrentNotification, this.timeout);
-        }
-      }
-    };
-
-    var userSelection = {
-      template: '#user-selection',
-      props: {
-        selectedUser: null,
-        payWithCash: false,
-        users: {
-          type: Array,
-          required: true
-        }
-      },
-
-      data: () => {
-        return {
-          highlightedUserIndex: -1,
-          userQuery: '',
-          suggestedUsers: users
-        };
-      },
-
-      watch: {
-        'users': 'queryChange'
-      },
-
-      updated: function(){
-        const input = this.$refs.userSearchBar;
-        if (input) {
-          input.focus();
-        }
-      },
-
-      methods: {
-        doubleToCurrency(price) {
-          return `€${parseFloat(price).toFixed(2)}`;
-        },
-
-        queryChange() {
-          this.suggestedUsers = this.searchUsersResult();
-          this.resetHighlight();
-        },
-
-        searchUsersResult: function() {
-          return this.users.filter((user) => {
-            return user.name.toLowerCase().indexOf(this.userQuery.toLowerCase()) !== -1;
-          });
-        },
-
-        resetHighlight() {
-          if (this.userQuery.length === 0) {
-            this.highlightedUserIndex = -1;
-          } else {
-            this.highlightedUserIndex = 0;
-          }
-        },
-
-        increaseHighlightedUserIndex() {
-          if ((this.highlightedUserIndex + 1) < this.suggestedUsers.length) {
-            this.highlightedUserIndex++;
-            this.scrollToUser();
-          }
-        },
-
-        decreaseHighlightedUserIndex() {
-          if ((this.highlightedUserIndex) > 0) {
-            this.highlightedUserIndex--;
-            this.scrollToUser();
-          }
-        },
-
-        scrollToUser() {
-          this.$refs[`suggestedUser${this.highlightedUserIndex}`][0].scrollIntoView({block: 'nearest'});
-        },
-
-        selectUser(user) {
-          this.userQuery = '';
-          this.queryChange();
-          this.$emit('updateuser', user);
-        },
-
-        selectHighlightedUser() {
-          if (this.searchUsersResult(this.userQuery).length > 0){
-            var user = this.searchUsersResult(this.userQuery)[this.highlightedUserIndex];
-            this.selectUser(user);
-          }
-        },
-
-        selectCash() {
-          this.userQuery = '';
-          this.queryChange();
-          this.$emit('selectcash', 'pay_with_cash');
-        }
-      }
     };
 
     new Vue({
@@ -315,7 +130,7 @@ document.addEventListener('turbolinks:load', () => {
           }).then((response) => {
             const user = response.body.user;
             const orderTotal = this.doubleToCurrency(response.body.order_total);
-            const additionalInfo = `${user ? user.userName : 'Contant'} - ${orderTotal}`;
+            const additionalInfo = `${user ? user.name : 'Contant'} - ${orderTotal}`;
 
             if (user) {
               this.$set(this.users, this.users.indexOf(this.selectedUser), response.body.user);
@@ -357,12 +172,13 @@ document.addEventListener('turbolinks:load', () => {
             this.$set(this.users, this.users.indexOf(this.selectedUser), response.body.user);
             this.$emit('updateusers');
 
+            this.setUser(null);
+            this.$refs.creditMutationModal.hide();
+
             this.creditMutationAmount = null;
             this.creditMutationDescription = 'Inleg contant';
-
             const additionalInfo = `${response.body.user.name} - ${this.doubleToCurrency(response.body.amount)}`;
             this.sendFlash('Inleg opgeslagen.', additionalInfo, 'success');
-            this.setUser(null);
           }, this.handleXHRError);
         },
 
@@ -386,8 +202,9 @@ document.addEventListener('turbolinks:load', () => {
       },
 
       components: {
-        'orderscreen-flash': orderscreenFlash,
-        'user-selection': userSelection
+        Flash,
+        UserSelection,
+        OrderHistory
       }
     });
   }

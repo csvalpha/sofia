@@ -6,18 +6,14 @@ class OrdersController < ApplicationController
   def index
     authorize Order
 
-    @activity = Activity.includes([:price_list, price_list: { product_price: :product }])
-                        .find(params[:activity_id])
+    @orders = Order.where(activity: params.require(:activity_id)).includes(:order_rows, :user)
 
-    @product_prices_json = sorted_product_price(@activity).to_json(
-      include: { product: { only: %i[id name category], methods: %i[requires_age] } }
+    render json: @orders.to_json(
+      only: %i[id created_at order_total],
+      include: { order_rows: {
+        only: [:id, :product_count, product: { only: %i[id name credit] }]
+      }, user: { only: :name } }
     )
-
-    @users_json = User.includes(%i[credit_mutations order_rows]).order(:name)
-                      .to_json(only: %i[id name], methods: %i[credit minor avatar_thumb_or_default_url])
-    @activity_json = @activity.to_json(only: %i[id title start_time end_time])
-
-    render layout: 'order_screen'
   end
 
   def create
@@ -34,10 +30,6 @@ class OrdersController < ApplicationController
   end
 
   private
-
-  def sorted_product_price(activity)
-    activity.price_list.product_price.sort_by { |p| p.product.id }
-  end
 
   def permitted_attributes
     params.require(:order).permit(%i[user_id paid_with_cash activity_id],
