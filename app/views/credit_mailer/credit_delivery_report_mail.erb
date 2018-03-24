@@ -1,9 +1,9 @@
 Beste <%= @user.name %>
 
-Er is namens u een geautomatiseerde saldo mail verstuurd naar alle gebruikers die negatief staan. Op dit moment staan er <%= @send_to_count %> gebruikers negatief.
+Er is een automatische saldomail verstuurd naar alle gebruikers die een negatief saldo hebben. Er zijn <%= @send_to_count %> gebruikers gemaild.
 
 <% if @mail_unknown_user.any? %>
-  De volgende gebruikers hebben helaas geen mailadres bekend in het systeem. Zolang deze niet bekend is zal er geen saldo mail naar hen worden verstuurd.
+  De volgende gebruikers hebben een negatief saldo maar geen mailadres in het systeem. Deze gebruikers zijn niet geinformeerd over hen negatieve saldo.
   <% @mail_unknown_user.each do |user| %>
       - <%= user.name %>
   <% end %>
