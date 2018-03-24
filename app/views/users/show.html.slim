@@ -6,10 +6,6 @@
 
       table.table.table-sm
         tbody
-          - if @user.email
-            tr
-              th scope='row' = 'Email'
-              td.text-right = @user.email
           - if @user.birthday
             tr
               th scope='row' = 'Geboortedatum'
