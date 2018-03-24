@@ -5,7 +5,7 @@ class CreditMailer < ApplicationMailer
   end
 
   def credit_delivery_report_mail(treasurer, mail_unknown_users, send_to_count)
-    @treasurer = treasurer
+    @user = treasurer
     @mail_unknown_user = mail_unknown_users
     @send_to_count = send_to_count
     mail to: treasurer.email, subject: 'Er is een saldomail verstuurd', content_type: 'text/plain'
