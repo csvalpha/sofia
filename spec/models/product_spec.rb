@@ -17,11 +17,19 @@ RSpec.describe Product, type: :model do
 
       it { expect(product).not_to be_valid }
     end
+  end
 
-    context 'when without requires_age' do
-      subject(:product) { FactoryBot.build_stubbed(:product, requires_age: nil) }
+  describe '#requires_age?' do
+    context 'when with requires age category' do
+      subject(:product) {FactoryBot.create(:product, category:  %w[beer distilled wine tobacco].sample)}
 
-      it { expect(product).not_to be_valid }
+      it { expect(product.requires_age?).to eq true}
+    end
+
+    context 'when with non requires age category' do
+      subject(:product) {FactoryBot.create(:product, category:  %w[food non-alcoholic].sample)}
+
+      it { expect(product.requires_age?).to eq false}
     end
   end
 

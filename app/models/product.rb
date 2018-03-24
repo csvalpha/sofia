@@ -5,9 +5,12 @@ class Product < ApplicationRecord
   has_many :price_lists, through: :product_prices, dependent: :restrict_with_error
 
   validates :name, :category, presence: true
-  validates :requires_age, inclusion: [true, false]
 
   accepts_nested_attributes_for :product_prices
+
+  def requires_age?
+    %w[beer distilled wine tobacco].include? category
+  end
 
   def t_category
     I18n.t category
