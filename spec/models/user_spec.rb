@@ -11,20 +11,6 @@ RSpec.describe User, type: :model do
 
       it { expect(user).not_to be_valid }
     end
-
-    context 'when without an email' do
-      context 'when external user' do
-        subject(:user) { FactoryBot.build_stubbed(:user, email: nil, provider: 'some_provider') }
-
-        it { expect(user).to be_valid }
-      end
-
-      context 'when manually created user' do
-        subject(:user) { FactoryBot.build_stubbed(:user, email: nil) }
-
-        it { expect(user).not_to be_valid }
-      end
-    end
   end
 
   describe '.in_banana' do
