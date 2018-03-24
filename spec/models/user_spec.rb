@@ -104,7 +104,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '#minor_age' do
+  describe '#minor' do
     context 'when without age' do
       it { expect(user.minor).to eq false }
     end
