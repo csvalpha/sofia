@@ -15,7 +15,7 @@ class Order < ApplicationRecord
   before_destroy :destroyable?
 
   def order_total
-    @sum ||= order_rows.map(&:row_total).sum
+    @order_total ||= order_rows.map(&:row_total).sum
   end
 
   private

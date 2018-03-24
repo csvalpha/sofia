@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
   end
 
   def records
-    @objects ||= model_class.all
+    @records ||= model_class.all
   end
 
   def model_includes
