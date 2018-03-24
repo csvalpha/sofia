@@ -24,7 +24,7 @@ class NegativeCreditMailerJob < ApplicationJob
   def send_report(negative_users, success_count)
     no_mail_users = negative_users.select { |user| user.email.nil? }
     User.treasurer.each do |treasurer|
-      CreditMailer.treasurer_report(treasurer, no_mail_users, success_count).deliver_later
+      CreditMailer.credit_delivery_report_mail(treasurer, no_mail_users, success_count).deliver_later
     end
   end
 end

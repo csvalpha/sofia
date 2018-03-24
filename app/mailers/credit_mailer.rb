@@ -4,7 +4,7 @@ class CreditMailer < ApplicationMailer
     mail to: user.email, subject: 'Verzoek met betrekking op uw Zatladder saldo', content_type: 'text/plain'
   end
 
-  def treasurer_report(treasurer, mail_unknown_users, send_to_count)
+  def credit_delivery_report_mail(treasurer, mail_unknown_users, send_to_count)
     @treasurer = treasurer
     @mail_unknown_user = mail_unknown_users
     @send_to_count = send_to_count
