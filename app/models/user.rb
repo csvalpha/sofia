@@ -23,6 +23,11 @@ class User < ApplicationRecord
     "#{Rails.application.config.x.banana_api_host}#{avatar_thumb_url}"
   end
 
+  def profile_url
+    default_options = Rails.application.config.action_mailer.default_url_options
+    URI::Generic.build(default_options.merge(path: "/users/#{id}")).to_s
+  end
+
   def treasurer?
     @treasurer ||= roles.map(&:treasurer?).any?
   end
