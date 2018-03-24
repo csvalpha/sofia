@@ -32,7 +32,8 @@ class User < ApplicationRecord
     age
   end
 
-  def minor_age
+  def minor
+    return true
     return false unless age
     age < 18
   end

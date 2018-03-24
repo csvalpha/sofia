@@ -106,19 +106,19 @@ RSpec.describe User, type: :model do
 
   describe '#minor_age' do
     context 'when without age' do
-      it { expect(user.minor_age).to eq false }
+      it { expect(user.minor).to eq false }
     end
 
     context 'when 18 or older' do
       let(:user) { FactoryBot.build(:user, birthday: 18.years.ago) }
 
-      it { expect(user.minor_age).to eq false }
+      it { expect(user.minor).to eq false }
     end
 
     context 'when younger than 18' do
       let(:user) { FactoryBot.build(:user, birthday: (18.years.ago + 1.day)) }
 
-      it { expect(user.minor_age).to eq true }
+      it { expect(user.minor).to eq true }
     end
   end
 

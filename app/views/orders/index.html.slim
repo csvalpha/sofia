@@ -86,7 +86,7 @@
             .orders-rows-row-product-price.col-3.px-1.px-lg-3.d-flex.justify-content-between
               span :title="doubleToCurrency(orderRow.productPrice.price) + ' p.s.'"
                 = '{{doubleToCurrency(orderRow.productPrice.price * orderRow.amount)}}'
-              span.fa-stack v-if="selectedUser && selectedUser.minor_age && orderRow.productPrice.product.requires_age"
+              span.fa-stack v-if="selectedUser && selectedUser.minor && orderRow.productPrice.product.requires_age"
                 i class="fa fa-circle fa-stack-2x"
                 span class="fa fa-stack-1x fa-inverse fa-plus18"
               span.order-rows-row-remove @click="dropOrderRow(index)"
@@ -106,13 +106,13 @@
         button.btn.btn-block.btn-lg.btn-success(@click="confirmOrder" v-bind:disabled="orderConfirmButtonDisabled()" v-bind:class="{ 'btn-warning' : (selectedRequiresAgeProduct() && selectedUser.minor_age) }")
           span = 'Bestelling plaatsen'
           br
-          small v-if="selectedRequiresAgeProduct() && selectedUser.minor_age" = 'Deze gebruiker is minderjarig! U heeft 18+ producten geselecteerd'
+          small v-if="selectedRequiresAgeProduct() && selectedUser.minor" = 'Deze gebruiker is minderjarig! U heeft 18+ producten geselecteerd'
 
   .product-grid
-    .product-grid-product v-for="productPrice in productPrices" @click="selectProduct(productPrice)" v-bind:class="{ 'minor-age-product' : (selectedUser && selectedUser.minor_age && productPrice.product.requires_age) }"
+    .product-grid-product v-for="productPrice in productPrices" @click="selectProduct(productPrice)" v-bind:class="{ 'minor-age-product' : (selectedUser && selectedUser.minor && productPrice.product.requires_age) }"
       span.product-grid-product-name = '{{productPrice.product.name}}'
       span.product-grid-product-price = '{{doubleToCurrency(productPrice.price)}}'
-      span.fa-stack v-if="selectedUser && selectedUser.minor_age && productPrice.product.requires_age"
+      span.fa-stack v-if="selectedUser && selectedUser.minor && productPrice.product.requires_age"
         i class="fa fa-circle fa-stack-2x"
         span class="fa fa-stack-1x fa-inverse fa-plus18"
 
