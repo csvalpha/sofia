@@ -19,17 +19,17 @@ RSpec.describe Product, type: :model do
     end
   end
 
-  describe '#requires_age?' do
+  describe '#requires_age' do
     context 'when with requires age category' do
       subject(:product) {FactoryBot.create(:product, category:  %w[beer distilled wine tobacco].sample)}
 
-      it { expect(product.requires_age?).to eq true}
+      it { expect(product.requires_age).to eq true}
     end
 
     context 'when with non requires age category' do
       subject(:product) {FactoryBot.create(:product, category:  %w[food non-alcoholic].sample)}
 
-      it { expect(product.requires_age?).to eq false}
+      it { expect(product.requires_age).to eq false}
     end
   end
 

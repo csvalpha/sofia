@@ -8,7 +8,7 @@ class Product < ApplicationRecord
 
   accepts_nested_attributes_for :product_prices
 
-  def requires_age?
+  def requires_age
     %w[beer distilled wine tobacco].include? category
   end
 
