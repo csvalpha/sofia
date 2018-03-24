@@ -277,11 +277,11 @@
     }
   }
 
-  .minor-age-product{
-    background-color: $gray-500;
+  .product-requires-age{
+    background-color: $gray-300;
 
     &:hover {
-      background-color: $gray-600;
+      background-color: $gray-400;
     }
   }
 

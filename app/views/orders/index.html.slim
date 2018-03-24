@@ -108,7 +108,7 @@
             span = ' {{selectedUser.name}} is minderjarig!'
 
   .product-grid
-    .product-grid-product v-for="productPrice in productPrices" @click="selectProduct(productPrice)" v-bind:class="{ 'minor-age-product' : (selectedUser && selectedUser.minor && productPrice.product.requires_age) }"
+    .product-grid-product v-for="productPrice in productPrices" @click="selectProduct(productPrice)" v-bind:class="{ 'product-requires-age' : (selectedUser && selectedUser.minor && productPrice.product.requires_age) }"
       span.product-grid-product-name = '{{productPrice.product.name}}'
       span.product-grid-product-price = '{{doubleToCurrency(productPrice.price)}}'
       span.fa-stack v-if="selectedUser && selectedUser.minor && productPrice.product.requires_age"
