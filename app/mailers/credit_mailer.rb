@@ -1,7 +1,7 @@
 class CreditMailer < ApplicationMailer
   def negative_credit_mail(user)
     @user = user
-    mail to: user.email, subject: 'U heeft een negatief Fluxsaldo', content_type: 'text/plain'
+    mail to: user.email, subject: 'Verzoek met betrekking op uw Zatladder saldo', content_type: 'text/plain'
   end
 
   def treasurer_report(treasurer, mail_unknown_users, send_to_count)
