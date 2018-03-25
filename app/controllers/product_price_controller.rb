@@ -1,5 +1,5 @@
 class ProductPriceController < ApplicationController
-  before_action :model, only: %i[destroy]
+  before_action :set_model, only: %i[destroy]
   before_action :authenticate_user!
 
   after_action :verify_authorized
@@ -13,7 +13,7 @@ class ProductPriceController < ApplicationController
 
   private
 
-  def model
+  def set_model
     @model ||= ProductPrice.find(params[:id])
   end
 
