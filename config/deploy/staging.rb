@@ -1,4 +1,4 @@
-set :branch, :staging
+set :branch, 'feature/sidekiq'
 set :deploy_to, '/opt/projects/alpha-tomato-staging'
 
 before :"deploy:started", 'docker:compose:down'
