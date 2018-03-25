@@ -83,6 +83,3 @@ Style/Send:
 
 Style/StringMethods:
   Enabled: true
-
-Naming/MemoizedInstanceVariableName:
-  Enabled: false
