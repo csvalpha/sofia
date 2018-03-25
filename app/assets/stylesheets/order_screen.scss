@@ -289,6 +289,12 @@
     }
   }
 
+  .product-grid-product-requires-age{
+    align-self: right;
+    flex-basis: 0px;
+    top: -50px;
+  }
+
   .product-grid-product-name {
     text-align: center;
     color: $font-color-dark;
