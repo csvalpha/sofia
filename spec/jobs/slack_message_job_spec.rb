@@ -9,6 +9,6 @@ RSpec.describe SlackMessageJob, type: :job do
       job.perform('Example message')
     end
 
-    it { expect(job).to have_received(:ping).with('Example message', channel: nil) }
+    it { expect(job).to have_received(:ping).with('Example message') }
   end
 end

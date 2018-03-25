@@ -15,7 +15,7 @@ module Tomato
     config.i18n.fallbacks = [:nl]
 
     config.cache_store = :redis_store, "#{Rails.application.config_for(:cable)['url']}/cache",
-                       { expires_in: 90.minutes }
+                         { expires_in: 90.minutes }
     config.active_job.queue_adapter = :sidekiq
 
     config.exceptions_app = routes
