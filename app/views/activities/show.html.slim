@@ -110,21 +110,19 @@
                       td.text-right
                         = number_to_currency(@credit_mutations_total, unit: '€')
                     tr
-                      td = 'Omzet Zatladder Inlegsysteem'
-                      td = t('codes.credit_mutation')
-                      td
-                      td.text-right = number_to_currency(@revenue_without_cash, unit: '€')
-                    tr
                       td = 'Contante bestellingen'
-                      td
                       td
                       td.text-right = number_to_currency(@revenue_with_cash, unit: '€')
                     tr
                       td title="Contante inleg plus contante betalingen"
-                        = 'Kas totaal'
+                        strong = 'Totaal kas'
                       td = t('codes.cash')
-                      td.text-right
-                        = number_to_currency(@cash_total, unit: '€')
+                      td.text-right = number_to_currency(@cash_total, unit: '€')
+                    tr
+                      td = 'Omzet Zatladder Inlegsysteem'
+                      td = t('codes.credit_mutation')
+                      td
+                      td.text-right = number_to_currency(@revenue_without_cash, unit: '€')
 
         .tab-pane id='credit_mutations' role='tabpanel' aria-labelledby='credit_mutations-tab'
           .table-responsive
