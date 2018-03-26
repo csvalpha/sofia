@@ -23,21 +23,38 @@ class Activity < ApplicationRecord
   delegate :products, to: :price_list
 
   def credit_mutations_total
-    credit_mutations.map(&:amount).reduce(:+) || 0
+    credit_mutations.sum(&:amount)
   end
 
-  def revenue_hash
-    @revenue_hash ||= orders.group_by(&:paid_with_cash).map { |h|
-      [h[0] ? :cash : :not_cash, h[1].map(&:order_rows)
-                                     .flatten
-                                     .map(&:row_total).reduce(:+)]
-    }.to_h
+  def revenue_with_cash
+    @revenue_with_cash ||= begin
+      OrderRow.where(order: orders.where(paid_with_cash: true)).sum('product_count * price_per_product')
+    end
+  end
+
+  def revenue_without_cash
+    @revenue_without_cash ||= begin
+      OrderRow.where(order: orders.where(paid_with_cash: false)).sum('product_count * price_per_product')
+    end
+  end
+
+  def count_per_product
+    @count_per_product ||= OrderRow.where(order: orders).group(:product).count
   end
 
   def revenue_by_category
-    @totals_hash ||= orders.map(&:order_rows).flatten.group_by {
-      |r| r.product.category
-    }.map { |cat| cat[1] = cat[1].map(&:row_total).sum; cat }.to_h
+    @revenue_by_category ||= begin
+      revenue_per_product.inject(Hash.new(0)) do |hash, (product, price)|
+        hash[product[:category]] += price
+        hash
+      end
+    end
+  end
+
+  def revenue_per_product
+    @revenue_per_product ||= begin
+      OrderRow.where(order: orders).group(:product).sum('product_count * price_per_product')
+    end
   end
 
   def bartenders

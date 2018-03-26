@@ -31,14 +31,18 @@ class ActivitiesController < ApplicationController
     @activity = Activity.includes(:price_list,
                                   { orders: [{ order_rows: :product }, :user, :created_by] },
                                   credit_mutations: [:user]).find(params[:id])
-
-    @cash_total = @activity.revenue_hash[:cash] + @activity.credit_mutations_total
-    @revenue_total = @activity.revenue_hash[:cash] + @activity.revenue_hash[:not_cash]
-    @products = @activity.orders.map(&:order_rows).flatten.group_by(&:product).map {
-      |hash| hash[1] = hash[1].sum(&:product_count); hash
-    }.sort_by {|h| h[0].id }
-
     authorize @activity
+
+    @bartenders = @activity.bartenders
+    @orders = @activity.orders
+    @credit_mutations = @activity.credit_mutations
+    @price_list = @activity.price_list
+    @revenue_by_category = @activity.revenue_by_category
+    @revenue_with_cash = @activity.revenue_with_cash
+    @revenue_without_cash = @activity.revenue_without_cash
+    @cash_total = @activity.revenue_with_cash + @activity.credit_mutations_total
+    @revenue_total = @activity.revenue_with_cash + @activity.revenue_without_cash
+    @count_per_product = @activity.count_per_product
   end
 
   def order_screen
