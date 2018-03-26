@@ -9,7 +9,7 @@ module Tomato
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.1
 
-    config.time_zone = 'Amsterdam'
+    config.time_zone = 'Europe/Amsterdam'
 
     config.i18n.default_locale = :nl
     config.i18n.fallbacks = [:nl]
