@@ -23,7 +23,7 @@ class Activity < ApplicationRecord
   delegate :products, to: :price_list
 
   def credit_mutations_total
-    credit_mutations.sum(&:amount)
+    @credit_mutations_total ||= credit_mutations.sum(:amount)
   end
 
   def revenue_with_cash
