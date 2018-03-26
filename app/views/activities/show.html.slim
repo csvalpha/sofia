@@ -79,9 +79,9 @@
                 table.table.table-sm
                   thead
                     tr
-                      th scope='col' = 'Credit'
+                      th scope='col' = 'Resultaat'
                       th scope='col' = 'Code'
-                      th.text-right scope='col' = 'Omzet'
+                      th.text-right scope='col' = 'Credit'
                   tbody
                     - Product.categories.each do |category|
                       tr
@@ -90,32 +90,35 @@
                         td.text-right
                           = number_to_currency(@revenue_by_category[category[0]] || 0, unit: '€')
                     tr
-                      td = 'Inleg Zatladder Inlegsysteem'
-                      td = t('codes.credit_mutation')
+                      th.pl-4 scope='row' = 'Totaal opbrengsten'
+                      td
                       td.text-right
-                        = number_to_currency(@credit_mutations_total, unit: '€')
+                        strong = number_to_currency(@revenue_total, unit: '€')
 
               .col-12.col-md-5
                 table.table.table-sm
                   thead
                     tr
-                      th scope='col' = 'Debet'
+                      th scope='col' = 'Balans'
                       th scope='col' = 'Code'
-                      th.text-right scope='col' = 'Bedrag'
+                      th.text-right scope='col' = 'Credit'
+                      th.text-right scope='col' = 'Debet'
                   tbody
+                    tr
+                      td = 'Inleg Zatladder Inlegsysteem'
+                      td = t('codes.credit_mutation')
+                      td.text-right
+                        = number_to_currency(@credit_mutations_total, unit: '€')
                     tr
                       td = 'Omzet Zatladder Inlegsysteem'
                       td = t('codes.credit_mutation')
+                      td
                       td.text-right = number_to_currency(@revenue_without_cash, unit: '€')
                     tr
                       td = 'Contante bestellingen'
                       td
-                      td.text-right = number_to_currency(@revenue_with_cash, unit: '€')
-                    tr
-                      th.pl-4 scope='row' = 'Omzet totaal'
                       td
-                      td.text-right
-                        strong = number_to_currency(@revenue_total, unit: '€')
+                      td.text-right = number_to_currency(@revenue_with_cash, unit: '€')
                     tr
                       td title="Contante inleg plus contante betalingen"
                         = 'Kas totaal'
