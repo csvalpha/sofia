@@ -112,10 +112,16 @@
                       td
                       td.text-right = number_to_currency(@activity.revenue_hash[:cash], unit: '€')
                     tr
-                      th scope='row' = 'Omzet totaal'
-                      td = t('codes.cash')
+                      th.pl-4 scope='row' = 'Omzet totaal'
+                      td
                       td.text-right
                         strong = number_to_currency(@revenue_total, unit: '€')
+                    tr
+                      td title="Contante inleg plus contante betalingen"
+                        = 'Kas totaal'
+                      td = t('codes.cash')
+                      td.text-right
+                        = number_to_currency(@cash_total, unit: '€')
 
         .tab-pane id='credit_mutations' role='tabpanel' aria-labelledby='credit_mutations-tab'
           .table-responsive

@@ -32,6 +32,7 @@ class ActivitiesController < ApplicationController
                                   { orders: [{ order_rows: :product }, :user, :created_by] },
                                   credit_mutations: [:user]).find(params[:id])
 
+    @cash_total = @activity.revenue_hash[:cash] + @activity.credit_mutations_total
     @revenue_total = @activity.revenue_hash[:cash] + @activity.revenue_hash[:not_cash]
     @products = @activity.orders.map(&:order_rows).flatten.group_by(&:product).map {
       |hash| hash[1] = hash[1].sum(&:product_count); hash
