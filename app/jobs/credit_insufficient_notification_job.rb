@@ -28,8 +28,10 @@ class CreditInsufficientNotificationJob < ApplicationJob
       ).deliver_later
     end
 
-    SlackMessageJob.perform_later("Er is een saldomail verstuurd naar #{success_count} mensen,"\
-      " en #{unnotifyable_users.count} saldomail(s) kon(den) niet verzonden worden door het ontbreken"\
-      ' van een e-mail adres.')
+    if Rails.env.production?
+      SlackMessageJob.perform_later("Er is een saldomail verstuurd naar #{success_count} mensen,"\
+        " en #{unnotifyable_users.count} saldomail(s) kon(den) niet verzonden worden door het ontbreken"\
+        ' van een e-mail adres.')
+    end
   end
 end
