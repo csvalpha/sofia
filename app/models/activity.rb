@@ -39,12 +39,12 @@ class Activity < ApplicationRecord
   end
 
   def count_per_product
-    @count_per_product ||= OrderRow.where(order: orders).group(:product).count
+    @count_per_product ||= OrderRow.where(order: orders).group(:product).sum(:product_count)
   end
 
   def revenue_by_category
     @revenue_by_category ||= begin
-      revenue_per_product.inject(Hash.new(0)) do |hash, (product, price)|
+      revenue_per_product.each_with_object(Hash.new(0)) do |(product, price), hash|
         hash[product[:category]] += price
         hash
       end

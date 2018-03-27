@@ -109,15 +109,18 @@
                       td = t('codes.credit_mutation')
                       td.text-right
                         = number_to_currency(@credit_mutations_total, unit: '€')
+                      td
                     tr
                       td = 'Contante bestellingen'
                       td
                       td.text-right = number_to_currency(@revenue_with_cash, unit: '€')
+                      td
                     tr
                       td title="Contante inleg plus contante betalingen"
                         strong = 'Totaal kas'
                       td = t('codes.cash')
                       td.text-right = number_to_currency(@cash_total, unit: '€')
+                      td
                     tr
                       td = 'Omzet Zatladder Inlegsysteem'
                       td = t('codes.credit_mutation')

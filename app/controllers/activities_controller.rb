@@ -27,7 +27,7 @@ class ActivitiesController < ApplicationController
     redirect_to activities_url
   end
 
-  def show
+  def show # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @activity = Activity.includes(:price_list,
                                   { orders: [{ order_rows: :product }, :user, :created_by] },
                                   credit_mutations: [:user]).find(params[:id])
