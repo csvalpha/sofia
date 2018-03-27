@@ -36,6 +36,9 @@ class UsersController < ApplicationController
     users_json.each do |user_json|
       find_or_create_user(user_json)
     end
+
+    send_slack_users_refresh_notification
+
     redirect_to users_path
   end
 
@@ -66,6 +69,14 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def send_slack_users_refresh_notification
+    return unless Rails.env.production?
+    # :nocov:
+    SlackMessageJob.perform_later("User ##{current_user.id} (#{current_user.name}) "\
+      "is importing users from Banana (#{Rails.application.config.x.banana_api_host})}")
+    # :nocov:
+  end
 
   def users_json
     JSON.parse(RestClient.get("#{Rails.application.config.x.banana_api_host}/api/v1/users?filter[group]=Leden",
