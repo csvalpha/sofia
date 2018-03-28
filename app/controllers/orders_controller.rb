@@ -9,7 +9,7 @@ class OrdersController < ApplicationController
     @orders = Order.where(activity: params.require(:activity_id)).includes(:order_rows, :user)
 
     render json: @orders.to_json(
-      only: %i[id created_at order_total],
+      only: %i[id created_at order_total paid_with_cash],
       include: { order_rows: {
         only: [:id, :product_count, product: { only: %i[id name credit] }]
       }, user: { only: :name } }
