@@ -66,7 +66,7 @@ export default {
     },
 
     userFormatter(user) {
-      return user.name;
+      return user ? user.name : '<i>Contant betaald</i>';
     },
 
     createdAtFormatter(value) {
