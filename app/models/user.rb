@@ -28,6 +28,18 @@ class User < ApplicationRecord
     URI::Generic.build(default_options.merge(path: "/users/#{id}")).to_s
   end
 
+  def age
+    return nil unless birthday
+    age = Time.zone.now.year - birthday.year
+    age -= 1 if Time.zone.now < birthday + age.years
+    age
+  end
+
+  def minor
+    return false unless age
+    age < 18
+  end
+
   def treasurer?
     @treasurer ||= roles.where(role_type: :treasurer).any?
   end

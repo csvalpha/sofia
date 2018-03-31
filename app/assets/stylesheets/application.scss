@@ -18,6 +18,18 @@
   opacity: 0;
 }
 
+// Source: jsfiddle.net/mwj2tagh
+.fa-plus18{
+  text-align: center;
+  font-family: "helvetica neue", Helvetica, Arial, Sans-Serif;
+  font-size: 80%;
+  font-weight: bold;
+
+  &:before {
+    content: "18+"
+  }
+}
+
 .environment-label {
   position: fixed;
   bottom: 0;

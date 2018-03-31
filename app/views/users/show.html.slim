@@ -6,6 +6,10 @@
 
       table.table.table-sm
         tbody
+          - if @user.birthday
+            tr
+              th scope='row' = 'Geboortedatum'
+              td.text-right = l @user.birthday, format: :long
           - if @user.email
             tr
               th scope='row' = 'Email'
