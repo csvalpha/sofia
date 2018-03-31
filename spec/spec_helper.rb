@@ -1,12 +1,12 @@
 require 'simplecov'
 
 SimpleCov.start 'rails' do
-  filter 'app/controllers/*'
-  filter 'app/jobs/*'
-  filter 'app/mailers/*'
-  filter 'app/policies/*'
-  filter 'app/views/*'
-  filter 'lib/*'
+  add_filter 'app/controllers/'
+  add_filter 'app/jobs/'
+  add_filter 'app/mailers/'
+  add_filter 'app/policies/'
+  add_filter 'app/views/'
+  add_filter 'lib/'
 
   minimum_coverage 95
   minimum_coverage_by_file 95
