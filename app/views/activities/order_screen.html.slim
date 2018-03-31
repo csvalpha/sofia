@@ -1,0 +1,113 @@
+= content_tag :div, id: 'order-screen', class: 'order-screen',
+  data: { users: @users_json, product_prices: @product_prices_json, activity: @activity_json }
+
+  b-modal id="credit-mutation-modal" ref="creditMutationModal" title='Inleggen'
+    form.col-12.mt-2  :class="{ 'was-validated': creditMutationFormInvalid }" novalidate=""
+      .form-group.row
+        .col-4
+          label.col-form-label for="creditMutationAmountInput"
+            = 'Inleg *'
+        .col-8
+          .input-group
+            .input-group-prepend
+              .input-group-text = fa_icon 'euro'
+            input.form-control( type="text" placeholder="10.00" required=""
+                                v-model="creditMutationAmount"
+                                id="creditMutationAmountInput")
+            .invalid-feedback
+              = 'Bedrag is verplicht'
+
+      .form-group.row
+        .col-4
+          label.col-form-label for="creditMutationDescriptionInput"
+            = 'Beschrijving *'
+        .col-8
+          input.form-control( type="text" v-model="creditMutationDescription" required=""
+                              placeholder="Inleg contant" id="creditMutationDescriptionInput")
+          .invalid-feedback
+            = 'Beschrijving is verplicht'
+
+      fieldset disabled="true"
+        .form-group.row
+          label.col-4.col-form-label
+            = 'Activiteit *'
+          .col-8
+            input.form-control type="text" :value="activity.title"
+            small.form-text.text-muted
+              = 'Omdat deze inleg aangemaakt wordt tijdens een activiteit kan je dit niet aanpassen'
+
+    div slot='modal-footer'
+      button type="button" class="btn btn-secondary mr-1" data-dismiss="modal" aria-label="Close"
+        = 'Annuleren'
+      button type="sumbit" class="btn btn-primary" @click="saveCreditMutation($event)"
+        = 'Inleg aanmaken'
+
+  b-modal id="modal1" title="Bestelgeschiedenis" size="lg" lazy=true ok-only="" ok-title="Sluiten"
+    order-history :activity="activity"
+
+  nav.header
+    ul.header-nav
+      li.header-nav-item.header-nav-home
+        = link_to @activity, class: 'nav-link'
+          = fa_icon 'chevron-left'
+      li.header-nav-item
+        span.mr-3 = @activity.title
+        small.font-weight-light.d-inline-block = l @activity.start_time, format: :date_only
+
+    b-btn.m-3 variant="outline-secondary" v-b-modal.modal1=""
+      = fa_icon 'history lg', class: 'mr-1'
+      = 'Bestelgeschiedenis'
+
+    flash
+
+  .side-panel
+
+    user-selection( :selected-user="selectedUser" :users="users" :pay-with-cash="payWithCash"
+                    v-on:updateuser="setUser($event)" v-on:selectcash="selectCash")
+
+    .orders v-if="selectedUser || payWithCash"
+      h4.orders-header.py-4 = 'Bestelling'
+
+      .orders-rows.container
+
+        template v-for="(orderRow, index) in orderRows"
+          .orders-rows-row.row.py-2
+            .orders-rows-row-count.col-3.px-1.px-md-2.px-lg-3
+              = fa_icon 'plus-square-o lg', class: 'orders-rows-row-count-icon', '@click': 'increaseRowAmount(orderRow)'
+              div = '{{orderRow.amount}}'
+              = fa_icon('minus-square-o lg', class: 'orders-rows-row-count-icon',
+                        '@click': 'decreaseRowAmount(orderRow)')
+
+            .orders-rows-row-product-name.col-6
+              = '{{orderRow.productPrice.product.name}}'
+            .orders-rows-row-product-price.col-3.px-1.px-lg-3.d-flex.justify-content-between
+              span :title="doubleToCurrency(orderRow.productPrice.price) + ' p.s.'"
+                = '{{doubleToCurrency(orderRow.productPrice.price * orderRow.amount)}}'
+              span.order-rows-row-remove @click="dropOrderRow(index)"
+                = fa_icon 'times-circle lg'
+
+        template v-if="!orderRows.length"
+          p.text-center.font-weight-light.pt-3
+            em = 'Geen producten geselecteerd'
+
+      .orders-rows-total.container
+        .orders-rows-total-dividor.mb-1
+        .row.justify-content-end
+          h4.col-3 = 'Totaal:'
+          h4.col-3.px-2 = '{{doubleToCurrency(orderTotal())}}'
+
+      .orders-confirmation
+        button.btn.btn-block.btn-lg.btn-success(
+          @click="confirmOrder" :disabled="orderConfirmButtonDisabled()")
+          = 'Bestelling plaatsen'
+
+  .product-grid
+    .product-grid-product v-for="product in productPrices" @click="selectProduct(product)"
+      span.product-grid-product-name = '{{product.product.name}}'
+      span.product-grid-product-price = '{{doubleToCurrency(product.price)}}'
+
+    em.no-items v-if="!productPrices.length"
+      span
+        = "Nog geen producten beschikbaar in de prijslijst #{@activity.price_list.name}. Klik "
+        = link_to 'hier', price_lists_path
+        = ' om prijzen aan te maken.'

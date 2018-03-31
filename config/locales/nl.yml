@@ -12,3 +12,13 @@ nl:
   wine: 'wijn'
   food: 'etenswaren'
   tobacco: 'rookwaren'
+
+  codes:
+    beer: 8010
+    non_alcoholic: 8020
+    distilled: 8030
+    wine: 8040
+    food: 8050
+    tobacco: 8060
+    credit_mutation: 1400
+    cash: 1000

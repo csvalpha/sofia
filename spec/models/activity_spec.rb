@@ -118,81 +118,108 @@ RSpec.describe Activity, type: :model do
     it { expect(Activity.current).not_to include past_activity }
   end
 
-  describe '#credit_mutations_total' do
-    context 'when without credit mutations' do
-      subject(:activity) { FactoryBot.build(:activity) }
+  describe 'reporting' do
+    subject(:activity) { FactoryBot.create(:activity) }
 
-      it { expect(activity.credit_mutations_total).to eq 0 }
-    end
-
-    context 'when with credit mutations' do
-      subject(:activity) { FactoryBot.create(:activity) }
-
-      before do
-        FactoryBot.create(:credit_mutation, activity: activity, amount: 10)
-        FactoryBot.create(:credit_mutation, activity: activity, amount: 50)
+    describe '#credit_mutations_total' do
+      context 'when without credit mutations' do
+        it { expect(activity.credit_mutations_total).to eq 0 }
       end
 
-      it { expect(activity.credit_mutations_total).to eq 60 }
+      context 'when with credit mutations' do
+        before do
+          FactoryBot.create(:credit_mutation, activity: activity, amount: 10)
+          FactoryBot.create(:credit_mutation, activity: activity, amount: 50)
+        end
+
+        it { expect(activity.credit_mutations_total).to eq 60 }
+      end
+    end
+
+    describe '#revenue_with(out)_cash' do
+      let(:product) { activity.price_list.products.sample }
+      let(:product_price) { activity.price_list.product_price_for(product).price }
+      let(:cash_order) { FactoryBot.create(:order, :cash, activity: activity) }
+      let(:order) { FactoryBot.create(:order, activity: activity) }
+
+      before do
+        FactoryBot.create(:order_row, product: product, order: cash_order, product_count: 2)
+        FactoryBot.create(:order_row, product: product, order: order, product_count: 3)
+      end
+
+      it { expect(activity.revenue_with_cash).to eq product_price * 2 }
+      it { expect(activity.revenue_without_cash).to eq product_price * 3 }
+      it { expect(activity.revenue_with_cash).not_to eq activity.revenue_without_cash }
+    end
+
+    describe '#count_per_product' do
+      let(:order) { FactoryBot.create(:order, activity: activity) }
+      let(:products) { activity.price_list.products.sample(2) }
+
+      before do
+        FactoryBot.create(:order_row, order: order, product_count: 2, product: products.first)
+        FactoryBot.create(:order_row, order: order, product_count: 3, product: products.last)
+      end
+
+      it { expect(activity.count_per_product[products.first]).to eq 2 }
+      it { expect(activity.count_per_product[products.last]).to eq 3 }
+    end
+
+    describe '#revenue_by_category' do
+      let(:product) { FactoryBot.create(:product, category: :beer) }
+      let(:other_product) { FactoryBot.create(:product, category: :wine) }
+      let(:order) { FactoryBot.create(:order, activity: activity) }
+
+      before do
+        FactoryBot.create(:product_price, price_list: activity.price_list, product: product, price: 2)
+        FactoryBot.create(:product_price, price_list: activity.price_list, product: other_product, price: 3)
+
+        FactoryBot.create(:order_row, order: order, product: product, product_count: 1)
+        FactoryBot.create(:order_row, order: order, product: other_product, product_count: 1)
+      end
+
+      it { expect(activity.revenue_by_category['beer']).to eq 2 }
+    end
+
+    describe '#revenue_per_product' do
+      let(:product) { FactoryBot.create(:product, category: :beer) }
+      let(:other_product) { FactoryBot.create(:product, category: :wine) }
+      let(:order) { FactoryBot.create(:order, activity: activity) }
+
+      before do
+        FactoryBot.create(:product_price, price_list: activity.price_list, product: product, price: 2)
+        FactoryBot.create(:product_price, price_list: activity.price_list, product: other_product, price: 3)
+
+        FactoryBot.create(:order_row, order: order, product: product, product_count: 1)
+        FactoryBot.create(:order_row, order: order, product: other_product, product_count: 1)
+      end
+
+      it { expect(activity.revenue_per_product[product]).to eq 2 }
+    end
+
+    describe '#bartenders' do
+      let(:bartender) { FactoryBot.create(:user) }
+
+      before do
+        FactoryBot.create(:order, created_by: bartender, activity: activity)
+      end
+
+      it { expect(activity.bartenders).to match_array [bartender] }
     end
   end
 
-  describe '#revenue' do
-    subject(:activity) { FactoryBot.create(:activity) }
+  describe '#locked?' do
+    subject(:activity) { FactoryBot.build_stubbed(:activity, :locked) }
 
-    let(:product) { activity.price_list.products.sample }
-    let(:product_price) { activity.price_list.product_price_for(product).price }
-    let(:order) { FactoryBot.create(:order, activity: activity) }
-
-    before do
-      FactoryBot.create(:order_row, product: product, order: order, product_count: 2)
-    end
-
-    it { expect(activity.revenue).to eq product_price * 2 }
+    it { expect(activity.locked?).to eq true }
   end
 
-  describe '#revenue_paid_with_cash' do
-    subject(:activity) { FactoryBot.create(:activity) }
-
-    let(:product) { activity.price_list.products.sample }
-    let(:product_price) { activity.price_list.product_price_for(product).price }
-    let(:order) { FactoryBot.create(:order, :cash, activity: activity) }
-
-    before do
-      FactoryBot.create(:order_row, product: product, order: order, product_count: 2)
-      FactoryBot.create(:order, activity: activity)
+  describe '#lock_date' do
+    subject(:activity) do
+      FactoryBot.build_stubbed(:activity, start_time: '01-01-2000'.to_datetime,
+                                          end_time: '02-01-2000'.to_datetime)
     end
 
-    it { expect(activity.revenue_paid_with_cash).to eq product_price * 2 }
-  end
-
-  describe '#revenue_by_category' do
-    subject(:activity) { FactoryBot.create(:activity) }
-
-    let(:product) { FactoryBot.create(:product, category: :beer) }
-    let(:other_product) { FactoryBot.create(:product, category: :wine) }
-    let(:order) { FactoryBot.create(:order, activity: activity) }
-
-    before do
-      FactoryBot.create(:product_price, price_list: activity.price_list, product: product, price: 2)
-      FactoryBot.create(:product_price, price_list: activity.price_list, product: other_product, price: 3)
-
-      FactoryBot.create(:order_row, order: order, product: product, product_count: 1)
-      FactoryBot.create(:order_row, order: order, product: other_product, product_count: 1)
-    end
-
-    it { expect(activity.revenue_by_category(:beer)).to eq 2 }
-  end
-
-  describe '#bartenders' do
-    subject(:activity) { FactoryBot.create(:activity) }
-
-    let(:bartender) { FactoryBot.create(:user) }
-
-    before do
-      FactoryBot.create(:order, created_by: bartender, activity: activity)
-    end
-
-    it { expect(activity.bartenders).to match_array [bartender] }
+    it { expect(activity.lock_date).to eq '02-03-2000'.to_datetime }
   end
 end
