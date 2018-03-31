@@ -11,7 +11,8 @@ class OrdersController < ApplicationController
     render json: @orders.to_json(
       only: %i[id created_at order_total paid_with_cash],
       include: { order_rows: {
-        only: [:id, :product_count, product: { only: %i[id name credit] }]
+        only: %i[id product_count price_per_product],
+        include: { product: { only: %i[id name] } }
       }, user: { only: :name } }
     )
   end

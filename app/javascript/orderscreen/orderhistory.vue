@@ -1,15 +1,28 @@
 <template lang="html">
-  <div class="order-history">
-    <b-row>
-      <b-col>
-        <b-table
-          striped hover :busy.sync="isLoading" :items="ordersProvider"
-          :fields="fields" no-provider-sorting sort-by="created_at" sort-desc />
+  <b-row class="order-history">
+    <b-table small hover :busy.sync="isLoading" :items="ordersProvider" :fields="fields"
+      no-provider-sorting sort-by="created_at" sort-desc>
+      <template slot="show_details" slot-scope="row">
+       <i @click.stop="row.toggleDetails" :class="['fa', 'fa-lg', row.detailsShowing ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down']"></i>
+      </template>
+      <div slot="row-details" slot-scope="row">
+        <b-row v-for="row in row.item.order_rows">
+          <b-col></b-col>
+          <b-col>{{row.product.name}}</b-col>
+          <b-col>
+            {{row.product_count}}
+            {{' x '}}
+            {{doubleToCurrency(row.price_per_product)}}
+          </b-col>
+          <b-col>
+            {{doubleToCurrency(row.product_count * row.price_per_product)}}
+          </b-col>
+        </b-row>
+      </div>
+    </b-table>
 
-        <spinner class="pt-2 pb-3" size="large" v-if="isLoading" />
-      </b-col>
-    </b-row>
-  </div>
+    <spinner class="pt-2 pb-3 m-auto" size="large" v-if="isLoading" />
+  </b-row>
 </template>
 
 <script>
@@ -47,8 +60,12 @@ export default {
           label: 'Bedrag',
           sortable: false,
           formatter: 'doubleToCurrency'
+        },
+        show_details: {
+          label: ' ',
+          sortable: false
         }
-      }
+      },
     };
   },
 
@@ -79,7 +96,7 @@ export default {
   },
 
   components: {
-    Spinner
+    Spinner,
   }
 };
 </script>
