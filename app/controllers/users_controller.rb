@@ -4,14 +4,14 @@ class UsersController < ApplicationController
   after_action :verify_authorized
 
   def index
-    @model = User.all.includes(model_includes).order(:name)
+    @model = User.all.order(:name)
     authorize @model
 
     @new_user = User.new
   end
 
   def show
-    @user = User.includes(model_includes).find(params[:id])
+    @user = User.includes(:credit_mutations).find(params[:id])
     authorize @user
 
     @new_mutation = CreditMutation.new(user: @user)
@@ -62,10 +62,6 @@ class UsersController < ApplicationController
 
   def model_class
     User
-  end
-
-  def model_includes
-    %i[credit_mutations order_rows]
   end
 
   private

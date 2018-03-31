@@ -86,6 +86,12 @@ Rails.application.configure do
     scheme: 'https', host: Rails.application.config.x.tomato_host || 'tomato.csvalpha.nl'
   }
 
+  config.action_mailer.delivery_method = :mailgun
+  config.action_mailer.mailgun_settings = {
+    api_key: Rails.application.secrets.fetch(:mailgun_api_key),
+    domain: 'csvalpha.nl'
+  }
+
   if ENV['RAILS_LOG_TO_STDOUT'].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
