@@ -25,6 +25,18 @@ class User < ApplicationRecord
     "#{Rails.application.config.x.banana_api_host}#{avatar_thumb_url}"
   end
 
+  def age
+    return nil unless birthday
+    age = Time.zone.now.year - birthday.year
+    age -= 1 if Time.zone.now < birthday + age.years
+    age
+  end
+
+  def minor
+    return false unless age
+    age < 18
+  end
+
   def treasurer?
     @treasurer ||= roles.where(role_type: :treasurer).any?
   end
