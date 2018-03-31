@@ -122,6 +122,7 @@ ActiveRecord::Schema.define(version: 20180324165337) do
     t.string "uid"
     t.string "avatar_thumb_url"
     t.date "birthday"
+    t.string "email"
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
