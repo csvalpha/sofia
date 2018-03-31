@@ -17,13 +17,13 @@
             td = l @activity.lock_date, format: :long
           tr
             th scope='row' = 'Prijslijst'
-            td = @activity.price_list.name
+            td = @price_list.name
           tr
             th scope='row' = 'Gemaakt door'
             td = link_to @activity.created_by.name, @activity.created_by
           tr
             th scope='row' = 'Tappers'
-            td = @activity.bartenders.map(&:name).join(', ')
+            td = @bartenders.map(&:name).join(', ')
 
     .card.col-sm-12.col-md-6.col-lg-4.py-2.align-self-start
       .card-body
@@ -58,11 +58,15 @@
           a.nav-link (id='orders-tab' data-toggle="tab" href="#orders" role="tab"
             aria-controls="orders" aria-selected="false")
             = 'Bestellingen'
+        li.nav-item
+          a.nav-link (id='product_totals-tab' data-toggle="tab" href="#product_totals" role="tab"
+            aria-controls="product_totals-tab" aria-selected="false")
+            = 'Producttotalen'
 
       .tab-content.p-2 id='activityTabsContent'
         .tab-pane.show.active id='summary' role='tabpanel' aria-labelledby='summary-tab'
           .row.justify-content-between
-            - if @activity.credit_mutations.empty? && @activity.orders.empty?
+            - if @credit_mutations.empty? && @orders.empty?
               .table-responsive
                 table.table.table-striped
                   tbody
@@ -75,36 +79,58 @@
                 table.table.table-sm
                   thead
                     tr
-                      th scope='col' = 'Categorie'
-                      th.text-right scope='col' = 'Bedrag'
+                      th scope='col' = 'Resultaat'
+                      th scope='col' = 'Code'
+                      th.text-right scope='col' = 'Credit'
                   tbody
                     - Product.categories.each do |category|
                       tr
                         td = t(category.first).capitalize
-                        td.text-right = number_to_currency(@activity.revenue_by_category(category), unit: '€')
+                        td = t("codes.#{category.first}")
+                        td.text-right
+                          = number_to_currency(@revenue_by_category[category[0]] || 0, unit: '€')
                     tr
-                      th scope='row' = 'Totaal'
+                      th.pl-4 scope='row' = 'Totaal opbrengsten'
+                      td
                       td.text-right
-                        strong = number_to_currency(@activity.revenue, unit: '€')
+                        strong = number_to_currency(@revenue_total, unit: '€')
 
               .col-12.col-md-5
                 table.table.table-sm
                   thead
                     tr
-                      th scope='col' = 'Totaal'
-                      th.text-right scope='col' = 'Bedrag'
+                      th scope='col' = 'Balans'
+                      th scope='col' = 'Code'
+                      th.text-right scope='col' = 'Credit'
+                      th.text-right scope='col' = 'Debet'
                   tbody
                     tr
-                      td = 'Inleg en correcties'
-                      td.text-right = number_to_currency(@activity.credit_mutations_total, unit: '€')
+                      td = 'Inleg Zatladder Inlegsysteem'
+                      td = t('codes.credit_mutation')
+                      td.text-right
+                        = number_to_currency(@credit_mutations_total, unit: '€')
+                      td
                     tr
                       td = 'Contante bestellingen'
-                      td.text-right = number_to_currency(@activity.revenue_paid_with_cash, unit: '€')
+                      td
+                      td.text-right = number_to_currency(@revenue_with_cash, unit: '€')
+                      td
+                    tr
+                      td title="Contante inleg plus contante betalingen"
+                        strong = 'Totaal kas'
+                      td = t('codes.cash')
+                      td.text-right = number_to_currency(@cash_total, unit: '€')
+                      td
+                    tr
+                      td = 'Omzet Zatladder Inlegsysteem'
+                      td = t('codes.credit_mutation')
+                      td
+                      td.text-right = number_to_currency(@revenue_without_cash, unit: '€')
 
         .tab-pane id='credit_mutations' role='tabpanel' aria-labelledby='credit_mutations-tab'
           .table-responsive
             table.table.table-striped
-              - if @activity.credit_mutations.empty?
+              - if @credit_mutations.empty?
                 tr
                   td.text-center colspan='4'
                     p.my-1
@@ -117,7 +143,7 @@
                     th scope='col' = 'Gebruiker'
                     th scope='col' = 'Bedrag'
                 tbody
-                  - @activity.credit_mutations.each do |mutation|
+                  - @credit_mutations.each do |mutation|
                     tr
                       th scope='row' = mutation.id
                       td = l mutation.created_at, format: :time_only
@@ -127,7 +153,7 @@
         .tab-pane id='orders' role='tabpanel' aria-labelledby='orders-tab'
           .table-responsive
             table.table.table-striped
-              - if @activity.orders.empty?
+              - if @orders.empty?
                 tr
                   td.text-center colspan='4'
                     p.my-1
@@ -142,7 +168,7 @@
                     th scope='col' = 'Producten'
 
                 tbody
-                  - @activity.orders.each do |order|
+                  - @orders.each do |order|
                     tr
                       th scope='row' = order.id
                       td = l order.created_at, format: :time_only
@@ -159,3 +185,25 @@
                             = " (#{order_row.product_count}x)"
                           - if i < order.order_rows.size - 1
                             = ', '
+
+        .tab-pane id='product_totals' role='tabpanel' aria-labelledby='product_totals-tab'
+          .row
+            .col-6.mx-auto
+              .table-responsive
+                table.table.table-sm
+                  - if @count_per_product.empty?
+                    tr
+                      td.text-center colspan='4'
+                        p.my-1
+                          em = 'Er zijn geen producten verkocht'
+                  - else
+                    thead
+                      tr
+                        th scope='col' = 'Product'
+                        th.text-right scope='col' = 'Aantal keer besteld'
+
+                    tbody
+                      - @count_per_product.each do |product, sum|
+                        tr
+                          th scope='row' = product.name
+                          td.text-right = "#{sum} x"

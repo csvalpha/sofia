@@ -13,11 +13,11 @@ class User < ApplicationRecord
   scope :in_banana, (-> { where(provider: 'banana_oauth2') })
 
   def credit
-    credit_mutations.map(&:amount).sum - order_rows.map(&:row_total).sum
+    credit_mutations.sum(:amount) - order_rows.sum('product_count * price_per_product')
   end
 
   def roles
-    @roles ||= roles_users.includes(:role).map(&:role).flatten.uniq
+    @roles ||= Role.joins(:roles_users).merge(RolesUsers.where(user: self))
   end
 
   def avatar_thumb_or_default_url
@@ -38,11 +38,11 @@ class User < ApplicationRecord
   end
 
   def treasurer?
-    @treasurer ||= roles.map(&:treasurer?).any?
+    @treasurer ||= roles.where(role_type: :treasurer).any?
   end
 
   def main_bartender?
-    @main_bartender ||= roles.map(&:main_bartender?).any?
+    @main_bartender ||= roles.where(role_type: :main_bartender).any?
   end
 
   def update_role(groups)
