@@ -455,7 +455,7 @@ DEPENDENCIES
   pg (~> 1.0)
   pry-byebug
   pry-rails
-  puma (~> 3.9)
+  puma (~> 3.11)
   pundit (~> 1.1.0)
   rails (~> 5.1.6)
   rails-i18n (~> 5.1)
