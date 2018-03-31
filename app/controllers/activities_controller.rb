@@ -42,7 +42,7 @@ class ActivitiesController < ApplicationController
                         .find(params[:id])
 
     @product_prices_json = sorted_product_price(@activity).to_json(
-        include: { product: { only: %i[id name category], methods: %i[requires_age] } }
+      include: { product: { only: %i[id name category], methods: %i[requires_age] } }
     )
 
     @users_json = User.includes(%i[credit_mutations order_rows]).order(:name)
