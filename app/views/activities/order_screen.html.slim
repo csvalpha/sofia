@@ -42,8 +42,28 @@
       button type="sumbit" class="btn btn-primary" @click="saveCreditMutation($event)"
         = 'Inleg aanmaken'
 
+
   b-modal id="modal1" title="Bestelgeschiedenis" size="lg" lazy=true ok-only="" ok-title="Sluiten"
     order-history :activity="activity"
+
+  b-modal id="shortcut-modal" ref="shortcutModal" title='Sneltoetsen'
+    table.table.table-sm
+      tbody
+        tr
+          th scope='row' = 'Ctrl + Alt + getal'
+          td = 'Selecteer product op positie van het getal'
+        tr
+          th scope='row' = 'Ctrl + getal'
+          td = 'Selecteer product op positie van het getal + 10'
+        tr
+          th scope='row' = 'Enter'
+          td = 'Bestelling plaatsen'
+        tr
+          th scope='row' = 'Esc'
+          td = 'Annuleren'
+        tr
+          th scope='row' = 'Ctrl + C'
+          td = 'Contant betalen'
 
   nav.header
     ul.header-nav
@@ -53,6 +73,8 @@
       li.header-nav-item
         span.mr-3 = @activity.title
         small.font-weight-light.d-inline-block = l @activity.start_time, format: :date_only
+      li.header-nav-item
+        b-btn v-b-modal.shortcut-modal="" = fa_icon 'question'
 
     b-btn.m-3 variant="outline-secondary" v-b-modal.modal1=""
       = fa_icon 'history lg', class: 'mr-1'
