@@ -131,9 +131,14 @@
 
   .product-grid
     .product-grid-product v-for="productPrice, i in productPrices" @shortkey="selectProduct(productPrice)" @click="selectProduct(productPrice)" v-bind:class="{ 'product-requires-age' : (selectedUser && selectedUser.minor && productPrice.product.requires_age) }"
-        span v-if="i < 10" v-shortkey="['ctrl', (i + 1)]"
-        span v-if="i == 10" v-shortkey="['ctrl', 0]"
-        span v-if="i > 10 && i < 20" v-shortkey="['ctrl', 'alt', (i - 10)]"
+        span v-if="i < 9" v-shortkey="['ctrl', (i + 1)]"
+        span v-if="i == 9" v-shortkey="['ctrl', 0]"
+        span v-if="i > 9 && i < 19" v-shortkey="['ctrl', 'alt', (i - 9)]"
+        span v-if="i == 19" v-shortkey="['ctrl', 'alt', 0]"
+        span v-if="showProductShortcut && i < 9" = 'Ctrl + {{i + 1}}'
+        span v-if="showProductShortcut && i == 9" = 'Ctrl + 0'
+        span v-if="showProductShortcut && i > 9 && i < 19" = 'Ctrl + Alt + {{i - 9}}'
+        span v-if="showProductShortcut && i == 19" = 'Ctrl + Alt + 0'
         span.product-grid-product-requires-age.py-1.fa-stack v-if="selectedUser && selectedUser.minor && productPrice.product.requires_age"
           i class="fa fa-circle fa-circle-lighter fa-stack-2x"
           span class="fa fa-stack-1x fa-inverse fa-plus18"
@@ -148,3 +153,5 @@
         = ' om prijzen aan te maken.'
 
   span v-shortkey="['del']" @shortkey="dropOrderRow(-1)"
+  span v-shortkey.push="['ctrl']" @shortkey="showProductShortcut = !showProductShortcut"
+  span v-shortkey.push="['alt']" @shortkey="showProductShortcut = !showProductShortcut"
