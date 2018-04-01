@@ -10,6 +10,7 @@ import OrderHistory from '../orderscreen/orderhistory.vue';
 Vue.use(TurbolinksAdapter);
 Vue.use(VueResource);
 Vue.use(BootstrapVue);
+Vue.use(require('vue-shortkey'))
 
 document.addEventListener('turbolinks:load', () => {
   Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');

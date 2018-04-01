@@ -105,7 +105,7 @@
             span = ' {{selectedUser.name}} is minderjarig!'
 
   .product-grid
-    .product-grid-product v-for="productPrice in productPrices" @click="selectProduct(productPrice)" v-bind:class="{ 'product-requires-age' : (selectedUser && selectedUser.minor && productPrice.product.requires_age) }"
+    .product-grid-product v-for="productPrice, i in productPrices" v-shortkey="['ctrl', 'alt', i]" @shortkey="selectProduct(productPrice)" @click="selectProduct(productPrice)" v-bind:class="{ 'product-requires-age' : (selectedUser && selectedUser.minor && productPrice.product.requires_age) }"
         span.product-grid-product-requires-age.py-1.fa-stack v-if="selectedUser && selectedUser.minor && productPrice.product.requires_age"
           i class="fa fa-circle fa-circle-lighter fa-stack-2x"
           span class="fa fa-stack-1x fa-inverse fa-plus18"
