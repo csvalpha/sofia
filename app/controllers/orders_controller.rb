@@ -22,7 +22,7 @@ class OrdersController < ApplicationController
 
     if @order.save
       render json: Order.includes(
-        :order_rows, user: { orders: :order_rows }
+        :order_rows, :user
       ).find(@order.id).to_json(include: json_includes)
     else
       render json: @order.errors, status: :unprocessable_entity
