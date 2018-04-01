@@ -6833,6 +6833,12 @@ vue-resource@^1.3.6:
   dependencies:
     got "^8.0.3"
 
+vue-shortkey@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/vue-shortkey/-/vue-shortkey-3.1.0.tgz#0770dd407bc6e4def478ffd941899128d3405afe"
+  dependencies:
+    vue "^2.1.0"
+
 vue-simple-spinner@1.2.8:
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/vue-simple-spinner/-/vue-simple-spinner-1.2.8.tgz#638249e9b25b43424ff906c14f1b7c7ed441ce9d"
@@ -6860,6 +6866,10 @@ vue-turbolinks@^2.0.1:
   resolved "https://registry.yarnpkg.com/vue-turbolinks/-/vue-turbolinks-2.0.1.tgz#7d4269faca88de22451c9dbed1976a714f3f2764"
   dependencies:
     vue "^2.2.4"
+
+vue@^2.1.0:
+  version "2.5.16"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.16.tgz#07edb75e8412aaeed871ebafa99f4672584a0085"
 
 vue@^2.2.4:
   version "2.5.3"

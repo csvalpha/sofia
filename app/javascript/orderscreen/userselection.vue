@@ -12,7 +12,7 @@
           <h3 class="mb-3">
             {{selectedUser.name}}
 
-            <span class="pull-right pr-2 user-details-close" @click="selectUser(null)">
+            <span class="pull-right pr-2 user-details-close" @click="selectUser(null)" v-shortkey="['esc']" @shortkey="selectUser(null)">
               <i class="fa fa-times-circle"></i>
             </span>
           </h3>
@@ -43,7 +43,7 @@
           </h4>
         </div>
 
-        <h3 class="col-1 pr-2 user-details-close" @click="selectUser(null)">
+        <h3 class="col-1 pr-2 user-details-close" @click="selectUser(null)" v-shortkey="['esc']" @shortkey="selectUser(null)">
           <i class="fa fa-times-circle pull-right"></i>
         </h3>
       </div>
@@ -56,7 +56,7 @@
              placeholder="Gebruiker zoeken" @input="queryChange" @keyup.enter.prevent="selectHighlightedUser"
              @keyup.up="decreaseHighlightedUserIndex" @keyup.down="increaseHighlightedUserIndex" autofocus>
 
-      <button class="btn btn-secondary mt-3" @click="selectCash">
+      <button class="btn btn-secondary mt-3" @click="selectCash" v-shortkey="['ctrl', 'c']" @shortkey="selectCash">
         <i class="fa fa-money mr-1"></i>
         Betaal contant
       </button>

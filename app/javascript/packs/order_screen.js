@@ -2,6 +2,7 @@ import Vue from 'vue/dist/vue.esm';
 import TurbolinksAdapter from 'vue-turbolinks';
 import VueResource from 'vue-resource';
 import BootstrapVue from 'bootstrap-vue';
+import VueShortkey from 'vue-shortkey';
 
 import Flash from '../flash.vue';
 import UserSelection from '../orderscreen/userselection.vue';
@@ -10,6 +11,7 @@ import OrderHistory from '../orderscreen/orderhistory.vue';
 Vue.use(TurbolinksAdapter);
 Vue.use(VueResource);
 Vue.use(BootstrapVue);
+Vue.use(VueShortkey);
 
 document.addEventListener('turbolinks:load', () => {
   Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -34,6 +36,7 @@ document.addEventListener('turbolinks:load', () => {
           activity: activity,
           selectedUser: null,
           payWithCash: false,
+          showProductShortcut: false,
           orderRows: [],
           creditMutationAmount: null,
           creditMutationDescription: 'Inleg contant',
@@ -75,6 +78,9 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         dropOrderRow(index) {
+          if(index === -1){
+            index = this.orderRows.length -1;
+          }
           this.$delete(this.orderRows, index);
         },
 

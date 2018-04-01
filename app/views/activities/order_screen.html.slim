@@ -42,8 +42,31 @@
       button type="sumbit" class="btn btn-primary" @click="saveCreditMutation($event)"
         = 'Inleg aanmaken'
 
+
   b-modal id="modal1" title="Bestelgeschiedenis" size="lg" lazy=true ok-only="" ok-title="Sluiten"
     order-history :activity="activity"
+
+  b-modal id="shortcut-modal" ref="shortcutModal" title='Sneltoetsen'
+    table.table.table-sm
+      tbody
+        tr
+          th scope='row' = 'Ctrl + getal'
+          td = 'Selecteer product op positie van het getal'
+        tr
+          th scope='row' = 'Ctrl + Alt + getal'
+          td = 'Selecteer product op positie van het getal + 10'
+        tr
+          th scope='row' = 'Ctrl + C'
+          td = 'Contant betalen'
+        tr
+          th scope='row' = 'Enter'
+          td = 'Bestelling plaatsen'
+        tr
+          th scope='row' = 'Esc'
+          td = 'Annuleren'
+        tr
+          th scope='row' = 'Delete'
+          td = 'Laatste regel van bestelling verwijderen'
 
   nav.header
     ul.header-nav
@@ -53,6 +76,8 @@
       li.header-nav-item
         span.mr-3 = @activity.title
         small.font-weight-light.d-inline-block = l @activity.start_time, format: :date_only
+      li.header-nav-item
+        b-btn v-b-modal.shortcut-modal="" = fa_icon 'question'
 
     b-btn.m-3 variant="outline-secondary" v-b-modal.modal1=""
       = fa_icon 'history lg', class: 'mr-1'
@@ -97,7 +122,7 @@
           h4.col-3.px-2 = '{{doubleToCurrency(orderTotal())}}'
 
       .orders-confirmation
-        button.btn.btn-block.btn-lg.btn-success(@click="confirmOrder" v-bind:disabled="orderConfirmButtonDisabled()" v-bind:class="{ 'btn-warning' : (orderRequiresAge() && selectedUser.minor) }")
+        button.btn.btn-block.btn-lg.btn-success @click="confirmOrder" v-shortkey="['enter']" @shortkey="confirmOrder()" v-bind:disabled="orderConfirmButtonDisabled()" v-bind:class="{ 'btn-warning' : (orderRequiresAge() && selectedUser.minor) }"
           span = 'Bestelling plaatsen'
           br
           small v-if="orderRequiresAge() && selectedUser.minor"
@@ -105,7 +130,15 @@
             span = ' {{selectedUser.name}} is minderjarig!'
 
   .product-grid
-    .product-grid-product v-for="productPrice in productPrices" @click="selectProduct(productPrice)" v-bind:class="{ 'product-requires-age' : (selectedUser && selectedUser.minor && productPrice.product.requires_age) }"
+    .product-grid-product v-for="productPrice, i in productPrices" @shortkey="selectProduct(productPrice)" @click="selectProduct(productPrice)" v-bind:class="{ 'product-requires-age' : (selectedUser && selectedUser.minor && productPrice.product.requires_age) }"
+        span v-if="i < 9" v-shortkey="['ctrl', (i + 1)]"
+        span v-if="i == 9" v-shortkey="['ctrl', 0]"
+        span v-if="i > 9 && i < 19" v-shortkey="['ctrl', 'alt', (i - 9)]"
+        span v-if="i == 19" v-shortkey="['ctrl', 'alt', 0]"
+        span v-if="showProductShortcut && i < 9" = 'Ctrl + {{i + 1}}'
+        span v-if="showProductShortcut && i == 9" = 'Ctrl + 0'
+        span v-if="showProductShortcut && i > 9 && i < 19" = 'Ctrl + Alt + {{i - 9}}'
+        span v-if="showProductShortcut && i == 19" = 'Ctrl + Alt + 0'
         span.product-grid-product-requires-age.py-1.fa-stack v-if="selectedUser && selectedUser.minor && productPrice.product.requires_age"
           i class="fa fa-circle fa-circle-lighter fa-stack-2x"
           span class="fa fa-stack-1x fa-inverse fa-plus18"
@@ -118,3 +151,7 @@
         = "Nog geen producten beschikbaar in de prijslijst #{@activity.price_list.name}. Klik "
         = link_to 'hier', price_lists_path
         = ' om prijzen aan te maken.'
+
+  span v-shortkey="['del']" @shortkey="dropOrderRow(-1)"
+  span v-shortkey.push="['ctrl']" @shortkey="showProductShortcut = !showProductShortcut"
+  span v-shortkey.push="['alt']" @shortkey="showProductShortcut = !showProductShortcut"
