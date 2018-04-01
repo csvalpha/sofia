@@ -2,7 +2,7 @@ import Vue from 'vue/dist/vue.esm';
 import TurbolinksAdapter from 'vue-turbolinks';
 import VueResource from 'vue-resource';
 import BootstrapVue from 'bootstrap-vue';
-import VueShortkey from 'vue-shortkey'
+import VueShortkey from 'vue-shortkey';
 
 import Flash from '../flash.vue';
 import UserSelection from '../orderscreen/userselection.vue';
