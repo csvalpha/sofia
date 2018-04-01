@@ -97,10 +97,10 @@
           h4.col-3.px-2 = '{{doubleToCurrency(orderTotal())}}'
 
       .orders-confirmation
-        button.btn.btn-block.btn-lg.btn-success(@click="confirmOrder" v-bind:disabled="orderConfirmButtonDisabled()" v-bind:class="{ 'btn-warning' : (orderRequiresAge() && selectedUser.minor) }")
+        button.btn.btn-block.btn-lg.btn-success(@click="confirmOrder" v-bind:disabled="orderConfirmButtonDisabled()" v-bind:class="{ 'btn-warning' : (orderRequiresAge() && selectedUser && selectedUser.minor) }")
           span = 'Bestelling plaatsen'
           br
-          small v-if="orderRequiresAge() && selectedUser.minor"
+          small v-if="orderRequiresAge() && selectedUser && selectedUser.minor"
             span = fa_icon 'exclamation-triangle '
             span = ' {{selectedUser.name}} is minderjarig!'
 
