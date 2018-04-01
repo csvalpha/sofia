@@ -20,6 +20,9 @@ module Tomato
 
     config.exceptions_app = routes
 
+    # See https://github.com/kickstarter/rack-attack#getting-started
+    config.middleware.use Rack::Attack
+
     config.x.banana_api_host  = ENV['BANANA_API_HOST']
     config.x.tomato_host      = ENV['TOMATO_HOST']
     config.x.slack_channel    = '#monitoring'
