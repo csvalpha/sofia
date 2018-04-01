@@ -76,6 +76,9 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         dropOrderRow(index) {
+          if(index === -1){
+            index = this.orderRows.length -1;
+          }
           this.$delete(this.orderRows, index);
         },
 
