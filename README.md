@@ -55,7 +55,8 @@ Role.create(role_type: :main_bartender, group_uid: 2)
 ```
 
 ## Deploying
-See [DEPLOY.md](DEPLOY.md) for that.
+Deploying procedure is the same as for the Banana project.   
+See [DEPLOY.md](https://github.com/csvalpha/alpha-banana-api/blob/master/DEPLOY.md) for that.
 
 
 ## Contributing
