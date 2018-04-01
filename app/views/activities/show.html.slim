@@ -33,7 +33,7 @@
           .card-text
             div class='alert alert-danger'
               = 'Deze activiteit is langer dan een maand geleden afgelopen. Er kunnen geen nieuwe '
-              = 'bestellingen worden geplaatst en geen saldocorrecties meer worden toegevoegd'
+              = 'bestellingen worden geplaatst en geen inleg meer worden toegevoegd'
         - else
           p.card-text = 'Je kan bestellingen plaatsen in het streepscherm.'
 
@@ -53,7 +53,7 @@
         li.nav-item
           a.nav-link (id='credit_mutations-tab' data-toggle="tab" href="#credit_mutations" role="tab"
             aria-controls="credit_mutations" aria-selected="false")
-            = 'Inleg en correcties'
+            = 'Inleg'
         li.nav-item
           a.nav-link (id='orders-tab' data-toggle="tab" href="#orders" role="tab"
             aria-controls="orders" aria-selected="false")
@@ -134,7 +134,7 @@
                 tr
                   td.text-center colspan='4'
                     p.my-1
-                      em = 'Er zijn nog geen correcties en er is nog niet ingelegd'
+                      em = 'Er is nog niet ingelegd'
               - else
                 thead
                   tr
