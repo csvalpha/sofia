@@ -3,6 +3,7 @@
 
   b-modal id="credit-mutation-modal" ref="creditMutationModal" title='Inleggen'
     form.col-12.mt-2  :class="{ 'was-validated': creditMutationFormInvalid }" novalidate=""
+      p.alert.alert-danger = 'Let op! Alle bedragen die u hier invoert worden meegenomen in het kasverschil. Als dit geen contante transactie betreft moet u de mutatie niet hier invoeren!'
       .form-group.row
         .col-4
           label.col-form-label for="creditMutationAmountInput"
