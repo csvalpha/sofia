@@ -9,31 +9,40 @@
             <i @click.stop="row.toggleDetails" :class="['order-history--details-expand', 'fa', 'fa-lg', 'pl-2', row.detailsShowing ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down']"></i>
           </span>
         </template>
-        <div slot="row-details" slot-scope="row">
-          <b-container>
-            <b-row class="b-table-details--header">
-              <b-col>product</b-col>
-              <b-col class="text-right">aantal</b-col>
-              <b-col class="text-right">prijs per stuk</b-col>
-              <b-col class="text-right pr-3">
-                <span class="pr-3">totaal</span>
-              </b-col>
-            </b-row>
-            <b-row v-for="row in row.item.order_rows" class="b-table-details--item">
-              <b-col>{{row.product.name}}</b-col>
-              <b-col class="text-right">
-                {{row.product_count}}
-              </b-col>
-              <b-col class="text-right">
-                {{doubleToCurrency(row.price_per_product)}}
-              </b-col>
-              <b-col class="text-right">
-                {{doubleToCurrency(row.product_count * row.price_per_product)}}
-                <i @click="" :class="['order-history--item-edit', 'fa', 'fa-pencil', 'pl-1']"></i>
-              </b-col>
-            </b-row>
-          </b-container>
-        </div>
+
+        <b-container slot="row-details" slot-scope="row">
+          <b-row class="b-table-details--header px-2">
+            <b-col sm="5">product</b-col>
+            <b-col sm="2" class="text-right">aantal</b-col>
+            <b-col sm="3" class="text-right">prijs per stuk</b-col>
+            <b-col sm="2" class="text-right pr-3">
+              <span class="pr-3">totaal</span>
+            </b-col>
+          </b-row>
+          <b-row v-for="orderRow in row.item.order_rows" class="b-table-details--item px-2">
+            <b-col sm="5" >{{orderRow.product.name}}</b-col>
+            <b-col sm="2" class="text-right">
+              <template v-if="orderRow.editing">
+                <i @click="increaseProductCount(orderRow)"
+                   class="fa fa-plus-square-o order-history--item-count"></i>
+                <span class="px-2">{{orderRow.product_count}}</span>
+                <i @click="decreaseProductCount(orderRow)"
+                   class="fa fa-minus-square-o order-history--item-count"></i>
+              </template>
+              <template v-else>
+                {{orderRow.product_count}}
+              </template>
+            </b-col>
+            <b-col sm="3" class="text-right">
+              {{doubleToCurrency(orderRow.price_per_product)}}
+            </b-col>
+            <b-col sm="2" class="text-right pr-1">
+              {{doubleToCurrency(orderRow.product_count * orderRow.price_per_product)}}
+              <i v-if="orderRow.editing" @click="saveOrderRow(orderRow)" class="order-history--item-save fa fa-save pl-3"></i>
+              <i v-else @click="editOrderRow(orderRow)" class="order-history--item-edit fa fa-pencil pl-3"></i>
+            </b-col>
+          </b-row>
+        </b-container>
       </b-table>
 
       <spinner class="pt-2 pb-3 m-auto" size="large" v-if="isLoading" />
@@ -89,6 +98,9 @@ export default {
 
       return promise.then((response) => {
         const orders = response.data;
+        orders.map(order => {
+          order.order_rows.map(row => { row.editing = false })
+        })
 
         return orders;
       }, () => {
@@ -106,6 +118,25 @@ export default {
 
     doubleToCurrency(price) {
       return `€${parseFloat(price).toFixed(2)}`;
+    },
+
+    editOrderRow(orderRow) {
+      orderRow.editing = true;
+    },
+
+    saveOrderRow(orderRow) {
+      orderRow.editing = false;
+      // TODO: save row
+    },
+
+    increaseProductCount(orderRow) {
+      orderRow.product_count += 1;
+    },
+
+    decreaseProductCount(orderRow) {
+      if (orderRow.product_count > 0) {
+        orderRow.product_count -= 1;
+      }
     },
   },
 
