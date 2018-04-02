@@ -1,29 +1,35 @@
 <template lang="html">
   <b-row class="order-history">
     <b-col>
-      <b-table small hover :busy.sync="isLoading" :items="ordersProvider" :fields="fields"
+      <b-table :busy.sync="isLoading" :items="ordersProvider" :fields="fields"
         no-provider-sorting sort-by="created_at" sort-desc>
         <template slot="order_total" slot-scope="row">
           <span class="pull-right">
             {{doubleToCurrency(row.item.order_total)}}
-            <i @click.stop="row.toggleDetails" :class="['order-history--row-edit', 'fa', 'fa-lg', 'pl-2', row.detailsShowing ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down']"></i>
+            <i @click.stop="row.toggleDetails" :class="['order-history--details-expand', 'fa', 'fa-lg', 'pl-2', row.detailsShowing ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down']"></i>
           </span>
         </template>
         <div slot="row-details" slot-scope="row">
           <b-container>
-            <b-row v-for="row in row.item.order_rows">
-              <b-col sm="2" class="text-right">-</b-col>
-              <b-col sm="4">{{row.product.name}}</b-col>
-              <b-col>
+            <b-row class="b-table-details--header">
+              <b-col>product</b-col>
+              <b-col class="text-right">aantal</b-col>
+              <b-col class="text-right">prijs per stuk</b-col>
+              <b-col class="text-right pr-3">
+                <span class="pr-3">totaal</span>
+              </b-col>
+            </b-row>
+            <b-row v-for="row in row.item.order_rows" class="b-table-details--item">
+              <b-col>{{row.product.name}}</b-col>
+              <b-col class="text-right">
                 {{row.product_count}}
-                {{' x '}}
+              </b-col>
+              <b-col class="text-right">
                 {{doubleToCurrency(row.price_per_product)}}
               </b-col>
-              <b-col sm="2" class="pr-0">
-                <span class="pull-right">
-                  {{doubleToCurrency(row.product_count * row.price_per_product)}}
-                  <i class="order-history--row-edit fa fa-lg fa-edit pl-1"></i>
-                </span>
+              <b-col class="text-right">
+                {{doubleToCurrency(row.product_count * row.price_per_product)}}
+                <i @click="" :class="['order-history--item-edit', 'fa', 'fa-pencil', 'pl-1']"></i>
               </b-col>
             </b-row>
           </b-container>

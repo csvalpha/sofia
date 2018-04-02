@@ -44,16 +44,27 @@
   }
 }
 
-.b-table-details {
-  background-color: $gray-200;
+.order-history--details-expand {
+  color: $gray-500;
+
+  &:hover {
+    color: $gray-700;
+  }
 }
 
-i {
-  &.order-history--row-edit {
-    color: $gray-700;
+.b-table-details--header {
+  background-color: $gray-200;
+  text-transform: uppercase;
+}
 
-    &:hover {
-      color: $gray-900;
+.b-table-details--item {
+  .order-history--item-edit {
+    color: $gray-100;
+  }
+
+  &:hover {
+    .order-history--item-edit {
+      color: $gray-700;
     }
   }
 }
