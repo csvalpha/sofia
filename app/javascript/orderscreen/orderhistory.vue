@@ -20,7 +20,12 @@
             </b-col>
           </b-row>
           <b-row v-for="orderRow in row.item.order_rows" class="b-table-details--item px-2">
-            <b-col sm="5" >{{orderRow.product.name}}</b-col>
+            <b-col sm="5" >
+              {{orderRow.product.name}}
+              <div>
+                <small class="text-danger"><em>{{orderRowErrors[orderRow.id]}}</em></small>
+              </div>
+            </b-col>
             <b-col sm="2" class="text-right">
               <template v-if="orderRow.editing">
                 <i @click="increaseProductCount(orderRow)"
@@ -38,7 +43,7 @@
             </b-col>
             <b-col sm="2" class="text-right pr-1">
               {{doubleToCurrency(orderRow.product_count * orderRow.price_per_product)}}
-              <i v-if="orderRow.editing" @click="saveOrderRow(orderRow)" class="order-history--item-save fa fa-save pl-3"></i>
+              <i v-if="orderRow.editing" @click="saveOrderRow(row.item, orderRow)" class="order-history--item-save fa fa-save pl-3"></i>
               <i v-else @click="editOrderRow(orderRow)" class="order-history--item-edit fa fa-pencil pl-3"></i>
             </b-col>
           </b-row>
@@ -89,6 +94,7 @@ export default {
           thClass: 'text-right pr-4'
         }
       },
+      orderRowErrors: {},
     };
   },
 
@@ -124,9 +130,34 @@ export default {
       orderRow.editing = true;
     },
 
-    saveOrderRow(orderRow) {
-      orderRow.editing = false;
-      // TODO: save row
+    saveOrderRow(order, orderRow) {
+      const newOrder = {
+        order_rows_attributes: [ {
+            id: orderRow.id,
+            product_count: orderRow.product_count,
+        } ]
+      }
+
+      axios.patch(`/activities/${this.activity.id}/orders/${order.id}`, newOrder).then((response) => {
+        const updatedOrder = response.data;
+        const updatedOrderRow = updatedOrder.order_rows.find(r => r.id == orderRow.id);
+        let orderRowToUpdate = order.order_rows.find(r => r.id == orderRow.id);
+
+        order.order_total = updatedOrder.order_total;
+        orderRowToUpdate = {
+          ...updatedOrderRow,
+          editing: false
+        }
+
+        orderRow.editing = false;
+      }, (error) => {
+        let errorMessage = 'Something went wrong saving this order row';
+        if (error.response.data['order_rows.product_count']) {
+          errorMessage = `Aantal ${error.response.data['order_rows.product_count']}`
+        }
+
+        this.$set(this.orderRowErrors, orderRow.id, errorMessage);
+      })
     },
 
     increaseProductCount(orderRow) {
