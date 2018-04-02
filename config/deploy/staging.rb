@@ -1,4 +1,4 @@
-set :branch, :staging
+set :branch, :disable_bullet_exceptions_in_dev
 set :deploy_to, '/opt/projects/alpha-tomato-staging'
 
 before :"deploy:started", 'docker:compose:down'
