@@ -16,7 +16,7 @@
             <b-col sm="2" class="text-right">aantal</b-col>
             <b-col sm="3" class="text-right">prijs per stuk</b-col>
             <b-col sm="2" class="text-right pr-3">
-              <span class="pr-3">totaal</span>
+              <span :class="editable ? 'pr-3' : ''">totaal</span>
             </b-col>
           </b-row>
           <b-row v-for="orderRow in row.item.order_rows" class="b-table-details--item px-2">
@@ -27,7 +27,7 @@
               </div>
             </b-col>
             <b-col sm="2" class="text-right">
-              <template v-if="orderRow.editing">
+              <template v-if="editable && orderRow.editing">
                 <i @click="increaseProductCount(orderRow)"
                    class="fa fa-plus-square-o order-history--item-count"></i>
                 <span class="px-2">{{orderRow.product_count}}</span>
@@ -41,10 +41,12 @@
             <b-col sm="3" class="text-right">
               {{doubleToCurrency(orderRow.price_per_product)}}
             </b-col>
-            <b-col sm="2" class="text-right pr-1">
+            <b-col sm="2" :class="['text-right', editable ? 'pr-1' : 'pr-3']">
               {{doubleToCurrency(orderRow.product_count * orderRow.price_per_product)}}
-              <i v-if="orderRow.editing" @click="saveOrderRow(row.item, orderRow)" class="order-history--item-save fa fa-save pl-3"></i>
-              <i v-else @click="editOrderRow(orderRow)" class="order-history--item-edit fa fa-pencil pl-3"></i>
+              <template v-if="editable">
+                <i v-if="orderRow.editing" @click="saveOrderRow(row.item, orderRow)" class="order-history--item-save fa fa-save pl-3"></i>
+                <i v-else @click="editOrderRow(orderRow)" class="order-history--item-edit fa fa-pencil pl-3"></i>
+              </template>
             </b-col>
           </b-row>
         </b-container>
@@ -67,6 +69,10 @@ export default {
     },
     user: {
       type: Object
+    },
+    editable: {
+      type: Boolean,
+      default: false
     }
   },
 
