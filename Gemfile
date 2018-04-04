@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 
 gem 'bcrypt', '~> 3.1.11'
 gem 'bootstrap', '~> 4.0.0.beta3'
-gem 'bullet', '~> 5.7.5'
 gem 'coffee-rails', '~> 4.2'
 gem 'devise', '4.4.1'
 gem 'devise-i18n', '1.5'
@@ -38,6 +37,7 @@ group :development, :test do
   gem 'awesome_print'
   gem 'better_errors'
   gem 'brakeman', require: false
+  gem 'bullet', '~> 5.7'
   gem 'colorize'
   gem 'consistency_fail'
   gem 'dotenv-rails', '~> 2.2.1'

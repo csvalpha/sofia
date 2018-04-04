@@ -428,7 +428,7 @@ DEPENDENCIES
   better_errors
   bootstrap (~> 4.0.0.beta3)
   brakeman
-  bullet (~> 5.7.5)
+  bullet (~> 5.7)
   capistrano (= 3.10.1)
   capistrano-docker!
   capistrano-sidekiq
