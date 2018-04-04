@@ -59,14 +59,25 @@ class ActivitiesController < ApplicationController
       include: { product: { only: %i[id name category], methods: %i[requires_age] } }
     )
 
-    @users_json = User.order(:name)
-                      .to_json(only: %i[id name], methods: %i[credit minor avatar_thumb_or_default_url])
+    @users_json = users_hash.to_json
+
     @activity_json = @activity.to_json(only: %i[id title start_time end_time])
 
     render layout: 'order_screen'
   end
 
   private
+
+  def users_hash
+    users_credits = User.calculate_credits
+    User.order(:name).map do |user|
+      hash = user.attributes
+      hash[:minor] = user.minor
+      hash[:avatar_thumb_or_default_url] = user.avatar_thumb_or_default_url
+      hash[:credit] = users_credits.fetch(user.id, 0)
+      hash
+    end
+  end
 
   def sorted_product_price(activity)
     activity.price_list.product_price.sort_by { |p| p.product.id }

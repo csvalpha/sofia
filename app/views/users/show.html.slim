@@ -58,61 +58,44 @@
 
   hr
 
-  .row
-    .col-sm-12
-      ul.nav.nav-tabs role='tablist' id='userTabs'
-        li.nav-item
-          a.nav-link.active (id='orders-tab' data-toggle="tab" href="#orders" role="tab"
-            aria-controls="orders" aria-selected="true")
-            = 'Bestellingen'
-        li.nav-item
-          a.nav-link (id='creditMutations-tab' data-toggle="tab" href="#creditMutations" role="tab"
-            aria-controls="creditMutations" aria-selected="false")
-            = 'Inleg en saldocorrecties'
+  .col-sm-12
+    = content_tag :div, id: 'user-history-table', class: 'row card', data: { user: @user_json }
+      .card-header
+        ul.nav.nav-tabs.card-header-tabs role='tablist' id='userTabs'
+          li.nav-item
+            a.nav-link.active (id='orders-tab' data-toggle="tab" href="#orders" role="tab"
+              aria-controls="orders" aria-selected="true")
+              = 'Bestellingen'
+          li.nav-item
+            a.nav-link (id='creditMutations-tab' data-toggle="tab" href="#creditMutations" role="tab"
+              aria-controls="creditMutations" aria-selected="false")
+              = 'Inleg en saldocorrecties'
 
-      .tab-content.p-2 id='userTabsContent'
-        .tab-pane.show.active id='orders' role='tabpanel' aria-labelledby='orders-tab'
-          .table-responsive
-            table.table.table-striped
-              thead
-                tr
-                  th scope='col'= '#'
-                  th scope='col'= 'Datum'
-                  th scope='col'= 'bedrag'
+      .card-body
+        .tab-content.p-2 id='userTabsContent'
+          .tab-pane.show.active id='orders' role='tabpanel' aria-labelledby='orders-tab'
+            order-history :user="user"
 
-              tbody
-                - if @user.orders.empty?
+          .tab-pane id='creditMutations' role='tabpanel' aria-labelledby='creditMutations-tab'
+            .table-responsive
+              table.table
+                thead
                   tr
-                    td.text-center colspan='3'
-                      p.my-1
-                        em = "#{@user.name} heeft nog geen bestellingen gedaan"
-                - else
-                  - @user.orders.each do |order|
-                    tr
-                      th scope='row' = order.id
-                      td = l order.created_at
-                      td = number_to_currency(order.order_total, unit: '€')
+                    th scope='col'= '#'
+                    th scope='col'= 'Datum'
+                    th scope='col'= 'Beschrijving'
+                    th scope='col'= 'Bedrag'
 
-        .tab-pane id='creditMutations' role='tabpanel' aria-labelledby='creditMutations-tab'
-          .table-responsive
-            table.table.table-striped
-              thead
-                tr
-                  th scope='col'= '#'
-                  th scope='col'= 'Datum'
-                  th scope='col'= 'Beschrijving'
-                  th scope='col'= 'Bedrag'
-
-              tbody
-                - if @user.credit_mutations.empty?
-                  tr
-                    td.text-center colspan='4'
-                      p.my-1
-                        em = "#{@user.name} heeft nog niet ingelegd en er zijn nog geen correcties"
-                - else
-                  - @user.credit_mutations.each do |mutation|
+                tbody
+                  - if @user.credit_mutations.empty?
                     tr
-                      th scope='row' = mutation.id
-                      td = l mutation.created_at
-                      td = mutation.description
-                      td = number_to_currency(mutation.amount, unit: '€')
+                      td.text-center colspan='4'
+                        p.my-1
+                          em = "#{@user.name} heeft nog niet ingelegd en er zijn nog geen correcties"
+                  - else
+                    - @user.credit_mutations.each do |mutation|
+                      tr
+                        th scope='row' = mutation.id
+                        td = l mutation.created_at
+                        td = mutation.description
+                        td = number_to_currency(mutation.amount, unit: '€')

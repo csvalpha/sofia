@@ -4,16 +4,19 @@ class UsersController < ApplicationController
   after_action :verify_authorized
 
   def index
-    @model = User.all.order(:name)
-    authorize @model
+    @users = User.all.order(:name)
+    authorize @users
+
+    @users_credits = User.calculate_credits
 
     @new_user = User.new
   end
 
   def show
-    @user = User.includes(roles_users: :role).find(params[:id])
+    @user = User.includes(:credit_mutations, roles_users: :role).find(params[:id])
     authorize @user
 
+    @user_json = @user.to_json(only: %i[id name])
     @new_mutation = CreditMutation.new(user: @user)
   end
 
@@ -58,14 +61,6 @@ class UsersController < ApplicationController
     token_response = RestClient.post "#{Rails.application.config.x.banana_api_host}/api/v1/oauth/token", options
 
     @token = JSON.parse(token_response)['access_token']
-  end
-
-  def model_class
-    User
-  end
-
-  def model_includes
-    %i[credit_mutations order_rows]
   end
 
   private
