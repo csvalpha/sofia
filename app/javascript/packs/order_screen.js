@@ -128,7 +128,7 @@ document.addEventListener('turbolinks:load', () => {
             };
           }
 
-          this.$http.post(`/activities/${this.activity.id}/orders.json`, {
+          this.$http.post('/orders.json', {
             order: order
           }).then((response) => {
             const user = response.body.user;

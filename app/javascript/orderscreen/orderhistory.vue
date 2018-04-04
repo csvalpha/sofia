@@ -108,7 +108,14 @@ export default {
 
   methods: {
     ordersProvider() {
-      let promise = axios.get(`/activities/1/orders.json`);
+      let params;
+      if (this.activity) {
+        params = { activity_id: this.activity.id }
+      } else if (user) {
+        this.params = { user_id: this.user.id }
+      }
+
+      let promise = axios.get('/orders', { params });
 
       return promise.then((response) => {
         const orders = response.data;
@@ -146,7 +153,9 @@ export default {
         } ]
       }
 
-      axios.patch(`/activities/${this.activity.id}/orders/${order.id}`, newOrder).then((response) => {
+      if (this.activity.id) newOrder.activity_id = this.activity.id;
+
+      axios.patch(`/orders/${order.id}`, newOrder).then((response) => {
         const updatedOrder = response.data;
         const updatedOrderRow = updatedOrder.order_rows.find(r => r.id == orderRow.id);
         let orderRowToUpdate = order.order_rows.find(r => r.id == orderRow.id);

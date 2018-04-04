@@ -6,7 +6,11 @@ class OrdersController < ApplicationController
   def index
     authorize Order
 
-    @orders = Order.where(activity: params.require(:activity_id)).includes(:order_rows, :user)
+    if allowed_filters.any?
+      @orders = Order.where(allowed_filters).includes(:order_rows, :user)
+    else
+      render status: :bad_request
+    end
 
     render json: @orders.to_json(proper_json)
   end
@@ -37,6 +41,15 @@ class OrdersController < ApplicationController
   end
 
   private
+
+  def allowed_filters
+    @allowed_filters ||= begin
+      @allowed_filters = {}
+      @allowed_filters[:activity] = params[:activity_id] if params[:activity_id]
+      @allowed_filters[:user] = params[:user_id] if params[:user_id]
+      @allowed_filters
+    end
+  end
 
   def permitted_attributes
     params.require(:order).permit(%i[user_id paid_with_cash activity_id],
