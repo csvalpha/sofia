@@ -17,7 +17,7 @@ FactoryBot.define do
       end
 
       after(:create) do |order, evaluator|
-        create :order_row, order: order, product: evaluator.products.sample
+        create :order_row, order: order, product: evaluator.products.sample, product_count: 1
       end
     end
 

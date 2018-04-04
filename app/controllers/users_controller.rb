@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   after_action :verify_authorized
 
   def index
-    @users = User.all.includes(%i[credit_mutations order_rows]).order(:name)
+    @users = User.all.order(:name)
     authorize @users
 
     @users_credits = User.calculate_credits
@@ -13,7 +13,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user = User.includes(%i[credit_mutations order_rows]).find(params[:id])
+    @user = User.includes(:credit_mutations, roles_users: :role).find(params[:id])
     authorize @user
 
     @user_json = @user.to_json(only: %i[id name])

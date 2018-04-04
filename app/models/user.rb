@@ -13,7 +13,7 @@ class User < ApplicationRecord
   scope :in_banana, (-> { where(provider: 'banana_oauth2') })
 
   def credit
-    self.class.calculate_credits.fetch(id, 0)
+    credit_mutations.sum('amount') - order_rows.sum('product_count * price_per_product')
   end
 
   def roles
@@ -68,7 +68,7 @@ class User < ApplicationRecord
   end
 
   def self.calculate_credits
-    credits = User.all.joins(:credit_mutations).group(:id).sum('amount')
+    credits = User.all.left_outer_joins(:credit_mutations).group(:id).sum('amount')
     costs = User.all.joins(:order_rows).group(:id).sum('product_count * price_per_product')
 
     credits.each_with_object({}) { |(id, credit), h| h[id] = credit - costs.fetch(:id, 0) }
