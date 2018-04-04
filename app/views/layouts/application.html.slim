@@ -22,7 +22,7 @@ html
 
     == yield
 
-    - if Rails.application.config.x.tomato_host == 'staging.tomato.csvalpha.nl'
+    - if Rails.application.config.x.tomato_host == 'staging.streep.csvalpha.nl'
       = image_tag '/images/staging_label.png', class: 'environment-label'
-    - elsif Rails.application.config.x.tomato_host != 'tomato.csvalpha.nl'
+    - elsif Rails.application.config.x.tomato_host != 'streep.csvalpha.nl'
       = image_tag '/images/dev_label.png', class: 'environment-label'
