@@ -198,4 +198,55 @@ RSpec.describe User, type: :model do
       it { expect(User.full_name_from_attributes('first', '', 'last')). to eq 'first last' }
     end
   end
+
+  describe 'calculate_credits' do
+    let(:user) { FactoryBot.create(:user) }
+
+    context 'when without orders or credit_mutations' do
+      before { user }
+
+      it { expect(User.calculate_credits[user.id]).to eq 0 }
+    end
+
+    context 'when with data' do
+      let(:product_price) { FactoryBot.build(:product_price, price: 2.18) }
+      let(:price_list) { FactoryBot.build(:price_list, product_price: [product_price]) }
+      let(:activity) { FactoryBot.build(:activity, price_list: price_list) }
+
+      subject(:hash) { User.calculate_credits }
+
+      context 'without orders' do
+        let(:credit_mutation) { FactoryBot.create(:credit_mutation, user: user, amount: 20) }
+
+        before do
+          credit_mutation
+        end
+
+        it { expect(hash[user.id]).to eq credit_mutation.amount }
+      end
+
+      context 'without credit_mutations' do
+        let(:order) { FactoryBot.build(:order, activity: activity, user: user) }
+        let(:order_row) { FactoryBot.build(:order_row, product: product_price.product) }
+
+        before do
+          order
+        end
+
+        it { expect(hash[user.id]).to eq order.order_total }
+      end
+
+      context 'when with both' do
+        let(:order) { FactoryBot.build(:order, activity: activity, user: user) }
+        let(:order_row) { FactoryBot.build(:order_row, product: product_price.product) }
+        let(:credit_mutation) { FactoryBot.create(:credit_mutation, user: user, amount: 20) }
+
+        before do
+          credit_mutation
+        end
+
+        it { expect(hash[user.id]).to eq credit_mutation.amount - order.order_total }
+      end
+    end
+  end
 end

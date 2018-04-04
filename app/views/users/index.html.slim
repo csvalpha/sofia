@@ -24,8 +24,9 @@
               th scope='col' = 'Naam'
               th scope='col' = 'Saldo'
           tbody
-            - @model.each do |user|
+            - @users.each do |user|
               tr
                 th scope='row' = user.id
                 td = link_to user.name, user
-                td class=('text-danger' if user.credit <= 0) = number_to_currency(user.credit, unit: '€')
+                td class=('text-danger' if @users_credits.fetch(user.id, 0) <= 0)
+                  = number_to_currency(@users_credits.fetch(user.id, 0), unit: '€')
