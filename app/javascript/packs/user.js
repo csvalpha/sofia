@@ -16,8 +16,10 @@ document.addEventListener('turbolinks:load', () => {
     var user = JSON.parse(element.dataset.user);
     new Vue({
       el: element,
-      data: {
-        user: user
+      data: () => {
+        return {
+          user: user
+        };
       },
       components: {
         OrderHistory

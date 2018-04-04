@@ -77,6 +77,21 @@ export default {
   },
 
   data: function () {
+    const conditionalFields = {};
+
+    if (!this.user) {
+      conditionalFields.user = {
+        label: 'Gebruiker',
+        sortable: true,
+        formatter: (user) => user ? user.name : '<i>Contant betaald</i>',
+      }
+    } else if (!this.activity) {
+      conditionalFields.activity = {
+        label: 'Activiteit',
+        sortable: false,
+        formatter: (activity) => activity.title,
+      }
+    }
     return {
       isLoading: false,
       fields: {
@@ -84,18 +99,15 @@ export default {
           label: '#',
           sortable: true,
           thClass: 'text-center',
-          tdClass: 'text-center'
+          tdClass: 'text-center',
+          isRowHeader: true
         },
         created_at: {
           label: 'Tijdstip',
           sortable: true,
-          formatter: 'createdAtFormatter'
+          formatter: (value) => moment(value).format('DD-MM HH:mm:ss'),
         },
-        user: {
-          label: 'Gebruiker',
-          sortable: true,
-          formatter: 'userFormatter',
-        },
+        ...conditionalFields,
         order_total: {
           label: 'Bedrag',
           sortable: false,
@@ -111,8 +123,8 @@ export default {
       let params;
       if (this.activity) {
         params = { activity_id: this.activity.id }
-      } else if (user) {
-        this.params = { user_id: this.user.id }
+      } else if (this.user) {
+        params = { user_id: this.user.id }
       }
 
       let promise = axios.get('/orders', { params });
@@ -127,14 +139,6 @@ export default {
       }, () => {
         return [];
       });
-    },
-
-    userFormatter(user) {
-      return user ? user.name : '<i>Contant betaald</i>';
-    },
-
-    createdAtFormatter(value) {
-      return moment(value).format('DD-MM HH:mm:ss');
     },
 
     doubleToCurrency(price) {

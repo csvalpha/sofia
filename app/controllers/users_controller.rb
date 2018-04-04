@@ -14,6 +14,7 @@ class UsersController < ApplicationController
     @user = User.includes(roles_users: :role).find(params[:id])
     authorize @user
 
+    @user_json = @user.to_json(only: %i[id name])
     @new_mutation = CreditMutation.new(user: @user)
   end
 

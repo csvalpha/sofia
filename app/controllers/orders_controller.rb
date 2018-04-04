@@ -4,13 +4,13 @@ class OrdersController < ApplicationController
   after_action :verify_authorized
 
   def index
-    authorize Order
-
     if allowed_filters.any?
-      @orders = Order.where(allowed_filters).includes(:order_rows, :user)
+      @orders = Order.where(allowed_filters).includes(:order_rows, :user, :activity)
     else
       render status: :bad_request
     end
+
+    authorize @orders
 
     render json: @orders.to_json(proper_json)
   end
@@ -65,7 +65,7 @@ class OrdersController < ApplicationController
       include: { order_rows: {
         only: %i[id product_count price_per_product],
         include: { product: { only: %i[id name] } }
-      }, user: { only: :name } } }
+      }, user: { only: :name }, activity: { only: :title } } }
   end
 
   def json_includes
