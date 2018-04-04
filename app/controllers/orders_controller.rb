@@ -8,12 +8,7 @@ class OrdersController < ApplicationController
 
     @orders = Order.where(activity: params.require(:activity_id)).includes(:order_rows, :user)
 
-    render json: @orders.to_json(
-      only: %i[id created_at order_total paid_with_cash],
-      include: { order_rows: {
-        only: [:id, :product_count, product: { only: %i[id name credit] }]
-      }, user: { only: :name } }
-    )
+    render json: @orders.to_json(proper_json)
   end
 
   def create
@@ -29,11 +24,35 @@ class OrdersController < ApplicationController
     end
   end
 
+  def update
+    @order = Order.find(permitted_attributes_on_update[:id])
+
+    authorize @order
+
+    if @order.update(permitted_attributes_on_update)
+      render json: @order.to_json(proper_json)
+    else
+      render json: @order.errors, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def permitted_attributes
     params.require(:order).permit(%i[user_id paid_with_cash activity_id],
                                   order_rows_attributes: %i[id product_id product_count])
+  end
+
+  def permitted_attributes_on_update
+    params.permit(:id, order_rows_attributes: %i[id product_count])
+  end
+
+  def proper_json
+    { only: %i[id created_at order_total paid_with_cash],
+      include: { order_rows: {
+        only: %i[id product_count price_per_product],
+        include: { product: { only: %i[id name] } }
+      }, user: { only: :name } } }
   end
 
   def json_includes
