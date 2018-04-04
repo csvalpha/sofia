@@ -17,7 +17,6 @@ class UsersController < ApplicationController
     authorize @user
 
     @user_json = @user.to_json(only: %i[id name])
-
     @new_mutation = CreditMutation.new(user: @user)
   end
 

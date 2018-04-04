@@ -16,7 +16,7 @@
             <b-col sm="2" class="text-right">aantal</b-col>
             <b-col sm="3" class="text-right">prijs per stuk</b-col>
             <b-col sm="2" class="text-right pr-3">
-              <span class="pr-3">totaal</span>
+              <span :class="editable ? 'pr-3' : ''">totaal</span>
             </b-col>
           </b-row>
           <b-row v-for="orderRow in row.item.order_rows" class="b-table-details--item px-2">
@@ -27,7 +27,7 @@
               </div>
             </b-col>
             <b-col sm="2" class="text-right">
-              <template v-if="orderRow.editing">
+              <template v-if="editable && orderRow.editing">
                 <i @click="increaseProductCount(orderRow)"
                    class="fa fa-plus-square-o order-history--item-count"></i>
                 <span class="px-2">{{orderRow.product_count}}</span>
@@ -41,10 +41,12 @@
             <b-col sm="3" class="text-right">
               {{doubleToCurrency(orderRow.price_per_product)}}
             </b-col>
-            <b-col sm="2" class="text-right pr-1">
+            <b-col sm="2" :class="['text-right', editable ? 'pr-1' : 'pr-3']">
               {{doubleToCurrency(orderRow.product_count * orderRow.price_per_product)}}
-              <i v-if="orderRow.editing" @click="saveOrderRow(row.item, orderRow)" class="order-history--item-save fa fa-save pl-3"></i>
-              <i v-else @click="editOrderRow(orderRow)" class="order-history--item-edit fa fa-pencil pl-3"></i>
+              <template v-if="editable">
+                <i v-if="orderRow.editing" @click="saveOrderRow(row.item, orderRow)" class="order-history--item-save fa fa-save pl-3"></i>
+                <i v-else @click="editOrderRow(orderRow)" class="order-history--item-edit fa fa-pencil pl-3"></i>
+              </template>
             </b-col>
           </b-row>
         </b-container>
@@ -63,12 +65,33 @@ import moment from 'moment';
 export default {
   props: {
     activity: {
-      type: Object,
-      required: true
+      type: Object
+    },
+    user: {
+      type: Object
+    },
+    editable: {
+      type: Boolean,
+      default: false
     }
   },
 
   data: function () {
+    const conditionalFields = {};
+
+    if (!this.user) {
+      conditionalFields.user = {
+        label: 'Gebruiker',
+        sortable: true,
+        formatter: (user) => user ? user.name : '<i>Contant betaald</i>',
+      }
+    } else if (!this.activity) {
+      conditionalFields.activity = {
+        label: 'Activiteit',
+        sortable: false,
+        formatter: (activity) => activity.title,
+      }
+    }
     return {
       isLoading: false,
       fields: {
@@ -76,18 +99,15 @@ export default {
           label: '#',
           sortable: true,
           thClass: 'text-center',
-          tdClass: 'text-center'
+          tdClass: 'text-center',
+          isRowHeader: true
         },
         created_at: {
           label: 'Tijdstip',
           sortable: true,
-          formatter: 'createdAtFormatter'
+          formatter: (value) => moment(value).format('DD-MM HH:mm:ss'),
         },
-        user: {
-          label: 'Gebruiker',
-          sortable: true,
-          formatter: 'userFormatter',
-        },
+        ...conditionalFields,
         order_total: {
           label: 'Bedrag',
           sortable: false,
@@ -100,7 +120,14 @@ export default {
 
   methods: {
     ordersProvider() {
-      let promise = axios.get(`/activities/${this.activity.id}/orders.json`);
+      let params;
+      if (this.activity) {
+        params = { activity_id: this.activity.id }
+      } else if (this.user) {
+        params = { user_id: this.user.id }
+      }
+
+      let promise = axios.get('/orders', { params });
 
       return promise.then((response) => {
         const orders = response.data;
@@ -112,14 +139,6 @@ export default {
       }, () => {
         return [];
       });
-    },
-
-    userFormatter(user) {
-      return user ? user.name : '<i>Contant betaald</i>';
-    },
-
-    createdAtFormatter(value) {
-      return moment(value).format('DD-MM HH:mm:ss');
     },
 
     doubleToCurrency(price) {
@@ -138,7 +157,9 @@ export default {
         } ]
       }
 
-      axios.patch(`/activities/${this.activity.id}/orders/${order.id}`, newOrder).then((response) => {
+      if (this.activity.id) newOrder.activity_id = this.activity.id;
+
+      axios.patch(`/orders/${order.id}`, newOrder).then((response) => {
         const updatedOrder = response.data;
         const updatedOrderRow = updatedOrder.order_rows.find(r => r.id == orderRow.id);
         let orderRowToUpdate = order.order_rows.find(r => r.id == orderRow.id);

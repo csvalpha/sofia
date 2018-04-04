@@ -110,7 +110,7 @@ RSpec.describe User, type: :model do
     end
 
     context 'when 18 or older' do
-      let(:user) { FactoryBot.build(:user, birthday: 18.years.ago) }
+      let(:user) { FactoryBot.build(:user, birthday: 18.years.ago - 1.day) }
 
       it { expect(user.minor).to eq false }
     end

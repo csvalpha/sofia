@@ -4,9 +4,13 @@ class OrdersController < ApplicationController
   after_action :verify_authorized
 
   def index
-    authorize Order
+    if allowed_filters.any?
+      @orders = Order.where(allowed_filters).includes(:order_rows, :user, :activity)
+    else
+      render status: :bad_request
+    end
 
-    @orders = Order.where(activity: params.require(:activity_id)).includes(:order_rows, :user)
+    authorize @orders
 
     render json: @orders.to_json(proper_json)
   end
@@ -38,6 +42,15 @@ class OrdersController < ApplicationController
 
   private
 
+  def allowed_filters
+    @allowed_filters ||= begin
+      @allowed_filters = {}
+      @allowed_filters[:activity] = params[:activity_id] if params[:activity_id]
+      @allowed_filters[:user] = params[:user_id] if params[:user_id]
+      @allowed_filters
+    end
+  end
+
   def permitted_attributes
     params.require(:order).permit(%i[user_id paid_with_cash activity_id],
                                   order_rows_attributes: %i[id product_id product_count])
@@ -52,7 +65,7 @@ class OrdersController < ApplicationController
       include: { order_rows: {
         only: %i[id product_count price_per_product],
         include: { product: { only: %i[id name] } }
-      }, user: { only: :name } } }
+      }, user: { only: :name }, activity: { only: :title } } }
   end
 
   def json_includes
