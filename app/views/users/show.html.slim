@@ -58,7 +58,7 @@
 
   hr
 
-  .row
+  = content_tag :div, id: 'user-history-table', class: 'row', data: { user: @user_json }
     .col-sm-12
       ul.nav.nav-tabs role='tablist' id='userTabs'
         li.nav-item
@@ -72,26 +72,7 @@
 
       .tab-content.p-2 id='userTabsContent'
         .tab-pane.show.active id='orders' role='tabpanel' aria-labelledby='orders-tab'
-          .table-responsive
-            table.table.table-striped
-              thead
-                tr
-                  th scope='col'= '#'
-                  th scope='col'= 'Datum'
-                  th scope='col'= 'bedrag'
-
-              tbody
-                - if @user.orders.empty?
-                  tr
-                    td.text-center colspan='3'
-                      p.my-1
-                        em = "#{@user.name} heeft nog geen bestellingen gedaan"
-                - else
-                  - @user.orders.each do |order|
-                    tr
-                      th scope='row' = order.id
-                      td = l order.created_at
-                      td = number_to_currency(order.order_total, unit: '€')
+          order-history :user="user"
 
         .tab-pane id='creditMutations' role='tabpanel' aria-labelledby='creditMutations-tab'
           .table-responsive

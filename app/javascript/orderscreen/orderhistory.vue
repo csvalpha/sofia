@@ -63,8 +63,10 @@ import moment from 'moment';
 export default {
   props: {
     activity: {
-      type: Object,
-      required: true
+      type: Object
+    },
+    user: {
+      type: Object
     }
   },
 
@@ -100,7 +102,7 @@ export default {
 
   methods: {
     ordersProvider() {
-      let promise = axios.get(`/activities/${this.activity.id}/orders.json`);
+      let promise = axios.get(`/activities/1/orders.json`);
 
       return promise.then((response) => {
         const orders = response.data;
