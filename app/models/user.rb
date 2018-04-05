@@ -71,6 +71,6 @@ class User < ApplicationRecord
     credits = User.all.left_outer_joins(:credit_mutations).group(:id).sum('amount')
     costs = User.all.joins(:order_rows).group(:id).sum('product_count * price_per_product')
 
-    credits.each_with_object({}) { |(id, credit), h| h[id] = credit - costs.fetch(:id, 0) }
+    credits.each_with_object({}) { |(id, credit), h| h[id] = credit - costs.fetch(id, 0) }
   end
 end
