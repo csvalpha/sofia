@@ -1,7 +1,7 @@
 set :branch, :staging
 set :deploy_to, '/opt/projects/alpha-tomato-staging'
 
-before :"deploy:started", 'docker:compose:down'
+before :"docker:deploy:compose:start", 'docker:compose:down'
 after :"docker:deploy:compose:start", 'docker:deploy:compose:migrate'
 
 set :docker_compose, true

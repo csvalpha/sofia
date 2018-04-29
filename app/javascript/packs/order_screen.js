@@ -1,6 +1,7 @@
 import Vue from 'vue/dist/vue.esm';
 import TurbolinksAdapter from 'vue-turbolinks';
 import VueResource from 'vue-resource';
+import axios from 'axios';
 import BootstrapVue from 'bootstrap-vue';
 
 import Flash from '../flash.vue';
@@ -12,7 +13,9 @@ Vue.use(VueResource);
 Vue.use(BootstrapVue);
 
 document.addEventListener('turbolinks:load', () => {
-  Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  Vue.http.headers.common['X-CSRF-TOKEN'] = token;
+  axios.defaults.headers.common['X-CSRF-Token'] = token;
 
   var element = document.getElementById('order-screen');
   if (element != null) {
@@ -125,7 +128,7 @@ document.addEventListener('turbolinks:load', () => {
             };
           }
 
-          this.$http.post(`/activities/${this.activity.id}/orders.json`, {
+          this.$http.post('/orders.json', {
             order: order
           }).then((response) => {
             const user = response.body.user;

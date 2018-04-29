@@ -38,7 +38,7 @@ group :development, :test do
   gem 'awesome_print'
   gem 'better_errors'
   gem 'brakeman', require: false
-  gem 'bullet'
+  gem 'bullet', '~> 5.7'
   gem 'colorize'
   gem 'consistency_fail'
   gem 'dotenv-rails', '~> 2.2.1'
