@@ -5,4 +5,4 @@
 
 schedule:
   CreditInsufficientNotificationJob:
-    cron: '0 0 10 * * 4'  # At 10:00:00 on Thursday => https://crontab.guru/#0_10_*_*_4
+    cron: '0 30 11 * * 0'  # At 10:00:00 on Thursday => https://crontab.guru/#0_10_*_*_4
