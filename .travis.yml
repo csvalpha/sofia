@@ -7,7 +7,7 @@ cache:
 
 install:
   - bundle install
-  - nvm install node
+  - nvm install node 9
   - node -v
   - npm i -g yarn
   - yarn
