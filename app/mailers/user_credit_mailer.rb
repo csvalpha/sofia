@@ -8,6 +8,11 @@ class UserCreditMailer < ApplicationMailer
     @user = treasurer
     @unnotifyable_users = unnotifyable_users
     @success_count = success_count
-    mail to: treasurer.email, subject: 'Er is een saldomail verstuurd'
+    if @unnotifyable_users.count || @success_count
+      subject = 'Er is een saldomail verstuurd'
+    else
+      subject = 'Er is geen saldomail verstuurd'
+    end
+    mail to: treasurer.email, subject: subject
   end
 end
