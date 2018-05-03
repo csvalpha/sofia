@@ -2,6 +2,7 @@ class UserCreditMailer < ApplicationMailer
   def insufficient_credit_mail(user)
     @user = user
     @title = 'Notificatie over je saldo'
+    @cab_link = @user.profile_url
     mail to: user.email, subject: 'Verzoek met betrekking tot uw Zatladder saldo'
   end
 
