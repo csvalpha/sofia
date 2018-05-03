@@ -86,11 +86,12 @@ class UsersController < ApplicationController
                                             fields['last_name'])
     u.provider = 'banana_oauth2'
     u.avatar_thumb_url = fields['avatar_thumb_url']
+    u.email = fields['email']
     u.birthday = fields['birthday']
     u.save
   end
 
   def permitted_attributes
-    params.require(:user).permit(:name)
+    params.require(:user).permit(%w[name email])
   end
 end

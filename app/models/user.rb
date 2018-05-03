@@ -6,23 +6,26 @@ class User < ApplicationRecord
   has_many :activities, dependent: :destroy, foreign_key: 'created_by_id', inverse_of: :created_by
 
   has_many :roles_users, class_name: 'RolesUsers', dependent: :destroy, inverse_of: :user
+  has_many :roles, through: :roles_users
 
   validates :name, presence: true
   validates :uid, uniqueness: true, allow_blank: true
 
   scope :in_banana, (-> { where(provider: 'banana_oauth2') })
+  scope :treasurer, (-> { joins(:roles).merge(Role.treasurer) })
 
   def credit
     credit_mutations.sum('amount') - order_rows.sum('product_count * price_per_product')
   end
 
-  def roles
-    @roles ||= Role.joins(:roles_users).merge(RolesUsers.where(user: self))
-  end
-
   def avatar_thumb_or_default_url
     return '/images/avatar_thumb_default.png' unless avatar_thumb_url
     "#{Rails.application.config.x.banana_api_host}#{avatar_thumb_url}"
+  end
+
+  def profile_url
+    default_options = Rails.application.config.action_mailer.default_url_options
+    URI::Generic.build(default_options.merge(path: "/users/#{id}")).to_s
   end
 
   def age

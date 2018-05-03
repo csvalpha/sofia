@@ -1,0 +1,17 @@
+p style="margin: 0;font-size: 16px;line-height: 18px"
+  = "Op #{l Time.zone.now, format: :long} is er een automatische saldomail verstuurd "
+  = 'naar alle gebruikers die een negatief saldo hebben. '
+  = "Er is/zijn #{@success_count} gebruiker(s) gemaild."
+
+br
+
+- if @unnotifyable_users.any?
+  p style="margin: 0;font-size: 16px;line-height: 18px"
+    = 'De volgende gebruikers hebben een negatief saldo maar geen mailadres in het systeem. '
+    = 'Deze gebruikers zijn niet geinformeerd over hen negatieve saldo.'
+  br
+  ol
+    - @unnotifyable_users.each do |user_name|
+      li = user_name
+
+  br

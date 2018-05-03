@@ -10,6 +10,10 @@
             tr
               th scope='row' = 'Geboortedatum'
               td.text-right = l @user.birthday, format: :long
+          - if @user.email
+            tr
+              th scope='row' = 'Email'
+              td.text-right = @user.email
           tr
             th scope='row' = 'Aangemaakt op'
             td.text-right = l @user.created_at, format: :long
