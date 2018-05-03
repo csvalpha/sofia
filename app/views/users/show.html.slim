@@ -38,27 +38,51 @@
 
     .col-sm-12.col-md-6.py-2
       .card
-        .card-body
-          button.btn.btn-small.pull-right (type= 'button' data-toggle= 'collapse'
-            data-target= '#roleSyncDescription' aria-controls='roleSyncDescription' aria-expanded='false')
-            = fa_icon 'question-circle'
+        .card-header
+          ul.nav.nav-tabs.card-header-tabs role='tablist' id='infoTabs'
+            li.nav-item
+              a.nav-link.active (id='creditInfo-tab' data-toggle="tab" href="#creditInfo" role="tab"
+                aria-controls="creditInfo" aria-selected="true")
+                = 'Inleggen'
+            li.nav-item
+              a.nav-link (id='roleInfo-tab' data-toggle="tab" href="#roleInfo" role="tab"
+                aria-controls="roleInfo" aria-selected="false")
+                = 'Rollen en rechten'
 
-          h2.card-title
-            = 'Rollen'
+        .card-body.p-1
+          .tab-content.p-2 id='infoTabsContent'
+            .tab-pane.show.active id='creditInfo' role='tabpanel' aria-labelledby='creditInfo-tab'
+              = content_tag :div, class: "alert mb-1 alert-#{@user.credit <= 0 ? 'danger' : 'info'}"
+                h4.alert-heading
+                 = @user.credit <= 0 ? 'Je staat rood!' : 'Inleggen'
 
-          p.alert.alert-light.card-text.collapse id='roleSyncDescription'
-            = 'Rollen worden gesynchroniseerd als de gebruiker zelf inlogt'
+                p.card-text.d-none.d-md-block
+                  = 'Om je saldo aan te vullen moet je zelf geld overmaken. '
+                  = 'Dat kan naar NL68INGB0008165420 t.n.v. Stichting Societeit Flux '
+                  = 'onder vermelding van je naam en \'Inleg Zatladder\'.'
+                small.mb-0 = 'Het kan enkele dagen duren voor je betaling is verwerkt.'
 
-          p.card-text.d-none.d-md-block
-            = 'Rechten zijn afhankelijk van de rollen die een gebruiker in het streepsysteem heeft. '
-            = 'Rollen worden bepaald aan de hand van de groepen waar een gebruiker lid van is in de Alpha website.'
+            .tab-pane.p-2 id='roleInfo' role='tabpanel' aria-labelledby='roleInfo-tab'
+              button.btn.btn-small.pull-right (type= 'button' data-toggle= 'collapse'
+                data-target= '#roleSyncDescription' aria-controls='roleSyncDescription' aria-expanded='false')
+                = fa_icon 'question-circle'
 
-          - if @user.roles_users.any?
-            ul
-              - @user.roles_users.each do |role|
-                li = role.name
-          - else
-            p = "#{@user.name} heeft geen speciale rollen binnen het streepsysteem."
+              h2.card-title
+                = 'Rollen'
+
+              p.alert.alert-light.card-text.collapse id='roleSyncDescription'
+                = 'Rollen worden gesynchroniseerd als de gebruiker zelf inlogt'
+
+              p.card-text.d-none.d-md-block
+                = 'Rechten zijn afhankelijk van de rollen die een gebruiker in het streepsysteem heeft. '
+                = 'Rollen worden bepaald aan de hand van de groepen waar een gebruiker lid van is in de Alpha website.'
+
+              - if @user.roles_users.any?
+                ul.mb-1
+                  - @user.roles_users.each do |role|
+                    li = role.name
+              - else
+                p = "#{@user.name} heeft geen speciale rollen binnen het streepsysteem."
 
   hr
 
