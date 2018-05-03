@@ -87,6 +87,7 @@ Rails.application.configure do
   }
 
   config.action_mailer.delivery_method = :mailgun
+  config.action_mailer.asset_host = "https://#{config.action_mailer.default_url_options[:host]}"
   config.action_mailer.mailgun_settings = {
     api_key: Rails.application.secrets.fetch(:mailgun_api_key),
     domain: 'csvalpha.nl'

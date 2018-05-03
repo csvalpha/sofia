@@ -1,11 +1,17 @@
-Beste <%= @user.name %>
+p style="margin: 0;font-size: 16px;line-height: 18px"
+  = 'U heeft op het moment een negatief Flux saldo. U wordt verzocht dit aan te '
+  = 'vullen tot minsten 5 euro positief zoals beschreven in het Huishoudelijk '
+  = 'Regelement van onze stichting.'
 
-U heeft op het moment een negatief Flux saldo. U wordt verzocht dit aan te vullen tot minsten 5 euro positief zoals beschreven in het Huishoudelijk Regelement van onze stichting.
-Uw saldo aanvullen kan door het geld over te maken naar NL64INGB0008165420 ten name van Stichting Sociëteit Flux onder vermelding van je naam en 'inleg zatladder'.
-Mocht u meer details willen, of van mening zijn dat uw saldo niet klopt kunt u contact opnemen met de penningmeester via penningmeester@societeitflux.nl.
+br
 
-U kunt uw saldo bekijken op: <%= @user.profile_url %>
+p style="margin: 0;font-size: 16px;line-height: 18px"
+  = 'Uw saldo aanvullen kan door het geld over te maken naar NL64INGB0008165420 '
+  = 'ten name van Stichting Sociëteit Flux onder vermelding van je naam en \'inleg '
+  = 'zatladder\'. Mocht u meer details willen, of van mening zijn dat uw saldo '
+  = 'niet klopt kunt u contact opnemen met de penningmeester via '
+  a href="mailto:penningmeester@societeitflux.nl"
+    = 'penningmeester@societeitflux.nl'
+  = '.'
 
-
-Met vriendelijke groet,
-Uw penningmeester
+br
