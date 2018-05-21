@@ -1,3 +1,4 @@
+- content_for :title, "Streepscherm #{@activity.title} - SOFIA"
 = content_tag :div, id: 'order-screen', class: 'order-screen',
   data: { users: @users_json, product_prices: @product_prices_json, activity: @activity_json }
 
