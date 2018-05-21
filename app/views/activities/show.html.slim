@@ -56,10 +56,11 @@
           a.nav-link (id='credit_mutations-tab' data-toggle="tab" href="#credit_mutations" role="tab"
             aria-controls="credit_mutations" aria-selected="false")
             = 'Inleg en correcties'
-        li.nav-item
-          a.nav-link (id='orders-tab' data-toggle="tab" href="#orders" role="tab"
-            aria-controls="orders" aria-selected="false")
-            = 'Bestellingen'
+        - if current_user.treasurer?
+          li.nav-item
+            a.nav-link (id='orders-tab' data-toggle="tab" href="#orders" role="tab"
+              aria-controls="orders" aria-selected="false")
+              = 'Bestellingen'
         li.nav-item
           a.nav-link (id='product_totals-tab' data-toggle="tab" href="#product_totals" role="tab"
             aria-controls="product_totals-tab" aria-selected="false")
@@ -152,41 +153,42 @@
                       td = link_to mutation.user.name, mutation.user
                       td = number_to_currency(mutation.amount, unit: '€')
 
-        .tab-pane id='orders' role='tabpanel' aria-labelledby='orders-tab'
-          .table-responsive
-            table.table.table-striped
-              - if @orders.empty?
-                tr
-                  td.text-center colspan='4'
-                    p.my-1
-                      em = 'Er zijn nog geen bestellingen'
-              - else
-                thead
+        - if current_user.treasurer?
+          .tab-pane id='orders' role='tabpanel' aria-labelledby='orders-tab'
+            .table-responsive
+              table.table.table-striped
+                - if @orders.empty?
                   tr
-                    th scope='col' = '#'
-                    th scope='col' = 'Tijd'
-                    th scope='col' = 'Gebruiker'
-                    th scope='col' = 'Bedrag'
-                    th scope='col' = 'Producten'
-
-                tbody
-                  - @orders.each do |order|
+                    td.text-center colspan='4'
+                      p.my-1
+                        em = 'Er zijn nog geen bestellingen'
+                - else
+                  thead
                     tr
-                      th scope='row' = order.id
-                      td = l order.created_at, format: :time_only
-                      td
-                        - if order.user.present?
-                          = link_to order.user.name, order.user
-                        - else
-                          em = 'Contant betaald'
-                      td = number_to_currency(order.order_total, unit: '€')
-                      td
-                        - order.order_rows.each_with_index do |order_row, i|
-                          = order_row.product.name
-                          - if order_row.product_count > 1
-                            = " (#{order_row.product_count}x)"
-                          - if i < order.order_rows.size - 1
-                            = ', '
+                      th scope='col' = '#'
+                      th scope='col' = 'Tijd'
+                      th scope='col' = 'Gebruiker'
+                      th scope='col' = 'Bedrag'
+                      th scope='col' = 'Producten'
+
+                  tbody
+                    - @orders.each do |order|
+                      tr
+                        th scope='row' = order.id
+                        td = l order.created_at, format: :time_only
+                        td
+                          - if order.user.present?
+                            = link_to order.user.name, order.user
+                          - else
+                            em = 'Contant betaald'
+                        td = number_to_currency(order.order_total, unit: '€')
+                        td
+                          - order.order_rows.each_with_index do |order_row, i|
+                            = order_row.product.name
+                            - if order_row.product_count > 1
+                              = " (#{order_row.product_count}x)"
+                            - if i < order.order_rows.size - 1
+                              = ', '
 
         .tab-pane id='product_totals' role='tabpanel' aria-labelledby='product_totals-tab'
           .row
