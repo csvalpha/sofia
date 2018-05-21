@@ -19,14 +19,14 @@
 }
 
 // Source: jsfiddle.net/mwj2tagh
-.fa-plus18{
+.fa-plus18 {
   text-align: center;
-  font-family: "helvetica neue", Helvetica, Arial, Sans-Serif;
+  font-family: 'helvetica neue', Helvetica, Arial, Sans-Serif;
   font-size: 80%;
   font-weight: bold;
 
-  &:before {
-    content: "18+"
+  &::before {
+    content: '18+';
   }
 }
 
@@ -79,4 +79,13 @@
       color: $gray-700;
     }
   }
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  background-color: $gray-400;
+  width: 100%;
+  height: 48px;
+  line-height: 48px;
 }
