@@ -5,6 +5,9 @@
 @import 'order_screen';
 @import 'price_lists';
 
+body {
+  padding-bottom: 52px;
+}
 
 // ANIMATIONS
 .slide-fade-enter-active,
@@ -82,7 +85,7 @@
 }
 
 .footer {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   background-color: $gray-400;
   width: 100%;
