@@ -22,7 +22,7 @@
             td = @price_list.name
           tr
             th scope='row' = 'Gemaakt door'
-            td = link_to @activity.created_by.name, @activity.created_by
+            td = @activity.created_by.name
           tr
             th scope='row' = 'Tappers'
             td = @bartenders.map(&:name).join(', ')
