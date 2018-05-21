@@ -6,7 +6,7 @@ class Product < ApplicationRecord
 
   validates :name, :category, presence: true
 
-  accepts_nested_attributes_for :product_prices
+  accepts_nested_attributes_for :product_prices, allow_destroy: true
 
   def requires_age
     %w[beer distilled wine tobacco].include? category
