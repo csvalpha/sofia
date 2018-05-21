@@ -37,7 +37,7 @@ _On Linux-like systems_
 In OAuth Banana (github.com/csvalpha/alpha-banana-api), voer het volgende commando uit:
 
 ```ruby
-Doorkeeper::Application.create(name: 'Tomato - Streepsysteem der C.S.V. Alpha', redirect_uri: 'http://localhost:5000/users/auth/banana_oauth2/callback')
+Doorkeeper::Application.create(name: 'Tomato - Streepsysteem der C.S.V. Alpha', redirect_uri: 'http://localhost:5000/users/auth/banana_oauth2/callback', scopes: 'read_user')
 ```
 
 Vervolgens kopieer je de uid en secret naar de `.env` in Tomato (als `banana_client_id` en `banana_client_secret`).
@@ -53,6 +53,11 @@ Role.create(role_type: :treasurer, group_uid: 3)
 Role.create(role_type: :main_bartender, group_uid: 3)
 Role.create(role_type: :main_bartender, group_uid: 2)
 ```
+
+## Deploying
+Deploying procedure is the same as for the Banana project.   
+See [DEPLOY.md](https://github.com/csvalpha/alpha-banana-api/blob/master/DEPLOY.md) for that.
+
 
 ## Contributing
 

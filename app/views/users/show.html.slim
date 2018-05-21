@@ -10,6 +10,10 @@
             tr
               th scope='row' = 'Geboortedatum'
               td.text-right = l @user.birthday, format: :long
+          - if @user.email
+            tr
+              th scope='row' = 'Email'
+              td.text-right = @user.email
           tr
             th scope='row' = 'Aangemaakt op'
             td.text-right = l @user.created_at, format: :long
@@ -34,85 +38,92 @@
 
     .col-sm-12.col-md-6.py-2
       .card
-        .card-body
-          button.btn.btn-small.pull-right (type= 'button' data-toggle= 'collapse'
-            data-target= '#roleSyncDescription' aria-controls='roleSyncDescription' aria-expanded='false')
-            = fa_icon 'question-circle'
+        .card-header
+          ul.nav.nav-tabs.card-header-tabs role='tablist' id='infoTabs'
+            li.nav-item
+              a.nav-link.active (id='creditInfo-tab' data-toggle="tab" href="#creditInfo" role="tab"
+                aria-controls="creditInfo" aria-selected="true")
+                = 'Inleggen'
+            li.nav-item
+              a.nav-link (id='roleInfo-tab' data-toggle="tab" href="#roleInfo" role="tab"
+                aria-controls="roleInfo" aria-selected="false")
+                = 'Rollen en rechten'
 
-          h2.card-title
-            = 'Rollen'
+        .card-body.p-1
+          .tab-content.p-2 id='infoTabsContent'
+            .tab-pane.show.active id='creditInfo' role='tabpanel' aria-labelledby='creditInfo-tab'
+              = content_tag :div, class: "alert mb-1 alert-#{@user.credit <= 0 ? 'danger' : 'info'}"
+                h4.alert-heading
+                 = @user.credit <= 0 ? 'Je staat rood!' : 'Inleggen'
 
-          p.alert.alert-light.card-text.collapse id='roleSyncDescription'
-            = 'Rollen worden gesynchroniseerd als de gebruiker zelf inlogt'
+                p.card-text
+                  = 'Om je saldo aan te vullen moet je zelf geld overmaken. '
+                  = 'Dat kan naar NL68INGB0008165420 t.n.v. Stichting Societeit Flux '
+                  = 'onder vermelding van je naam en \'Inleg Zatladder\'.'
+                small.mb-0 = 'Het kan enkele dagen duren voor je betaling is verwerkt.'
 
-          p.card-text.d-none.d-md-block
-            = 'Rechten zijn afhankelijk van de rollen die een gebruiker in het streepsysteem heeft. '
-            = 'Rollen worden bepaald aan de hand van de groepen waar een gebruiker lid van is in de Alpha website.'
+            .tab-pane.p-2 id='roleInfo' role='tabpanel' aria-labelledby='roleInfo-tab'
+              button.btn.btn-small.pull-right (type= 'button' data-toggle= 'collapse'
+                data-target= '#roleSyncDescription' aria-controls='roleSyncDescription' aria-expanded='false')
+                = fa_icon 'question-circle'
 
-          - if @user.roles_users.any?
-            ul
-              - @user.roles_users.each do |role|
-                li = role.name
-          - else
-            p = "#{@user.name} heeft geen speciale rollen binnen het streepsysteem."
+              h2.card-title
+                = 'Rollen'
+
+              p.alert.alert-light.card-text.collapse id='roleSyncDescription'
+                = 'Rollen worden gesynchroniseerd als de gebruiker zelf inlogt'
+
+              p.card-text.d-none.d-md-block
+                = 'Rechten zijn afhankelijk van de rollen die een gebruiker in het streepsysteem heeft. '
+                = 'Rollen worden bepaald aan de hand van de groepen waar een gebruiker lid van is in de Alpha website.'
+
+              - if @user.roles_users.any?
+                ul.mb-1
+                  - @user.roles_users.each do |role|
+                    li = role.name
+              - else
+                p = "#{@user.name} heeft geen speciale rollen binnen het streepsysteem."
 
   hr
 
-  .row
-    .col-sm-12
-      ul.nav.nav-tabs role='tablist' id='userTabs'
-        li.nav-item
-          a.nav-link.active (id='orders-tab' data-toggle="tab" href="#orders" role="tab"
-            aria-controls="orders" aria-selected="true")
-            = 'Bestellingen'
-        li.nav-item
-          a.nav-link (id='creditMutations-tab' data-toggle="tab" href="#creditMutations" role="tab"
-            aria-controls="creditMutations" aria-selected="false")
-            = 'Inleg en saldocorrecties'
+  .col-sm-12
+    = content_tag :div, id: 'user-history-table', class: 'row card', data: { user: @user_json }
+      .card-header
+        ul.nav.nav-tabs.card-header-tabs role='tablist' id='userTabs'
+          li.nav-item
+            a.nav-link.active (id='orders-tab' data-toggle="tab" href="#orders" role="tab"
+              aria-controls="orders" aria-selected="true")
+              = 'Bestellingen'
+          li.nav-item
+            a.nav-link (id='creditMutations-tab' data-toggle="tab" href="#creditMutations" role="tab"
+              aria-controls="creditMutations" aria-selected="false")
+              = 'Inleg en saldocorrecties'
 
-      .tab-content.p-2 id='userTabsContent'
-        .tab-pane.show.active id='orders' role='tabpanel' aria-labelledby='orders-tab'
-          .table-responsive
-            table.table.table-striped
-              thead
-                tr
-                  th scope='col'= '#'
-                  th scope='col'= 'Datum'
-                  th scope='col'= 'bedrag'
+      .card-body
+        .tab-content.p-2 id='userTabsContent'
+          .tab-pane.show.active id='orders' role='tabpanel' aria-labelledby='orders-tab'
+            order-history :user="user"
 
-              tbody
-                - if @user.orders.empty?
+          .tab-pane id='creditMutations' role='tabpanel' aria-labelledby='creditMutations-tab'
+            .table-responsive
+              table.table
+                thead
                   tr
-                    td.text-center colspan='3'
-                      p.my-1
-                        em = "#{@user.name} heeft nog geen bestellingen gedaan"
-                - else
-                  - @user.orders.each do |order|
-                    tr
-                      th scope='row' = order.id
-                      td = l order.created_at
-                      td = number_to_currency(order.order_total, unit: '€')
+                    th scope='col'= '#'
+                    th scope='col'= 'Datum'
+                    th scope='col'= 'Beschrijving'
+                    th scope='col'= 'Bedrag'
 
-        .tab-pane id='creditMutations' role='tabpanel' aria-labelledby='creditMutations-tab'
-          .table-responsive
-            table.table.table-striped
-              thead
-                tr
-                  th scope='col'= '#'
-                  th scope='col'= 'Datum'
-                  th scope='col'= 'Beschrijving'
-                  th scope='col'= 'Bedrag'
-
-              tbody
-                - if @user.credit_mutations.empty?
-                  tr
-                    td.text-center colspan='4'
-                      p.my-1
-                        em = "#{@user.name} heeft nog niet ingelegd en er zijn nog geen correcties"
-                - else
-                  - @user.credit_mutations.each do |mutation|
+                tbody
+                  - if @user.credit_mutations.empty?
                     tr
-                      th scope='row' = mutation.id
-                      td = l mutation.created_at
-                      td = mutation.description
-                      td = number_to_currency(mutation.amount, unit: '€')
+                      td.text-center colspan='4'
+                        p.my-1
+                          em = "#{@user.name} heeft nog niet ingelegd en er zijn nog geen correcties"
+                  - else
+                    - @user.credit_mutations.each do |mutation|
+                      tr
+                        th scope='row' = mutation.id
+                        td = l mutation.created_at
+                        td = mutation.description
+                        td = number_to_currency(mutation.amount, unit: '€')

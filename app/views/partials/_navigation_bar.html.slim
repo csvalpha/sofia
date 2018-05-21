@@ -15,11 +15,11 @@ nav.navbar.navbar-expand-md.navbar-dark.bg-dark
         li.nav-item
           = nav_link activities_path, class: 'nav-link'
             = fa_icon 'calendar', class: 'mr-2', text: 'Activiteiten'
+
+      - if current_user&.treasurer?
         li.nav-item
           = nav_link users_path, class: 'nav-link'
             = fa_icon 'users', class: 'mr-2', text: 'Gebruikers'
-
-      - if current_user&.treasurer?
         li.nav-item
           = nav_link price_lists_path, class: 'nav-link'
             = fa_icon 'beer', class: 'mr-2', text: 'Prijslijsten'
