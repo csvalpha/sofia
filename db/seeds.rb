@@ -13,9 +13,10 @@ end
 
 p 'Seeding users...'
 users = []
-5.times do
+4.times do
   users << FactoryBot.create(:user)
 end
+users << FactoryBot.create(:user, name: 'Benjamin Knopje', birthday: 16.years.ago)
 
 p 'Seeding activities...'
 activities = []

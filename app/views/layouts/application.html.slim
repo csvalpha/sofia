@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title = 'Tomato – Streepsysteem der C.S.V. Alpha'
+    title = yield(:title)
     = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
 
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
@@ -27,3 +27,5 @@ html
       = image_tag '/images/staging_label.png', class: 'environment-label'
     - elsif Rails.application.config.x.tomato_host != 'streep.csvalpha.nl'
       = image_tag '/images/dev_label.png', class: 'environment-label'
+
+    = render partial: 'partials/footer'
