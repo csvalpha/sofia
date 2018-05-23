@@ -5,8 +5,10 @@
 @import 'order_screen';
 @import 'price_lists';
 
+html,
 body {
-  padding-bottom: 52px;
+  position: relative;
+  min-height: 100vh;
 }
 
 // ANIMATIONS
@@ -85,10 +87,14 @@ body {
 }
 
 .footer {
-  position: fixed;
+  position: absolute;
   bottom: 0;
   background-color: $gray-400;
   width: 100%;
   height: 48px;
   line-height: 48px;
+}
+
+.footer-padding {
+  padding-bottom: 58px
 }
