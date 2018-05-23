@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
-gem 'bcrypt', '~> 3.1.11'
-gem 'bootstrap', '~> 4.0.0.beta3'
+gem 'bcrypt', '~> 3.1'
+gem 'bootstrap', '~> 4.1'
 gem 'coffee-rails', '~> 4.2'
 gem 'devise', '4.4.1'
 gem 'devise-i18n', '1.5'
@@ -27,28 +27,28 @@ gem 'sass-rails', '~> 5.0'
 gem 'sentry-raven', '~> 2.3'
 gem 'sidekiq', '~> 5.1.2'
 gem 'sidekiq-scheduler', '~> 2.2.1'
-gem 'simple_form', '~> 3.5.0'
+gem 'simple_form', '~> 4.0'
 gem 'slack-notifier', '~> 2.3.2'
 gem 'slim', '~> 3.0.8'
 gem 'turbolinks', '~> 5.1'
 gem 'uglifier', '~> 4.1'
 gem 'validates_timeliness', '~> 4.0'
-gem 'webpacker', '~> 3.4'
+gem 'webpacker', '~> 3.5'
 
 group :development, :test do
   gem 'awesome_print'
   gem 'better_errors'
   gem 'brakeman', require: false
-  gem 'bullet', '~> 5.7'
+  gem 'bullet'
   gem 'colorize'
   gem 'consistency_fail'
-  gem 'dotenv-rails', '~> 2.2.1'
+  gem 'dotenv-rails', '~> 2.4'
   gem 'guard-livereload', '~> 2.5'
   gem 'guard-rspec', require: false
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'rspec-rails'
-  gem 'slim_lint', '~> 0.14'
+  gem 'slim_lint'
 end
 
 group :development do
@@ -69,7 +69,7 @@ group :test do
 end
 
 group :deploy do
-  gem 'capistrano', '= 3.10.1' # keep version in sync with version locked in ./config/deploy.rb
+  gem 'capistrano', '= 3.10.2' # keep version in sync with version locked in ./config/deploy.rb
   gem 'capistrano-docker', git: 'https://github.com/netguru/capistrano-docker.git', tag: 'v0.2.11'
   gem 'slackistrano', '~> 3.8.1'
 end

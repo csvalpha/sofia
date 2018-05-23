@@ -19,7 +19,7 @@
               <span :class="editable ? 'pr-3' : ''">totaal</span>
             </b-col>
           </b-row>
-          <b-row v-for="orderRow in row.item.order_rows" class="b-table-details--item px-2">
+          <b-row v-for="orderRow in row.item.order_rows" class="b-table-details--item px-2" :key="row.item.id">
             <b-col sm="5" >
               {{orderRow.product.name}}
               <div>
