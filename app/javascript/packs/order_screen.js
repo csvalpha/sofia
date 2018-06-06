@@ -28,7 +28,7 @@ document.addEventListener('turbolinks:load', () => {
       dispatchEvent(event);
     };
 
-    new Vue({
+    const app = new Vue({
       el: element,
       data: () => {
         return {
@@ -52,7 +52,7 @@ document.addEventListener('turbolinks:load', () => {
           return `€${parseFloat(price).toFixed(2)}`;
         },
 
-        setUser(user) {
+        setUser(user = null) {
           if (!user) {
             this.orderRows = [];
           }
@@ -201,14 +201,29 @@ document.addEventListener('turbolinks:load', () => {
           } else {
             this.sendFlash(`Error ${error.status}?!🤔`, 'Herlaadt de pagina', 'info');
           }
+        },
+
+        escapeKeyListener: function(evt) {
+          if (evt.keyCode === 27 && app.selectedUser) {
+            app.setUser(null);
+          }
         }
+      },
+
+      // Listen to escape button which are dispatched on the body content_tag
+      // https://vuejsdevelopers.com/2017/05/01/vue-js-cant-help-head-body/
+      created: function() {
+        document.addEventListener('keyup', this.escapeKeyListener);
+      },
+      destroyed: function() {
+        document.removeEventListener('keyup', this.escapeKeyListener);
       },
 
       components: {
         Flash,
         UserSelection,
         OrderHistory
-      }
+      },
     });
   }
 });
