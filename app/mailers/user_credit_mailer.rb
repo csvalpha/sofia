@@ -16,4 +16,15 @@ class UserCreditMailer < ApplicationMailer
 
     mail to: treasurer.email, subject: subject
   end
+
+  def new_credit_mutation_mail(credit_mutation)
+    @user = credit_mutation.user
+    @title = 'Bedankt voor het inleggen'
+    @credit_mutation_amount = credit_mutation.amount
+    @credit_mutation_description = credit_mutation.description
+
+    subject = 'Je betaling aan flux is verwerkt'
+
+    mail to: credit_mutation.user.email, subject: subject
+  end
 end
