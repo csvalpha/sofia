@@ -33,7 +33,7 @@ document.addEventListener('turbolinks:load', () => {
               tdClass: (value) => {
                 return value <= 0 ? 'text-danger' : '';
               },
-              formatter: (value) => `€${parseFloat(value).toFixed(2)}`,
+              formatter: (value) => `€ ${parseFloat(value).toFixed(2)}`,
             }
           }
         };
