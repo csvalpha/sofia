@@ -10,6 +10,7 @@ html
     = javascript_pack_tag 'price_lists', 'data-turbolinks-track': 'reload'
     = javascript_pack_tag 'credit_mutations', 'data-turbolinks-track': 'reload'
     = javascript_pack_tag 'user', 'data-turbolinks-track': 'reload'
+    = javascript_pack_tag 'order_screen', 'data-turbolinks-track': 'reload'
 
     meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"
 
@@ -17,15 +18,18 @@ html
 
   body
 
-    = render partial: 'partials/navigation_bar'
+    - unless @empty_layout
+      = render partial: 'partials/navigation_bar'
 
-    = render partial: 'partials/flash'
+      = render partial: 'partials/flash'
 
-    == yield
+    main
+      == yield
 
-    - if Rails.application.config.x.tomato_host == 'staging.streep.csvalpha.nl'
-      = image_tag '/images/staging_label.png', class: 'environment-label'
-    - elsif Rails.application.config.x.tomato_host != 'streep.csvalpha.nl'
-      = image_tag '/images/dev_label.png', class: 'environment-label'
+    - unless @empty_layout
+      - if Rails.application.config.x.tomato_host == 'staging.streep.csvalpha.nl'
+        = image_tag '/images/staging_label.png', class: 'environment-label'
+      - elsif Rails.application.config.x.tomato_host != 'streep.csvalpha.nl'
+        = image_tag '/images/dev_label.png', class: 'environment-label'
 
-    = render partial: 'partials/footer'
+      = render partial: 'partials/footer'

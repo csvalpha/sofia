@@ -63,7 +63,8 @@ class ActivitiesController < ApplicationController
 
     @activity_json = @activity.to_json(only: %i[id title start_time end_time])
 
-    render layout: 'order_screen'
+    # Render application.html.slim without header&footer
+    @empty_layout = true
   end
 
   private
