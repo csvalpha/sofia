@@ -1,4 +1,4 @@
-p style="margin: 0;font-size: 16px;line-height: 18px"
+p style="margin: 0;font-size: 16px;line-height: 20px"
   - if @credit_mutation_amount.positive?
     = "Op #{l Time.zone.now, format: :long} is uw betaling van "
     = "#{number_to_currency(@credit_mutation_amount, unit: '€')} aan Stichting "
