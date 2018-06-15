@@ -37,7 +37,15 @@ Rails.application.configure do
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
+  # Configure url to test actionmailer urls
+  config.action_mailer.default_url_options = { scheme: 'http', host: 'testhost', port: 1337 }
+
   PaperTrail.enabled = false
+
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.raise = true
+  end
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true

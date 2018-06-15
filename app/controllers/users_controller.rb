@@ -4,16 +4,19 @@ class UsersController < ApplicationController
   after_action :verify_authorized
 
   def index
-    @model = User.all.includes(model_includes).order(:name)
-    authorize @model
+    @users = User.all.order(:name)
+    authorize @users
+
+    @users_credits = User.calculate_credits
 
     @new_user = User.new
   end
 
   def show
-    @user = User.includes(model_includes).find(params[:id])
+    @user = User.includes(:credit_mutations, roles_users: :role).find(params[:id])
     authorize @user
 
+    @user_json = @user.to_json(only: %i[id name])
     @new_mutation = CreditMutation.new(user: @user)
   end
 
@@ -60,14 +63,6 @@ class UsersController < ApplicationController
     @token = JSON.parse(token_response)['access_token']
   end
 
-  def model_class
-    User
-  end
-
-  def model_includes
-    %i[credit_mutations order_rows]
-  end
-
   private
 
   def send_slack_users_refresh_notification
@@ -91,10 +86,12 @@ class UsersController < ApplicationController
                                             fields['last_name'])
     u.provider = 'banana_oauth2'
     u.avatar_thumb_url = fields['avatar_thumb_url']
+    u.email = fields['email']
+    u.birthday = fields['birthday']
     u.save
   end
 
   def permitted_attributes
-    params.require(:user).permit(:name)
+    params.require(:user).permit(%w[name email])
   end
 end

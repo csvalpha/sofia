@@ -1,4 +1,7 @@
 Rails.application.configure do
+  # Verifies that versions and hashed value of the package contents in the project's package.json
+  config.webpacker.check_yarn_integrity = false
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Code is not reloaded between requests.
@@ -84,6 +87,13 @@ Rails.application.configure do
 
   config.action_mailer.default_url_options = {
     scheme: 'https', host: Rails.application.config.x.tomato_host || 'tomato.csvalpha.nl'
+  }
+
+  config.action_mailer.delivery_method = :mailgun
+  config.action_mailer.asset_host = "https://#{config.action_mailer.default_url_options[:host]}"
+  config.action_mailer.mailgun_settings = {
+    api_key: Rails.application.secrets.fetch(:mailgun_api_key),
+    domain: 'csvalpha.nl'
   }
 
   if ENV['RAILS_LOG_TO_STDOUT'].present?

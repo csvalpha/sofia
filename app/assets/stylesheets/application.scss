@@ -5,6 +5,11 @@
 @import 'order_screen';
 @import 'price_lists';
 
+html,
+body {
+  position: relative;
+  min-height: 100vh;
+}
 
 // ANIMATIONS
 .slide-fade-enter-active,
@@ -16,6 +21,18 @@
 .slide-fade-leave-to {
   transform: translateX(10px);
   opacity: 0;
+}
+
+// Source: jsfiddle.net/mwj2tagh
+.fa-plus18 {
+  text-align: center;
+  font-family: 'helvetica neue', Helvetica, Arial, Sans-Serif;
+  font-size: 80%;
+  font-weight: bold;
+
+  &::before {
+    content: '18+';
+  }
 }
 
 .environment-label {
@@ -42,4 +59,42 @@
   & + .container {
     margin-bottom: 250px;
   }
+}
+
+.order-history--details-expand {
+  color: $gray-500;
+
+  &:hover {
+    color: $gray-700;
+  }
+}
+
+.b-table-details--header {
+  background-color: $gray-200;
+  text-transform: uppercase;
+}
+
+.b-table-details--item {
+  .order-history--item-edit {
+    color: $gray-100;
+  }
+
+  &:hover {
+    .order-history--item-edit {
+      color: $gray-700;
+    }
+  }
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  background-color: $gray-400;
+  width: 100%;
+  height: 48px;
+  line-height: 48px;
+}
+
+.footer-padding {
+  padding-bottom: 58px
 }

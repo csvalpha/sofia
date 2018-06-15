@@ -4,16 +4,15 @@ class OrdersController < ApplicationController
   after_action :verify_authorized
 
   def index
-    authorize Order
+    if allowed_filters.any?
+      @orders = Order.where(allowed_filters).includes(:order_rows, :user, :activity)
+    else
+      render status: :bad_request
+    end
 
-    @orders = Order.where(activity: params.require(:activity_id)).includes(:order_rows, :user)
+    authorize @orders
 
-    render json: @orders.to_json(
-      only: %i[id created_at order_total paid_with_cash],
-      include: { order_rows: {
-        only: [:id, :product_count, product: { only: %i[id name credit] }]
-      }, user: { only: :name } }
-    )
+    render json: @orders.to_json(proper_json)
   end
 
   def create
@@ -29,11 +28,44 @@ class OrdersController < ApplicationController
     end
   end
 
+  def update
+    @order = Order.find(permitted_attributes_on_update[:id])
+
+    authorize @order
+
+    if @order.update(permitted_attributes_on_update)
+      render json: @order.to_json(proper_json)
+    else
+      render json: @order.errors, status: :unprocessable_entity
+    end
+  end
+
   private
+
+  def allowed_filters
+    @allowed_filters ||= begin
+      @allowed_filters = {}
+      @allowed_filters[:activity] = params[:activity_id] if params[:activity_id]
+      @allowed_filters[:user] = params[:user_id] if params[:user_id]
+      @allowed_filters
+    end
+  end
 
   def permitted_attributes
     params.require(:order).permit(%i[user_id paid_with_cash activity_id],
                                   order_rows_attributes: %i[id product_id product_count])
+  end
+
+  def permitted_attributes_on_update
+    params.permit(:id, order_rows_attributes: %i[id product_count])
+  end
+
+  def proper_json
+    { only: %i[id created_at order_total paid_with_cash],
+      include: { order_rows: {
+        only: %i[id product_count price_per_product],
+        include: { product: { only: %i[id name] } }
+      }, user: { only: :name }, activity: { only: :title } } }
   end
 
   def json_includes

@@ -31,6 +31,22 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '.treasurer' do
+    context 'when treasurer' do
+      subject(:user) { FactoryBot.create(:user) }
+
+      let(:treasurer_role) { FactoryBot.create(:role, role_type: :treasurer) }
+
+      before { FactoryBot.create(:roles_users, user: user, role: treasurer_role) }
+
+      it { expect(User.treasurer).to include user }
+    end
+
+    context 'when not treasurer' do
+      it { expect(User.treasurer).not_to include user }
+    end
+  end
+
   describe '#credit' do
     subject(:user) { FactoryBot.create(:user) }
 
@@ -83,6 +99,42 @@ RSpec.describe User, type: :model do
       subject(:user) { FactoryBot.create(:user) }
 
       it { expect(user.avatar_thumb_or_default_url).to eq '/images/avatar_thumb_default.png' }
+    end
+  end
+
+  describe '#age' do
+    context 'when without birthday' do
+      it { expect(user.age).to eq nil }
+    end
+
+    context 'when birthday did not pass this year' do
+      let(:user) { FactoryBot.build(:user, birthday: (1.day.ago - 2.years)) }
+
+      it { expect(user.age).to eq 2 }
+    end
+
+    context 'when birthday did pass this year' do
+      let(:user) { FactoryBot.build(:user, birthday: (1.day.from_now - 2.years)) }
+
+      it { expect(user.age).to eq 1 }
+    end
+  end
+
+  describe '#minor' do
+    context 'when without age' do
+      it { expect(user.minor).to eq false }
+    end
+
+    context 'when 18 or older' do
+      let(:user) { FactoryBot.build(:user, birthday: 18.years.ago - 1.day) }
+
+      it { expect(user.minor).to eq false }
+    end
+
+    context 'when younger than 18' do
+      let(:user) { FactoryBot.build(:user, birthday: (18.years.ago + 1.day)) }
+
+      it { expect(user.minor).to eq true }
     end
   end
 
@@ -160,6 +212,57 @@ RSpec.describe User, type: :model do
 
     context 'when without middle name' do
       it { expect(User.full_name_from_attributes('first', '', 'last')). to eq 'first last' }
+    end
+  end
+
+  describe 'calculate_credits' do
+    let(:user) { FactoryBot.create(:user) }
+
+    context 'when without orders or credit_mutations' do
+      before { user }
+
+      it { expect(User.calculate_credits[user.id]).to eq 0 }
+    end
+
+    context 'when with data' do
+      let(:product_price) { FactoryBot.build(:product_price, price: 2.18) }
+      let(:price_list) { FactoryBot.build(:price_list, product_price: [product_price]) }
+      let(:activity) { FactoryBot.build(:activity, price_list: price_list) }
+
+      subject(:hash) { User.calculate_credits }
+
+      context 'without orders' do
+        let(:credit_mutation) { FactoryBot.create(:credit_mutation, user: user, amount: 20) }
+
+        before do
+          credit_mutation
+        end
+
+        it { expect(hash[user.id]).to eq credit_mutation.amount }
+      end
+
+      context 'without credit_mutations' do
+        let(:order) { FactoryBot.build(:order, activity: activity, user: user) }
+        let(:order_row) { FactoryBot.build(:order_row, product: product_price.product) }
+
+        before do
+          order
+        end
+
+        it { expect(hash[user.id]).to eq order.order_total }
+      end
+
+      context 'when with both' do
+        let(:order) { FactoryBot.build(:order, activity: activity, user: user) }
+        let(:order_row) { FactoryBot.build(:order_row, product: product_price.product) }
+        let(:credit_mutation) { FactoryBot.create(:credit_mutation, user: user, amount: 20) }
+
+        before do
+          credit_mutation
+        end
+
+        it { expect(hash[user.id]).to eq credit_mutation.amount - order.order_total }
+      end
     end
   end
 end

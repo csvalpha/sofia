@@ -1,6 +1,7 @@
 import Vue from 'vue/dist/vue.esm';
 import TurbolinksAdapter from 'vue-turbolinks';
 import VueResource from 'vue-resource';
+import axios from 'axios';
 import BootstrapVue from 'bootstrap-vue';
 
 import Flash from '../flash.vue';
@@ -12,7 +13,9 @@ Vue.use(VueResource);
 Vue.use(BootstrapVue);
 
 document.addEventListener('turbolinks:load', () => {
-  Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  Vue.http.headers.common['X-CSRF-TOKEN'] = token;
+  axios.defaults.headers.common['X-CSRF-Token'] = token;
 
   var element = document.getElementById('order-screen');
   if (element != null) {
@@ -25,7 +28,7 @@ document.addEventListener('turbolinks:load', () => {
       dispatchEvent(event);
     };
 
-    new Vue({
+    const app = new Vue({
       el: element,
       data: () => {
         return {
@@ -50,7 +53,7 @@ document.addEventListener('turbolinks:load', () => {
           return `€${parseFloat(price).toFixed(2)}`;
         },
 
-        setUser(user) {
+        setUser(user = null) {
           if (!user) {
             this.orderRows = [];
           }
@@ -95,6 +98,12 @@ document.addEventListener('turbolinks:load', () => {
           orderRow.amount++;
         },
 
+        orderRequiresAge() {
+          return this.orderRows.filter((row) => {
+            return row.productPrice.product.requires_age;
+          }).length > 0;
+        },
+
         confirmOrder() {
           let order = {};
           const order_rows_attributes = this.orderRows.map((row) => {
@@ -120,7 +129,7 @@ document.addEventListener('turbolinks:load', () => {
             };
           }
 
-          this.$http.post(`/activities/${this.activity.id}/orders.json`, {
+          this.$http.post('/orders.json', {
             order: order
           }).then((response) => {
             const user = response.body.user;
@@ -198,14 +207,29 @@ document.addEventListener('turbolinks:load', () => {
           } else {
             this.sendFlash(`Error ${error.status}?!🤔`, 'Herlaadt de pagina', 'info');
           }
+        },
+
+        escapeKeyListener: function(evt) {
+          if (evt.keyCode === 27 && app.selectedUser) {
+            app.setUser(null);
+          }
         }
+      },
+
+      // Listen to escape button which are dispatched on the body content_tag
+      // https://vuejsdevelopers.com/2017/05/01/vue-js-cant-help-head-body/
+      created: function() {
+        document.addEventListener('keyup', this.escapeKeyListener);
+      },
+      destroyed: function() {
+        document.removeEventListener('keyup', this.escapeKeyListener);
       },
 
       components: {
         Flash,
         UserSelection,
         OrderHistory
-      }
+      },
     });
   }
 });

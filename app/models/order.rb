@@ -14,6 +14,8 @@ class Order < ApplicationRecord
 
   before_destroy :destroyable?
 
+  scope :orders_for, (->(user) { where(user: user) })
+
   def order_total
     @sum ||= order_rows.sum('product_count * price_per_product')
   end

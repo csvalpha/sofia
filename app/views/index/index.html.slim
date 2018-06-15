@@ -1,3 +1,5 @@
+- content_for :title, 'SOFIA – Streepsysteem der C.S.V. Alpha'
+
 = render partial: 'partials/tomato_quote'
 
 .container.py-sm-3
@@ -61,3 +63,8 @@
 
     - else
       = render partial: 'partials/login_prompt'
+
+  .d-flex.flex-column.mt-4.py-4.align-items-center
+    blockquote.blockquote.text-center
+      p.mb-0 = 'Vakmanschap is meesterschap'
+      footer.blockquote-footer = 'Gerard Brummer, Grolsch'
