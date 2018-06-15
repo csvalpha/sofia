@@ -89,7 +89,8 @@ export default {
       conditionalFields.user = {
         label: 'Gebruiker',
         sortable: true,
-        formatter: (user) => user ? user.name : '<i>Contant betaald</i>',
+        tdClass: (user) => user ? '' : 'font-italic',
+        formatter: (user) => user ? user.name : 'Contant betaald',
       }
     } else if (!this.activity) {
       conditionalFields.activity = {
