@@ -24,7 +24,8 @@
               th scope='col' = 'Gebruiker'
               th scope='col' = 'Activiteit'
               th scope='col' = 'Geregistreerd door'
-              th scope='col' = 'Aangemaakt op'
+              th scope='col' = 'Bedrag'
+              th scope='col' = 'Datum'
           tbody
             - @credit_mutations&.each do |mutation|
               tr
@@ -37,5 +38,7 @@
                     = link_to mutation.activity&.title, mutation.activity
                 td
                   = link_to mutation.created_by.name, mutation.created_by
+                td
+                  = number_to_currency(mutation.amount, unit: '€')
                 td
                   = l mutation.created_at

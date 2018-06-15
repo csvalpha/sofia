@@ -125,7 +125,7 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         productPriceToCurrency: function(productPrice) {
-          return (productPrice && productPrice.price) ? `€${parseFloat(productPrice.price).toFixed(2)}` : '';
+          return (productPrice && productPrice.price) ? `€ ${parseFloat(productPrice.price).toFixed(2)}` : '';
         },
       }
     });
