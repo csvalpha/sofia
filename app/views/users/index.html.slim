@@ -4,30 +4,24 @@
     .col-sm-12.d-flex.justify-content-between.align-items-center
       h1 = 'Gebruikers'
 
-      - if current_user&.treasurer?
-        span
-          = link_to refresh_user_list_users_path, class: 'btn btn-primary btn-sm mr-1'
-            = fa_icon 'refresh'
-            span.d-none.d-md-inline.ml-1 = 'Synchroniseer gebruikers'
-          button.btn.btn-sm.btn-primary role='button' data-toggle='modal' data-target='#edit_user_modal'
-            = fa_icon 'plus'
-            span.d-none.d-md-inline.ml-1 = 'Nieuwe gebruiker'
+      span
+        = link_to refresh_user_list_users_path, class: 'btn btn-primary btn-sm mr-1'
+          = fa_icon 'refresh'
+          span.d-none.d-md-inline.ml-1 = 'Synchroniseer gebruikers'
+        button.btn.btn-sm.btn-primary role='button' data-toggle='modal' data-target='#edit_user_modal'
+          = fa_icon 'plus'
+          span.d-none.d-md-inline.ml-1 = 'Nieuwe gebruiker'
 
-        = render 'modal'
+      = render 'modal'
 
-  .row
+  = content_tag :div, id: 'users-index', class: 'row', data: { users: @users_json }
     .col-sm-12
-      .table-responsive
-        table.table.table-striped
-          thead
-            tr
-              th scope='col' = 'ID'
-              th scope='col' = 'Naam'
-              th scope='col' = 'Saldo'
-          tbody
-            - @users.each do |user|
-              tr
-                th scope='row' = user.id
-                td = link_to user.name, user
-                td class=('text-danger' if @users_credits.fetch(user.id, 0) <= 0)
-                  = number_to_currency(@users_credits.fetch(user.id, 0), unit: '€')
+      b-table show-empty="" striped="" responsive="" :items="users" :fields="fields" sort-by="name"
+        template slot="name" slot-scope="data"
+          a :href="`/users/${data.item.id}`"
+            = '{{data.value}}'
+        template slot="empty"
+          p.my-1.text-center
+            em = 'Er zijn geen gebruikers om weer te geven'
+
+  hr

@@ -9,6 +9,10 @@ class UsersController < ApplicationController
 
     @users_credits = User.calculate_credits
 
+    @users_json = @users.as_json
+                        .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
+                        .to_json(only: %w[id name credit])
+
     @new_user = User.new
   end
 
