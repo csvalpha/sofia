@@ -134,7 +134,7 @@ export default {
 
   methods: {
     doubleToCurrency(price) {
-      return `€${parseFloat(price).toFixed(2)}`;
+      return `€ ${parseFloat(price).toFixed(2)}`;
     },
 
     queryChange() {
