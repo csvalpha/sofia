@@ -33,6 +33,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_layout_flag
-    @empty_layout = false
+    @show_navigationbar = true
+    @show_extras = true
   end
 end

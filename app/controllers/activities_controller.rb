@@ -63,8 +63,9 @@ class ActivitiesController < ApplicationController
 
     @activity_json = @activity.to_json(only: %i[id title start_time end_time])
 
-    # Render application.html.slim without header&footer
-    @empty_layout = true
+    # Set flags for application.html.slim
+    @show_navigationbar = false
+    @show_extras = false
   end
 
   private

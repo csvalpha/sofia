@@ -19,15 +19,16 @@ html
 
   body
 
-    - unless @empty_layout
+    - if @show_navigationbar
       = render partial: 'partials/navigation_bar'
 
+    - if @show_extras
       = render partial: 'partials/flash'
 
     main
       == yield
 
-    - unless @empty_layout
+    - if @show_extras
       - if Rails.application.config.x.tomato_host == 'staging.streep.csvalpha.nl'
         = image_tag '/images/staging_label.png', class: 'environment-label'
       - elsif Rails.application.config.x.tomato_host != 'streep.csvalpha.nl'
