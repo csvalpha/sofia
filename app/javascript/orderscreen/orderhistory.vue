@@ -1,13 +1,19 @@
 <template lang="html">
   <b-row class="order-history">
     <b-col>
-      <b-table :busy.sync="isLoading" :items="ordersProvider" :fields="fields"
+      <b-table show-empty :busy.sync="isLoading" :items="ordersProvider" :fields="fields"
         no-provider-sorting sort-by="created_at" sort-desc>
         <template slot="order_total" slot-scope="row">
           <span class="pull-right">
             {{doubleToCurrency(row.item.order_total)}}
             <i @click.stop="row.toggleDetails" :class="['order-history--details-expand', 'fa', 'fa-lg', 'pl-2', row.detailsShowing ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down']"></i>
           </span>
+        </template>
+
+        <template slot="empty">
+          <p class="my-1 text-center">
+            <em>Er zijn geen bestellingen om weer te geven</em>
+          </p>
         </template>
 
         <b-container slot="row-details" slot-scope="row">
@@ -83,7 +89,8 @@ export default {
       conditionalFields.user = {
         label: 'Gebruiker',
         sortable: true,
-        formatter: (user) => user ? user.name : '<i>Contant betaald</i>',
+        tdClass: (user) => user ? '' : 'font-italic',
+        formatter: (user) => user ? user.name : 'Contant betaald',
       }
     } else if (!this.activity) {
       conditionalFields.activity = {
@@ -142,7 +149,7 @@ export default {
     },
 
     doubleToCurrency(price) {
-      return `€${parseFloat(price).toFixed(2)}`;
+      return `€ ${parseFloat(price).toFixed(2)}`;
     },
 
     editOrderRow(orderRow) {
