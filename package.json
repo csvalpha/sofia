@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "@rails/webpacker": "3.5",
+    "animate.css": "^3.6.1",
     "autosuggest-highlight": "^3.1.1",
     "axios": "^0.18.0",
     "bootstrap": "4.1",
@@ -12,6 +13,7 @@
     "postcss-smart-import": "^0.7.6",
     "raven-js": "^3.25",
     "remove-accents": "^0.4.2",
+    "turbolinks-animate": "^3.0.5",
     "vue": "^2.5.16",
     "vue-loader": "^14.2",
     "vue-resource": "^1.5",
