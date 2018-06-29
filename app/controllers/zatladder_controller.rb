@@ -5,15 +5,17 @@ class ZatladderController < ApplicationController
   def index
     authorize :zatladder
 
-    @from_date = Order.first&.created_at || Time.zone.now
-    @to_date = Order.last&.created_at || Time.zone.now
-    @zatladder = zatladder_spendings
+    last_october = Time.zone.now.beginning_of_year - 3.months
+
+    @from_date  = last_october
+    @to_date    = last_october + 1.year
+    @zatladder  = zatladder_spendings(@from_date, @to_date)
   end
 
   private
 
-  def zatladder_spendings
-    @users_spendings = User.calculate_spendings
+  def zatladder_spendings(from, to)
+    @users_spendings = User.calculate_spendings(from, to)
     zatladder = User.select(:id, :name).map do |user|
       {
         id: user.id,

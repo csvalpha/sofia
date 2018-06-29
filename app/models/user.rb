@@ -77,7 +77,10 @@ class User < ApplicationRecord
     credits.each_with_object({}) { |(id, credit), h| h[id] = credit - costs.fetch(id, 0) }
   end
 
-  def self.calculate_spendings
-    User.all.joins(:order_rows).group(:id).sum('product_count * price_per_product')
+  def self.calculate_spendings(from = Order.first.created_at, to = Order.last.created_at)
+    User.all.joins(:order_rows)
+        .where('orders.created_at >= ?', from)
+        .where('orders.created_at <= ?', to)
+        .group(:id).sum('product_count * price_per_product')
   end
 end
