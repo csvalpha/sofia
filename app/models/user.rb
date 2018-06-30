@@ -65,6 +65,7 @@ class User < ApplicationRecord
     user.update_role(auth[:info][:groups])
     user
   end
+  # :nocov:
 
   def self.full_name_from_attributes(first_name, last_name_prefix, last_name)
     [first_name, last_name_prefix, last_name].reject(&:blank?).join(' ')
@@ -77,10 +78,9 @@ class User < ApplicationRecord
     credits.each_with_object({}) { |(id, credit), h| h[id] = credit - costs.fetch(id, 0) }
   end
 
-  def self.calculate_spendings(from = Time.at(0), to = Time.zone.now)
+  def self.calculate_spendings(from: '01-01-1970', to: Time.zone.now)
     User.all.joins(:order_rows)
-        .where('orders.created_at >= ?', from)
-        .where('orders.created_at <= ?', to)
+        .where('orders.created_at BETWEEN ? AND ?', from, to)
         .group(:id).sum('product_count * price_per_product')
   end
 end
