@@ -17,8 +17,10 @@
 //= require bootstrap
 //= require raven-js/dist/raven.min.js
 //= require webfontloader/webfontloader
+//= require turbolinks-animate/src/turbolinks-animate
 //= require_tree .
 
+/* eslint-disable no-undef */
 WebFont.load({
   google: {
     families: ['Roboto:300,400']
@@ -26,3 +28,12 @@ WebFont.load({
 });
 
 Raven.config('https://329a65545f5a4cbbb27a1c9d5433113b@sentry.io/228968').install();
+
+document.addEventListener( 'turbolinks:load', function() {
+  TurbolinksAnimate.init({
+    element: document.querySelector('main'),
+    animation: 'fadein',
+    duration: '0.15s',
+  });
+});
+/* eslint-enable no-undef */
