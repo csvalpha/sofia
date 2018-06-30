@@ -215,21 +215,79 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe 'calculate_spendings' do
+    let(:user) { FactoryBot.create(:user) }
+
+    let(:product_price) { FactoryBot.build(:product_price, price: 2.00) }
+    let(:price_list) { FactoryBot.build(:price_list, product_price: [product_price]) }
+    let(:activity) { FactoryBot.build(:activity, price_list: price_list) }
+
+    let(:default_order) { { products: [product_price.product], activity: activity, user: user } }
+
+    let(:order) do
+      FactoryBot.create(:order_with_items, default_order.merge(created_at: 4.weeks.ago))
+    end
+
+    let(:second_order) do
+      FactoryBot.create(:order_with_items, default_order.merge(created_at: 1.week.ago))
+    end
+
+    let(:third_order) do
+      FactoryBot.create(:order_with_items, default_order.merge(user: user, created_at: Time.zone.now))
+    end
+
+    before do
+      order
+      second_order
+      third_order
+    end
+
+    context 'when without date supplied' do
+      subject(:spendings_hash) { User.calculate_spendings }
+
+      it { expect(spendings_hash[user.id]).to eq 6 }
+    end
+
+    context 'when with from date' do
+      subject(:spendings_hash) { User.calculate_spendings(from: 2.weeks.ago) }
+
+      it { expect(spendings_hash[user.id]).to eq 4 }
+    end
+
+    context 'when with to date' do
+      subject(:spendings_hash) { User.calculate_spendings(to: 2.days.ago) }
+
+      it { expect(spendings_hash[user.id]).to eq 4 }
+    end
+
+    context 'when with from and to date' do
+      subject(:spendings_hash) { User.calculate_spendings(from: 2.weeks.ago, to: 2.days.ago) }
+
+      it { expect(spendings_hash[user.id]).to eq 2 }
+    end
+
+    context 'when with wrong date' do
+      subject(:spendings_hash) { User.calculate_spendings(from: 2.days.from_now, to: 2.days.ago) }
+
+      it { expect(spendings_hash[user.id]).to eq nil }
+    end
+  end
+
   describe 'calculate_credits' do
     let(:user) { FactoryBot.create(:user) }
+
+    subject(:credits_hash) { User.calculate_credits }
 
     context 'when without orders or credit_mutations' do
       before { user }
 
-      it { expect(User.calculate_credits[user.id]).to eq 0 }
+      it { expect(credits_hash[user.id]).to eq 0 }
     end
 
     context 'when with data' do
       let(:product_price) { FactoryBot.build(:product_price, price: 2.18) }
       let(:price_list) { FactoryBot.build(:price_list, product_price: [product_price]) }
       let(:activity) { FactoryBot.build(:activity, price_list: price_list) }
-
-      subject(:hash) { User.calculate_credits }
 
       context 'without orders' do
         let(:credit_mutation) { FactoryBot.create(:credit_mutation, user: user, amount: 20) }
@@ -238,30 +296,28 @@ RSpec.describe User, type: :model do
           credit_mutation
         end
 
-        it { expect(hash[user.id]).to eq credit_mutation.amount }
+        it { expect(credits_hash[user.id]).to eq credit_mutation.amount }
       end
 
       context 'without credit_mutations' do
-        let(:order) { FactoryBot.build(:order, activity: activity, user: user) }
-        let(:order_row) { FactoryBot.build(:order_row, product: product_price.product) }
+        let(:order) { FactoryBot.build(:order_with_items, products: [product_price.product], activity: activity, user: user) }
 
         before do
           order
         end
 
-        it { expect(hash[user.id]).to eq order.order_total }
+        it { expect(credits_hash[user.id]).to eq order.order_total }
       end
 
       context 'when with both' do
-        let(:order) { FactoryBot.build(:order, activity: activity, user: user) }
-        let(:order_row) { FactoryBot.build(:order_row, product: product_price.product) }
+        let(:order) { FactoryBot.build(:order_with_items, products: [product_price.product], activity: activity, user: user) }
         let(:credit_mutation) { FactoryBot.create(:credit_mutation, user: user, amount: 20) }
 
         before do
           credit_mutation
         end
 
-        it { expect(hash[user.id]).to eq credit_mutation.amount - order.order_total }
+        it { expect(credits_hash[user.id]).to eq credit_mutation.amount - order.order_total }
       end
     end
   end

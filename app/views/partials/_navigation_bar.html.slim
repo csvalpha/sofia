@@ -26,6 +26,9 @@ nav.navbar.navbar-expand-md.navbar-dark.bg-dark
         li.nav-item
           = nav_link credit_mutations_path, class: 'nav-link'
             = fa_icon 'money', class: 'mr-2', text: 'Inleg en saldocorrecties'
+        li.nav-item
+          = nav_link zatladder_index_path, class: 'nav-link'
+            = fa_icon 'list', class: 'mr-2', text: 'Zatladder'
 
     - if current_user
       .navbar-nav
