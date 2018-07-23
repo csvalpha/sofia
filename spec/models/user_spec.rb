@@ -300,7 +300,9 @@ RSpec.describe User, type: :model do
       end
 
       context 'without credit_mutations' do
-        let(:order) { FactoryBot.build(:order_with_items, products: [product_price.product], activity: activity, user: user) }
+        let(:order) do
+          FactoryBot.build(:order_with_items, products: [product_price.product], activity: activity, user: user)
+        end
 
         before do
           order
@@ -310,7 +312,9 @@ RSpec.describe User, type: :model do
       end
 
       context 'when with both' do
-        let(:order) { FactoryBot.build(:order_with_items, products: [product_price.product], activity: activity, user: user) }
+        let(:order) do
+          FactoryBot.build(:order_with_items, products: [product_price.product], activity: activity, user: user)
+        end
         let(:credit_mutation) { FactoryBot.create(:credit_mutation, user: user, amount: 20) }
 
         before do
