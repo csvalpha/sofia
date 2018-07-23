@@ -7,6 +7,7 @@ RSpec.describe SlackHelper, type: :helper do
     before do
       allow(notifier).to receive(:ping)
     end
+
     it do
       ping('Example message')
       expect(notifier).to have_received(:ping).with('Example message')
