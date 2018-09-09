@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
 
   before_action :set_raven_context
   before_action :set_paper_trail_whodunnit
+  before_action :set_layout_flag
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
@@ -29,5 +30,10 @@ class ApplicationController < ActionController::Base
   def set_raven_context
     Raven.user_context(id: current_user&.id)
     Raven.extra_context(params: params.to_unsafe_h, url: request.url)
+  end
+
+  def set_layout_flag
+    @show_navigationbar = true
+    @show_extras = true
   end
 end

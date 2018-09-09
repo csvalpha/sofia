@@ -39,7 +39,15 @@ Rails.application.configure do
 
   config.middleware.delete Rack::Attack
 
+  # Configure url to test actionmailer urls
+  config.action_mailer.default_url_options = { scheme: 'http', host: 'testhost', port: 1337 }
+
   PaperTrail.enabled = false
+
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.raise = true
+  end
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true

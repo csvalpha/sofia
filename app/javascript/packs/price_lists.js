@@ -46,24 +46,18 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         saveProduct: function(product) {
-          this.sanitizeProductInput(product);
-          if (product.id) { // Existing product
-            const prices_to_remove = product.prices_to_remove;
-            delete(product.prices_to_remove);
-            this.$http.put(`/products/${product.id}.json`, { product: product }).then( (response) => {
+          const sanitizedProduct = this.sanitizeProductInput(product);
+          if (sanitizedProduct.id) { // Existing product
+            this.$http.put(`/products/${sanitizedProduct.id}.json`, { product: sanitizedProduct }).then( (response) => {
               var newProduct = response.data;
               newProduct.editing = false;
 
               this.$set(this.products, this.products.indexOf(product), newProduct);
             }, (response) => {
               this.errors = response.data.errors;
-            }
-            );
-            for (var key in prices_to_remove) {
-              this.$http.delete(`/product_price/${prices_to_remove[key].id}`);
-            }
+            });
           } else {
-            this.$http.post('/products.json', { product: product }).then( (response) => {
+            this.$http.post('/products.json', { product: sanitizedProduct }).then( (response) => {
               var index = this.products.indexOf(product);
               this.products.splice(index, 1);
 
@@ -79,28 +73,32 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         sanitizeProductInput: function (product) {
-          this.$delete(product, 'editing');
-          this.$delete(product, '_beforeEditingCache');
+          const sanitizedProduct = product;
+          this.$delete(sanitizedProduct, 'editing');
+          this.$delete(sanitizedProduct, '_beforeEditingCache');
+          this.$delete(sanitizedProduct, 't_category');
 
-          if (product.id) {
-            this.$delete(product.product_prices, 'product_id');
-            this.$delete(product.product_prices, 'price_list_id');
+          if (sanitizedProduct.id) {
+            this.$delete(sanitizedProduct.product_prices, 'product_id');
+            this.$delete(sanitizedProduct.product_prices, 'price_list_id');
           } else {
-            this.$delete(product, 'id');
+            this.$delete(sanitizedProduct, 'id');
           }
 
-          this.$set(product, 'product_prices_attributes', {});
-          this.$set(product, 'product_prices_remove_attributes', {});
+          this.$set(sanitizedProduct, 'product_prices_attributes', {});
 
-          product.product_prices.forEach((price, index) => {
+          sanitizedProduct.product_prices.forEach((price, index) => {
             if (price && price.price && price.price > 0) {
-              this.$set(product.product_prices_attributes, index, price);
+              this.$set(sanitizedProduct.product_prices_attributes, index, price);
             } else if(price.id) {
-              this.$set(product.prices_to_remove, index, price);
+              price.price = 0;
+              price._destroy = true;
+              this.$set(sanitizedProduct.product_prices_attributes, index, price);
             }
           });
 
-          this.$delete(product, 'product_prices');
+          this.$delete(sanitizedProduct, 'product_prices');
+          return sanitizedProduct;
         },
 
         editProduct: function(product) {
@@ -127,7 +125,7 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         productPriceToCurrency: function(productPrice) {
-          return (productPrice && productPrice.price) ? `€${parseFloat(productPrice.price).toFixed(2)}` : '';
+          return (productPrice && productPrice.price) ? `€ ${parseFloat(productPrice.price).toFixed(2)}` : '';
         },
       }
     });

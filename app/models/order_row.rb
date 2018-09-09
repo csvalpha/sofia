@@ -3,16 +3,12 @@ class OrderRow < ApplicationRecord
   belongs_to :product
 
   validates :order, :product, presence: true
-  validates :product_count, presence: true, numericality: { only_integer: true, greater_than: 0 }
+  validates :product_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :price_per_product, numericality: { greater_than: 0, allow_nil: true }
   validates :product, inclusion: { in: :available_products }
 
   validate :no_changes_of_product_count_allowed
   validate :no_changes_of_price_per_product_allowed
-
-  scope :by_category, lambda { |category|
-    joins(:product).where(products: { category: category })
-  }
 
   before_create :copy_product_price
 
@@ -21,7 +17,7 @@ class OrderRow < ApplicationRecord
   end
 
   def no_changes_of_product_count_allowed
-    errors.add(:product_count, 'cannot be altered') if !new_record? && product_count_changed?
+    errors.add(:product_count, 'cannot be altered') if !new_record? && product_count_changed? && order.activity.locked?
   end
 
   def no_changes_of_price_per_product_allowed

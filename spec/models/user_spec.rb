@@ -31,6 +31,22 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '.treasurer' do
+    context 'when treasurer' do
+      subject(:user) { FactoryBot.create(:user) }
+
+      let(:treasurer_role) { FactoryBot.create(:role, role_type: :treasurer) }
+
+      before { FactoryBot.create(:roles_users, user: user, role: treasurer_role) }
+
+      it { expect(User.treasurer).to include user }
+    end
+
+    context 'when not treasurer' do
+      it { expect(User.treasurer).not_to include user }
+    end
+  end
+
   describe '#credit' do
     subject(:user) { FactoryBot.create(:user) }
 
@@ -110,7 +126,7 @@ RSpec.describe User, type: :model do
     end
 
     context 'when 18 or older' do
-      let(:user) { FactoryBot.build(:user, birthday: 18.years.ago) }
+      let(:user) { FactoryBot.build(:user, birthday: 18.years.ago - 1.day) }
 
       it { expect(user.minor).to eq false }
     end
@@ -196,6 +212,117 @@ RSpec.describe User, type: :model do
 
     context 'when without middle name' do
       it { expect(User.full_name_from_attributes('first', '', 'last')). to eq 'first last' }
+    end
+  end
+
+  describe 'calculate_spendings' do
+    let(:user) { FactoryBot.create(:user) }
+
+    let(:product_price) { FactoryBot.build(:product_price, price: 2.00) }
+    let(:price_list) { FactoryBot.build(:price_list, product_price: [product_price]) }
+    let(:activity) { FactoryBot.build(:activity, price_list: price_list) }
+
+    let(:default_order) { { products: [product_price.product], activity: activity, user: user } }
+
+    let(:order) do
+      FactoryBot.create(:order_with_items, default_order.merge(created_at: 4.weeks.ago))
+    end
+
+    let(:second_order) do
+      FactoryBot.create(:order_with_items, default_order.merge(created_at: 1.week.ago))
+    end
+
+    let(:third_order) do
+      FactoryBot.create(:order_with_items, default_order.merge(user: user, created_at: Time.zone.now))
+    end
+
+    before do
+      order
+      second_order
+      third_order
+    end
+
+    context 'when without date supplied' do
+      subject(:spendings_hash) { User.calculate_spendings }
+
+      it { expect(spendings_hash[user.id]).to eq 6 }
+    end
+
+    context 'when with from date' do
+      subject(:spendings_hash) { User.calculate_spendings(from: 2.weeks.ago) }
+
+      it { expect(spendings_hash[user.id]).to eq 4 }
+    end
+
+    context 'when with to date' do
+      subject(:spendings_hash) { User.calculate_spendings(to: 2.days.ago) }
+
+      it { expect(spendings_hash[user.id]).to eq 4 }
+    end
+
+    context 'when with from and to date' do
+      subject(:spendings_hash) { User.calculate_spendings(from: 2.weeks.ago, to: 2.days.ago) }
+
+      it { expect(spendings_hash[user.id]).to eq 2 }
+    end
+
+    context 'when with wrong date' do
+      subject(:spendings_hash) { User.calculate_spendings(from: 2.days.from_now, to: 2.days.ago) }
+
+      it { expect(spendings_hash[user.id]).to eq nil }
+    end
+  end
+
+  describe 'calculate_credits' do
+    let(:user) { FactoryBot.create(:user) }
+
+    subject(:credits_hash) { User.calculate_credits }
+
+    context 'when without orders or credit_mutations' do
+      before { user }
+
+      it { expect(credits_hash[user.id]).to eq 0 }
+    end
+
+    context 'when with data' do
+      let(:product_price) { FactoryBot.build(:product_price, price: 2.18) }
+      let(:price_list) { FactoryBot.build(:price_list, product_price: [product_price]) }
+      let(:activity) { FactoryBot.build(:activity, price_list: price_list) }
+
+      context 'without orders' do
+        let(:credit_mutation) { FactoryBot.create(:credit_mutation, user: user, amount: 20) }
+
+        before do
+          credit_mutation
+        end
+
+        it { expect(credits_hash[user.id]).to eq credit_mutation.amount }
+      end
+
+      context 'without credit_mutations' do
+        let(:order) do
+          FactoryBot.build(:order_with_items, products: [product_price.product], activity: activity, user: user)
+        end
+
+        before do
+          order
+        end
+
+        it { expect(credits_hash[user.id]).to eq order.order_total }
+      end
+
+      context 'when with both' do
+        let(:order) do
+          FactoryBot.build(:order_with_items, products: [product_price.product], activity: activity, user: user)
+        end
+        let(:credit_mutation) { FactoryBot.create(:credit_mutation, user: user, amount: 20) }
+
+        before do
+          credit_mutation
+        end
+
+        it { expect(credits_hash[user.id]).to eq credit_mutation.amount - order.order_total }
+      end
     end
   end
 end

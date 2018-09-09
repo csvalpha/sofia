@@ -1,0 +1,25 @@
+- content_for :title, 'Zatladder - SOFIA'
+.container.footer-padding
+  .row.pt-4.d-flex.justify-content-around
+    .card.col-12.col-md-6.pt-3
+      h1.card-title.text-center = 'Zatladder'
+
+      .row.d-flex.justify-content-center
+        small.col-2 = 'Van'
+        small.col-4.text-right = l @from_date, format: '%d %B %Y'
+      .row.d-flex.justify-content-center
+        small.col-2 = 'Tot'
+        small.col-4.text-right = l @to_date, format: '%d %B %Y'
+
+      table.table.table-striped.mt-2
+        thead
+          tr
+            th scope='col' = 'Plaats'
+            th scope='col' = 'Naam'
+            th scope='col' = 'Bedrag'
+        tbody
+          - @zatladder.each_with_index do |entry, index|
+            tr
+              th scope="row" = index + 1
+              td = entry[:name]
+              td = number_to_currency(entry[:spendings], unit: '€')

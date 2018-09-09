@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title = 'Tomato – Streepsysteem der C.S.V. Alpha'
+    title = yield(:title)
     = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
 
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
@@ -9,6 +9,9 @@ html
     = javascript_pack_tag 'activities', 'data-turbolinks-track': 'reload'
     = javascript_pack_tag 'price_lists', 'data-turbolinks-track': 'reload'
     = javascript_pack_tag 'credit_mutations', 'data-turbolinks-track': 'reload'
+    = javascript_pack_tag 'user', 'data-turbolinks-track': 'reload'
+    = javascript_pack_tag 'order_screen', 'data-turbolinks-track': 'reload'
+    = javascript_pack_tag 'users', 'data-turbolinks-track': 'reload'
 
     meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"
 
@@ -16,13 +19,19 @@ html
 
   body
 
-    = render partial: 'partials/navigation_bar'
+    - if @show_navigationbar
+      = render partial: 'partials/navigation_bar'
 
-    = render partial: 'partials/flash'
+    - if @show_extras
+      = render partial: 'partials/flash'
 
-    == yield
+    main
+      == yield
 
-    - if Rails.application.config.x.tomato_host == 'staging.tomato.csvalpha.nl'
-      = image_tag '/images/staging_label.png', class: 'environment-label'
-    - elsif Rails.application.config.x.tomato_host != 'tomato.csvalpha.nl'
-      = image_tag '/images/dev_label.png', class: 'environment-label'
+    - if @show_extras
+      - if Rails.application.config.x.tomato_host == 'staging.streep.csvalpha.nl'
+        = image_tag '/images/staging_label.png', class: 'environment-label'
+      - elsif Rails.application.config.x.tomato_host != 'streep.csvalpha.nl'
+        = image_tag '/images/dev_label.png', class: 'environment-label'
+
+      = render partial: 'partials/footer'

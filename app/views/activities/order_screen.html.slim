@@ -1,3 +1,4 @@
+- content_for :title, "Streepscherm #{@activity.title} - SOFIA"
 = content_tag :div, id: 'order-screen', class: 'order-screen',
   data: { users: @users_json, product_prices: @product_prices_json, activity: @activity_json }
 
@@ -43,7 +44,7 @@
         = 'Inleg aanmaken'
 
   b-modal id="modal1" title="Bestelgeschiedenis" size="lg" lazy=true ok-only="" ok-title="Sluiten"
-    order-history :activity="activity"
+    order-history :activity="activity" editable=""
 
   nav.header
     ul.header-nav
@@ -54,9 +55,15 @@
         span.mr-3 = @activity.title
         small.font-weight-light.d-inline-block = l @activity.start_time, format: :date_only
 
-    b-btn.m-3 variant="outline-secondary" v-b-modal.modal1=""
-      = fa_icon 'history lg', class: 'mr-1'
-      = 'Bestelgeschiedenis'
+    div.row.col-lg-4.pull-right style='flex-direction: row-reverse'
+      b-btn.m-3 variant="outline-secondary" v-b-modal.modal1=""
+              = fa_icon 'history lg', class: 'mr-1'
+              = 'Bestelgeschiedenis'
+
+      b-btn.m-3 variant="outline-secondary" v-on:click='keepUserSelected = !keepUserSelected'
+        span v-if='keepUserSelected' = fa_icon 'check-square lg', class: 'mr-1'
+        span v-if='!keepUserSelected' = fa_icon 'square lg', class: 'mr-1'
+        span = 'Persoon onthouden'
 
     flash
 
@@ -97,10 +104,10 @@
           h4.col-3.px-2 = '{{doubleToCurrency(orderTotal())}}'
 
       .orders-confirmation
-        button.btn.btn-block.btn-lg.btn-success(@click="confirmOrder" v-bind:disabled="orderConfirmButtonDisabled()" v-bind:class="{ 'btn-warning' : (orderRequiresAge() && selectedUser.minor) }")
+        button.btn.btn-block.btn-lg.btn-success(@click="confirmOrder" v-bind:disabled="orderConfirmButtonDisabled()" v-bind:class="{ 'btn-warning' : (orderRequiresAge() && selectedUser && selectedUser.minor) }")
           span = 'Bestelling plaatsen'
           br
-          small v-if="orderRequiresAge() && selectedUser.minor"
+          small v-if="orderRequiresAge() && selectedUser && selectedUser.minor"
             span = fa_icon 'exclamation-triangle '
             span = ' {{selectedUser.name}} is minderjarig!'
 
