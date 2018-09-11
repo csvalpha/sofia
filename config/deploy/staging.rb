@@ -1,4 +1,4 @@
-set :branch, :staging
+set :branch, 'fix-animatecss-loading'
 set :deploy_to, '/opt/projects/alpha-tomato-staging'
 
 before :"docker:deploy:compose:start", 'docker:compose:down'
