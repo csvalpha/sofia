@@ -7,10 +7,6 @@ environment.config.merge({
       {
         test: /\.vue$/,
         use: 'vue-loader'
-      }, {
-        test: /\.scss$/,
-        loaders: ['style-loader', 'css-loader', 'sass-loader'],
-        exclude: /node_modules/
       }
     ]
   },
