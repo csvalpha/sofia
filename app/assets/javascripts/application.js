@@ -23,7 +23,7 @@
 /* eslint-disable no-undef */
 WebFont.load({
   google: {
-    families: ['Roboto:300,400']
+    families: ['Roboto:300,400,500']
   }
 });
 
