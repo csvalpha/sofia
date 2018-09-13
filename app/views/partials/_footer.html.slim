@@ -1,3 +1,9 @@
-footer.footer.text-right
+footer.footer.d-flex.justify-content-between
+  span.text-danger.text-uppercase.font-weight-bold.mx-2
+    = ''
+    - if Rails.application.config.x.tomato_host == 'staging.streep.csvalpha.nl'
+      = 'For demo and testing purposes only'
+    - elsif Rails.application.config.x.tomato_host != 'streep.csvalpha.nl'
+      = 'Development mode'
   span.text-muted.mx-2
     = '2018 © ICT-commissie der C.S.V. Alpha'

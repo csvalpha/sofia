@@ -37,6 +37,8 @@ Rails.application.configure do
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
+  config.middleware.delete Rack::Attack
+
   # Configure url to test actionmailer urls
   config.action_mailer.default_url_options = { scheme: 'http', host: 'testhost', port: 1337 }
 
