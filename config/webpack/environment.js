@@ -7,7 +7,7 @@ environment.config.merge({
       {
         test: /\.vue$/,
         use: 'vue-loader'
-      },
+      }
     ]
   },
   plugins: [

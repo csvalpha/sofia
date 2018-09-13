@@ -3,7 +3,6 @@
   "private": true,
   "dependencies": {
     "@rails/webpacker": "4.0.0-pre.2",
-    "animate.css": "^3.6.1",
     "autosuggest-highlight": "^3.1.1",
     "axios": "^0.18.0",
     "bootstrap": "4.1",
