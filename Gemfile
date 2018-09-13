@@ -4,7 +4,7 @@ gem 'bcrypt', '~> 3.1'
 gem 'coffee-rails', '~> 4.2'
 gem 'devise', '4.4.1'
 gem 'devise-i18n', '1.5'
-gem 'factory_bot_rails', '~> 4.10'
+gem 'factory_bot_rails', '~> 4.11'
 gem 'faker', '~> 1.9'
 gem 'font-awesome-rails', '~> 4.7'
 gem 'jbuilder', '~> 2.7'
@@ -25,12 +25,12 @@ gem 'redis-rails', '~> 5.0.2'
 gem 'rest-client', '~> 2.0.2'
 gem 'sass-rails', '~> 5.0'
 gem 'sentry-raven', '~> 2.3'
-gem 'sidekiq', '~> 5.1.2'
+gem 'sidekiq', '~> 5.2.1'
 gem 'sidekiq-scheduler', '~> 3.0'
 gem 'simple_form', '~> 4.0'
 gem 'slack-notifier', '~> 2.3.2'
 gem 'slim', '~> 3.0.8'
-gem 'turbolinks', '~> 5.1'
+gem 'turbolinks', '~> 5.2'
 gem 'uglifier', '~> 4.1'
 gem 'validates_timeliness', '~> 4.0'
 gem 'webpacker', '~> 3.5'
@@ -58,18 +58,18 @@ group :development do
   gem 'spring', require: false
   gem 'spring-commands-rspec', require: false
   gem 'spring-watcher-listen', require: false
-  gem 'web-console', '>= 3.3.0'
+  gem 'web-console', '~> 3.7'
 end
 
 group :test do
-  gem 'rubocop', '~> 0.52', require: false
+  gem 'rubocop', '~> 0.59', require: false
   gem 'rubocop-rspec', require: false
   gem 'simplecov', require: false
   gem 'terminal-notifier-guard'
 end
 
 group :deploy do
-  gem 'capistrano', '= 3.10.2' # keep version in sync with version locked in ./config/deploy.rb
+  gem 'capistrano', '= 3.11.0' # keep version in sync with version locked in ./config/deploy.rb
   gem 'capistrano-docker', git: 'https://github.com/netguru/capistrano-docker.git', tag: 'v0.2.11'
   gem 'slackistrano', '~> 3.8.1'
 end

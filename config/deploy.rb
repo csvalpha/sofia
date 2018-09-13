@@ -1,5 +1,5 @@
 # config valid only for current version of Capistrano
-lock '3.10.2'
+lock '3.11'
 
 set :application, 'alpha-tomato'
 set :repo_url, 'git@github.com:csvalpha/alpha-tomato.git'
