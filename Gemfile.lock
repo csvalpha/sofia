@@ -246,6 +246,8 @@ GEM
       activesupport (>= 3.0.0)
     raabro (1.1.6)
     rack (2.0.5)
+    rack-attack (5.4.0)
+      rack (>= 1.0, < 3)
     rack-protection (2.0.3)
       rack
     rack-proxy (0.6.4)
@@ -479,6 +481,7 @@ DEPENDENCIES
   pry-rails
   puma (~> 3.11)
   pundit (~> 2.0)
+  rack-attack (~> 5.0)
   rails (~> 5.1.6)
   rails-i18n (~> 5.1)
   redis-rails (~> 5.0.2)
