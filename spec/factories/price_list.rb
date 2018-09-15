@@ -3,17 +3,17 @@ FactoryBot.define do
     name { Faker::Book.title }
 
     transient do
-      with_all_products false
-      with_specific_products false
-      products []
+      with_all_products { false }
+      with_specific_products { false }
+      products { [] }
     end
 
     trait :with_all_products do
-      with_all_products true
+      with_all_products { true }
     end
 
     trait :with_products do
-      with_specific_products true
+      with_specific_products { true }
     end
 
     after(:create) do |price_list, evaluator|

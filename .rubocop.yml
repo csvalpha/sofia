@@ -11,6 +11,7 @@ AllCops:
     - 'config/initializers/simple_form_bootstrap.rb'
     - 'node_modules/**/*'
     - 'vendor/**/*'
+    - '.pryrc'
   DisplayCopNames: true
   DisplayStyleGuide: true
 
