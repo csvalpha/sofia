@@ -57,6 +57,15 @@ document.addEventListener('turbolinks:load', () => {
           });
           this.suggestionsUpdatedAt = new Date();
         },
+
+        selectFirstSuggestion: function(e) {
+          if (this.open) {
+            e.preventDefault();
+          }
+          if (this.suggestions.length > 0) {
+            this.suggestionClicked(0);
+          }
+        }
       }
     });
   }
