@@ -1,4 +1,8 @@
 - content_for :title, "Gebruiker #{@user.name}- SOFIA"
+
+- content_for :modal
+  = render 'mutation_modal'
+
 .container.footer-padding
   .row.justify-content-between
     .col-sm-12.col-md-6.py-2
@@ -34,8 +38,6 @@
         span.mr-1 = 'Saldo:'
         span class=('text-danger' if @user.credit <= 0)
           = number_to_currency(@user.credit, unit: '€')
-
-      = render 'mutation_modal'
 
     .col-sm-12.col-md-6.py-2
       .card

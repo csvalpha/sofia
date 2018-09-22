@@ -1,4 +1,8 @@
 - content_for :title, 'Prijslijsten - SOFIA'
+
+- content_for :modal
+  = render 'modal'
+
 .container.py-2.footer-padding
   .row
     .col-sm-12
@@ -10,8 +14,6 @@
         button.btn.btn-sm.btn-primary role='button' data-toggle='modal' data-target='#editPriceListModal'
           = fa_icon 'plus', class: 'mr-1'
           = 'Nieuwe prijslijst'
-
-      = render 'modal'
 
       = content_tag :table, id: 'price_lists_table', class: 'table table-striped table-responsive-md',
         data: { price_lists: @recent_price_lists_json, products: @products_json }

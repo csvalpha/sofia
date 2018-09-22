@@ -21,6 +21,8 @@ html
 
   body
 
+    = yield(:modal)
+
     - if @show_navigationbar
       = render partial: 'partials/navigation_bar'
 
