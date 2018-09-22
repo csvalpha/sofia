@@ -16,14 +16,18 @@ class CreditMutationsController < ApplicationController
     respond_to do |format|
       if @mutation.save
         NewCreditMutationNotificationJob.perform_later(@mutation) if Rails.env.production?
-        format.html { redirect_to request.referer, success: 'Successfully created mutation' }
+        format.html { redirect_to which_redirect?, flash: { success: 'Inleg of mutatie aangemaakt' } }
         format.json { render json: @mutation, include: { user: { methods: %i[credit avatar_thumb_or_default_url] } } }
 
       else
-        format.html { redirect_to request.referer, error: @mutation.errors.full_messages.join(', ') }
+        format.html { redirect_to which_redirect?, flash: { error: @mutation.errors.full_messages.join(', ') } }
         format.json { render json: @mutation.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def which_redirect?
+    request.referer || @mutation.user
   end
 
   def model_includes
