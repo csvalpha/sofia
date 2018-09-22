@@ -59,6 +59,7 @@ class UsersController < ApplicationController
 
   def api_token
     return @token if @token
+
     options = { grant_type: 'client_credentials',
                 client_id: Rails.application.secrets.fetch(:banana_client_id),
                 client_secret: Rails.application.secrets.fetch(:banana_client_secret) }
@@ -71,6 +72,7 @@ class UsersController < ApplicationController
 
   def send_slack_users_refresh_notification
     return unless Rails.env.production?
+
     # :nocov:
     SlackMessageJob.perform_later("User ##{current_user.id} (#{current_user.name}) "\
       "is importing users from Banana (#{Rails.application.config.x.banana_api_host})}")

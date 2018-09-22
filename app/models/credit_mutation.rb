@@ -9,6 +9,7 @@ class CreditMutation < ApplicationRecord
 
   def activity_not_locked
     return if activity.blank?
+
     errors.add(:activity, 'has been locked') if changed? && activity.locked?
   end
 end

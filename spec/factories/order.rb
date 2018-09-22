@@ -13,7 +13,7 @@ FactoryBot.define do
 
     trait :with_items do
       transient do
-        products []
+        products { [] }
       end
 
       after(:create) do |order, evaluator|

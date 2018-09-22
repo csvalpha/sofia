@@ -13,11 +13,10 @@
 //= require rails-ujs
 //= require turbolinks
 //= require jquery3
-//= require popper
-//= require bootstrap
-//= require raven-js/dist/raven.min.js
-//= require webfontloader/webfontloader
-//= require turbolinks-animate/src/turbolinks-animate
+//= require bootstrap.bundle.min.js
+//= require raven.min.js
+//= require webfontloader.js
+//= require turbolinks-animate.js
 //= require_tree .
 
 /* eslint-disable no-undef */
