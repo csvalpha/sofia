@@ -281,7 +281,7 @@
     }
   }
 
-  .product-requires-age{
+  .product-requires-age {
     background-color: $gray-300;
 
     &:hover {
@@ -289,7 +289,7 @@
     }
   }
 
-  .product-grid-product-requires-age{
+  .product-grid-product-requires-age {
     top: -50px;
     flex-basis: 0px;
     align-self: right;
@@ -301,14 +301,14 @@
     font-size: $font-size-lg;
   }
 
-  .fa-circle-lighter{
+  .fa-circle-lighter {
     color: $gray-600;
   }
 
   .order-grid {
     display: grid;
-    overflow-y: hidden;
     margin-right: 20px;
+    overflow-y: hidden;
     grid-area: order-grid;
   }
 }
