@@ -54,10 +54,7 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         setUser(user = null) {
-          if (!user) {
-            this.orderRows = [];
-          }
-
+          this.orderRows = [];
           this.payWithCash = false;
           this.selectedUser = user;
         },
@@ -142,9 +139,11 @@ document.addEventListener('turbolinks:load', () => {
             }
 
             this.sendFlash('Bestelling geplaatst.', additionalInfo, 'success');
-            this.orderRows = [];
             if(!this.keepUserSelected){
               this.setUser(null);
+            } else {
+              // re-set user to update credit
+              this.setUser(response.body.user)
             }
           }, this.handleXHRError );
         },
@@ -181,6 +180,9 @@ document.addEventListener('turbolinks:load', () => {
 
             if(!this.keepUserSelected) {
               this.setUser(null);
+            } else {
+              // re-set user to update credit
+              this.setUser(response.body.user)
             }
             this.$refs.creditMutationModal.hide();
 
