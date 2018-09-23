@@ -4,8 +4,8 @@
   width: 100vw;
   height: 100vh;
 
-  grid-template-columns: [header-start orders-start user-details-start] minmax(35%, 340px) [user-details-end orders-end product-grid-start] 1fr [header-end product-grid-end];
-  grid-template-rows: [header-start] 80px [header-end user-details-start product-grid-start orders-start ] 1fr [user-details-end orders-end product-grid-end];
+  grid-template-columns: [header-start orders-start user-details-start] minmax(35%, 340px) [user-details-end orders-end product-grid-start order-grid-start] 1fr [header-end product-grid-end order-grid-end];
+  grid-template-rows: [header-start] 80px [header-end user-details-start product-grid-start orders-start order-grid-start] 1fr [user-details-end orders-end product-grid-end order-grid-end];
 
 
   .header {
@@ -303,5 +303,12 @@
 
   .fa-circle-lighter{
     color: $gray-600;
+  }
+
+  .order-grid {
+    display: grid;
+    overflow-y: hidden;
+    margin-right: 20px;
+    grid-area: order-grid;
   }
 }
