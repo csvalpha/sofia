@@ -143,7 +143,7 @@ document.addEventListener('turbolinks:load', () => {
               this.setUser(null);
             } else {
               // re-set user to update credit
-              this.setUser(response.body.user)
+              this.setUser(response.body.user);
             }
           }, this.handleXHRError );
         },
@@ -182,7 +182,7 @@ document.addEventListener('turbolinks:load', () => {
               this.setUser(null);
             } else {
               // re-set user to update credit
-              this.setUser(response.body.user)
+              this.setUser(response.body.user);
             }
             this.$refs.creditMutationModal.hide();
 
