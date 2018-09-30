@@ -7,6 +7,10 @@
   grid-template-columns: [header-start orders-start user-details-start] minmax(35%, 340px) [user-details-end orders-end product-grid-start order-grid-start] 1fr [header-end product-grid-end order-grid-end];
   grid-template-rows: [header-start] 80px [header-end user-details-start product-grid-start orders-start order-grid-start] 1fr [user-details-end orders-end product-grid-end order-grid-end];
 
+  .row {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
 
   .header {
     display: flex;
@@ -307,9 +311,7 @@
 
   .order-grid {
     display: grid;
-    margin-right: 20px;
     grid-area: order-grid;
-
-    overflow-y: auto
+    overflow-y: auto;
   }
 }
