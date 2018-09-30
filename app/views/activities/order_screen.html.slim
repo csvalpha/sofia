@@ -43,9 +43,6 @@
       button type="sumbit" class="btn btn-primary" @click="saveCreditMutation($event)"
         = 'Inleg aanmaken'
 
-  b-modal id="modal1" title="Bestelgeschiedenis" size="lg" lazy=true ok-only="" ok-title="Sluiten"
-    order-history :activity="activity" editable=""
-
   nav.header
     ul.header-nav
       li.header-nav-item.header-nav-home
@@ -56,10 +53,6 @@
         small.font-weight-light.d-inline-block = l @activity.start_time, format: :date_only
 
     div.row.col-lg-4.pull-right style='flex-direction: row-reverse'
-      b-btn.m-3 variant="outline-secondary" v-b-modal.modal1=""
-              = fa_icon 'history lg', class: 'mr-1'
-              = 'Bestelgeschiedenis'
-
       b-btn.m-3 variant="outline-secondary" v-on:click='keepUserSelected = !keepUserSelected'
         span v-if='keepUserSelected' = fa_icon 'check-square lg', class: 'mr-1'
         span v-if='!keepUserSelected' = fa_icon 'square lg', class: 'mr-1'
