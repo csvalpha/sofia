@@ -308,7 +308,8 @@
   .order-grid {
     display: grid;
     margin-right: 20px;
-    overflow-y: hidden;
     grid-area: order-grid;
+
+    overflow-y: auto
   }
 }
