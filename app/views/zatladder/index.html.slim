@@ -1,15 +1,15 @@
 - content_for :title, 'Zatladder - SOFIA'
 .container.footer-padding
-  .row.pt-4.d-flex.justify-content-around
-    .card.col-12.col-md-6.pt-3
+  .row.p-3.d-flex.justify-content-around
+    .card.col-12.col-md-6.pt-3.mx-2
       h1.card-title.text-center = 'Zatladder'
 
       .row.d-flex.justify-content-center
-        small.col-2 = 'Van'
-        small.col-4.text-right = l @from_date, format: '%d %B %Y'
+        small.col-4.col-md-2 = 'Van'
+        small.col-8.col-md-4.text-right = l @from_date, format: '%d %B %Y'
       .row.d-flex.justify-content-center
-        small.col-2 = 'Tot'
-        small.col-4.text-right = l @to_date, format: '%d %B %Y'
+        small.col-4.col-md-2 = 'Tot'
+        small.col-8.col-md-4.text-right = l @to_date, format: '%d %B %Y'
 
       table.table.table-striped.mt-2
         thead
