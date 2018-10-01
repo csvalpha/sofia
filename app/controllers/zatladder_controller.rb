@@ -5,15 +5,20 @@ class ZatladderController < ApplicationController
   def index
     authorize :zatladder
 
-    last_october = Time.zone.now.beginning_of_year - 3.months
-    next_october = last_october + 1.year
-
     @from_date  = last_october
-    @to_date    = next_october
-    @zatladder  = zatladder_spendings(@from_date, @to_date)
+    @to_date    = last_october + 1.year
+    @zatladder = zatladder_spendings(@from_date, @to_date)
   end
 
   private
+
+  def last_october
+    # now: 04 - 05 - 2018
+    beginning_of_year = Time.zone.now.beginning_of_year
+    return beginning_of_year - 3.months if Time.zone.now < beginning_of_year + 9.months
+
+    beginning_of_year + 10.months
+  end
 
   def zatladder_spendings(from, to)
     @users_spendings = User.in_banana.calculate_spendings(from: from, to: to)
