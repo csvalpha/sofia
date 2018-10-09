@@ -46,8 +46,11 @@
   nav.header
     ul.header-nav
       li.header-nav-item.header-nav-home
-        = link_to @activity, class: 'nav-link'
+        span.user-details-close v-if="selectedUser" @click="selectedUser = null"
           = fa_icon 'chevron-left'
+        span v-else=""
+          = link_to @activity, class: 'nav-link'
+            = fa_icon 'home'
       li.header-nav-item
         span.mr-3 = @activity.title
         small.font-weight-light.d-inline-block = l @activity.start_time, format: :date_only
