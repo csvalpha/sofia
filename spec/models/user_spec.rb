@@ -285,7 +285,7 @@ RSpec.describe User, type: :model do
 
       let(:order) { FactoryBot.create(:order_with_items, default_order.merge(created_at: included_date)) }
       let(:second_order) { FactoryBot.create(:order_with_items, default_order.merge(created_at: excluded_date)) }
-      let(:third_order) { nil }
+      let(:third_order) { FactoryBot.create(:order_with_items, default_order.merge(created_at: excluded_date + 1.day)) }
 
       it { expect(spendings_hash[user.id]).to eq order.order_total }
     end
