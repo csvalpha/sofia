@@ -1,4 +1,6 @@
 class ZatladderController < ApplicationController
+  include OctoberHelper
+
   before_action :authenticate_user!
   after_action :verify_authorized
 
@@ -12,17 +14,9 @@ class ZatladderController < ApplicationController
 
   private
 
-  def last_october
-    # now: 04 - 05 - 2018
-    beginning_of_year = Time.zone.now.beginning_of_year
-    return beginning_of_year - 3.months if Time.zone.now < beginning_of_year + 9.months
-
-    beginning_of_year + 10.months
-  end
-
   def zatladder_spendings(from, to)
     @users_spendings = User.in_banana.calculate_spendings(from: from, to: to)
-    zatladder = User.select(:id, :name).map do |user|
+    zatladder = User.in_banana.select(:id, :name).map do |user|
       {
         id: user.id,
         name: user.name,
