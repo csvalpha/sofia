@@ -271,6 +271,24 @@ RSpec.describe User, type: :model do
 
       it { expect(spendings_hash[user.id]).to eq nil }
     end
+
+    context 'when on specific date' do
+      subject(:spendings_hash) do
+        User.calculate_spendings(
+          from: Time.zone.local(2018, 6, 1),
+          to: Time.zone.local(2018, 6, 23)
+        )
+      end
+
+      let(:included_date) { Time.zone.local(2018, 6, 22) }
+      let(:excluded_date) { Time.zone.local(2018, 6, 23) }
+
+      let(:order) { FactoryBot.create(:order_with_items, default_order.merge(created_at: included_date)) }
+      let(:second_order) { FactoryBot.create(:order_with_items, default_order.merge(created_at: excluded_date)) }
+      let(:third_order) { FactoryBot.create(:order_with_items, default_order.merge(created_at: excluded_date + 1.day)) }
+
+      it { expect(spendings_hash[user.id]).to eq order.order_total }
+    end
   end
 
   describe 'calculate_credits' do

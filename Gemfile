@@ -66,6 +66,7 @@ group :test do
   gem 'rubocop-rspec', require: false
   gem 'simplecov', require: false
   gem 'terminal-notifier-guard'
+  gem 'timecop'
 end
 
 group :deploy do

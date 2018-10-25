@@ -83,7 +83,7 @@ class User < ApplicationRecord
 
   def self.calculate_spendings(from: '01-01-1970', to: Time.zone.now)
     User.all.joins(:order_rows)
-        .where('orders.created_at BETWEEN ? AND ?', from, to)
+        .where('orders.created_at >= ? AND orders.created_at < ?', from, to)
         .group(:id).sum('product_count * price_per_product')
   end
 end
