@@ -4,9 +4,8 @@
   width: 100vw;
   height: 100vh;
 
-  grid-template-columns: [header-start orders-start user-details-start] minmax(35%, 340px) [user-details-end orders-end product-grid-start] 1fr [header-end product-grid-end];
-  grid-template-rows: [header-start] 80px [header-end user-details-start product-grid-start orders-start ] 1fr [user-details-end orders-end product-grid-end];
-
+  grid-template-columns: [header-start orders-start user-details-start] minmax(35%, 340px) [user-details-end orders-end product-grid-start order-grid-start] 1fr [header-end product-grid-end order-grid-end];
+  grid-template-rows: [header-start] 80px [header-end user-details-start product-grid-start orders-start order-grid-start] 1fr [user-details-end orders-end product-grid-end order-grid-end];
 
   .header {
     display: flex;
@@ -281,7 +280,7 @@
     }
   }
 
-  .product-requires-age{
+  .product-requires-age {
     background-color: $gray-300;
 
     &:hover {
@@ -289,9 +288,9 @@
     }
   }
 
-  .product-grid-product-requires-age{
+  .product-grid-product-requires-age {
     top: -50px;
-    flex-basis: 0px;
+    flex-basis: 0;
     align-self: right;
   }
 
@@ -301,7 +300,13 @@
     font-size: $font-size-lg;
   }
 
-  .fa-circle-lighter{
+  .fa-circle-lighter {
     color: $gray-600;
+  }
+
+  .order-grid {
+    display: grid;
+    grid-area: order-grid;
+    overflow-y: auto;
   }
 }
