@@ -46,7 +46,7 @@
   nav.header
     ul.header-nav
       li.header-nav-item.header-nav-home
-        span.user-details-close v-if="selectedUser" @click="selectedUser = null"
+        span.user-details-close v-if="selectedUser || payWithCash" @click="payWithCash ? payWithCash = false : selectedUser = null"
           = fa_icon 'chevron-left'
         span v-else=""
           = link_to @activity, class: 'nav-link'
