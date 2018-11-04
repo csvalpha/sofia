@@ -34,7 +34,7 @@ _On Linux-like systems_
 
 ### OAuth configuration
 
-In OAuth Banana (github.com/csvalpha/alpha-banana-api), execute the following command:
+In OAuth Banana (github.com/csvalpha/alpha-banana-api), execute the following command (in `rails console`):
 
 ```ruby
 Doorkeeper::Application.create(name: 'Tomato - Streepsysteem der C.S.V. Alpha', redirect_uri: 'http://localhost:5000/users/auth/banana_oauth2/callback', scopes: 'read_user')
