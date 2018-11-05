@@ -37,7 +37,7 @@ _On Linux-like systems_
 In OAuth Banana (github.com/csvalpha/alpha-banana-api), execute the following command (in `rails console`):
 
 ```ruby
-Doorkeeper::Application.create(name: 'Tomato - Streepsysteem der C.S.V. Alpha', redirect_uri: 'http://localhost:5000/users/auth/banana_oauth2/callback', scopes: 'read_user')
+Doorkeeper::Application.create(name: 'Tomato - Streepsysteem der C.S.V. Alpha', redirect_uri: 'http://localhost:5000/users/auth/banana_oauth2/callback', scopes: 'tomato')
 ```
 
 Next, copy the uid and secret to the `.env` in Tomato (as `banana_client_id` and `banana_client_secret`).
