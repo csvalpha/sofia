@@ -46,7 +46,7 @@
   nav.header
     ul.header-nav
       li.header-nav-item.header-nav-home
-        span.user-details-close v-if="selectedUser" @click="selectedUser = null"
+        span.user-details-close v-if="selectedUser || payWithCash" @click="payWithCash ? payWithCash = false : selectedUser = null"
           = fa_icon 'chevron-left'
         span v-else=""
           = link_to @activity, class: 'nav-link'
@@ -107,10 +107,10 @@
             span = fa_icon 'exclamation-triangle '
             span = ' {{selectedUser.name}} is minderjarig!'
 
-  .order-grid v-if="!selectedUser"
+  .order-grid v-if="!selectedUser && !payWithCash"
     order-history :activity="activity" expand_first="" editable=""
 
-  .product-grid v-if="selectedUser"
+  .product-grid v-if="selectedUser || payWithCash"
     .product-grid-product v-for="productPrice in productPrices" @click="selectProduct(productPrice)" v-bind:class="{ 'product-requires-age' : (selectedUser && selectedUser.minor && productPrice.product.requires_age) }"
         span.product-grid-product-requires-age.py-1.fa-stack v-if="selectedUser && selectedUser.minor && productPrice.product.requires_age"
           i class="fa fa-circle fa-circle-lighter fa-stack-2x"
