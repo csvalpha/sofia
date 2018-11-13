@@ -15,6 +15,10 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
         li.nav-item
           = nav_link activities_path, class: 'nav-link'
             = fa_icon 'calendar', class: 'mr-2', text: 'Activiteiten'
+        - Activity.current.each do |activity|
+          li.nav-item
+            = nav_link order_screen_activity_url(activity), class: 'nav-link'
+              = fa_icon 'calculator', class: 'mr-2', text: 'Direct naar '+activity.title
 
       - if current_user&.treasurer?
         li.nav-item
