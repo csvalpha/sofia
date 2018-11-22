@@ -26,27 +26,27 @@ _On Linux-like systems_
 1. Clone this repository
 1. Run the following commands:
   1. `bundle install` (might take a couple of minutes)
-  1. `bundle exec rails db:setup`
   1. `yarn`
+  1. `bundle exec rails db:setup`
   1. `bundle exec rails s -p 5000` (port specified so it doesn't use the same as Banana API)
 1. Go to http://localhost:5000 and you should see Alpha Tomato running
-1. Copy `.env.example` to `.env` with `cp .env.example .env` en pas de waarden waar nodig aan
+1. Copy `.env.example` to `.env` with `cp .env.example .env` and edit the values where necessary
 
 ### OAuth configuration
 
-In OAuth Banana (github.com/csvalpha/alpha-banana-api), voer het volgende commando uit:
+In OAuth Banana (github.com/csvalpha/alpha-banana-api), execute the following command (in `rails console`):
 
 ```ruby
-Doorkeeper::Application.create(name: 'Tomato - Streepsysteem der C.S.V. Alpha', redirect_uri: 'http://localhost:5000/users/auth/banana_oauth2/callback', scopes: 'read_user')
+Doorkeeper::Application.create(name: 'Tomato - Streepsysteem der C.S.V. Alpha', redirect_uri: 'http://localhost:5000/users/auth/banana_oauth2/callback', scopes: 'tomato')
 ```
 
-Vervolgens kopieer je de uid en secret naar de `.env` in Tomato (als `banana_client_id` en `banana_client_secret`).
+Next, copy the uid and secret to the `.env` in Tomato (as `banana_client_id` and `banana_client_secret`).
 
 ### Configuring roles
 
-Gebruikers kunnen in Tomato rollen hebben, namelijk "SB-penningmeester" en/of "Hoofdtapper". Een gebruiker kan ook inloggen zonder rol. Deze rollen worden afgeleid van de groepen waar een gebruiker in zit, die groepen zijn opgeslagen in de Banana API.
+Users can have roles in Tomato, namely Treasurer ("SB-penningmeester") and/or Main Bartender ("Hoofdtapper"). A user can also log in without a role. These roles are derived from the groups the user is in. These groups are saved in the Banana API.
 
-Rollen worden bij het seeden aangemaakt op de volgende manier:
+Roles are created in the following way during the seeding:
 
 ```ruby
 Role.create(role_type: :treasurer, group_uid: 3)
@@ -55,7 +55,7 @@ Role.create(role_type: :main_bartender, group_uid: 2)
 ```
 
 ## Deploying
-Deploying procedure is the same as for the Banana project.   
+Deploying procedure is the same as for the Banana project.
 See [DEPLOY.md](https://github.com/csvalpha/alpha-banana-api/blob/master/DEPLOY.md) for that.
 
 
