@@ -62,6 +62,8 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = { address: 'localhost', port: 1025 }
   config.action_mailer.asset_host = 'http://localhost:5000'
 
+  config.sass.inline_source_maps = true
+
   config.after_initialize do
     Bullet.enable = true
     Bullet.console = true
