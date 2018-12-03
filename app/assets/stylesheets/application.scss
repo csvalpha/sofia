@@ -72,3 +72,11 @@ body {
 .footer-padding {
   padding-bottom: 58px;
 }
+
+.footer-activity-link {
+  color: $gray-800;
+  &:hover {
+    text-decoration: none;
+    color: $link-color;
+  }
+}
