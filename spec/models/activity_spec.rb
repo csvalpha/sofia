@@ -216,10 +216,10 @@ RSpec.describe Activity, type: :model do
 
   describe '#lock_date' do
     subject(:activity) do
-      FactoryBot.build_stubbed(:activity, start_time: '01-01-2000'.to_datetime,
-                                          end_time: '02-01-2000'.to_datetime)
+      FactoryBot.build_stubbed(:activity, start_time: Time.zone.parse('01-01-2000'),
+                                          end_time: Time.zone.parse('02-01-2000'))
     end
 
-    it { expect(activity.lock_date).to eq '02-03-2000'.to_datetime }
+    it { expect(activity.lock_date).to eq Time.zone.parse('02-03-2000') }
   end
 end
