@@ -30,7 +30,7 @@ set :sentry_organization, 'csvalpha'
 
 task :staging do
   set :stage, 'staging'
-  set :deploy_to, '/opt/docker/tomato/staging'
+  set :deploy_to, '/opt/docker/sofia/staging'
   set :branch, 'staging'
   set :docker_tag, 'staging'
   set :branch, 'staging'
@@ -39,7 +39,7 @@ end
 
 task :production do
   set :stage, 'production'
-  set :deploy_to, '/opt/docker/tomato/production'
+  set :deploy_to, '/opt/docker/sofia/production'
   set :branch, 'master'
   set :docker_tag, 'latest'
   set :branch, 'master'
@@ -67,7 +67,7 @@ task :publish do
   run(:local) do
     invoke 'slack:starting'
 
-    invoke 'docker:ensure_local_is_clean'
+    # invoke 'docker:ensure_local_is_clean'
     invoke 'docker:build'
     invoke 'docker:publish'
 
