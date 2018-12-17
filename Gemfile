@@ -71,9 +71,7 @@ group :test do
 end
 
 group :deploy do
-  gem 'capistrano', '= 3.11.0' # keep version in sync with version locked in ./config/deploy.rb
-  gem 'capistrano-docker', git: 'https://github.com/netguru/capistrano-docker.git', tag: 'v0.2.11'
-  gem 'slackistrano', '~> 3.8.1'
+  gem 'mina', '~> 1.2.3'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
