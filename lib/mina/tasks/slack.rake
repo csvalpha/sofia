@@ -17,7 +17,7 @@ namespace :slack do
     comment 'Sending message to slack'
     command "curl -sS --request POST -H 'Content-type: application/json' \
              --data '{\"channel\": \"#{fetch(:slack_room)}\", \
-             \"username\": \"Amber-Api deployer\", \
+             \"username\": \"Sofia deployer\", \
             \"text\": \"#{message}\"}' #{fetch(:slack_url)}"
   end
 end

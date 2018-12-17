@@ -5,7 +5,7 @@ import 'lib/mina/tasks/rails.rake'
 import 'lib/mina/tasks/slack.rake'
 import 'lib/mina/tasks/sentry.rake'
 
-set :application_name, 'amber-api'
+set :application_name, 'sofia'
 set :domain, 'csvalpha.nl'
 
 # Git config
