@@ -3,26 +3,11 @@
 - content_for :modal
   = render 'mutation_modal'
 
-= content_tag :div, id: 'user-bubbles', class: ' container footer-padding', data: { username: @user.name }
-  template v-if="bubblesActivated"
-    bubbles
-    audio autoplay="true"
-      source src="/wemakenschoon.mp3" type="audio/mpeg"
-
-  audio v-if="soundActivated" id="bubblesound" loop=""
-    source src="/bubbles.mp3" type="audio/mpeg"
-
+.container.footer-padding
   .row.justify-content-between
     .col-sm-12.col-md-6.py-2
 
-      h1.mouse-pointer @click="toggleBubbles"
-        span.mr-2
-          = fa_icon 'bath', class: 'mr-2', 'v-if': 'bubblesActivated'
-          = fa_icon 'user', class: 'mr-2', 'v-else': true
-
-        = '{{userName}}'
-
-        = fa_icon 'trophy', class: 'ml-2', 'v-if': 'bubblesActivated'
+      h1 = fa_icon 'user', class: 'mr-2', text: @user.name
 
       table.table.table-sm
         tbody
