@@ -4,7 +4,6 @@ cache:
   directories:
     - node_modules
   yarn: true
-
 install:
   - bundle install
   - nvm install 9.11.1
@@ -12,12 +11,16 @@ install:
   - npm i -g yarn
   - yarn
 
+jobs:
+  include:
+    - stage: test
+      name: "spec"
+      script: ./bin/ci.sh spec
+    -
+      name: "lint"
+      script: ./bin/ci.sh lint
 env:
-  - TYPE=spec
-  - TYPE=lint
-
-script:
-  - './bin/ci.sh $TYPE'
+  secure: V3ls8VgJmD1IvkyX2TbfQJvxFDUHQ5FI2LbTuDmaWk4lalUoTw0kTMd6OPnh6WhhSePL2loFM0grktyGjYfYAGqFGBW8xJrjrPJ+gyeWjUGZxrbkeluypDio0bVKtxerbgsOW/5ftV1ecrS9B3LtnkoSEhN8AJJjXdCl7SRSWYR9K82EO96aRqFjeUmXTBJcXdNXUKGALxqpFOBjxSuLWMF6Yn9j8MHTPxeIWQaNcM9ALN2hl6+QfeafxbkRNVL1giuIpTiYPH9Kwf2RE7m1PWuWAEukf10P6C1c4sW25Bk7prAdwpuId6gb+oL28cVXocSBXpr+qiwggSx8UiucI40hEPaHCHE2ptxWKgPa+hl2ejiuUVJeSkEuJA4lxe8KFPiIpNnv3mTmupLtWnykMawDKooXUB/sIAB6Rx4PHJ0ce/97oTmuEqhLDqxHxC50Kswg/UumtALwPg52IPhfMnpJbDxFDdRh2agQ8ckeSUJUo/uUv2N9YlDu71/IEuhD7q3kYXTOMWJI5CnwwzOpGfiPnV4y3GIRFAorCNEws2Iv3D1O0cq6gOr7sFAjjQVCmqqY2B9lSi+lFLRnPB1sRMMJTkLFAoYJmLd/4hcSfiEQBq1IRsn5VZW9plpBTzUCZSCfopkhbN+83HVkuM6nZQnF29bp9q+l/PL5Av9v7/k=
 
 branches:
   only:
