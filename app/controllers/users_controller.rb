@@ -57,7 +57,7 @@ class UsersController < ApplicationController
     render json: @users
   end
 
-  def api_token
+  def api_token # rubocop:disable Metrics/AbcSize
     return @token if @token
 
     options = { grant_type: 'client_credentials',
