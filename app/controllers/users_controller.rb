@@ -61,8 +61,8 @@ class UsersController < ApplicationController
     return @token if @token
 
     options = { grant_type: 'client_credentials',
-                client_id: Rails.application.secrets.fetch(:banana_client_id),
-                client_secret: Rails.application.secrets.fetch(:banana_client_secret) }
+                client_id: Rails.application.credentials.fetch.banana_client_id,
+                client_secret: Rails.application.credentials.fetch.banana_client_secret }
     token_response = RestClient.post "#{Rails.application.config.x.banana_api_host}/api/v1/oauth/token", options
 
     @token = JSON.parse(token_response)['access_token']

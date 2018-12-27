@@ -36,3 +36,15 @@ yarn-error\.log
 /node_modules
 yarn-debug.log*
 .yarn-integrity
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key
+
+# Ignore master key for decrypting credentials and more.
+/config/master-development.key
+
+# Ignore master key for decrypting credentials and more.
+/config/master-staging.key
+
+# Ignore master key for decrypting credentials and more.
+/config/master-test.key

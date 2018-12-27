@@ -48,6 +48,7 @@ group :development, :test do
   gem 'guard-rspec', require: false
   gem 'pry-byebug'
   gem 'pry-rails'
+  gem 'rails-env-credentials'
   gem 'rspec-rails'
   gem 'slim_lint'
 end

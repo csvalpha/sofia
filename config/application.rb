@@ -23,8 +23,8 @@ module Tomato
     # See https://github.com/kickstarter/rack-attack#getting-started
     config.middleware.use Rack::Attack
 
-    config.x.banana_api_host  = ENV['BANANA_API_HOST']
-    config.x.tomato_host      = ENV['TOMATO_HOST']
+    config.x.banana_api_host  = credentials.banana_host
+    config.x.tomato_host      = credentials.tomato_host
     config.x.slack_channel    = '#monitoring'
   end
 end

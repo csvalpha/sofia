@@ -86,7 +86,7 @@ Rails.application.configure do
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
   config.action_mailer.default_url_options = {
-    scheme: 'https', host: Rails.application.config.x.tomato_host
+    scheme: 'https', host: Rails.application.credentials.tomato_host
   }
 
   config.action_mailer.delivery_method = :mailgun
