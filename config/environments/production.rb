@@ -92,8 +92,8 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :mailgun
   config.action_mailer.asset_host = "https://#{config.action_mailer.default_url_options[:host]}"
   config.action_mailer.mailgun_settings = {
-    api_key: Rails.application.credentials.mailgun_api_key,
-    domain: Rails.application.credentials.banana_host
+    api_key: Rails.application.credentials[Rails.env.to_sym][:mailgun_api_key],
+    domain: Rails.application.credentials[Rails.env.to_sym][:banana_host]
   }
 
   if ENV['RAILS_LOG_TO_STDOUT'].present?
@@ -104,4 +104,7 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # Require key to be able to boot
+  config.require_master_key = true
 end

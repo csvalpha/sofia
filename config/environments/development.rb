@@ -71,4 +71,7 @@ Rails.application.configure do
     Bullet.enable = true
     Bullet.console = true
   end
+
+  # Require key to be able to boot
+  config.require_master_key = true
 end
