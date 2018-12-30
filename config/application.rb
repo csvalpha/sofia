@@ -23,10 +23,10 @@ module Tomato
     # See https://github.com/kickstarter/rack-attack#getting-started
     config.middleware.use Rack::Attack
 
-    config.x.banana_api_host  = credentials[Rails.env.to_sym][:banana_host]
-    config.x.tomato_host      = credentials[Rails.env.to_sym][:tomato_host]
+    config.x.banana_api_host  = credentials.dig(Rails.env.to_sym, :banana_host)
+    config.x.tomato_host      = credentials.dig(Rails.env.to_sym, :tomato_host)
 
-    config.x.slack_wehbook    = credentials[Rails.env.to_sym][:slack_webhook]
+    config.x.slack_wehbook    = credentials.dig(Rails.env.to_sym, :slack_webhook)
     config.x.slack_channel    = '#monitoring'
   end
 end
