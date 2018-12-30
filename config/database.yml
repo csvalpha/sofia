@@ -8,11 +8,11 @@ default: &default
 
 development:
   <<: *default
-  database: alpha-tomato_development
+  database: sofia_development
 
 test:
   <<: *default
-  database: alpha-tomato_test
+  database: sofia_test
 
 production:
   <<: *default
