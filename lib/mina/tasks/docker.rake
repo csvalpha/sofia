@@ -11,7 +11,9 @@ namespace :docker do
     registry = fetch(:docker_registry)
     image = fetch(:docker_image)
     url = "#{registry}#{image}"
+
     raise ArgumentError, 'DOCKER_PASSWORD environment variable should be set' unless fetch(:docker_registry_password)
+
     command "docker login #{registry} -u #{fetch(:docker_registry_user)}"\
               " -p #{fetch(:docker_registry_password)}"
 
@@ -51,6 +53,7 @@ namespace :docker do
 
   task :pull do
     raise ArgumentError, 'DOCKER_PASSWORD environment variable should be set' unless fetch(:docker_registry_password)
+
     in_path fetch(:deploy_to) do
       comment 'Pulling new app version'
       command "docker login #{fetch(:docker_registry)} -u #{fetch(:docker_registry_user)}"\
