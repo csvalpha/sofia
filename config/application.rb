@@ -27,11 +27,6 @@ module Tomato
     config.x.tomato_host      = credentials.dig(Rails.env.to_sym, :tomato_host)
 
     config.x.slack_webhook    = credentials.dig(Rails.env.to_sym, :slack_webhook) || ''
-    # rubocop:disable all
-    p "Rails env: #{Rails.env.to_sym}"
-    p "Webhook: #{config.x.slack_webhook}"
-    p "Credentials: #{credentials.to_hash}"
     config.x.slack_channel    = '#monitoring'
-    # rubocop:enable
   end
 end
