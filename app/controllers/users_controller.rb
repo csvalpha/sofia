@@ -71,7 +71,7 @@ class UsersController < ApplicationController
   private
 
   def send_slack_users_refresh_notification
-    return unless Rails.env.production?
+    return unless Rails.env.production? || Rails.env.staging?
 
     # :nocov:
     SlackMessageJob.perform_later("User ##{current_user.id} (#{current_user.name}) "\

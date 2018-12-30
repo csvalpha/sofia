@@ -1,13 +1,14 @@
 version: '3'
 
+# RAILS_MASTER_KEY must be provided in .env file or ENV
 services:
   db:
-    env_file: .env
-    image: postgres:9.6.5
+    env_file: .env # must include POSTGRES_PASSWORD
+    image: postgres:9.6.11
     volumes:
       - postgres_data:/var/lib/postgresql/data
   redis:
-    env_file: .env
+    env_file: .env # must include REDIS_PASSWORD
     image: 'redis:3.2-alpine'
     command: redis-server --requirepass ${REDIS_PASSWORD}
     volumes:
@@ -20,21 +21,23 @@ services:
       - db
       - redis
     environment:
-      - RAILS_ENV=production
+      - "RAILS_ENV=${RAILS_ENV}"
       - REDIS_HOST=redis
       - POSTGRES_HOST=db
+      - "RAILS_MASTER_KEY=${RAILS_MASTER_KEY}" # Travis knows this
   web:
     env_file: .env
     build: .
     ports:
-      - "${LISTEN_ON_PORT}:5000"
+      - "${METAL_WEB_PORT}:5000"
     depends_on:
       - db
       - redis
     environment:
-      - RAILS_ENV=production
+      - "RAILS_ENV=${RAILS_ENV}"
       - REDIS_HOST=redis
       - POSTGRES_HOST=db
+      - "RAILS_MASTER_KEY=${RAILS_MASTER_KEY}" # Travis knows this
     volumes:
       - ./log:/app/log
 
