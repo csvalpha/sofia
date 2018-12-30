@@ -16,5 +16,5 @@ fi
 
 if [ "${TYPE}" = "spec" ] || [ "${TYPE}" = "" ]; then
   RAILS_ENV=test bundle exec rails db:create db:environment:set db:schema:load
-  bundle exec rspec
+  RAILS_ENV=test bundle exec rspec
 fi
