@@ -26,7 +26,7 @@ module Tomato
     config.x.banana_api_host  = credentials.dig(Rails.env.to_sym, :banana_host)
     config.x.tomato_host      = credentials.dig(Rails.env.to_sym, :tomato_host)
 
-    config.x.slack_wehbook    = credentials.dig(Rails.env.to_sym, :slack_webhook)
+    config.x.slack_webhook    = credentials.dig(Rails.env.to_sym, :slack_webhook)
     config.x.slack_channel    = '#monitoring'
   end
 end

@@ -5,7 +5,7 @@ module SlackHelper
 
   def notifier
     @notifier ||= Slack::Notifier.new(
-      Rails.application.config.x.slack_wehbook,
+      Rails.application.config.x.slack_webhook,
       username: 'Sofia',
       channel: Rails.application.config.x.slack_channel
     )
