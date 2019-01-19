@@ -23,10 +23,18 @@ module Tomato
     # See https://github.com/kickstarter/rack-attack#getting-started
     config.middleware.use Rack::Attack
 
-    config.x.banana_api_host  = credentials.dig(Rails.env.to_sym, :banana_host)
-    config.x.tomato_host      = credentials.dig(Rails.env.to_sym, :tomato_host)
+    config.x.banana_api_host      = credentials.dig(Rails.env.to_sym, :banana_host)
+    config.x.banana_client_id     = credentials.dig(Rails.env.to_sym, :banana_client_id)
+    config.x.banana_client_secret = credentials.dig(Rails.env.to_sym, :banana_client_secret)
 
-    config.x.slack_webhook    = credentials.dig(Rails.env.to_sym, :slack_webhook) || ''
-    config.x.slack_channel    = '#monitoring'
+    config.x.banana_host          = credentials.dig(Rails.env.to_sym, :banana_host)
+    config.x.tomato_host          = credentials.dig(Rails.env.to_sym, :tomato_host)
+
+    config.x.slack_webhook        = credentials.dig(Rails.env.to_sym, :slack_webhook) || ''
+    config.x.slack_channel        = '#monitoring'
+
+    config.x.mailgun_api_key      = credentials.dig(Rails.env.to_sym, :mailgun_api_key)
+    config.x.sentry_dsn           = credentials.dig(Rails.env.to_sym, :sentry_dsn)
+    # Rails.application.config.x.banana_client_secret
   end
 end
