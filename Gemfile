@@ -48,6 +48,7 @@ group :development, :test do
   gem 'guard-rspec', require: false
   gem 'pry-byebug'
   gem 'pry-rails'
+  gem 'rb-readline'
   gem 'rspec-rails'
   gem 'slim_lint'
 end
