@@ -1,0 +1,24 @@
+steps:
+  - label: ":docker: Build"
+    plugins:
+      - docker-compose#v2.6.0:
+          build: app
+          config: docker-compose.buildkite.yml
+
+  - wait
+
+  - label: ":rspec: Rspec"
+    command: "bin/ci.sh"
+    env: "TYPE=spec"
+    plugins:
+      - docker-compose#v2.6.0:
+          run: app
+          config: docker-compose.buildkite.yml
+
+  - label: ":rubocop: :html: :eslint: :scsslint: Lint"
+    command: "bin/ci.sh"
+    env: "TYPE=lint"
+    plugins:
+      - docker-compose#v2.6.0:
+          run: app
+          config: docker-compose.buildkite.yml
