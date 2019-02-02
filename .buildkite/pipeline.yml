@@ -9,16 +9,18 @@ steps:
 
   - label: ":rspec: Rspec"
     command: "bin/ci.sh"
-    env: "TYPE=spec"
     plugins:
       - docker-compose#v2.6.0:
           run: app
+          env:
+            - TYPE=spec
           config: docker-compose.buildkite.yml
 
   - label: ":rubocop: :html: :eslint: :scsslint: Lint"
     command: "bin/ci.sh"
-    env: "TYPE=lint"
     plugins:
       - docker-compose#v2.6.0:
           run: app
+          env:
+            - TYPE=lint
           config: docker-compose.buildkite.yml
