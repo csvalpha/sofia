@@ -15,7 +15,7 @@ steps:
           config: docker-compose.buildkite.yml
           env:
             - TYPE=spec
-      - csvalpha/github-checks#8fb81c0294ce76e2e27163c966c766781f98c731:
+      - csvalpha/github-checks#3418fd07d0f5:
 
   - label: ":rubocop: :html: :eslint: :scsslint: Lint"
     command: "bin/ci.sh"
@@ -25,4 +25,4 @@ steps:
           config: docker-compose.buildkite.yml
           env: 
             - TYPE=lint
-      - csvalpha/github-checks#8fb81c0294ce76e2e27163c966c766781f98c731:
+      - csvalpha/github-checks#3418fd07d0f5:
