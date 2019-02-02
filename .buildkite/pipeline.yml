@@ -15,8 +15,7 @@ steps:
           run: app
           config: docker-compose.buildkite.yml
       - csvalpha/github-checks#8fb81c0294ce76e2e27163c966c766781f98c731:
-          output_title: CheckTest Rspec
-          debug: true
+          output_title: Rspec
 
   - label: ":rubocop: :html: :eslint: :scsslint: Lint"
     command: "bin/ci.sh"
@@ -25,3 +24,5 @@ steps:
       - docker-compose#v2.6.0:
           run: app
           config: docker-compose.buildkite.yml
+      - csvalpha/github-checks#8fb81c0294ce76e2e27163c966c766781f98c731:
+          output_title: Lint
