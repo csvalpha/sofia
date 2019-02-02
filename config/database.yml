@@ -2,17 +2,17 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: 10
+  host: <%= ENV['POSTGRES_HOST'] %> # defined in docker-compose
   username: <%= ENV['POSTGRES_USER'] %>
-  host: <%= ENV['POSTGRES_HOST'] %>
   password: <%= ENV['POSTGRES_PASSWORD'] %>
 
 development:
   <<: *default
-  database: alpha-tomato_development
+  database: sofia_development
 
 test:
   <<: *default
-  database: alpha-tomato_test
+  database: sofia_test
 
 production:
   <<: *default

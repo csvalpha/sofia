@@ -15,7 +15,7 @@ class CreditMutationsController < ApplicationController
 
     respond_to do |format|
       if @mutation.save
-        NewCreditMutationNotificationJob.perform_later(@mutation) if Rails.env.production?
+        NewCreditMutationNotificationJob.perform_later(@mutation) if Rails.env.production? || Rails.env.staging?
         format.html { redirect_to which_redirect?, flash: { success: 'Inleg of mutatie aangemaakt' } }
         format.json { render json: @mutation, include: { user: { methods: %i[credit avatar_thumb_or_default_url] } } }
 

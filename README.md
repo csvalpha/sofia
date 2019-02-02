@@ -32,6 +32,22 @@ _On Linux-like systems_
 1. Go to http://localhost:5000 and you should see Alpha Tomato running
 1. Copy `.env.example` to `.env` with `cp .env.example .env` and edit the values where necessary
 
+### Credentials
+
+Before you can start the application you will need the `master.key`. Ask a fellow developer for it, or pull it from the server via ssh.
+
+When the `master.key` is present, you can use `bundle exec rails credentials:edit` to open the default editor on your machine to read and edit the credentials. Be informed: these are production credentials so be careful.
+
+[Read more about Rails credentials on EngineYard.com.](https://www.engineyard.com/blog/rails-encrypted-credentials-on-rails-5.2)
+
+Tip: you can also use one of the following commands to use an editor of your choice:
+
+```
+$ EDITOR="atom --wait" bundle exec rails credentials:edit
+$ EDITOR="subl --wait" bundle exec rails credentials:edit
+$ EDITOR="code --wait" bundle exec rails credentials:edit
+```
+
 ### OAuth configuration
 
 In OAuth Banana (github.com/csvalpha/alpha-banana-api), execute the following command (in `rails console`):
