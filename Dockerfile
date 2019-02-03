@@ -17,6 +17,6 @@ COPY Gemfile* /app/
 RUN bundle install --without development test
 COPY . /app
 
-RUN RAILS_ENV=production bundle exec rails assets:precompile
+RUN RAILS_ENV=${RAILS_ENV} bundle exec rails assets:precompile
 
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
