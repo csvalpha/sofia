@@ -24,13 +24,8 @@
 /pkg
 /test/test_app/log
 
-/public/assets/
-/public/bassets/
-/public/packs
-/public/packs-test
-/node_modules
-
 yarn-error\.log
+/public/assets
 /public/packs
 /public/packs-test
 /node_modules
