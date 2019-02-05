@@ -86,14 +86,14 @@ Rails.application.configure do
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
   config.action_mailer.default_url_options = {
-    scheme: 'https', host: Rails.application.config.x.tomato_host || 'tomato.csvalpha.nl'
+    scheme: 'https', host: Rails.application.config.x.tomato_host
   }
 
   config.action_mailer.delivery_method = :mailgun
   config.action_mailer.asset_host = "https://#{config.action_mailer.default_url_options[:host]}"
   config.action_mailer.mailgun_settings = {
-    api_key: Rails.application.secrets.fetch(:mailgun_api_key),
-    domain: 'csvalpha.nl'
+    api_key: Rails.application.config.x.banana_client_secret,
+    domain: Rails.application.config.x.banana_host
   }
 
   if ENV['RAILS_LOG_TO_STDOUT'].present?
@@ -104,4 +104,7 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # Require key to be able to boot
+  config.require_master_key = true
 end

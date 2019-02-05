@@ -57,12 +57,12 @@ class UsersController < ApplicationController
     render json: @users
   end
 
-  def api_token
+  def api_token # rubocop:disable Metrics/AbcSize
     return @token if @token
 
     options = { grant_type: 'client_credentials',
-                client_id: Rails.application.secrets.fetch(:banana_client_id),
-                client_secret: Rails.application.secrets.fetch(:banana_client_secret) }
+                client_id: Rails.application.config.x.banana_client_id,
+                client_secret: Rails.application.config.x.banana_client_secret }
     token_response = RestClient.post "#{Rails.application.config.x.banana_api_host}/api/v1/oauth/token", options
 
     @token = JSON.parse(token_response)['access_token']
@@ -71,7 +71,7 @@ class UsersController < ApplicationController
   private
 
   def send_slack_users_refresh_notification
-    return unless Rails.env.production?
+    return unless Rails.env.production? || Rails.env.staging?
 
     # :nocov:
     SlackMessageJob.perform_later("User ##{current_user.id} (#{current_user.name}) "\

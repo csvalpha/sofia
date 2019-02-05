@@ -51,4 +51,7 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # Require key to be able to boot
+  config.require_master_key = true
 end

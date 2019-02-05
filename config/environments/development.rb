@@ -40,6 +40,9 @@ Rails.application.configure do
   # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load
 
+  # Highlight code that triggered database queries in logs.
+  config.active_record.verbose_query_logs = true
+
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
@@ -62,8 +65,13 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = { address: 'localhost', port: 1025 }
   config.action_mailer.asset_host = 'http://localhost:5000'
 
+  config.sass.inline_source_maps = true
+
   config.after_initialize do
     Bullet.enable = true
     Bullet.console = true
   end
+
+  # Require key to be able to boot
+  config.require_master_key = true
 end

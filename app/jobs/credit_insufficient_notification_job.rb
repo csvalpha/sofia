@@ -28,7 +28,7 @@ class CreditInsufficientNotificationJob < ApplicationJob
       ).deliver_later
     end
 
-    return unless Rails.env.production?
+    return unless Rails.env.production? || Rails.env.staging?
 
     SlackMessageJob.perform_later("Er is voor #{Rails.application.config.x.banana_api_host} een saldomail "\
       "verstuurd naar #{success_count} mensen, en #{unnotifyable_users.count} saldomail(s) kon(den) niet "\

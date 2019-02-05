@@ -30,6 +30,6 @@
     "webpack-dev-server": "^3.1"
   },
   "scripts": {
-    "lint": "yarn run eslint -- --ext .js --ext .jsx app/javascript"
+    "lint": "yarn run eslint --ext .js --ext .jsx app/javascript"
   }
 }

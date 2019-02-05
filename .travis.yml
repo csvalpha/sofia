@@ -4,21 +4,22 @@ cache:
   directories:
     - node_modules
   yarn: true
-
 install:
   - bundle install
   - nvm install 9.11.1
   - node -v
   - npm i -g yarn
   - yarn
-
+jobs:
+  include:
+  - stage: test
+    name: spec
+    script: "TYPE=spec ./bin/ci.sh"
+  - name: lint
+    script: "TYPE=lint ./bin/ci.sh"
 env:
-  - TYPE=spec
-  - TYPE=lint
-
-script:
-  - './bin/ci.sh $TYPE'
-
+  global:
+    - secure: WtoHHSHTmQ+vmvZKd9kC3CxSvWG3lkpdEKLnuFe+3Jjj5jUcRCPp4PPN6BH1yoim2urJrWf1/4Hn9Eo8xrCp77S83j933nbt+PbtBGHzoGew1mIeN4z80iesHqDqRYf7fGGMNHc7O+y4B3exKju/tbpO2xT05CRJuN3GQLKXB2+tOntLJaod1lSkGzBmyywzTHuwkSckfg1PM4E5V35CxP5fCp/Wqazsq2+lvdM1IRXB6mFK4hlsCZCj+qKKDUY6hMQqTW5Homn/ZkrKgJbejhwKSyg3bj9DODPaeafX0nlyjzf0U0qtl2DQ42xSCLICQWvdPg3R/lJAT728ad5sYBkb8za/vmQPAf9eT2rG79JBsO0NG5e5k0itn1BttzW1SRqqTe3Ky5h0tbqT3LSc4FFF+IzqFisIW6gfHux6OO0FMNyZOn8ENoM0KQ0KHpV7FDWDg2EEHbEmTLb7wPt8BHL17LkwPyZQhieuwAQwgCJVTxgesL+l3WBy4+/xDmhiPLxmkXK2N7SOyAXembOr5JTlbpBJHX1uBBUtLRj88Ywi4x+3f3CDD06mC63XSUTnasD0/GYpC0BueXBPRXzZuTAdTYqpOetkvjSUgdbkAyYyQx4qxhZ4F+qPch2DZtRB+eTki00u48fc3hbjtZi9H+ZLVZb/bSzLiAERAZtXSJs=
 branches:
   only:
     - master

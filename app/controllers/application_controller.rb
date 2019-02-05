@@ -7,8 +7,6 @@ class ApplicationController < ActionController::Base
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
-  protect_from_forgery with: :exception
-
   def new_session_path(_scope)
     root_path
   end
