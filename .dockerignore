@@ -12,43 +12,29 @@ README.md
 Icon
 # Thumbnails
 ._*
-# Files that might appear on external disk
-.Spotlight-V100
-.Trashes
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
 
 #
 # Rails
 #
 .env
 .env.sample
-*.rbc
-capybara-*.html
 log
 tmp
-db/*.sqlite3
-db/*.sqlite3-journal
 public/system
-public/packs
+public/assets
 public/packs-test
 coverage/
 spec/tmp
-**.orig
 yarn-error.log
 
 .bundle
 
-.ruby-version
 .ruby-gemset
 
 .rvmrc
 
-# if using bower-rails ignore default bower_components path bower.json files
-vendor/assets/bower_components
-*.bowerrc
-bower.json
+#
+# Nodejs
+#
+
+node_modules

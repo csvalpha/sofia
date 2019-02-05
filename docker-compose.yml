@@ -23,8 +23,6 @@ services:
     environment:
       - REDIS_HOST=redis
       - POSTGRES_HOST=db
-      - RAILS_ENV
-      - RAILS_MASTER_KEY
   web:
     env_file: .env
     build: .
@@ -36,8 +34,6 @@ services:
     environment:
       - REDIS_HOST=redis
       - POSTGRES_HOST=db
-      - RAILS_ENV
-      - RAILS_MASTER_KEY
     volumes:
       - ./log:/app/log
 
