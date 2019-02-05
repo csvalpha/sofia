@@ -14,6 +14,9 @@ test:
   <<: *default
   database: sofia_test
 
-production:
+production: &default
   <<: *default
   database: <%= ENV['POSTGRES_USER'] %>
+
+staging:
+  <<: *production
