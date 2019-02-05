@@ -3,7 +3,7 @@ namespace :docker do
   task :build do
     image = fetch(:docker_image)
     comment "Building docker image #{image}"
-    command "docker build -t #{image} ."
+    command "docker build -t #{image} --build-arg RAILS_ENV=${RAILS_ENV} --build-arg NODE_ENV=${NODE_ENV} ."
   end
 
   desc 'Publish the docker image'
