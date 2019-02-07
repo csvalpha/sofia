@@ -40,7 +40,7 @@
           tr
             th scope='row' = 'Accountbron'
             - if @user.provider == 'banana_oauth2'
-              td.text-right = link_to 'C.S.V. Alpha', "#{Rails.application.config.x.banana_api_host}/users/#{@user.uid}"
+              td.text-right = link_to 'C.S.V. Alpha', "#{Rails.application.config.x.banana_api_url}/users/#{@user.uid}"
             - else
               td.text-right = @user.provider || 'Handmatig aangemaakt'
 
