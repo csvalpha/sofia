@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:9.6.11
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.buildkite
+    depends_on:
+      - db
+    environment:
+      - RAILS_ENV=test
+      - POSTGRES_USER=postgres
+      - POSTGRES_HOST=db
+      - "RAILS_MASTER_KEY=${RAILS_MASTER_KEY}"

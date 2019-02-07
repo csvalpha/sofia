@@ -2,14 +2,24 @@
 set -e
 
 if [ "${TYPE}" = "lint" ] || [ "${TYPE}" = "" ]; then
+  echo "--- :rubocop: Rubocop"
   bundle exec rubocop
-  bundle exec brakeman -z
+
+  echo "--- :parcel: Brakeman"
+  bundle exec brakeman -z --no-pager
+
+  echo "--- :html: Slim lint"
   bundle exec slim-lint
+
+  echo "--- :ruby: Bundle audit"
   gem install bundler-audit
   bundle-audit update && bundle-audit check
   RAILS_ENV=test bundle exec rails db:create db:environment:set db:schema:load
   # Don't check DB consistency until solved: https://github.com/trptcolin/consistency_fail/issues/42
   # bundle exec consistency_fail
+
+  echo "--- :eslint: Yarn lint"
+  yarn install # Why do I need to do this again? This was done in Dockerfile, rite?
   yarn lint
   yarn run sass-lint -v -q
 fi
