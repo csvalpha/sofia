@@ -24,8 +24,8 @@ module Tomato
     config.middleware.use Rack::Attack
 
     config.x.banana_api_host      = credentials.dig(Rails.env.to_sym, :banana_host)
-    config.x.banana_client_id     = credentials.dig(Rails.env.to_sym, :banana_client_id)
-    config.x.banana_client_secret = credentials.dig(Rails.env.to_sym, :banana_client_secret)
+    config.x.banana_client_id     = credentials.dig(Rails.env.to_sym, :banana_client_id)  || ENV['BANANA_CLIENT_ID']
+    config.x.banana_client_secret = credentials.dig(Rails.env.to_sym, :banana_client_secret) || ENV['BANANA_CLIENT_SECRET']
 
     config.x.banana_host          = credentials.dig(Rails.env.to_sym, :banana_host)
     config.x.tomato_host          = credentials.dig(Rails.env.to_sym, :tomato_host)
