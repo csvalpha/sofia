@@ -30,9 +30,9 @@ set :sentry_organization, 'csvalpha'
 
 task :staging do
   set :stage, 'staging'
-  command %{export RAILS_ENV=staging}
-  command %{export NODE_ENV=staging}
-  
+  command %(export RAILS_ENV=staging)
+  command %(export NODE_ENV=staging)
+
   set :deploy_to, '/opt/docker/sofia/staging'
   set :branch, 'staging'
   set :docker_tag, 'staging'
@@ -42,9 +42,9 @@ end
 
 task :production do
   set :stage, 'production'
-  command %{export RAILS_ENV=production}
-  command %{export NODE_ENV=production}
-  
+  command %(export RAILS_ENV=production)
+  command %(export NODE_ENV=production)
+
   set :deploy_to, '/opt/docker/sofia/production'
   set :branch, 'master'
   set :docker_tag, 'latest'
