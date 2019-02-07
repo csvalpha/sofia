@@ -63,7 +63,7 @@ class UsersController < ApplicationController
     options = { grant_type: 'client_credentials',
                 client_id: Rails.application.config.x.banana_client_id,
                 client_secret: Rails.application.config.x.banana_client_secret }
-    token_response = RestClient.post "#{Rails.application.config.x.banana_api_host}/api/v1/oauth/token", options
+    token_response = RestClient.post "#{Rails.application.config.x.banana_api_url}/api/v1/oauth/token", options
 
     @token = JSON.parse(token_response)['access_token']
   end
@@ -80,7 +80,7 @@ class UsersController < ApplicationController
   end
 
   def users_json
-    JSON.parse(RestClient.get("#{Rails.application.config.x.banana_api_host}/api/v1/users?filter[group]=Leden",
+    JSON.parse(RestClient.get("#{Rails.application.config.x.banana_api_url}/api/v1/users?filter[group]=Leden",
                               'Authorization' => "Bearer #{api_token}"))['data']
   end
 

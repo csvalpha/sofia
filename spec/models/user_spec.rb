@@ -92,7 +92,7 @@ RSpec.describe User, type: :model do
     context 'when with avatar thumb url' do
       subject(:user) { FactoryBot.create(:user, avatar_thumb_url: '/test.png') }
 
-      it { expect(user.avatar_thumb_or_default_url).to eq "#{Rails.application.config.x.banana_api_host}/test.png" }
+      it { expect(user.avatar_thumb_or_default_url).to eq "#{Rails.application.config.x.banana_api_url}/test.png" }
     end
 
     context 'when without avatar thumb url' do

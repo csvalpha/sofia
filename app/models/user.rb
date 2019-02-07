@@ -20,8 +20,8 @@ class User < ApplicationRecord
 
   def avatar_thumb_or_default_url
     return '/images/avatar_thumb_default.png' unless avatar_thumb_url
-
-    "#{Rails.application.config.x.banana_api_host}#{avatar_thumb_url}"
+    
+    "#{Rails.application.config.x.banana_api_url}#{avatar_thumb_url}"
   end
 
   def profile_url
