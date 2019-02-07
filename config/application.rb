@@ -24,7 +24,7 @@ module Tomato
     config.middleware.use Rack::Attack
 
     config.x.banana_api_host      = credentials.dig(Rails.env.to_sym, :banana_host)
-    config.x.banana_api_url       = "#{Rails.env.development? ? 'http://' : 'https://'}#{config.x.banana_api_host}"
+    config.x.banana_api_url       = "#{Rails.env.development? ? 'http' : 'https'}://#{credentials.dig(Rails.env.to_sym, :banana_host)}"
 
     config.x.banana_client_id     = credentials.dig(Rails.env.to_sym, :banana_client_id)
     config.x.banana_client_secret = credentials.dig(Rails.env.to_sym, :banana_client_secret)
