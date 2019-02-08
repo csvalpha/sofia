@@ -4,7 +4,10 @@ development:
 test:
   adapter: async
 
-production:
+production: &production
   adapter: redis
   url: redis://:<%= ENV['REDIS_PASSWORD'] %>@<%= ENV['REDIS_HOST'] %>:6379/1
   channel_prefix: tomato_production
+
+staging:
+  <<: *production
