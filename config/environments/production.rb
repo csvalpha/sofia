@@ -92,7 +92,7 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :mailgun
   config.action_mailer.asset_host = "https://#{config.action_mailer.default_url_options[:host]}"
   config.action_mailer.mailgun_settings = {
-    api_key: Rails.application.config.x.banana_client_secret,
+    api_key: Rails.application.config.x.mailgun_api_key,
     api_host: 'api.eu.mailgun.net',
     domain: Rails.application.config.x.banana_host
   }
