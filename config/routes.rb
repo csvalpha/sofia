@@ -25,6 +25,15 @@ Rails.application.routes.draw do
     delete 'sign_out', to: 'devise/sessions#destroy', as: :destroy_user_session
   end
 
+  # Sidekiq dashboard
+  require 'sidekiq/web'
+  # See https://github.com/mperham/sidekiq/wiki/Monitoring#forbidden
+  Sidekiq::Web.set :session_secret, Rails.application.credentials[:secret_key_base]
+  
+  authenticate :user, lambda { |u| u.treasurer? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
   root to: 'index#index'
 
   get '/403', to: 'errors#forbidden'
