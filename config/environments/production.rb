@@ -94,7 +94,7 @@ Rails.application.configure do
   config.action_mailer.mailgun_settings = {
     api_key: Rails.application.config.x.banana_client_secret,
     api_host: 'api.eu.mailgun.net',
-    domain: Rails.application.config.x.banana_host
+    domain: 'csvalpha.nl'
   }
 
   if ENV['RAILS_LOG_TO_STDOUT'].present?
