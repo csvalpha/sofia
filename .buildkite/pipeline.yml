@@ -31,8 +31,11 @@ steps:
     branches: "automated-staging-production-docker-images"
     plugins:
       - docker-compose#v2.6.0:
-          build: app
+          build: app-production
+          config: docker-compose.buildkite.yml
           image-name: docker.csvalpha.nl/sofia:autoimage_test
+          args:
+            - RAILS_ENV=production
 
   - label: ":docker: Push :autoimage_test image"
     branches: "automated-staging-production-docker-images"

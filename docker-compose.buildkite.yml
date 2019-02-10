@@ -14,3 +14,12 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_HOST=db
       - "RAILS_MASTER_KEY=${RAILS_MASTER_KEY}"
+  app-production:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - RAILS_ENV=test
+      - POSTGRES_USER=postgres
+      - POSTGRES_HOST=db
+      - "RAILS_MASTER_KEY=${RAILS_MASTER_KEY}"
