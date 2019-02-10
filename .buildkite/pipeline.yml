@@ -31,6 +31,7 @@ steps:
     branches: "automated-staging-production-docker-images"
     plugins:
       - docker-login#v2.0.1:
+          server: docker.csvalpha.nl
           username: csvalpha
           password-env: DOCKER_PASSWORD
       - docker-compose#v2.6.0:
@@ -41,6 +42,7 @@ steps:
     branches: "staging"
     plugins:
       - docker-login#v2.0.1:
+          server: docker.csvalpha.nl
           username: csvalpha
           password-env: DOCKER_PASSWORD
       - docker-compose#v2.6.0:
@@ -51,6 +53,7 @@ steps:
     branches: "master"
     plugins:
       - docker-login#v2.0.1:
+          server: docker.csvalpha.nl
           username: csvalpha
           password-env: DOCKER_PASSWORD
       - docker-compose#v2.6.0:
