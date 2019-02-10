@@ -30,7 +30,7 @@ steps:
   - label: ":docker: Build & push :autoimage_test image"
     branches: "automated-staging-production-docker-images"
     plugins:
-      - docker-login#2.0.1:
+      - docker-login#v2.0.1:
           username: csvalpha
           password-env: DOCKER_PASSWORD
       - docker-compose#v2.6.0:
@@ -40,7 +40,7 @@ steps:
   - label: ":docker: Build & push :staging image"
     branches: "staging"
     plugins:
-      - docker-login#2.0.1:
+      - docker-login#v2.0.1:
           username: csvalpha
           password-env: DOCKER_PASSWORD
       - docker-compose#v2.6.0:
@@ -50,7 +50,7 @@ steps:
   - label: ":docker: Build & push :latest image"
     branches: "master"
     plugins:
-      - docker-login#2.0.1:
+      - docker-login#v2.0.1:
           username: csvalpha
           password-env: DOCKER_PASSWORD
       - docker-compose#v2.6.0:
