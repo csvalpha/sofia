@@ -27,20 +27,7 @@ steps:
 
   - wait
 
-  - label: ":docker: Build :autoimage_test image"
-    branches: "automated-staging-production-docker-images"
-    plugins:
-      - docker-compose#v2.6.0:
-          build: app-production
-          config: docker-compose.buildkite.yml
-          image-name: docker.csvalpha.nl/sofia:autoimage_test
-          args:
-            - RAILS_ENV=production
-            - "RAILS_MASTER_KEY=${RAILS_MASTER_KEY}"
-
-  - wait
-
-  - label: ":docker: Push :autoimage_test image"
+  - label: ":docker: Build+Push :autoimage_test image"
     branches: "automated-staging-production-docker-images"
     plugins:
       - docker-login#v2.0.1:
@@ -48,8 +35,11 @@ steps:
           username: csvalpha
           password-env: DOCKER_PASSWORD
       - docker-compose#v2.6.0:
-          config: docker-compose.buildkite.yml
           push: app-production:docker.csvalpha.nl/sofia:autoimage_test
+          config: docker-compose.buildkite.yml
+          args:
+            - RAILS_ENV=production
+            - "RAILS_MASTER_KEY=${RAILS_MASTER_KEY}"
 
   # - label: ":docker: Build & push :staging image"
   #   branches: "staging"
