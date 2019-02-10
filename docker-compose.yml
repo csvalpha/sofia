@@ -34,7 +34,7 @@ services:
     environment:
       - REDIS_HOST=redis
       - POSTGRES_HOST=db
-      # - "RAILS_MASTER_KEY=${RAILS_MASTER_KEY}"
+      - RAILS_MASTER_KEY
     volumes:
       - ./log:/app/log
 
