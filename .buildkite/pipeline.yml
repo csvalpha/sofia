@@ -32,6 +32,7 @@ steps:
     plugins:
       - docker-compose#v2.6.0:
           build: app
+          image-name: docker.csvalpha.nl/sofia:autoimage_test
 
   - label: ":docker: Push :autoimage_test image"
     branches: "automated-staging-production-docker-images"
