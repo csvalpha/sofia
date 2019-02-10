@@ -1,5 +1,5 @@
 steps:
-  - label: ":docker: Build"
+  - label: ":docker: Build test image"
     plugins:
       - docker-compose#v2.6.0:
           build: app
@@ -24,3 +24,32 @@ steps:
           env:
             - TYPE=lint
           config: docker-compose.buildkite.yml
+
+  - wait
+
+  - label: ":docker: Build+Push `:staging` image"
+    branches: "staging"
+    plugins:
+      - docker-login#v2.0.1:
+          server: docker.csvalpha.nl
+          username: csvalpha
+          password-env: DOCKER_PASSWORD
+      - docker-compose#v2.6.0:
+          push: app-production:docker.csvalpha.nl/sofia:staging
+          config: docker-compose.buildkite.yml
+
+  - label: ":docker: Build+Push `:production` image"
+    branches: "master"
+    plugins:
+      - docker-login#v2.0.1:
+          server: docker.csvalpha.nl
+          username: csvalpha
+          password-env: DOCKER_PASSWORD
+      - docker-compose#v2.6.0:
+          push: app-production:docker.csvalpha.nl/sofia:latest
+          config: docker-compose.buildkite.yml
+
+  # Deploy step TBD
+  # - block: ":shipit: Ready to ship ${BUILDKITE_BRANCH} image?"
+  #   branches: "master staging automated-staging-production-docker-images"
+  #   prompt: "Are you sure you want to deploy ${BUILDKITE_BRANCH} image?"
