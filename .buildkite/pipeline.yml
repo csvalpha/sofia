@@ -37,6 +37,8 @@ steps:
           args:
             - RAILS_ENV=production
 
+  - wait
+
   - label: ":docker: Push :autoimage_test image"
     branches: "automated-staging-production-docker-images"
     plugins:
