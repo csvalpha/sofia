@@ -27,7 +27,13 @@ steps:
 
   - wait
 
-  - label: ":docker: Build & push :autoimage_test image"
+  - label: ":docker: Build :autoimage_test image"
+    branches: "automated-staging-production-docker-images"
+    plugins:
+      - docker-compose#v2.6.0:
+          build: app
+
+  - label: ":docker: Push :autoimage_test image"
     branches: "automated-staging-production-docker-images"
     plugins:
       - docker-login#v2.0.1:
@@ -35,31 +41,30 @@ steps:
           username: csvalpha
           password-env: DOCKER_PASSWORD
       - docker-compose#v2.6.0:
-          build: app
           push: app:docker.csvalpha.nl/sofia:autoimage_test
 
-  - label: ":docker: Build & push :staging image"
-    branches: "staging"
-    plugins:
-      - docker-login#v2.0.1:
-          server: docker.csvalpha.nl
-          username: csvalpha
-          password-env: DOCKER_PASSWORD
-      - docker-compose#v2.6.0:
-          build: app
-          push: app:docker.csvalpha.nl/sofia:staging
+  # - label: ":docker: Build & push :staging image"
+  #   branches: "staging"
+  #   plugins:
+  #     - docker-login#v2.0.1:
+  #         server: docker.csvalpha.nl
+  #         username: csvalpha
+  #         password-env: DOCKER_PASSWORD
+  #     - docker-compose#v2.6.0:
+  #         build: app
+  #         push: app:docker.csvalpha.nl/sofia:staging
 
-  - label: ":docker: Build & push :latest image"
-    branches: "master"
-    plugins:
-      - docker-login#v2.0.1:
-          server: docker.csvalpha.nl
-          username: csvalpha
-          password-env: DOCKER_PASSWORD
-      - docker-compose#v2.6.0:
-          build: app
-          push: app:docker.csvalpha.nl/sofia:latest
+  # - label: ":docker: Build & push :latest image"
+  #   branches: "master"
+  #   plugins:
+  #     - docker-login#v2.0.1:
+  #         server: docker.csvalpha.nl
+  #         username: csvalpha
+  #         password-env: DOCKER_PASSWORD
+  #     - docker-compose#v2.6.0:
+  #         build: app
+  #         push: app:docker.csvalpha.nl/sofia:latest
 
   - block: ":shipit: Ready to ship ${BUILDKITE_BRANCH} image?"
-    branches: "master staging"
+    branches: "master staging automated-staging-production-docker-images"
     prompt: "Are you sure you want to deploy ${BUILDKITE_BRANCH} image?"
