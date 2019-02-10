@@ -3,7 +3,7 @@
 - content_for :modal
   = render 'mutation_modal'
 
-= content_tag :div, id: 'user-bubbles', class: ' container footer-padding', data: { username: @user.name }
+= content_tag :div, id: 'user-container', class: ' container footer-padding', data: { user: @user_json }
   template v-if="bubblesActivated"
     bubbles
     audio autoplay="true"
@@ -20,7 +20,7 @@
           = fa_icon 'bath', class: 'mr-2', 'v-if': 'bubblesActivated'
           = fa_icon 'user', class: 'mr-2', 'v-else': true
 
-        = '{{userName}}'
+        = '{{user.name}}'
 
         = fa_icon 'trophy', class: 'ml-2', 'v-if': 'bubblesActivated'
 
@@ -105,7 +105,7 @@
   hr
 
   .col-sm-12
-    = content_tag :div, id: 'user-history-table', class: 'row card', data: { user: @user_json }
+    .row.card
       .card-header
         ul.nav.nav-tabs.card-header-tabs role='tablist' id='userTabs'
           li.nav-item
