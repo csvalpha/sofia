@@ -16,6 +16,7 @@ WORKDIR /app
 # Define args that can be supplied with `docker build --build-args RAILS_ENV=<env>`, defaults to production
 ARG RAILS_ENV=production
 ARG NODE_ENV=production
+ARG RAILS_MASTER_KEY
 
 # Pre-install gems, so that can be cached
 COPY Gemfile* /app/
