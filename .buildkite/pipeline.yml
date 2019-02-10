@@ -48,7 +48,8 @@ steps:
           username: csvalpha
           password-env: DOCKER_PASSWORD
       - docker-compose#v2.6.0:
-          push: app:docker.csvalpha.nl/sofia:autoimage_test
+          config: docker-compose.buildkite.yml
+          push: app-production:docker.csvalpha.nl/sofia:autoimage_test
 
   # - label: ":docker: Build & push :staging image"
   #   branches: "staging"
