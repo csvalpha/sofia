@@ -32,7 +32,7 @@ steps:
     plugins:
       - docker-login#v2.0.1:
           server: docker.csvalpha.nl
-          username: csvalpha
+          username: buildkite
           password-env: DOCKER_PASSWORD
       - docker-compose#v2.6.0:
           push: app-production:docker.csvalpha.nl/sofia:staging
@@ -43,7 +43,7 @@ steps:
     plugins:
       - docker-login#v2.0.1:
           server: docker.csvalpha.nl
-          username: csvalpha
+          username: buildkite
           password-env: DOCKER_PASSWORD
       - docker-compose#v2.6.0:
           push: app-production:docker.csvalpha.nl/sofia:latest
