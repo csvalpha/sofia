@@ -3,7 +3,6 @@ import TurbolinksAdapter from 'vue-turbolinks';
 import axios from 'axios';
 import BootstrapVue from 'bootstrap-vue';
 
-import Bubbles from '../bubbles.vue';
 import OrderHistory from '../orderscreen/orderhistory.vue';
 
 Vue.use(TurbolinksAdapter);
@@ -36,17 +35,23 @@ document.addEventListener('turbolinks:load', () => {
             this.bubblesActivated = true;
 
             const sound = document.getElementById('bubblesound');
-            sound.pause();
+            if (sound !== null) {
+              sound.pause();
+            }
           }
         },
         activateSound() {
           const sound = document.getElementById('bubblesound');
-          sound.volume = 0.06;
-          sound.play();
+          if(sound !== null) {
+            sound.volume = 0.06;
+            let promise = sound.play();
+            if (promise !== null){
+              promise.catch(() => sound.play());
+            }
+          }
         }
       },
       components: {
-        Bubbles,
         OrderHistory
       }
     });

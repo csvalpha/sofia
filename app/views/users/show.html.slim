@@ -5,7 +5,13 @@
 
 = content_tag :div, id: 'user-container', class: ' container footer-padding', data: { user: @user_json }
   template v-if="bubblesActivated"
-    bubbles
+    #background-wrap
+      .bubble.x1
+      .bubble.x2
+      .bubble.x3
+      .bubble.x4
+      .bubble.x5
+      .bubble.x6
     audio autoplay="true"
       source src="/wemakenschoon.mp3" type="audio/mpeg"
 
