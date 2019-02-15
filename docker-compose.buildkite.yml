@@ -2,7 +2,7 @@ version: '3'
 
 services:
   db:
-    image: postgres:9.6.11
+    image: postgres:11.2
   app:
     build:
       context: .
