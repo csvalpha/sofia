@@ -10,7 +10,6 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 Rails.application.config.assets.paths << Rails.root.join('node_modules', 'bootstrap', 'dist', 'js')
 Rails.application.config.assets.paths << Rails.root.join('node_modules', 'bootstrap', 'scss')
 Rails.application.config.assets.paths << Rails.root.join('node_modules', 'raven-js', 'dist')
-Rails.application.config.assets.paths << Rails.root.join('node_modules', 'turbolinks-animate', 'src')
 Rails.application.config.assets.paths << Rails.root.join('node_modules', 'webfontloader')
 
 # Precompile additional assets.

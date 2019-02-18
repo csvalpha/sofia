@@ -31,7 +31,7 @@ RSpec.describe Order, type: :model do
     end
 
     context 'when with locked activity' do
-      let(:activity) { FactoryBot.build(:activity, :locked) }
+      let(:activity) { FactoryBot.build_stubbed(:activity, :locked) }
       let(:order) { FactoryBot.build(:order, activity: activity) }
 
       it { expect(order).not_to be_valid }

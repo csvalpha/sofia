@@ -16,7 +16,7 @@
 //= require bootstrap.bundle.min.js
 //= require raven.min.js
 //= require webfontloader.js
-//= require turbolinks-animate.js
+//= require turbolinks-animate/src/index.js
 //= require_tree .
 
 /* eslint-disable no-undef */
