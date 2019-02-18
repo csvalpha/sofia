@@ -7,6 +7,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - RAILS_ENV=test
     depends_on:
       - db
     environment:

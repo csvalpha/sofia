@@ -1,5 +1,4 @@
 #!/bin/sh
-# Source: https://github.com/eficode/wait-for
 
 TIMEOUT=15
 QUIET=0
