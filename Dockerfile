@@ -7,7 +7,7 @@ RUN apt-get update -qq \
   git \
   libpq-dev \
   curl \
-  nc
+  netcat
 
 # Add Node, required for asset pipeline
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
