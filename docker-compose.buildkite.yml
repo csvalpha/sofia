@@ -6,7 +6,8 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile.buildkite
+      args:
+        - RAILS_ENV=test
     depends_on:
       - db
     environment:
@@ -20,4 +21,5 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
+        - RAILS_ENV=production
         - RAILS_MASTER_KEY
