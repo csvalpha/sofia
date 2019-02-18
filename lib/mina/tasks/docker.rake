@@ -47,7 +47,7 @@ namespace :docker do
   task :migrate_db do
     in_path fetch(:deploy_to) do
       comment 'Running db migrations'
-      command 'docker-compose run web rails db:migrate'
+      command 'docker-compose exec web rails db:migrate'
     end
   end
 
