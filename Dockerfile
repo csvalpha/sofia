@@ -6,7 +6,8 @@ RUN apt-get update -qq \
   build-essential \
   git \
   libpq-dev \
-  curl
+  curl \
+  nc
 
 # Add Node, required for asset pipeline
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
