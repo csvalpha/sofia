@@ -8,21 +8,17 @@ steps:
   - wait
 
   - label: ":rspec: Rspec"
-    command: "bin/ci.sh"
+    command: "bin/wait_for -t 30 db:5432 -- bin/ci.sh spec"
     plugins:
       - docker-compose#v2.6.0:
           run: app
-          env:
-            - TYPE=spec
           config: docker-compose.buildkite.yml
 
   - label: ":rubocop: :html: :eslint: :scsslint: Lint"
-    command: "bin/ci.sh"
+    command: "ci.sh lint"
     plugins:
       - docker-compose#v2.6.0:
           run: app
-          env:
-            - TYPE=lint
           config: docker-compose.buildkite.yml
 
   - wait
