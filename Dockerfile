@@ -1,14 +1,18 @@
 FROM ruby:2.5.3-slim
+
+# Add build-essential tools
 RUN apt-get update -qq \
   && apt-get install -y \
   build-essential \
   git \
   libpq-dev \
-  curl
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
-  apt-get install -y \
-  nodejs && \
-  npm install -g yarn
+  curl \
+  netcat
+
+# Add Node, required for asset pipeline
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
+  apt-get install -y nodejs && \
+  npm install -q -g yarn
 
 RUN mkdir /app
 WORKDIR /app
@@ -20,15 +24,15 @@ ARG RAILS_MASTER_KEY
 
 # Pre-install gems, so that can be cached
 COPY Gemfile* /app/
-RUN bundle install --without development test
+RUN if [ "$RAILS_ENV" = "production" ] || [ "$RAILS_ENV" = "staging" ] ; then bundle install --without development test; else bundle install --without development ; fi
 
 # Pre-install npm packages, so that can be cached
 COPY package.json yarn.lock /app/
-RUN yarn install
+RUN yarn install --frozen-lockfile
 
-COPY . /app
+COPY . /app/
 
 # Precompile assets after copying app because whole Rails pipeline is needed
-RUN bundle exec rails assets:precompile
+RUN if [ "$RAILS_ENV" = "production" ] || [ "$RAILS_ENV" = "staging" ] ; then bundle exec rails assets:precompile; else echo "Skip assets:precompile" ; fi
 
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
