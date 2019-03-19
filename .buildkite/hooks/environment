@@ -1,2 +1,0 @@
-echo "--- :key: Adding Rails master key"
-export RAILS_MASTER_KEY="$(cat /opt/docker/buildkite/secrets/amber-api/master.key)"
