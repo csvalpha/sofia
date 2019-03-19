@@ -45,7 +45,19 @@ steps:
           push: app-production:docker.csvalpha.nl/sofia:latest
           config: docker-compose.buildkite.yml
 
-  # Deploy step TBD
-  # - block: ":shipit: Ready to ship ${BUILDKITE_BRANCH} image?"
-  #   branches: "master staging automated-staging-production-docker-images"
-  #   prompt: "Are you sure you want to deploy ${BUILDKITE_BRANCH} image?"
+  - block: "Deploy this stage"
+    branches: "master staging"
+
+  - label: 'Restarting service'
+    command: 'bash .buildkite/release.sh'
+    branches: "master staging"
+
+  - wait
+
+  - label: 'Inform Sentry'
+    command: 'bash .buildkite/sentry.sh'
+    branches: "master staging"
+
+  - label: 'Inform Slack'
+    command: 'bash .buildkite/slack.sh'
+    branches: "master staging"

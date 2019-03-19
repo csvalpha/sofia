@@ -36,3 +36,4 @@ COPY . /app/
 RUN if [ "$RAILS_ENV" = "production" ] || [ "$RAILS_ENV" = "staging" ] ; then bundle exec rails assets:precompile; else echo "Skip assets:precompile" ; fi
 
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
+

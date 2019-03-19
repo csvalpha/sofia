@@ -57,6 +57,7 @@ group :development do
   gem 'capistrano-sidekiq'
   gem 'foreman', require: false
   gem 'listen'
+  gem 'mina', '~> 1.2.3'
   gem 'spring', require: false
   gem 'spring-commands-rspec', require: false
   gem 'spring-watcher-listen', require: false
@@ -69,10 +70,6 @@ group :test do
   gem 'simplecov', require: false
   gem 'terminal-notifier-guard'
   gem 'timecop'
-end
-
-group :deploy do
-  gem 'mina', '~> 1.2.3'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
