@@ -15,7 +15,7 @@ _On Linux-like systems_
 - Ruby (see `.ruby-version`)
 - Bundler (`gem install bundler`)
 - NodeJS (see `.nvmrc`)
-- Yarn (preferred, otherwise npm)
+- Yarn
 - Postgresql 9.5+
 - Running versions of
   - Alpha Banana API

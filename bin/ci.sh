@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+TYPE=$1
+
 if [ "${TYPE}" = "lint" ] || [ "${TYPE}" = "" ]; then
   echo "--- :rubocop: Rubocop"
   bundle exec rubocop
