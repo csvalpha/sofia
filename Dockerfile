@@ -32,3 +32,4 @@ COPY . /app
 RUN bundle exec rails assets:precompile
 
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
+
