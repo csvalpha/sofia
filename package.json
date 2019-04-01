@@ -2,37 +2,37 @@
   "name": "tomato",
   "private": true,
   "dependencies": {
-    "@rails/webpacker": "4.0.0-rc.7",
+    "@rails/webpacker": "4.0.2",
     "autosuggest-highlight": "^3.1.1",
     "axios": "^0.18.0",
     "bootstrap": "4.3.1",
     "bootstrap-vue": "^2.0.0-rc.12",
-    "eslint-plugin-vue": "^4.5",
+    "eslint-plugin-vue": "^5.2.2",
     "jquery": "3.3.1",
     "moment": "^2.24",
     "popper.js": "^1.14",
     "raven-js": "^3.25",
     "remove-accents": "^0.4.2",
     "turbolinks-animate": "^3.2",
-    "vue": "^2.6",
-    "vue-loader": "^15.6",
+    "vue": "^2.6.9",
+    "vue-loader": "^15.7.0",
     "vue-resource": "^1.5",
     "vue-simple-spinner": "1.2.8",
-    "vue-template-compiler": "^2.6",
+    "vue-template-compiler": "^2.6.9",
     "vue-turbolinks": "^2.0",
     "webfontloader": "^1.6.28",
-    "webpack-cli": "^3.1"
+    "webpack-cli": "^3.3.0"
   },
   "devDependencies": {
-    "@babel/core": "7.3.3",
-    "@babel/plugin-proposal-class-properties": "7.3.3",
+    "@babel/core": "7.3.4",
+    "@babel/plugin-proposal-class-properties": "7.3.4",
     "@babel/plugin-syntax-object-rest-spread": "7.2.0",
-    "@babel/preset-env": "7.3.1",
-    "eslint": "^5.2",
+    "@babel/preset-env": "7.3.4",
+    "eslint": "^5.15.3",
     "eslint-loader": "^2.1",
     "postcss-cssnext": "3.1.0",
     "sass-lint": "^1.12.1",
-    "webpack-dev-server": "^3.1"
+    "webpack-dev-server": "^3.2.1"
   },
   "scripts": {
     "lint": "yarn run eslint --ext .js --ext .jsx app/javascript"
