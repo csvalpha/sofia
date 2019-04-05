@@ -3,32 +3,13 @@
 - content_for :modal
   = render 'mutation_modal'
 
-= content_tag :div, id: 'user-container', class: ' container footer-padding', data: { user: @user_json }
-  template v-if="bubblesActivated"
-    .bubbles-wrap
-      .bubble.x1
-      .bubble.x2
-      .bubble.x3
-      .bubble.x4
-      .bubble.x5
-      .bubble.x6
-    audio autoplay="true"
-      source src="/wemakenschoon.mp3" type="audio/mpeg"
-
-  audio v-if="soundActivated" id="bubblesound" loop=""
-    source src="/bubbles.mp3" type="audio/mpeg"
-
+= content_tag :div, id: 'user-container', class: 'container footer-padding', data: { user: @user_json }
   .row.justify-content-between
     .col-sm-12.col-md-6.py-2
 
-      h1.mouse-pointer @click="toggleBubbles"
-        span.mr-2
-          = fa_icon 'bath', class: 'mr-2', 'v-if': 'bubblesActivated'
-          = fa_icon 'user', class: 'mr-2', 'v-else': true
-
+      h1
+        = fa_icon 'user', class: 'mr-2'
         = '{{user.name}}'
-
-        = fa_icon 'trophy', class: 'ml-2', 'v-if': 'bubblesActivated'
 
       table.table.table-sm
         tbody
@@ -87,15 +68,15 @@
                 small.mb-0 = 'Het kan enkele dagen duren voor je betaling is verwerkt.'
 
             .tab-pane.p-2 id='roleInfo' role='tabpanel' aria-labelledby='roleInfo-tab'
-              button.btn.btn-small.pull-right (type= 'button' data-toggle= 'collapse'
-                data-target= '#roleSyncDescription' aria-controls='roleSyncDescription' aria-expanded='false')
+              b-button.pull-right size="sm" v-b-toggle.role-sync-description=""
                 = fa_icon 'question-circle'
 
               h2.card-title
                 = 'Rollen'
 
-              p.alert.alert-light.card-text.collapse id='roleSyncDescription'
-                = 'Rollen worden gesynchroniseerd als de gebruiker zelf inlogt'
+              b-collapse id="role-sync-description" class="mt-2"
+                p.alert.alert-light.card-text
+                  = 'Rollen worden gesynchroniseerd als de gebruiker zelf inlogt'
 
               p.card-text.d-none.d-md-block
                 = 'Rechten zijn afhankelijk van de rollen die een gebruiker in het streepsysteem heeft. '
