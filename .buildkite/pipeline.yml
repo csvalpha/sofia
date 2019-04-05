@@ -8,7 +8,7 @@ steps:
   - wait
 
   - label: ":rspec: Rspec"
-    command: "bin/wait_for -t 30 db:5432 -- bin/ci.sh spec"
+    command: "bin/ci.sh spec"
     plugins:
       - docker-compose#v2.6.0:
           run: app
