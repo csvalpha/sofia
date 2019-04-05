@@ -18,39 +18,7 @@ document.addEventListener('turbolinks:load', () => {
       el: element,
       data: () => ({
         user,
-        bubblesActivated: false,
-        soundActivated: true,
       }),
-      created() {
-        // Eight seconds seems to be the sweet spot. Also: wait a while
-        // because chrome prevents auto play without interaction
-        setTimeout(this.activateSound, 8000);
-      },
-      methods: {
-        toggleBubbles() {
-          if (this.bubblesActivated) {
-            this.bubblesActivated = false;
-            this.soundActivated = false;
-          } else {
-            this.bubblesActivated = true;
-
-            const sound = document.getElementById('bubblesound');
-            if (sound !== null) {
-              sound.pause();
-            }
-          }
-        },
-        activateSound() {
-          const sound = document.getElementById('bubblesound');
-          if(sound !== null) {
-            sound.volume = 0.06;
-            let promise = sound.play();
-            if (promise !== null){
-              promise.catch(() => sound.play());
-            }
-          }
-        }
-      },
       components: {
         OrderHistory
       }
