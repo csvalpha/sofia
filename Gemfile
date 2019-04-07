@@ -66,7 +66,8 @@ end
 
 group :test do
   gem 'rubocop', '~> 0.59', require: false
-  gem 'rubocop-rspec', require: false
+  gem 'rubocop-performance'
+  gem 'rubocop-rspec'
   gem 'simplecov', require: false
   gem 'terminal-notifier-guard'
   gem 'timecop'
