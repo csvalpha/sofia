@@ -10,7 +10,7 @@ html
 
     - if Rails.env.production? || Rails.env.staging?
       script
-        = "Raven.config(\'https://329a65545f5a4cbbb27a1c9d5433113b@sentry.io/228968\').install();"
+        = "Raven.config(\'https://6e835e3cf81d44858fedf4dd509078a2@sentry.io/267713\', { environment: \'#{Rails.env}\'}).install();"
 
     = csrf_meta_tags
 
