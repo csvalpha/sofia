@@ -505,7 +505,7 @@ DEPENDENCIES
   uglifier (~> 4.1)
   validates_timeliness (~> 4.0)
   web-console (~> 3.7)
-  webpacker (~> 4.0)
+  webpacker (~> 4.0.2)
 
 BUNDLED WITH
    1.17.3
