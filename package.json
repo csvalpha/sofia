@@ -21,7 +21,7 @@
     "vue-template-compiler": "^2.6.10",
     "vue-turbolinks": "^2.0",
     "webfontloader": "^1.6.28",
-    "webpack-cli": "^3.3.0"
+    "webpack-cli": "3.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4",
@@ -36,7 +36,7 @@
     "eslint-loader": "^2.1",
     "postcss-cssnext": "3.1.0",
     "sass-lint": "^1.12.1",
-    "webpack": "^4.29",
+    "webpack": "4.30",
     "webpack-dev-server": "3.3.1"
   },
   "scripts": {

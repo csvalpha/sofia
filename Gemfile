@@ -34,7 +34,7 @@ gem 'slim', '~> 4.0'
 gem 'turbolinks', '~> 5.2'
 gem 'uglifier', '~> 4.1'
 gem 'validates_timeliness', '~> 4.0'
-gem 'webpacker', '~> 4.0'
+gem 'webpacker', '~> 4.0.2'
 
 group :development, :test do
   gem 'awesome_print'
