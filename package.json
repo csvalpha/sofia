@@ -6,9 +6,9 @@
     "autosuggest-highlight": "^3.1.1",
     "axios": "^0.18.0",
     "bootstrap": "4.3.1",
-    "bootstrap-vue": "^2.0.0-rc.16",
+    "bootstrap-vue": "^2.0.0-rc.18",
     "eslint-plugin-vue": "^5.2.2",
-    "jquery": "3.3.1",
+    "jquery": "3.4.0",
     "moment": "^2.24",
     "popper.js": "^1.15.0",
     "raven-js": "^3.25",
@@ -21,18 +21,23 @@
     "vue-template-compiler": "^2.6.10",
     "vue-turbolinks": "^2.0",
     "webfontloader": "^1.6.28",
-    "webpack-cli": "^3.3.0"
+    "webpack-cli": "3.3.0"
   },
   "devDependencies": {
-    "@babel/core": "7.4.3",
-    "@babel/plugin-proposal-class-properties": "7.4.0",
-    "@babel/plugin-syntax-object-rest-spread": "7.2.0",
-    "@babel/preset-env": "7.4.3",
+    "@babel/core": "^7.4",
+    "@babel/plugin-proposal-class-properties": "^7.4",
+    "@babel/plugin-syntax-dynamic-import": "^7.2",
+    "@babel/plugin-syntax-object-rest-spread": "^7.2",
+    "@babel/plugin-transform-runtime": "7.4.3",
+    "@babel/preset-env": "^7.4",
+    "babel-loader": "8.0.5",
+    "css-loader": "2.1.1",
     "eslint": "^5.16.0",
     "eslint-loader": "^2.1",
     "postcss-cssnext": "3.1.0",
     "sass-lint": "^1.12.1",
-    "webpack-dev-server": "^3.2.1"
+    "webpack": "4.30",
+    "webpack-dev-server": "3.3.1"
   },
   "scripts": {
     "lint": "yarn run eslint --ext .js --ext .jsx app/javascript"
