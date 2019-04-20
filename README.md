@@ -1,8 +1,7 @@
 Alpha SOFIA
 ============
 
-[![Build status](https://badge.buildkite.com/78b9e8a74bf2160a0d4cb7b72a17ee7d4a1590b3b3eaf847db.svg)](https://buildkite.com/csv-alpha/tomato)
-[![codebeat badge](https://codebeat.co/badges/63a40869-8ae4-4ee9-9575-8899c402f70f)](https://codebeat.co/a/twan-coenraad/projects/github-com-csvalpha-alpha-tomato-master)
+[![Build Status](https://badge.buildkite.com/78b9e8a74bf2160a0d4cb7b72a17ee7d4a1590b3b3eaf847db.svg)](https://buildkite.com/csv-alpha/sofia?branch=master)
 
 The source code belonging to Alpha SOFIA. It is a system built with Ruby on Rails with Turbolinks and a little VueJS, used to manage orders in our own bar "Flux". Users authenticate via OAuth API (currently "Alpha Banana") to see how much credit they got left, or to be able to register new orders and/or payments.
 
