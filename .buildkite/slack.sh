@@ -4,5 +4,5 @@ if [ "$STAGE" = "production" ] || [ "$STAGE" = "staging" ]; then echo 'Deploying
 
 curl -sSf  --request POST \
           -H 'Content-type: application/json' \
-          --data '{"username": "Buildkite deploy", "text": "Deploy for tomato '$STAGE' is finished"}' \
+          --data '{"username": "Buildkite deploy", "text": "Deploy for SOFIA '$STAGE' is finished"}' \
           $SLACK_URL

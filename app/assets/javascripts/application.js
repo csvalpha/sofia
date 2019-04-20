@@ -26,7 +26,7 @@ WebFont.load({
   }
 });
 
-Raven.config('https://329a65545f5a4cbbb27a1c9d5433113b@sentry.io/228968').install();
+Raven.config('https://56243c9c41a549ba92e50b0a5b642e32@sentry.io/267713').install();
 
 document.addEventListener( 'turbolinks:load', function() {
   TurbolinksAnimate.init({

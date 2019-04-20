@@ -1,5 +1,5 @@
 {
-  "name": "tomato",
+  "name": "S.O.F.I.A.",
   "private": true,
   "dependencies": {
     "@rails/webpacker": "4.0.2",

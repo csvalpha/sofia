@@ -1,10 +1,9 @@
-Alpha Tomato
+Alpha SOFIA
 ============
 
-[![Build status](https://badge.buildkite.com/78b9e8a74bf2160a0d4cb7b72a17ee7d4a1590b3b3eaf847db.svg)](https://buildkite.com/csv-alpha/tomato)
-[![codebeat badge](https://codebeat.co/badges/63a40869-8ae4-4ee9-9575-8899c402f70f)](https://codebeat.co/a/twan-coenraad/projects/github-com-csvalpha-alpha-tomato-master)
+[![Build Status](https://badge.buildkite.com/78b9e8a74bf2160a0d4cb7b72a17ee7d4a1590b3b3eaf847db.svg)](https://buildkite.com/csv-alpha/sofia?branch=master)
 
-The source code belonging to Alpha Tomato (workname). It is a system built with Ruby on Rails with Turbolinks and a little VueJS, used to manage orders in our own bar "Flux". Users authenticate via OAuth API (currently "Alpha Banana") to see how much credit they got left, or to be able to register new orders and/or payments.
+The source code belonging to Alpha SOFIA. It is a system built with Ruby on Rails with Turbolinks and a little VueJS, used to manage orders in our own bar "Flux". Users authenticate via OAuth API (currently "Alpha Banana") to see how much credit they got left, or to be able to register new orders and/or payments.
 
 Use this repository to build upon, use as-is, learn from it, prove a point or whatever 😏
 
@@ -29,7 +28,7 @@ _On Linux-like systems_
   1. `yarn`
   1. `bundle exec rails db:setup`
   1. `bundle exec rails s -p 5000` (port specified so it doesn't use the same as Banana API)
-1. Go to http://localhost:5000 and you should see Alpha Tomato running
+1. Go to http://localhost:5000 and you should see SOFIA running
 1. Copy `.env.example` to `.env` with `cp .env.example .env` and edit the values where necessary
 
 ### Credentials
@@ -53,14 +52,14 @@ $ EDITOR="code --wait" bundle exec rails credentials:edit
 In OAuth Banana (github.com/csvalpha/alpha-banana-api), execute the following command (in `rails console`):
 
 ```ruby
-Doorkeeper::Application.create(name: 'Tomato - Streepsysteem der C.S.V. Alpha', redirect_uri: 'http://localhost:5000/users/auth/banana_oauth2/callback', scopes: 'tomato')
+Doorkeeper::Application.create(name: 'SOFIA - Streepsysteem der C.S.V. Alpha', redirect_uri: 'http://localhost:5000/users/auth/banana_oauth2/callback', scopes: 'tomato')
 ```
 
-Next, copy the uid and secret to the `.env` in Tomato (as `banana_client_id` and `banana_client_secret`).
+Next, copy the uid and secret to the `.env` in SOFIA (as `banana_client_id` and `banana_client_secret`).
 
 ### Configuring roles
 
-Users can have roles in Tomato, namely Treasurer ("SB-penningmeester") and/or Main Bartender ("Hoofdtapper"). A user can also log in without a role. These roles are derived from the groups the user is in. These groups are saved in the Banana API.
+Users can have roles in SOFIA, namely Treasurer ("SB-penningmeester") and/or Main Bartender ("Hoofdtapper"). A user can also log in without a role. These roles are derived from the groups the user is in. These groups are saved in the Banana API.
 
 Roles are created in the following way during the seeding:
 
