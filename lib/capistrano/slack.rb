@@ -3,11 +3,11 @@ module Slackistrano
     # rubocop:disable Metrics/MethodLength
 
     def branch
-      "<https://github.com/csvalpha/alpha-tomato/tree/#{fetch(:branch)}|\`#{fetch(:branch)}\`>"
+      "<https://github.com/csvalpha/sofia/tree/#{fetch(:branch)}|\`#{fetch(:branch)}\`>"
     end
 
     def environment
-      "tomato/#{stage}"
+      "sofia/#{stage}"
     end
 
     def deployer

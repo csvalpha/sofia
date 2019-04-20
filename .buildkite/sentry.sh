@@ -6,4 +6,4 @@ curl -sSf  -H 'Content-Type: application/json' \
           -H 'Authorization: Bearer '$SENTRY_API_TOKEN \
           --request POST \
           --data '{"version": "'"$(date)"'", "ref": "'"$BUILDKITE_COMMIT"'", "environment": "'"$STAGE"'"}' \
-          https://sentry.io/api/0/projects/csvalpha/alpha-tomato/releases/
+          https://sentry.io/api/0/projects/csvalpha/sofia/releases/
