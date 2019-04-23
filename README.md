@@ -1,7 +1,8 @@
 Alpha SOFIA
 ============
 
-[![Build Status](https://badge.buildkite.com/78b9e8a74bf2160a0d4cb7b72a17ee7d4a1590b3b3eaf847db.svg)](https://buildkite.com/csv-alpha/sofia?branch=master)
+![Build Status](https://badge.buildkite.com/78b9e8a74bf2160a0d4cb7b72a17ee7d4a1590b3b3eaf847db.svg?branch=staging)
+[![Depfu](https://badges.depfu.com/badges/511b8df2e034f68fa0e7b3a4ac476094/overview.svg)](https://depfu.com/github/csvalpha/sofia?project_id=7740)
 
 The source code belonging to Alpha SOFIA. It is a system built with Ruby on Rails with Turbolinks and a little VueJS, used to manage orders in our own bar "Flux". Users authenticate via OAuth API (currently "Alpha Banana") to see how much credit they got left, or to be able to register new orders and/or payments.
 
