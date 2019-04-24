@@ -1,11 +1,11 @@
 <template lang="html">
   <b-row class="order-history no-gutters">
     <b-col>
-      <b-table show-empty :busy.sync="isLoading" :items="ordersProvider" :fields="fields"
-               no-provider-sorting sort-by="created_at" sort-desc>
-        <template slot="order_total" slot-scope="row">
+      <b-table show-empty :busy.sync="isLoading" :items="activityProvider" :fields="fields"
+               no-provider-sorting sort-by="start_time" sort-desc>
+        <template slot="activity_total" slot-scope="row">
           <span class="pull-right">
-            {{doubleToCurrency(row.item.order_total)}}
+            {{doubleToCurrency(row.item.activity_total)}}
             <i @click.stop="row.toggleDetails" :class="['order-history--details-expand', 'fa', 'fa-lg', 'pl-2', row.detailsShowing ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down']"></i>
           </span>
         </template>
@@ -16,7 +16,12 @@
           </p>
         </template>
 
-        <ProductTable slot="row-details" slot-scope="row" :order="row.item" />
+        <template slot="row-details" slot-scope="row">
+          <div v-for="order in row.item.orders">
+            <b class="mb-1">{{formatTime(order.created_at)}}</b>
+            <ProductTable class="mb-4" :order="order" />
+          </div>
+        </template>
       </b-table>
 
       <spinner class="pt-2 pb-3 m-auto" size="large" v-if="isLoading" />
@@ -29,6 +34,7 @@
   import ProductTable from './producttable.vue';
   import axios from 'axios';
   import moment from 'moment';
+  import _ from 'lodash';
 
   export default {
     props: {
@@ -42,24 +48,16 @@
       return {
         isLoading: false,
         fields: {
-          id: {
-            label: '#',
+          start_time: {
+            label: 'Datum',
             sortable: true,
-            thClass: 'text-center',
-            tdClass: 'text-center',
-            isRowHeader: true
+            formatter: (value) => moment(value).format('DD-MM'),
           },
-          created_at: {
-            label: 'Tijdstip',
-            sortable: true,
-            formatter: (value) => moment(value).format('DD-MM HH:mm:ss'),
+          title: {
+            label: 'Titel',
+            sortable: false
           },
-          activity: {
-            label: 'Activiteit',
-            sortable: false,
-            formatter: (activity) => activity.title,
-          },
-          order_total: {
+          activity_total: {
             label: 'Bedrag',
             sortable: false,
             thClass: 'text-right pr-4'
@@ -69,7 +67,7 @@
     },
 
     methods: {
-      ordersProvider() {
+      activityProvider() {
         let params;
         if (this.activity) {
           params = { activity_id: this.activity.id }
@@ -85,7 +83,18 @@
             order.order_rows.map(row => { row.editing = false });
           });
 
-          return orders;
+          let activities = _.groupBy(orders, order => order.activity.id);
+          activities = _.map(activities, orders => {
+            let activity = orders[0].activity;
+            let ordersTotal = orders.reduce((accumulator, order) => accumulator + parseFloat(order.order_total), 0);
+            return {
+              ...activity,
+              orders: orders,
+              activity_total: ordersTotal
+            };
+          });
+
+          return activities;
         }, () => {
           return [];
         });
@@ -94,6 +103,10 @@
       doubleToCurrency(price) {
         return `€ ${parseFloat(price).toFixed(2)}`;
       },
+
+      formatTime(time) {
+        return moment(time).format('HH:mm');
+      }
     },
 
     components: {
