@@ -6,7 +6,6 @@
         <template slot="order_total" slot-scope="row">
           <span class="pull-right">
             {{doubleToCurrency(row.item.order_total)}}
-            {{row.showDetails}}
             <i @click.stop="row.toggleDetails" :class="['order-history--details-expand', 'fa', 'fa-lg', 'pl-2', row.detailsShowing ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down']"></i>
           </span>
         </template>
@@ -37,10 +36,6 @@
         type: Object,
         required: true
       },
-      expand_first: {
-        type: Boolean,
-        default: false
-      }
     },
 
     data: function () {
@@ -86,9 +81,8 @@
 
         return promise.then((response) => {
           const orders = response.data;
-          orders.map((order, index) => {
-            order._showDetails = (this.expand_first && index === orders.length - 1);
-            order.order_rows.map(row => { row.editing = false});
+          orders.map(order => {
+            order.order_rows.map(row => { row.editing = false });
           });
 
           return orders;
