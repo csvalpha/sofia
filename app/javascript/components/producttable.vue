@@ -11,8 +11,8 @@
     <b-row v-for="orderRow in order.order_rows" class="b-table-details--item px-2" :key="orderRow.id">
       <b-col sm="5" >
         {{orderRow.product.name}}
-        <div>
-          <small class="text-danger"><em>{{error}}</em></small>
+        <div v-if="orderRowErrors[orderRow.id]">
+          <small class="text-danger"><em>{{orderRowErrors[orderRow.id]}}</em></small>
         </div>
       </b-col>
       <b-col sm="2" class="text-right">
@@ -28,10 +28,10 @@
         </template>
       </b-col>
       <b-col sm="3" class="text-right">
-        {{d2c(orderRow.price_per_product)}}
+        {{doubleToCurrency(orderRow.price_per_product)}}
       </b-col>
       <b-col sm="2" :class="['text-right', editable ? 'pr-1' : 'pr-3']">
-        {{d2c(orderRow.product_count * orderRow.price_per_product)}}
+        {{doubleToCurrency(orderRow.product_count * orderRow.price_per_product)}}
         <template v-if="editable">
           <i v-if="orderRow.editing" @click="saveOrderRow(orderRow)" class="order-history--item-save fa fa-save pl-3"></i>
           <i v-else @click="editOrderRow(orderRow)" class="order-history--item-edit fa fa-pencil pl-3"></i>
@@ -60,11 +60,11 @@
     },
     data: function () {
       return {
-        error: ""
+        orderRowErrors: {}
       }
     },
     methods: {
-      d2c(price) {
+      doubleToCurrency(price) {
         return `€ ${parseFloat(price).toFixed(2)}`;
       },
 
@@ -84,23 +84,17 @@
 
         axios.patch(`/orders/${this.order.id}`, newOrder).then((response) => {
           const updatedOrder = response.data;
-          const updatedOrderRow = updatedOrder.order_rows.find(r => r.id == orderRow.id);
-          let orderRowToUpdate = this.order.order_rows.find(r => r.id == orderRow.id);
 
           this.order.order_total = updatedOrder.order_total;
-          orderRowToUpdate = {
-            ...updatedOrderRow,
-            editing: false
-          }
 
           orderRow.editing = false;
         }, (error) => {
-          let errorMessage = 'Something went wrong saving this order row';
-          if (error.response.data['order_rows.product_count']) {
+          let errorMessage = 'Er is iets misgegaan bij het opslaan van deze rij';
+          if (error.response && error.response.data['order_rows.product_count']) {
             errorMessage = `Aantal ${error.response.data['order_rows.product_count']}`
           }
 
-          this.$set(this.error, orderRow.id, errorMessage);
+          this.$set(this.orderRowErrors, orderRow.id, errorMessage);
         })
       },
 
