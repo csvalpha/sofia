@@ -5,7 +5,10 @@ describe ActivitiesController, type: :controller do
     let(:activities) { FactoryBot.create_list(:activity, 3) }
     let(:price_lists) { FactoryBot.create_list(:price_list, 3) }
 
-    before { activities && price_lists }
+    before do
+      activities
+      price_lists
+    end
 
     it 'assigns the values' do
       sign_in FactoryBot.create(:user, :treasurer)
