@@ -13,18 +13,36 @@ describe OrdersController, type: :controller do
       orders_eve
     end
 
-    it 'returns all orders' do
-      sign_in alice
-      get :index, params: { user_id: alice.id, format: :json }
+    context 'when as treasurer' do
+      it 'shows own orders' do
+        sign_in alice
+        get :index, params: { user_id: alice.id, format: :json }
 
-      expect(assigns(:orders)).to eq Order.where(user: alice)
+        expect(Order.where(user: alice)).to match_array assigns(:orders)
+      end
+
+      it 'show other users orders' do
+        sign_in alice
+        get :index, params: { user_id: eve.id, format: :json }
+
+        expect(Order.where(user: eve)).to match_array assigns(:orders)
+      end
     end
 
-    it 'returns eves orders' do
-      sign_in eve
-      get :index, params: { user_id: alice.id, format: :json }
+    context 'when as normal user' do
+      it 'shows own orders' do
+        sign_in eve
+        get :index, params: { user_id: eve.id, format: :json }
 
-      expect(assigns(:orders)).to be_empty
+        expect(Order.where(user: eve)).to match_array assigns(:orders)
+      end
+
+      it 'user cannot see other users orders' do
+        sign_in eve
+        get :index, params: { user_id: alice.id, format: :json }
+
+        expect(assigns(:orders)).to be_empty
+      end
     end
   end
 end
