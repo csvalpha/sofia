@@ -67,6 +67,9 @@ RSpec/LeadingSubject:
 RSpec/NestedGroups:
   Max: 4
 
+RSpec/MultipleExpectations:
+  Max: 5
+
 Style/AutoResourceCleanup:
   Enabled: true
 

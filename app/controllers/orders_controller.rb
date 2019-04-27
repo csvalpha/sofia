@@ -5,7 +5,7 @@ class OrdersController < ApplicationController
 
   def index
     if allowed_filters.any?
-      @orders = Order.where(allowed_filters).includes(:order_rows, :user, :activity)
+      @orders = policy_scope(Order).where(allowed_filters).includes(:order_rows, :user, :activity)
     else
       render status: :bad_request
     end
