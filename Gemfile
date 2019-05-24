@@ -1,8 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'bcrypt', '~> 3.1'
-gem 'bootsnap'
-gem 'coffee-rails', '~> 4.2'
+gem 'bootsnap', '~> 1.4'
 gem 'devise', '~>4.5'
 gem 'devise-i18n', '~>1.8'
 gem 'factory_bot_rails', '~> 5.0'
