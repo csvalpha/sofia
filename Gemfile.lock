@@ -70,13 +70,6 @@ GEM
       capistrano (>= 3.9.0)
       sidekiq (>= 3.4)
     coderay (1.1.2)
-    coffee-rails (4.2.2)
-      coffee-script (>= 2.2.0)
-      railties (>= 4.0.0)
-    coffee-script (2.4.1)
-      coffee-script-source
-      execjs
-    coffee-script-source (1.12.2)
     colorize (0.8.1)
     concurrent-ruby (1.1.5)
     connection_pool (2.2.2)
@@ -447,11 +440,10 @@ DEPENDENCIES
   awesome_print
   bcrypt (~> 3.1)
   better_errors
-  bootsnap
+  bootsnap (~> 1.4)
   brakeman
   bullet
   capistrano-sidekiq
-  coffee-rails (~> 4.2)
   colorize
   consistency_fail
   devise (~> 4.5)
