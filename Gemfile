@@ -67,6 +67,7 @@ group :test do
   gem 'rails-controller-testing', '~> 1.0.4'
   gem 'rubocop', '~> 0.71', require: false
   gem 'rubocop-performance'
+  gem 'rubocop-rails'
   gem 'rubocop-rspec'
   gem 'simplecov', require: false
   gem 'terminal-notifier-guard'
