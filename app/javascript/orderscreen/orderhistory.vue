@@ -155,7 +155,7 @@ export default {
     },
 
     doubleToCurrency(price) {
-      return `€ ${parseFloat(price).toFixed(2)}`;
+      return `€${parseFloat(price).toFixed(2)}`;
     },
 
     editOrderRow(orderRow) {

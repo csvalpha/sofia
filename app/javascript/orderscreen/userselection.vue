@@ -12,7 +12,7 @@
           <h3 class="mb-3">
             {{selectedUser.name}}
 
-            <span class="pull-right pr-2 user-details-close"
+            <span class="pull-right px-1 user-details-close"
                   title="Deselect (Esc)"
                   @click="selectUser(null)">
               <i class="fa fa-times-circle"></i>
