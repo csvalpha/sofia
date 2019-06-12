@@ -405,7 +405,7 @@ GEM
     thread_safe (0.3.6)
     tilt (2.0.9)
     timecop (0.9.1)
-    timeliness (0.3.10)
+    timeliness (0.4.1)
     turbolinks (5.2.0)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
@@ -418,8 +418,8 @@ GEM
     unf_ext (0.0.7.6)
     unicode-display_width (1.6.0)
     uniform_notifier (1.12.1)
-    validates_timeliness (4.0.2)
-      timeliness (~> 0.3.7)
+    validates_timeliness (4.1.0)
+      timeliness (>= 0.3.10, < 1)
     warden (1.2.8)
       rack (>= 2.0.6)
     web-console (3.7.0)
@@ -501,7 +501,7 @@ DEPENDENCIES
   turbolinks (~> 5.2)
   tzinfo-data
   uglifier (~> 4.1)
-  validates_timeliness (~> 4.0)
+  validates_timeliness (~> 4.1)
   web-console (~> 3.7)
   webpacker (~> 4.0.7)
 
