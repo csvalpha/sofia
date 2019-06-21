@@ -37,7 +37,7 @@
     "eslint": "^5.16.0",
     "eslint-loader": "^2.1",
     "sass-lint": "^1.13.1",
-    "webpack-dev-server": "3.7.1"
+    "webpack-dev-server": "3.7.2"
   },
   "scripts": {
     "lint": "yarn run eslint --ext .js --ext .jsx app/javascript"
