@@ -7,7 +7,7 @@ module OmniAuth
 
       option :client_options,
              site: Rails.application.config.x.banana_api_url.to_s,
-             authorize_url: '/api/v1/oauth/authorize',
+             authorize_url: '/oauth/authorize',
              token_url: '/api/v1/oauth/token'
 
       uid { raw_info['id'] }
