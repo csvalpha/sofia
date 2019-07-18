@@ -24,7 +24,7 @@
     "remove-accents": "^0.4.2",
     "turbolinks-animate": "^3.2",
     "vue": "^2.6.10",
-    "vue-loader": "^15.7.0",
+    "vue-loader": "^15.7.1",
     "vue-resource": "^1.5",
     "vue-simple-spinner": "1.2.8",
     "vue-template-compiler": "^2.6.10",
