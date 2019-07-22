@@ -13,7 +13,7 @@
     "axios": "^0.19.0",
     "babel-loader": "8.0.6",
     "bootstrap": "4.3.1",
-    "bootstrap-vue": "^2.0.0-rc.23",
+    "bootstrap-vue": "^2.0.0-rc.27",
     "css-loader": "2.1.1",
     "eslint-plugin-vue": "^5.2.2",
     "jquery": "3.4.1",
