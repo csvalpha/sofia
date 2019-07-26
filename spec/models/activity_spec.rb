@@ -101,8 +101,8 @@ RSpec.describe Activity, type: :model do
       FactoryBot.create(:activity, start_time: 1.day.from_now, end_time: 2.days.from_now)
     end
 
-    it { expect(Activity.upcoming).to include future_activity }
-    it { expect(Activity.upcoming).not_to include past_activity }
+    it { expect(described_class.upcoming).to include future_activity }
+    it { expect(described_class.upcoming).not_to include past_activity }
   end
 
   describe '.current' do
@@ -114,8 +114,8 @@ RSpec.describe Activity, type: :model do
       FactoryBot.create(:activity, start_time: 1.hour.ago, end_time: 2.hours.from_now)
     end
 
-    it { expect(Activity.current).to include current_activity }
-    it { expect(Activity.current).not_to include past_activity }
+    it { expect(described_class.current).to include current_activity }
+    it { expect(described_class.current).not_to include past_activity }
   end
 
   describe 'reporting' do
