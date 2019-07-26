@@ -19,7 +19,7 @@ RSpec.describe User, type: :model do
 
       before { user }
 
-      it { expect(User.in_banana).to include user }
+      it { expect(described_class.in_banana).to include user }
     end
 
     context 'when not in banana' do
@@ -27,7 +27,7 @@ RSpec.describe User, type: :model do
 
       before { user }
 
-      it { expect(User.in_banana).not_to include user }
+      it { expect(described_class.in_banana).not_to include user }
     end
   end
 
@@ -39,11 +39,11 @@ RSpec.describe User, type: :model do
 
       before { FactoryBot.create(:roles_users, user: user, role: treasurer_role) }
 
-      it { expect(User.treasurer).to include user }
+      it { expect(described_class.treasurer).to include user }
     end
 
     context 'when not treasurer' do
-      it { expect(User.treasurer).not_to include user }
+      it { expect(described_class.treasurer).not_to include user }
     end
   end
 
@@ -207,11 +207,11 @@ RSpec.describe User, type: :model do
 
   describe 'full_name_from_attributes' do
     context 'when with all attributes' do
-      it { expect(User.full_name_from_attributes('first', 'middle', 'last')). to eq 'first middle last' }
+      it { expect(described_class.full_name_from_attributes('first', 'middle', 'last')). to eq 'first middle last' }
     end
 
     context 'when without middle name' do
-      it { expect(User.full_name_from_attributes('first', '', 'last')). to eq 'first last' }
+      it { expect(described_class.full_name_from_attributes('first', '', 'last')). to eq 'first last' }
     end
   end
 
@@ -243,38 +243,38 @@ RSpec.describe User, type: :model do
     end
 
     context 'when without date supplied' do
-      subject(:spendings_hash) { User.calculate_spendings }
+      subject(:spendings_hash) { described_class.calculate_spendings }
 
       it { expect(spendings_hash[user.id]).to eq 6 }
     end
 
     context 'when with from date' do
-      subject(:spendings_hash) { User.calculate_spendings(from: 2.weeks.ago) }
+      subject(:spendings_hash) { described_class.calculate_spendings(from: 2.weeks.ago) }
 
       it { expect(spendings_hash[user.id]).to eq 4 }
     end
 
     context 'when with to date' do
-      subject(:spendings_hash) { User.calculate_spendings(to: 2.days.ago) }
+      subject(:spendings_hash) { described_class.calculate_spendings(to: 2.days.ago) }
 
       it { expect(spendings_hash[user.id]).to eq 4 }
     end
 
     context 'when with from and to date' do
-      subject(:spendings_hash) { User.calculate_spendings(from: 2.weeks.ago, to: 2.days.ago) }
+      subject(:spendings_hash) { described_class.calculate_spendings(from: 2.weeks.ago, to: 2.days.ago) }
 
       it { expect(spendings_hash[user.id]).to eq 2 }
     end
 
     context 'when with wrong date' do
-      subject(:spendings_hash) { User.calculate_spendings(from: 2.days.from_now, to: 2.days.ago) }
+      subject(:spendings_hash) { described_class.calculate_spendings(from: 2.days.from_now, to: 2.days.ago) }
 
       it { expect(spendings_hash[user.id]).to eq nil }
     end
 
     context 'when on specific date' do
       subject(:spendings_hash) do
-        User.calculate_spendings(
+        described_class.calculate_spendings(
           from: Time.zone.local(2018, 6, 1),
           to: Time.zone.local(2018, 6, 23)
         )
@@ -294,7 +294,7 @@ RSpec.describe User, type: :model do
   describe 'calculate_credits' do
     let(:user) { FactoryBot.create(:user) }
 
-    subject(:credits_hash) { User.calculate_credits }
+    subject(:credits_hash) { described_class.calculate_credits }
 
     context 'when without orders or credit_mutations' do
       before { user }

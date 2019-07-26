@@ -17,7 +17,7 @@ RSpec.describe CreditInsufficientNotificationJob, type: :job do
     end
     let(:emails) { ActionMailer::Base.deliveries }
 
-    subject(:job) { perform_enqueued_jobs { CreditInsufficientNotificationJob.perform_now } }
+    subject(:job) { perform_enqueued_jobs { described_class.perform_now } }
 
     before do
       ActionMailer::Base.deliveries = []
