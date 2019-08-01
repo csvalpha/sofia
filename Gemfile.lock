@@ -352,7 +352,7 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    sentry-raven (2.9.0)
+    sentry-raven (2.11.0)
       faraday (>= 0.7.6, < 1.0)
     shellany (0.0.1)
     sidekiq (5.2.7)
@@ -485,7 +485,7 @@ DEPENDENCIES
   rubocop-rails
   rubocop-rspec
   sassc-rails (~> 2.1)
-  sentry-raven (~> 2.3)
+  sentry-raven (~> 2.11)
   sidekiq (~> 5.2.1)
   sidekiq-scheduler (~> 3.0)
   simple_form (~> 4.0)
