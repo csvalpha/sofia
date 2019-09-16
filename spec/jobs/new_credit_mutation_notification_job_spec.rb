@@ -6,7 +6,7 @@ RSpec.describe NewCreditMutationNotificationJob, type: :job do
     let(:emails) { ActionMailer::Base.deliveries }
     let(:mutation) { FactoryBot.create(:credit_mutation, user: user, amount: -2.30) }
 
-    subject(:job) { perform_enqueued_jobs { NewCreditMutationNotificationJob.perform_now(mutation) } }
+    subject(:job) { perform_enqueued_jobs { described_class.perform_now(mutation) } }
 
     before do
       ActionMailer::Base.deliveries = []

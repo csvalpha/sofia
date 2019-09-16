@@ -11,6 +11,8 @@ module Sofia
 
     config.time_zone = 'Europe/Amsterdam'
 
+    config.generators.javascript_engine = :js
+
     config.i18n.default_locale = :nl
     config.i18n.fallbacks = [:nl]
 

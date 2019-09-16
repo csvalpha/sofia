@@ -1,14 +1,13 @@
 source 'https://rubygems.org'
 
 gem 'bcrypt', '~> 3.1'
-gem 'bootsnap'
-gem 'coffee-rails', '~> 4.2'
+gem 'bootsnap', '~> 1.4'
 gem 'devise', '~>4.5'
 gem 'devise-i18n', '~>1.8'
 gem 'factory_bot_rails', '~> 5.0'
 gem 'faker', '~> 1.9'
 gem 'font-awesome-rails', '~> 4.7'
-gem 'jbuilder', '~> 2.7'
+gem 'jbuilder', '~> 2.9'
 gem 'jquery-rails', '~> 4.3.1'
 gem 'mailgun-ruby', '~> 1.1.11'
 gem 'mini_racer', '~> 0.2'
@@ -17,9 +16,9 @@ gem 'omniauth-oauth2', '~> 1.4'
 gem 'paper_trail', '~> 10.2'
 gem 'paranoia', '~> 2.2'
 gem 'pg', '~> 1.0'
-gem 'puma', '~> 3.12'
+gem 'puma', '~> 4.0'
 gem 'pundit', '~> 2.0'
-gem 'rack-attack', '~> 5.0'
+gem 'rack-attack', '~> 6.0'
 gem 'rails', '~> 5.2'
 gem 'rails-i18n', '~> 5.1'
 gem 'redis-rails', '~> 5.0.2'
@@ -33,8 +32,8 @@ gem 'slack-notifier', '~> 2.3.2'
 gem 'slim', '~> 4.0'
 gem 'turbolinks', '~> 5.2'
 gem 'uglifier', '~> 4.1'
-gem 'validates_timeliness', '~> 4.0'
-gem 'webpacker', '~> 4.0.2'
+gem 'validates_timeliness', '~> 4.1'
+gem 'webpacker', '~> 4.0.7'
 
 group :development, :test do
   gem 'awesome_print'
@@ -65,8 +64,10 @@ group :development do
 end
 
 group :test do
-  gem 'rubocop', '~> 0.59', require: false
+  gem 'rails-controller-testing', '~> 1.0.4'
+  gem 'rubocop', '~> 0.71', require: false
   gem 'rubocop-performance'
+  gem 'rubocop-rails'
   gem 'rubocop-rspec'
   gem 'simplecov', require: false
   gem 'terminal-notifier-guard'
