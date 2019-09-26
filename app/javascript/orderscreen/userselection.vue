@@ -32,16 +32,25 @@
     </div>
   </div>
 
-  <div class="user-details" v-else-if="payWithCash">
+  <div class="user-details" v-else-if="payWithCash || payWithPin">
     <div class="user-details-user container py-3">
       <div class="row justify-content-end">
-        <div class="col-10 d-flex flex-column align-items-center">
+        <div class="col-10 d-flex flex-column align-items-center" v-if="payWithCash">
           <h1 class="display-3 py-2">
             <i class="fa fa-money fa-lg"></i>
           </h1>
 
           <h4 class="font-weight-light text-center">
             <em>Bestelling contant betalen</em>
+          </h4>
+        </div>
+        <div class="col-10 d-flex flex-column align-items-center" v-else-if="payWithPin">
+          <h1 class="display-3 py-2">
+            <i class="fa fa-credit-card fa-lg"></i>
+          </h1>
+
+          <h4 class="font-weight-light text-center">
+            <em>Bestelling met pin betalen</em>
           </h4>
         </div>
 
@@ -61,6 +70,10 @@
       <button class="btn btn-secondary mt-3" @click="selectCash">
         <i class="fa fa-money mr-1"></i>
         Betaal contant
+      </button>
+      <button class="btn btn-secondary mt-3" @click="selectPin">
+        <i class="fa fa-credit-card mr-1"></i>
+        Betaal met pin
       </button>
     </div>
 
@@ -90,6 +103,7 @@ export default {
   props: {
     selectedUser: null,
     payWithCash: false,
+    payWithPin: false,
     users: {
       type: Array,
       required: true
@@ -195,6 +209,12 @@ export default {
       this.userQuery = '';
       this.queryChange();
       this.$emit('selectcash', 'pay_with_cash');
+    },
+
+    selectPin() {
+      this.userQuery = '';
+      this.queryChange();
+      this.$emit('selectpin', 'pay_with_pin');
     }
   }
 };

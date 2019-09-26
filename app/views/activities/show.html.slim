@@ -125,10 +125,15 @@
                       td.text-right = number_to_currency(@cash_total, unit: '€')
                       td
                     tr
+                      td = 'Omzet Pin'
+                      td = t('codes.pin_mutation')
+                      td
+                      td.text-right = number_to_currency(@revenue_with_pin, unit: '€')
+                    tr
                       td = 'Omzet Zatladder Inlegsysteem'
                       td = t('codes.credit_mutation')
                       td
-                      td.text-right = number_to_currency(@revenue_without_cash, unit: '€')
+                      td.text-right = number_to_currency(@revenue_with_credit, unit: '€')
 
         .tab-pane id='credit_mutations' role='tabpanel' aria-labelledby='credit_mutations-tab'
           .table-responsive
@@ -179,7 +184,9 @@
                         td
                           - if order.user.present?
                             = link_to order.user.name, order.user
-                          - else
+                          - if order.paid_with_pin
+                            em = 'Gepind'
+                          - if order.paid_with_cash
                             em = 'Contant betaald'
                         td = number_to_currency(order.order_total, unit: '€')
                         td
