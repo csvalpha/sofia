@@ -125,10 +125,15 @@
                       td.text-right = number_to_currency(@cash_total, unit: '€')
                       td
                     tr
-                      td = 'Omzet Pin'
-                      td = t('codes.pin_mutation')
+                      td = 'Omzet SumUp'
+                      td = t('codes.pin')
                       td
                       td.text-right = number_to_currency(@revenue_with_pin, unit: '€')
+                    tr
+                      td = 'Kosten SumUp'
+                      td = t('codes.pin_fee')
+                      td
+                      td.text-right = number_to_currency(@pin_transaction_fee, unit: '€')
                     tr
                       td = 'Omzet Zatladder Inlegsysteem'
                       td = t('codes.credit_mutation')

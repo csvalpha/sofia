@@ -43,9 +43,10 @@ class ActivitiesController < ApplicationController
     @revenue_by_category = @activity.revenue_by_category
     @revenue_with_cash = @activity.revenue_with_cash
     @revenue_with_pin = @activity.revenue_with_pin
+    @pin_transaction_fee = @activity.pin_transaction_fee
     @revenue_with_credit = @activity.revenue_with_credit
     @cash_total = @activity.revenue_with_cash + @activity.credit_mutations_total
-    @revenue_total = @activity.revenue_with_cash + @activity.revenue_with_pin + @activity.revenue_with_credit
+    @revenue_total = @activity.revenue_with_cash + @activity.revenue_with_pin + @activity.pin_transaction_fee + @activity.revenue_with_credit
 
     @count_per_product = @activity.count_per_product
   end

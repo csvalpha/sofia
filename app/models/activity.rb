@@ -34,7 +34,13 @@ class Activity < ApplicationRecord
 
   def revenue_with_pin
     @revenue_with_pin ||= begin
-      OrderRow.where(order: orders.where(paid_with_pin: true)).sum('product_count * price_per_product') * 0.981
+      OrderRow.where(order: orders.where(paid_with_pin: true)).sum('product_count * price_per_product * 0.981')
+    end
+  end
+
+  def pin_transaction_fee
+    @pin_transaction_fee ||= begin
+      OrderRow.where(order: orders.where(paid_with_pin: true)).sum('product_count * price_per_product * 0.019')
     end
   end
 
