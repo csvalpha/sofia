@@ -65,7 +65,7 @@ class Activity < ApplicationRecord
 
   def revenue_per_product
     @revenue_per_product ||= begin
-      OrderRow.where(order: orders.where(paid_with_pin: true)).group(:product).sum('product_count * price_per_product')
+      OrderRow.where(order: orders).group(:product).sum('product_count * price_per_product')
     end
   end
 
