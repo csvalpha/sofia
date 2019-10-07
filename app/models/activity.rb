@@ -50,6 +50,14 @@ class Activity < ApplicationRecord
     end
   end
 
+  def cash_total
+    @cash_total ||= revenue_with_cash + credit_mutations_total
+  end
+
+  def revenue_total
+    @revenue_total ||= revenue_with_cash + revenue_with_pin + pin_transaction_fee + revenue_with_credit
+  end
+
   def count_per_product
     @count_per_product ||= OrderRow.where(order: orders).group(:product).sum(:product_count)
   end

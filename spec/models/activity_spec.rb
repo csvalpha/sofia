@@ -156,6 +156,45 @@ RSpec.describe Activity, type: :model do
       it { expect(activity.revenue_with_cash).not_to eq activity.revenue_with_credit }
     end
 
+    describe '#cash_total' do
+      let(:product) { activity.price_list.products.sample }
+      let(:product_price) { activity.price_list.product_price_for(product).price }
+      let(:cash_order) { FactoryBot.create(:order, :cash, activity: activity) }
+      let(:pin_order) { FactoryBot.create(:order, :pin, activity: activity) }
+      let(:order) { FactoryBot.create(:order, activity: activity) }
+
+      before do
+        FactoryBot.create(:credit_mutation, activity: activity, amount: 50)
+        FactoryBot.create(:order_row, product: product, order: cash_order, product_count: 2)
+        FactoryBot.create(:order_row, product: product, order: order, product_count: 3)
+        FactoryBot.create(:order_row, product: product, order: pin_order, product_count: 4)
+      end
+
+      it { expect(activity.cash_total).to eq activity.revenue_with_cash + activity.credit_mutations_total }
+    end
+
+    describe '#revenue_total' do
+      let(:product) { activity.price_list.products.sample }
+      let(:product_price) { activity.price_list.product_price_for(product).price }
+      let(:cash_order) { FactoryBot.create(:order, :cash, activity: activity) }
+      let(:pin_order) { FactoryBot.create(:order, :pin, activity: activity) }
+      let(:order) { FactoryBot.create(:order, activity: activity) }
+
+      before do
+        FactoryBot.create(:credit_mutation, activity: activity, amount: 50)
+        FactoryBot.create(:order_row, product: product, order: cash_order, product_count: 2)
+        FactoryBot.create(:order_row, product: product, order: order, product_count: 3)
+        FactoryBot.create(:order_row, product: product, order: pin_order, product_count: 4)
+      end
+
+      it {
+        expect(activity.revenue_total).to eq activity.revenue_with_cash +
+                                             activity.revenue_with_pin +
+                                             activity.pin_transaction_fee +
+                                             activity.revenue_with_credit
+      }
+    end
+
     describe '#count_per_product' do
       let(:order) { FactoryBot.create(:order, activity: activity) }
       let(:products) { activity.price_list.products.sample(2) }
