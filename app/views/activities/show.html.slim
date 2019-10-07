@@ -105,7 +105,7 @@
                       th scope='col' = 'Balans'
                       th scope='col' = 'Code'
                       th.text-right scope='col' = 'Credit'
-                      th.text-right scope='col' = 'Debet'
+                      th.text-right scope='col' = 'Debit'
                   tbody
                     tr
                       td = 'Inleg Zatladder Inlegsysteem'
@@ -122,8 +122,8 @@
                       td title="Contante inleg plus contante betalingen"
                         strong = 'Totaal kas'
                       td = t('codes.cash')
-                      td.text-right = number_to_currency(@cash_total, unit: '€')
                       td
+                      td.text-right = number_to_currency(@cash_total, unit: '€')
                     tr
                       td = 'Omzet Pin'
                       td = t('codes.pin')
