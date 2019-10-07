@@ -145,14 +145,14 @@ RSpec.describe Activity, type: :model do
 
       before do
         FactoryBot.create(:order_row, product: product, order: cash_order, product_count: 2)
-        FactoryBot.create(:order_row, product: product, order: pin_order, product_count: 2)
         FactoryBot.create(:order_row, product: product, order: order, product_count: 3)
+        FactoryBot.create(:order_row, product: product, order: pin_order, product_count: 4)
       end
 
       it { expect(activity.revenue_with_cash).to eq product_price * 2 }
-      it { expect(activity.revenue_with_pin).to eq product_price * 2 * 0.981 }
-      it { expect(activity.pin_transaction_fee).to eq product_price * 2 * 0.019 }
       it { expect(activity.revenue_with_credit).to eq product_price * 3 }
+      it { expect(activity.revenue_with_pin).to eq product_price * 4 * 0.981 }
+      it { expect(activity.pin_transaction_fee).to eq product_price * 4 * 0.019 }
       it { expect(activity.revenue_with_cash).not_to eq activity.revenue_with_credit }
     end
 
