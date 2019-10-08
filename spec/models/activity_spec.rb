@@ -169,7 +169,7 @@ RSpec.describe Activity, type: :model do
         FactoryBot.create(:order_row, product: product, order: pin_order, product_count: 4)
       end
 
-      it { expect(activity.cash_total).to eq activity.revenue_with_cash + activity.credit_mutations_total }
+      it { expect(activity.cash_total).to eq 2 * product_price + 50 }
     end
 
     describe '#revenue_total' do
@@ -186,11 +186,7 @@ RSpec.describe Activity, type: :model do
         FactoryBot.create(:order_row, product: product, order: pin_order, product_count: 4)
       end
 
-      it {
-        expect(activity.revenue_total).to eq activity.revenue_with_cash +
-                                             activity.revenue_with_pin +
-                                             activity.revenue_with_credit
-      }
+      it { expect(activity.revenue_total).to eq 9 * product_price }
     end
 
     describe '#count_per_product' do
