@@ -3,6 +3,12 @@
     <b-col>
       <b-table show-empty :busy.sync="isLoading" :items="ordersProvider" :fields="fields"
         no-provider-sorting sort-by="created_at" sort-desc>
+        <template slot="user" slot-scope="row">
+          <span v-if="row.item.user">{{row.item.user.name}}</span>
+          <span v-else-if="row.item.paid_with_pin">Gepind</span>
+          <span v-else-if="row.item.paid_with_cash">Contant betaald</span>
+        </template>
+
         <template slot="order_total" slot-scope="row">
           <span class="pull-right">
             {{doubleToCurrency(row.item.order_total)}}
@@ -94,8 +100,7 @@ export default {
       conditionalFields.user = {
         label: 'Gebruiker',
         sortable: true,
-        tdClass: (user) => user ? '' : 'font-italic',
-        formatter: (user) => user ? user.name : 'Contant betaald',
+        tdClass: (user) => user ? '' : 'font-italic'
       }
     } else if (!this.activity) {
       conditionalFields.activity = {

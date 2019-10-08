@@ -140,16 +140,53 @@ RSpec.describe Activity, type: :model do
       let(:product) { activity.price_list.products.sample }
       let(:product_price) { activity.price_list.product_price_for(product).price }
       let(:cash_order) { FactoryBot.create(:order, :cash, activity: activity) }
+      let(:pin_order) { FactoryBot.create(:order, :pin, activity: activity) }
       let(:order) { FactoryBot.create(:order, activity: activity) }
 
       before do
         FactoryBot.create(:order_row, product: product, order: cash_order, product_count: 2)
         FactoryBot.create(:order_row, product: product, order: order, product_count: 3)
+        FactoryBot.create(:order_row, product: product, order: pin_order, product_count: 4)
       end
 
       it { expect(activity.revenue_with_cash).to eq product_price * 2 }
-      it { expect(activity.revenue_without_cash).to eq product_price * 3 }
-      it { expect(activity.revenue_with_cash).not_to eq activity.revenue_without_cash }
+      it { expect(activity.revenue_with_credit).to eq product_price * 3 }
+      it { expect(activity.revenue_with_pin).to eq product_price * 4 }
+      it { expect(activity.revenue_with_cash).not_to eq activity.revenue_with_credit }
+    end
+
+    describe '#cash_total' do
+      let(:product) { activity.price_list.products.sample }
+      let(:product_price) { activity.price_list.product_price_for(product).price }
+      let(:cash_order) { FactoryBot.create(:order, :cash, activity: activity) }
+      let(:pin_order) { FactoryBot.create(:order, :pin, activity: activity) }
+      let(:order) { FactoryBot.create(:order, activity: activity) }
+
+      before do
+        FactoryBot.create(:credit_mutation, activity: activity, amount: 50)
+        FactoryBot.create(:order_row, product: product, order: cash_order, product_count: 2)
+        FactoryBot.create(:order_row, product: product, order: order, product_count: 3)
+        FactoryBot.create(:order_row, product: product, order: pin_order, product_count: 4)
+      end
+
+      it { expect(activity.cash_total).to eq 2 * product_price + 50 }
+    end
+
+    describe '#revenue_total' do
+      let(:product) { activity.price_list.products.sample }
+      let(:product_price) { activity.price_list.product_price_for(product).price }
+      let(:cash_order) { FactoryBot.create(:order, :cash, activity: activity) }
+      let(:pin_order) { FactoryBot.create(:order, :pin, activity: activity) }
+      let(:order) { FactoryBot.create(:order, activity: activity) }
+
+      before do
+        FactoryBot.create(:credit_mutation, activity: activity, amount: 50)
+        FactoryBot.create(:order_row, product: product, order: cash_order, product_count: 2)
+        FactoryBot.create(:order_row, product: product, order: order, product_count: 3)
+        FactoryBot.create(:order_row, product: product, order: pin_order, product_count: 4)
+      end
+
+      it { expect(activity.revenue_total).to eq 9 * product_price }
     end
 
     describe '#count_per_product' do

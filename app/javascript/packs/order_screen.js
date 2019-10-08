@@ -37,6 +37,7 @@ document.addEventListener('turbolinks:load', () => {
           activity: activity,
           selectedUser: null,
           payWithCash: false,
+          payWithPin: false,
           keepUserSelected: false,
           orderRows: [],
           creditMutationAmount: null,
@@ -56,6 +57,7 @@ document.addEventListener('turbolinks:load', () => {
         setUser(user = null) {
           this.orderRows = [];
           this.payWithCash = false;
+          this.payWithPin = false;
           this.selectedUser = user;
         },
 
@@ -63,8 +65,12 @@ document.addEventListener('turbolinks:load', () => {
           this.payWithCash = true;
         },
 
+        selectPin() {
+          this.payWithPin = true;
+        },
+
         selectProduct(productPrice) {
-          if (this.selectedUser || this.payWithCash) {
+          if (this.selectedUser || this.payWithCash || this.payWithPin) {
             const orderRow = this.orderRows.filter((row) => { return row.productPrice === productPrice; })[0];
 
             if (orderRow) {
@@ -118,6 +124,12 @@ document.addEventListener('turbolinks:load', () => {
               activity_id: this.activity.id,
               order_rows_attributes
             };
+          } else if (this.payWithPin) {
+            order = {
+              paid_with_pin: true,
+              activity_id: this.activity.id,
+              order_rows_attributes
+            };
           } else {
             order = {
               user_id: this.selectedUser.id,
@@ -149,7 +161,7 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         orderConfirmButtonDisabled() {
-          return !(this.selectedUser || this.payWithCash) || this.totalProductCount() == 0;
+          return !(this.selectedUser || this.payWithCash || this.payWithPin) || this.totalProductCount() == 0;
         },
 
         totalProductCount() {
