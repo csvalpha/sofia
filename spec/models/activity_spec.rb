@@ -151,8 +151,7 @@ RSpec.describe Activity, type: :model do
 
       it { expect(activity.revenue_with_cash).to eq product_price * 2 }
       it { expect(activity.revenue_with_credit).to eq product_price * 3 }
-      it { expect(activity.revenue_with_pin).to eq product_price * 4 * 0.981 }
-      it { expect(activity.pin_transaction_fee).to eq product_price * 4 * 0.019 }
+      it { expect(activity.revenue_with_pin).to eq product_price * 4 }
       it { expect(activity.revenue_with_cash).not_to eq activity.revenue_with_credit }
     end
 
@@ -190,7 +189,6 @@ RSpec.describe Activity, type: :model do
       it {
         expect(activity.revenue_total).to eq activity.revenue_with_cash +
                                              activity.revenue_with_pin +
-                                             activity.pin_transaction_fee +
                                              activity.revenue_with_credit
       }
     end
