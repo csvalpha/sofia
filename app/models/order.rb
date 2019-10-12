@@ -8,8 +8,9 @@ class Order < ApplicationRecord
 
   validates :activity, :created_by, presence: true
   validates :paid_with_cash, inclusion: [true, false]
+  validates :paid_with_pin, inclusion: [true, false]
 
-  validate :user_or_cash
+  validate :user_or_cash_or_pin
   validate :activity_not_locked
 
   before_destroy :destroyable?
@@ -22,8 +23,8 @@ class Order < ApplicationRecord
 
   private
 
-  def user_or_cash
-    errors.add(:order, 'must belong to a user or was paid in cash') unless user || paid_with_cash
+  def user_or_cash_or_pin
+    errors.add(:order, 'must belong to a user or was paid in cash or with pin') unless user || paid_with_cash || paid_with_pin
   end
 
   def activity_not_locked
