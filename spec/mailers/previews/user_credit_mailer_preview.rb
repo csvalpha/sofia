@@ -1,4 +1,4 @@
-# Preview all emails at http://localhost:3000/rails/mailers/user_credit_mailer
+# Preview all emails at http://localhost:5000/rails/mailers/user_credit_mailer
 class UserCreditMailerPreview < ActionMailer::Preview
   def insufficient_credit_mail
     user = FactoryBot.create(:user)
