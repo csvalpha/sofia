@@ -11,6 +11,13 @@ FactoryBot.define do
       end
     end
 
+    trait :pin do
+      after(:build) do |order|
+        order.user = nil
+        order.paid_with_pin = true
+      end
+    end
+
     trait :with_items do
       transient do
         products { [] }

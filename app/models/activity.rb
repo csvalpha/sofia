@@ -32,10 +32,24 @@ class Activity < ApplicationRecord
     end
   end
 
-  def revenue_without_cash
-    @revenue_without_cash ||= begin
-      OrderRow.where(order: orders.where(paid_with_cash: false)).sum('product_count * price_per_product')
+  def revenue_with_pin
+    @revenue_with_pin ||= begin
+      OrderRow.where(order: orders.where(paid_with_pin: true)).sum('product_count * price_per_product')
     end
+  end
+
+  def revenue_with_credit
+    @revenue_with_credit ||= begin
+      OrderRow.where(order: orders.where(paid_with_cash: false, paid_with_pin: false)).sum('product_count * price_per_product')
+    end
+  end
+
+  def cash_total
+    @cash_total ||= revenue_with_cash + credit_mutations_total
+  end
+
+  def revenue_total
+    @revenue_total ||= revenue_with_cash + revenue_with_pin + revenue_with_credit
   end
 
   def count_per_product
