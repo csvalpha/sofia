@@ -51,7 +51,7 @@
           start_time: {
             label: 'Datum',
             sortable: true,
-            formatter: (value) => moment(value).format('DD-MM'),
+            formatter: (value) => moment(value).format('DD-MM-YYYY'),
           },
           title: {
             label: 'Titel',
