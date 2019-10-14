@@ -46,7 +46,7 @@
   nav.header
     ul.header-nav
       li.header-nav-item.header-nav-home
-        span.user-details-close v-if="selectedUser || payWithCash" @click="payWithCash ? payWithCash = false : selectedUser = null"
+        span.user-details-close v-if="selectedUser || payWithCash || payWithPin" @click="payWithCash ? payWithCash = false : (payWithPin ? payWithPin = false : selectedUser = null)"
           = fa_icon 'chevron-left'
         span v-else=""
           = link_to @activity, class: 'nav-link'
@@ -65,10 +65,10 @@
 
   .side-panel
 
-    user-selection( :selected-user="selectedUser" :users="users" :pay-with-cash="payWithCash"
-                    v-on:updateuser="setUser($event)" v-on:selectcash="selectCash")
+    user-selection( :selected-user="selectedUser" :users="users" :pay-with-cash="payWithCash" :pay-with-pin="payWithPin"
+                    v-on:updateuser="setUser($event)" v-on:selectcash="selectCash" v-on:selectpin="selectPin")
 
-    .orders v-if="selectedUser || payWithCash"
+    .orders v-if="selectedUser || payWithCash || payWithPin"
       h4.orders-header.py-4 = 'Bestelling'
 
       .orders-rows.container
@@ -107,10 +107,10 @@
             span = fa_icon 'exclamation-triangle '
             span = ' {{selectedUser.name}} is minderjarig!'
 
-  .order-grid v-if="!selectedUser && !payWithCash"
+  .order-grid v-if="!selectedUser && !payWithCash && !payWithPin"
     activity-orders :activity="activity" expand_first="" editable=""
 
-  .product-grid v-if="selectedUser || payWithCash"
+  .product-grid v-if="selectedUser || payWithCash || payWithPin"
     .product-grid-product v-for="productPrice in productPrices" @click="selectProduct(productPrice)" v-bind:class="{ 'product-requires-age' : (selectedUser && selectedUser.minor && productPrice.product.requires_age) }"
         span.product-grid-product-requires-age.py-1.fa-stack v-if="selectedUser && selectedUser.minor && productPrice.product.requires_age"
           i class="fa fa-circle fa-circle-lighter fa-stack-2x"

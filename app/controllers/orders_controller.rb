@@ -52,7 +52,7 @@ class OrdersController < ApplicationController
   end
 
   def permitted_attributes
-    params.require(:order).permit(%i[user_id paid_with_cash activity_id],
+    params.require(:order).permit(%i[user_id paid_with_cash paid_with_pin activity_id],
                                   order_rows_attributes: %i[id product_id product_count])
   end
 
@@ -61,7 +61,7 @@ class OrdersController < ApplicationController
   end
 
   def proper_json
-    { only: %i[id created_at order_total paid_with_cash],
+    { only: %i[id created_at order_total paid_with_cash paid_with_pin],
       include: { order_rows: {
         only: %i[id product_count price_per_product],
         include: { product: { only: %i[id name] } }
