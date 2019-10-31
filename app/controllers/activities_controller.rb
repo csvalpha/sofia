@@ -1,6 +1,9 @@
+require 'browser/aliases'
+Browser::Base.include(Browser::Aliases)
+
 class ActivitiesController < ApplicationController # rubocop:disable Metrics/ClassLength
   before_action :authenticate_user!
-  after_action :verify_authorized
+  after_action :verify_authorized, except: [:sumup_callback]
   after_action :verify_policy_scoped, only: :index
 
   def index # rubocop:disable Metrics/AbcSize
@@ -77,7 +80,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
     @count_per_product = @activity.count_per_product
   end
 
-  def order_screen
+  def order_screen # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     authorize Activity
 
     @activity = Activity.includes([:price_list, price_list: { product_price: :product }])
@@ -91,6 +94,10 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
 
     @activity_json = @activity.to_json(only: %i[id title start_time end_time])
 
+    is_mobile = Browser.new(request.user_agent).mobile?
+    @sumup_key = Rails.application.config.x.sumup_key
+    @sumup_enabled = is_mobile && @sumup_key.present? || false
+
     # Set flags for application.html.slim
     @show_navigationbar = false
     @show_extras = false
@@ -101,6 +108,17 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
 
     activity = Activity.includes(:price_list, orders: [{ order_rows: :product }, :user]).find(params[:id])
     render json: activity.count_per_product(**params.permit(:user, :paid_with_pin, :paid_with_cash).to_h.symbolize_keys)
+  end
+
+  def sumup_callback
+    if params['smp-status'] == 'success'
+      flash[:success] = 'Pinbetaling is gelukt!'
+    else
+      flash[:error] = "Pinbetaling is mislukt! De bestelling is echter ingevoerd.
+                        Zorg dat de betaling (op een andere manier) lukt of verwijderd de bestelling handmatig uit het systeem."
+    end
+
+    redirect_to order_screen_activity_path
   end
 
   def lock
