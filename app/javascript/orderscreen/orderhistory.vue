@@ -10,7 +10,7 @@
         </template>
 
         <template slot="created_at" slot-scope="row">
-          {{formatTime(row.item)}}
+          {{formatTime(row.item.created_at)}}
         </template>
 
         <template slot="order_total" slot-scope="row">
