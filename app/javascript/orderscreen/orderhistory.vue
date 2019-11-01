@@ -9,6 +9,10 @@
           <span v-else-if="row.item.paid_with_cash">Contant betaald</span>
         </template>
 
+        <template slot="created_at" slot-scope="row">
+          {{formatTime(row.item)}}
+        </template>
+
         <template slot="order_total" slot-scope="row">
           <span class="pull-right">
             {{doubleToCurrency(row.item.order_total)}}
@@ -121,8 +125,7 @@ export default {
         },
         created_at: {
           label: 'Tijdstip',
-          sortable: true,
-          formatter: (value) => moment(value).format('DD-MM HH:mm:ss'),
+          sortable: true
         },
         ...conditionalFields,
         order_total: {
@@ -161,6 +164,10 @@ export default {
 
     doubleToCurrency(price) {
       return `€${parseFloat(price).toFixed(2)}`;
+    },
+
+    formatTime(isoTime) {
+      return moment(isoTime).format('DD-MM HH:mm:ss');
     },
 
     editOrderRow(orderRow) {
