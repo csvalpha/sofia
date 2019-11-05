@@ -7,9 +7,9 @@
           {{formatDate(row.item.start_time)}}
         </template>
 
-        <template slot="activity_total" slot-scope="row">
+        <template slot="title" slot-scope="row">
+          {{row.item.title}}
           <span class="pull-right">
-            {{doubleToCurrency(row.item.activity_total)}}
             <i @click.stop="row.toggleDetails" :class="['order-history--details-expand', 'fa', 'fa-lg', 'pl-2', row.detailsShowing ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down']"></i>
           </span>
         </template>
@@ -21,10 +21,7 @@
         </template>
 
         <template slot="row-details" slot-scope="row">
-          <div v-for="order in row.item.orders">
-            <b class="mb-1">{{formatTime(order.created_at)}}</b>
-            <ProductTable class="mb-4" :order="order" />
-          </div>
+          <ActivityOrderHistory :activity="row.item" :user="user" />
         </template>
       </b-table>
 
@@ -35,10 +32,9 @@
 
 <script>
   import Spinner from 'vue-simple-spinner';
-  import ProductTable from './producttable.vue';
+  import ActivityOrderHistory from './activityorderhistory.vue';
   import axios from 'axios';
   import moment from 'moment';
-  import _ from 'lodash';
 
   export default {
     props: {
@@ -59,11 +55,6 @@
           title: {
             label: 'Titel',
             sortable: false
-          },
-          activity_total: {
-            label: 'Bedrag',
-            sortable: false,
-            thClass: 'text-right pr-4'
           }
         },
       };
@@ -71,33 +62,10 @@
 
     methods: {
       activityProvider() {
-        let params;
-        if (this.activity) {
-          params = { activity_id: this.activity.id }
-        } else if (this.user) {
-          params = { user_id: this.user.id }
-        }
-
-        let promise = axios.get('/orders', { params });
+        let promise = axios.get('/users/'+this.user.id+'/activities');
 
         return promise.then((response) => {
-          const orders = response.data;
-          orders.map(order => {
-            order.order_rows.map(row => { row.editing = false });
-          });
-
-          let activities = _.groupBy(orders, order => order.activity.id);
-          activities = _.map(activities, orders => {
-            let activity = orders[0].activity;
-            let ordersTotal = orders.reduce((accumulator, order) => accumulator + parseFloat(order.order_total), 0);
-            return {
-              ...activity,
-              orders: orders,
-              activity_total: ordersTotal
-            };
-          });
-          console.log(activities);
-          return activities;
+          return response.data;
         }, () => {
           return [];
         });
@@ -118,10 +86,7 @@
 
     components: {
       Spinner,
-      ProductTable
+      ActivityOrderHistory
     }
   };
 </script>
-
-<style lang="css">
-</style>

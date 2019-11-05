@@ -92,7 +92,7 @@
   hr
 
   .col-sm-12
-    .row.card
+    .row.card.d-block
       .card-header
         ul.nav.nav-tabs.card-header-tabs role='tablist' id='userTabs'
           li.nav-item
@@ -117,7 +117,7 @@
                     th scope='col'= '#'
                     th scope='col'= 'Datum'
                     th scope='col'= 'Beschrijving'
-                    th scope='col'= 'Bedrag'
+                    th.text-right scope='col'= 'Bedrag'
 
                 tbody
                   - if @user.credit_mutations.empty?
@@ -131,4 +131,4 @@
                         th scope='row' = mutation.id
                         td = l mutation.created_at
                         td = mutation.description
-                        td = number_to_currency(mutation.amount, unit: '€')
+                        td.text-right = number_to_currency(mutation.amount, unit: '€')
