@@ -35,7 +35,7 @@
     "webpack-cli": "3.3.6"
   },
   "devDependencies": {
-    "eslint": "^6.1.0",
+    "eslint": "^6.2.2",
     "eslint-loader": "^2.2.1",
     "sass-lint": "^1.13.1",
     "webpack-dev-server": "3.7.2"

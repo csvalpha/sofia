@@ -64,6 +64,7 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = { address: 'localhost', port: 1025 }
   config.action_mailer.asset_host = 'http://localhost:5000'
+  config.action_mailer.preview_path = Rails.root.join('spec', 'mailers', 'previews')
 
   config.sass.inline_source_maps = true
 
