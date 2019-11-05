@@ -68,6 +68,14 @@ class UsersController < ApplicationController
     @token = JSON.parse(token_response)['access_token']
   end
 
+  def activities
+    authorize User.find(params.require(:id))
+
+    activities = Activity.select(%i[id title start_time]).joins(:orders).where(orders: { user_id: params.require(:id) }).distinct
+
+    render json: activities
+  end
+
   private
 
   def send_slack_users_refresh_notification
