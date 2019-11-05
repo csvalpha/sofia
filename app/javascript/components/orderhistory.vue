@@ -3,6 +3,10 @@
     <b-col>
       <b-table show-empty :busy.sync="isLoading" :items="activityProvider" :fields="fields"
                no-provider-sorting sort-by="start_time" sort-desc>
+        <template slot="start_time" slot-scope="row">
+          {{formatDate(row.item.start_time)}}
+        </template>
+
         <template slot="activity_total" slot-scope="row">
           <span class="pull-right">
             {{doubleToCurrency(row.item.activity_total)}}
@@ -50,8 +54,7 @@
         fields: {
           start_time: {
             label: 'Datum',
-            sortable: true,
-            formatter: (value) => moment(value).format('DD-MM-YYYY'),
+            sortable: true
           },
           title: {
             label: 'Titel',
@@ -93,7 +96,7 @@
               activity_total: ordersTotal
             };
           });
-
+          console.log(activities);
           return activities;
         }, () => {
           return [];
@@ -106,6 +109,10 @@
 
       formatTime(time) {
         return moment(time).format('HH:mm');
+      },
+
+      formatDate(time) {
+        return moment(time).format('DD-MM-YY HH:mm');
       }
     },
 
