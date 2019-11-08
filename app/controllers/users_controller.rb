@@ -75,7 +75,7 @@ class UsersController < ApplicationController
 
     # :nocov:
     SlackMessageJob.perform_later("User ##{current_user.id} (#{current_user.name}) "\
-      "is importing users from Banana (#{Rails.application.config.x.banana_api_host})}")
+      "is importing users from Banana (#{Rails.application.config.x.banana_api_host})")
     # :nocov:
   end
 
