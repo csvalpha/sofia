@@ -14,4 +14,8 @@ class UserPolicy < ApplicationPolicy
   def show?
     user&.treasurer? || record == user
   end
+
+  def activities?
+    user&.treasurer? || record == user
+  end
 end

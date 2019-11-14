@@ -108,7 +108,7 @@
             span = ' {{selectedUser.name}} is minderjarig!'
 
   .order-grid v-if="!selectedUser && !payWithCash && !payWithPin"
-    order-history :activity="activity" expand_first="" editable=""
+    activity-orders :activity="activity" expand_first="" editable=""
 
   .product-grid v-if="selectedUser || payWithCash || payWithPin"
     .product-grid-product v-for="productPrice in productPrices" @click="selectProduct(productPrice)" v-bind:class="{ 'product-requires-age' : (selectedUser && selectedUser.minor && productPrice.product.requires_age) }"

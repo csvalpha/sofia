@@ -65,7 +65,7 @@ class OrdersController < ApplicationController
       include: { order_rows: {
         only: %i[id product_count price_per_product],
         include: { product: { only: %i[id name] } }
-      }, user: { only: :name }, activity: { only: :title } } }
+      }, user: { only: :name } } }
   end
 
   def json_includes

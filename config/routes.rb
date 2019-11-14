@@ -15,6 +15,9 @@ Rails.application.routes.draw do
       get :refresh_user_list
       post :search
     end
+    member do
+      get :activities
+    end
   end
 
   resources :products, only: %i[create update], defaults: { format: :json }

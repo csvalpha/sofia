@@ -5,8 +5,8 @@ import axios from 'axios';
 import BootstrapVue from 'bootstrap-vue';
 
 import Flash from '../flash.vue';
-import UserSelection from '../orderscreen/userselection.vue';
-import OrderHistory from '../orderscreen/orderhistory.vue';
+import UserSelection from '../components/userselection.vue';
+import ActivityOrders from '../components/activityorders.vue';
 
 Vue.use(TurbolinksAdapter);
 Vue.use(VueResource);
@@ -242,7 +242,7 @@ document.addEventListener('turbolinks:load', () => {
       components: {
         Flash,
         UserSelection,
-        OrderHistory
+        ActivityOrders
       },
     });
   }
