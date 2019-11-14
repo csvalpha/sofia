@@ -72,7 +72,7 @@ class UsersController < ApplicationController
     user = User.find(params.require(:id))
     authorize user
 
-    activities = Activity.select(%i[id title start_time]).joins(:orders).merge(Order.orders_for(user)).distinct
+    activities = Activity.select(%i[id title start_time]).joins(:orders).merge(policy_scope(Order).orders_for(user)).distinct
 
     render json: activities
   end
