@@ -126,9 +126,9 @@
                         p.my-1
                           em = "#{@user.name} heeft nog niet ingelegd en er zijn nog geen correcties"
                   - else
-                    - @user.credit_mutations.each do |mutation|
+                    - @user.credit_mutations.order(created_at: :desc).each do |mutation|
                       tr
                         th scope='row' = mutation.id
-                        td = l mutation.created_at
+                        td = l(mutation.created_at, format: "%d-%m-%Y %H:%M")
                         td = mutation.description
                         td = number_to_currency(mutation.amount, unit: '€')
