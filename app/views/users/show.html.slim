@@ -129,6 +129,6 @@
                     - @user.credit_mutations.order(created_at: :desc).each do |mutation|
                       tr
                         th scope='row' = mutation.id
-                        td = l(mutation.created_at, format: "%d-%m-%Y %H:%M")
+                        td = l(mutation.created_at, format: "%d-%m-%y %H:%M")
                         td = mutation.description
                         td = number_to_currency(mutation.amount, unit: '€')
