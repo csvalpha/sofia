@@ -2,6 +2,7 @@ nl:
   time:
     formats:
       default: '%d-%m %H:%M'
+      with_year: '%d-%m-%y %H:%M'
       long: '%d %B %Y %H:%M'
       date_only: '%d-%b-%y'
       time_only: '%H:%M'
