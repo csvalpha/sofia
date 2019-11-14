@@ -10,6 +10,12 @@ module OmniAuth
              authorize_url: '/oauth/authorize',
              token_url: '/api/v1/oauth/token'
 
+      def authorize_params
+        params = super
+        params[:scope] = 'public tomato'
+        params
+      end
+
       uid { raw_info['id'] }
 
       info do
@@ -24,7 +30,7 @@ module OmniAuth
       end
 
       def raw_info
-        @raw_info ||= JSON.parse(access_token.get('/api/v1/users?filter[me]&include="active_groups"').body)['data'][0]
+        @raw_info ||= JSON.parse(access_token.get('/api/v1/users?filter[me]&include="active_groups"&scope="tomato"').body)['data'][0]
       end
 
       # https://github.com/intridea/omniauth-oauth2/issues/81
