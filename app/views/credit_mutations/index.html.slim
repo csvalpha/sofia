@@ -42,4 +42,4 @@
                 td.text-nowrap
                   = number_to_currency(mutation.amount, unit: '€')
                 td.text-nowrap
-                  = l(mutation.created_at, format: "%d-%m-%y %H:%M")
+                  = l(mutation.created_at, format: :with_year)
