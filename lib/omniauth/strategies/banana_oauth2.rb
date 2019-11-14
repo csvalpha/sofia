@@ -30,7 +30,7 @@ module OmniAuth
       end
 
       def raw_info
-        @raw_info ||= JSON.parse(access_token.get('/api/v1/users?filter[me]&include="active_groups"&scope="tomato"').body)['data'][0]
+        @raw_info ||= JSON.parse(access_token.get('/api/v1/users?filter[me]&include="active_groups"').body)['data'][0]
       end
 
       # https://github.com/intridea/omniauth-oauth2/issues/81
