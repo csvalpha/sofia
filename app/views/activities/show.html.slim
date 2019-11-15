@@ -199,7 +199,7 @@
 
         .tab-pane id='product_totals' role='tabpanel' aria-labelledby='product_totals-tab'
           .row
-            .col-6.mx-auto
+            .col-lg-6.mx-auto
               .table-responsive
                 table.table.table-sm
                   - if @count_per_product.empty?
@@ -211,10 +211,12 @@
                     thead
                       tr
                         th scope='col' = 'Product'
-                        th.text-right scope='col' = 'Aantal keer besteld'
+                        th scope='col' = 'Aantal keer besteld'
+                        th.text-right scope='col' = 'Totaalbedrag'
 
                     tbody
-                      - @count_per_product.each do |product, sum|
+                      - @count_per_product.each do |product, amount, price|
                         tr
-                          th scope='row' = product.name
-                          td.text-right = "#{sum} x"
+                          th scope='row' = product
+                          td = "#{amount.to_i} x"
+                          td.text-right = number_to_currency(price, unit: '€')

@@ -53,7 +53,8 @@ class Activity < ApplicationRecord
   end
 
   def count_per_product
-    @count_per_product ||= OrderRow.where(order: orders).group(:product).sum(:product_count)
+    @count_per_product ||= OrderRow.where(order: orders).group(:product_id, :name).joins(:product)
+                                   .pluck(:name, 'SUM(product_count)', 'SUM(product_count * price_per_product)')
   end
 
   def revenue_by_category
