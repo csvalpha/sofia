@@ -69,6 +69,16 @@ class ActivitiesController < ApplicationController
     @show_extras = false
   end
 
+  def product_totals
+    authorize Activity
+
+    activity = Activity.includes(:price_list, orders: [{ order_rows: :product }, :user]).find(params[:id])
+
+    count_per_product = activity.count_per_product(params[:user_id])
+
+    render json: count_per_product
+  end
+
   private
 
   def users_hash

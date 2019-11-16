@@ -52,9 +52,15 @@ class Activity < ApplicationRecord
     @revenue_total ||= revenue_with_cash + revenue_with_pin + revenue_with_credit
   end
 
-  def count_per_product
-    @count_per_product ||= OrderRow.where(order: orders).group(:product_id, :name).joins(:product)
+  def count_per_product(user = nil)
+    @count_per_product = if user
+                           OrderRow.where(order: orders.where(user: user)).group(:product_id, :name).joins(:product)
                                    .pluck(:name, 'SUM(product_count)', 'SUM(product_count * price_per_product)')
+                         else
+                           OrderRow.where(order: orders).group(:product_id, :name).joins(:product)
+                                   .pluck(:name, 'SUM(product_count)', 'SUM(product_count * price_per_product)')
+                         end
+    @count_per_product.map { |name, amount, price| { name: name, amount: amount.to_i, price: price.to_f } }
   end
 
   def revenue_by_category

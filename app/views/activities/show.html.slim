@@ -215,8 +215,8 @@
                         th.text-right scope='col' = 'Totaalbedrag'
 
                     tbody
-                      - @count_per_product.each do |product, amount, price|
+                      - @count_per_product.each do |product|
                         tr
-                          th scope='row' = product
-                          td = "#{amount.to_i} x"
-                          td.text-right = number_to_currency(price, unit: '€')
+                          th scope='row' = product[:name]
+                          td = "#{product[:amount]} x"
+                          td.text-right = number_to_currency(product[:price], unit: '€')
