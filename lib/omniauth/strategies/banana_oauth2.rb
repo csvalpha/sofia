@@ -10,6 +10,12 @@ module OmniAuth
              authorize_url: '/oauth/authorize',
              token_url: '/api/v1/oauth/token'
 
+      def authorize_params
+        params = super
+        params[:scope] = 'public tomato'
+        params
+      end
+
       uid { raw_info['id'] }
 
       info do
