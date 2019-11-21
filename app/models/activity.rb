@@ -54,7 +54,7 @@ class Activity < ApplicationRecord
 
   def count_per_product(user = nil, paid_with_pin = false, paid_with_cash = false)
     records = if user
-                orders.where(user: true)
+                orders.where(user: user)
               else
                 orders.where(paid_with_pin: paid_with_pin, paid_with_cash: paid_with_cash)
               end
