@@ -12,7 +12,7 @@
 
 <script>
   import Spinner from 'vue-simple-spinner';
-  import ProductTable from './producttable.vue';
+  import ProductTable from '../producttable.vue';
   import ActivityOrderHistory from './activityorderhistory.vue';
   import axios from 'axios';
   import moment from 'moment';

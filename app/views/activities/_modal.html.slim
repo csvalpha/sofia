@@ -22,7 +22,7 @@
             template
               .col-9 style="position:relative"
                   input.d-none name="activity[price_list_id]" v-bind:value="selectedSuggestion.id"
-                  input.form-control( type="text" v-model="query" placeholder="Start typing..."
+                  input.form-control( type="text" v-model="query" placeholder="Begin met typen..."
                                       @input="openSuggestions"
                                       @focus="openSuggestions"
                                       aria-haspopup="true" v-bind:aria-expanded="dropdownOpened"

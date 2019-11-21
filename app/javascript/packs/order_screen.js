@@ -4,9 +4,9 @@ import VueResource from 'vue-resource';
 import axios from 'axios';
 import BootstrapVue from 'bootstrap-vue';
 
-import Flash from '../flash.vue';
-import UserSelection from '../components/userselection.vue';
-import ActivityOrders from '../components/activityorders.vue';
+import Flash from '../components/flash.vue';
+import UserSelection from '../components/orderscreen/userselection.vue';
+import ActivityOrders from '../components/orderscreen/activityorders.vue';
 
 Vue.use(TurbolinksAdapter);
 Vue.use(VueResource);

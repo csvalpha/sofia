@@ -74,7 +74,13 @@ class ActivitiesController < ApplicationController
 
     activity = Activity.includes(:price_list, orders: [{ order_rows: :product }, :user]).find(params[:id])
 
-    count_per_product = activity.count_per_product(params[:user_id])
+    count_per_product = if params[:pin]
+                          activity.count_per_product(nil, paid_with_pin: true)
+                        elsif params[:cash]
+                          activity.count_per_product(nil, paid_with_cash: true)
+                        else
+                          activity.count_per_product(params[:user_id])
+                        end
 
     render json: count_per_product
   end

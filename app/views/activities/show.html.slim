@@ -1,6 +1,6 @@
 - content_for :title, "Activiteit #{@activity.title} - SOFIA"
 
-.container.footer-padding
+.container.footer-padding id='activity'
   .row.justify-content-between
     .col-sm-12.col-md-6.py-2
 
@@ -200,23 +200,4 @@
         .tab-pane id='product_totals' role='tabpanel' aria-labelledby='product_totals-tab'
           .row
             .col-lg-6.mx-auto
-              .table-responsive
-                table.table.table-sm
-                  - if @count_per_product.empty?
-                    tr
-                      td.text-center colspan='4'
-                        p.my-1
-                          em = 'Er zijn geen producten verkocht'
-                  - else
-                    thead
-                      tr
-                        th scope='col' = 'Product'
-                        th scope='col' = 'Aantal keer besteld'
-                        th.text-right scope='col' = 'Totaalbedrag'
-
-                    tbody
-                      - @count_per_product.each do |product|
-                        tr
-                          th scope='row' = product[:name]
-                          td = "#{product[:amount]} x"
-                          td.text-right = number_to_currency(product[:price], unit: '€')
+              = content_tag 'product-totals', '', activity: @activity.id
