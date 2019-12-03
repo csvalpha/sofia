@@ -27,6 +27,19 @@ class ActivitiesController < ApplicationController
     redirect_to activities_url
   end
 
+  def update
+    @activity = Activity.find(params[:id])
+    authorize @activity
+
+    if @activity.update(permitted_attributes)
+      flash[:success] = 'Activiteit opgeslagen'
+    else
+      flash[:error] = "Activiteit wijzigen mislukt; #{@activity.errors.full_messages.join(', ')}"
+    end
+
+    redirect_to @activity
+  end
+
   def show # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @activity = Activity.includes(:price_list,
                                   { orders: [{ order_rows: :product }, :user, :created_by] },
