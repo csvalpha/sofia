@@ -82,6 +82,21 @@ class ActivitiesController < ApplicationController
     @show_extras = false
   end
 
+  def lock
+    activity = Activity.find(params[:id])
+    authorize activity
+
+    activity.locked_by = current_user
+
+    if activity.save
+      flash[:success] = 'Successfully locked activity'
+    else
+      flash[:error] = activity.errors.full_messages.join(', ')
+    end
+
+    redirect_to activity
+  end
+
   private
 
   def users_hash

@@ -40,8 +40,12 @@
         - if @activity.locked?
           .card-text
             div class='alert alert-danger'
-              = 'Deze activiteit is langer dan een maand geleden afgelopen. Er kunnen geen nieuwe '
+              = 'Deze activiteit is vergrendeld. Er kunnen geen nieuwe '
               = 'bestellingen worden geplaatst en geen saldocorrecties meer worden toegevoegd'
+          - if @activity.locked_by
+            .card-text
+              div class='alert alert-info'
+                = "Deze activiteit is vergrendeld door #{@activity.locked_by.name}"
         - else
           p.card-text = 'Je kan bestellingen plaatsen in het streepscherm.'
 
@@ -224,4 +228,14 @@
                         tr
                           th scope='row' = product.name
                           td.text-right = "#{sum} x"
-
+  - unless @activity.locked?
+    .row
+      .col-sm-6
+        .alert.alert-danger
+          div
+            = 'Het vergendelen van de activiteit zorgt er voor dat er geen wijzigingen meer op uitgevoerd kunnen worden. '
+            b
+              = 'Deze actie is niet ongedaan te maken!'
+          .mt-3
+            = simple_form_for @activity, url: lock_activity_path, method: 'POST' do |f|
+              = f.button :submit, 'Activiteit vergrendelen', class: 'btn btn-danger'

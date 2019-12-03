@@ -3,6 +3,7 @@ class Activity < ApplicationRecord
   has_many :credit_mutations, dependent: :destroy
   belongs_to :price_list
   belongs_to :created_by, class_name: 'User', inverse_of: :activities
+  belongs_to :locked_by, class_name: 'User', optional: true
 
   validates :title, :start_time, :end_time, :price_list, :created_by, presence: true
   validates_datetime :end_time, after: :start_time
@@ -76,7 +77,7 @@ class Activity < ApplicationRecord
   end
 
   def locked?
-    end_time && Time.zone.now > lock_date
+    locked_by || time_locked?
   end
 
   def lock_date
@@ -86,10 +87,16 @@ class Activity < ApplicationRecord
   private
 
   def activity_not_locked
-    errors.add(:base, 'Activity cannot be changed after lock date') if locked? && changed?
+    return if locked_by_id_changed?(from: nil)
+
+    errors.add(:base, 'Activity cannot be changed when locked') if locked? && changed?
   end
 
   def destroyable?
     throw(:abort) if locked?
+  end
+
+  def time_locked?
+    end_time && Time.zone.now > lock_date
   end
 end

@@ -61,6 +61,12 @@ RSpec.describe Activity, type: :model do
 
       it { expect(activity).not_to be_valid }
     end
+
+    context 'when locked manually' do
+      subject(:activity) { FactoryBot.build(:activity, :manually_locked) }
+
+      it { expect(activity).not_to be_valid }
+    end
   end
 
   describe 'cannot destroy an activity when locked' do
@@ -72,6 +78,12 @@ RSpec.describe Activity, type: :model do
 
     context 'when after two months' do
       subject(:activity) { FactoryBot.build(:activity, :locked) }
+
+      it { expect(activity.destroy).to eq false }
+    end
+
+    context 'when manually locked' do
+      subject(:activity) { FactoryBot.build(:activity, :manually_locked) }
 
       it { expect(activity.destroy).to eq false }
     end
