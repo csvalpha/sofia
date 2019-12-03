@@ -32,9 +32,9 @@ class ActivitiesController < ApplicationController
     authorize @activity
 
     if @activity.update(params.require(:activity).permit(%i[title]))
-      flash[:success] = 'Activiteit gewijzigd'
+      flash[:success] = 'Activiteit hernoemd'
     else
-      flash[:error] = "Activiteit wijzigen mislukt; #{@activity.errors.full_messages.join(', ')}"
+      flash[:error] = "Activiteit hernoemen mislukt; #{@activity.errors.full_messages.join(', ')}"
     end
 
     redirect_to @activity
