@@ -1,0 +1,56 @@
+<% content_for :title, 'Activiteiten - SOFIA' %>
+<% content_for :modal do %>
+  <%= render 'modal' %>
+<% end %>
+
+<div class="container footer-padding">
+  <div class="row pt-4">
+    <div class="col-sm-12 d-flex justify-content-between align-items-center">
+      <h1>
+        Activiteiten
+      </h1>
+      <button class="btn btn-sm btn-primary" data-target="#edit_activity_modal" data-toggle="modal" role="button">
+        <%= fa_icon 'plus' %>
+        <span class="d-none d-md-inline ml-1">
+          Nieuwe activiteit
+        </span>
+      </button>
+    </div>
+    <div class="col-sm-12">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Starttijd</th>
+            <th scope="col">Endtijd</th>
+            <th scope="col">Streeplijst</th>
+            <th scope="col">Aangemaakt door</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @activities&.each do |activity| %>
+            <tr>
+              <td>
+                <%= link_to activity.title, activity %>
+              </td>
+              <td>
+                <%= l activity.start_time %>
+              </td>
+              <td>
+                <%= l activity.end_time %>
+              </td>
+              <td>
+                <%= activity.price_list.name %>
+              </td>
+              <td>
+                <%= link_to activity.created_by.name, activity.created_by %>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
