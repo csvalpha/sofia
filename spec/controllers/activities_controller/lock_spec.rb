@@ -22,7 +22,7 @@ describe ActivitiesController, type: :controller do
     end
 
     context 'when as treasurer' do
-      let(:user) { FactoryBot.create(:user, :treasurer)}
+      let(:user) { FactoryBot.create(:user, :treasurer) }
 
       it 'locks the activity' do
         sign_in user

@@ -63,7 +63,7 @@ RSpec.describe Activity, type: :model do
     end
 
     context 'when locked manually' do
-      subject(:activity) { FactoryBot.build(:activity, :manually_locked)}
+      subject(:activity) { FactoryBot.build(:activity, :manually_locked) }
 
       it { expect(activity).not_to be_valid }
     end

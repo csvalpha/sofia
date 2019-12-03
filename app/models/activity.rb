@@ -88,6 +88,7 @@ class Activity < ApplicationRecord
 
   def activity_not_locked
     return if locked_by_id_changed?(from: nil)
+
     errors.add(:base, 'Activity cannot be changed when locked') if locked? && changed?
   end
 
