@@ -1,0 +1,19 @@
+<div aria-hidden="true" aria-labelledby="edit_user_model_label" class="modal fade" id="edit_user_modal" role="dialog">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+
+<div class="modal-header">
+<h5 class="modal-title">
+<%= ::Temple::Utils.escape_html((@new_user.persisted? ? 'Gebruiker wijzigen' : 'Nieuwe gebruiker')) %>
+</h5><button aria-label="close" class="close" data-dismiss="modal" type="button">
+<span aria-hidden="true"><%= ::Temple::Utils.escape_html((fa_icon 'times')) %>
+
+</span></button></div><% _slim_controls1 = simple_form_for @new_user, wrapper: :horizontal_form do |f|
+ %><div class="modal-body" id="activities_modal">
+<%= ::Temple::Utils.escape_html((f.input :name, placeholder: 'Naam', required: true)) %>
+<%= ::Temple::Utils.escape_html((f.input :email, placeholder: 'E-Mail')) %>
+
+</div><div class="modal-footer">
+<button class="btn btn-secondary" data-dismiss="modal" type="button"><%= ::Temple::Utils.escape_html(('Annuleren')) %>
+</button><%= ::Temple::Utils.escape_html((f.button :submit, 'Gebruiker opslaan', class: 'btn btn-primary')) %>
+</div><% end %><%= ::Temple::Utils.escape_html((_slim_controls1)) %></div></div></div>

@@ -1,0 +1,40 @@
+<% content_for :title, 'Gebruikers - SOFIA' %>
+<% content_for :modal do %>
+  <%= render 'modal' %>
+<% end %>
+
+<div class="container footer-padding">
+  <div class="row pt-4">
+    <div class="col-sm-12 d-flex justify-content-between align-items-center">
+      <h1>Gebruikers</h1>
+      <%= link_to refresh_user_list_users_path, class: 'btn btn-primary btn-sm mr-1' do %>
+        <%= fa_icon 'refresh' %>
+        <span class="d-none d-md-inline ml-1"><%= 'Synchroniseer gebruikers' %></span>
+      <% end %>
+
+      <button class="btn btn-sm btn-primary" data-target="#edit_user_modal" data-toggle="modal" role="button">
+        <%= fa_icon 'plus' %>
+        <span class="d-none d-md-inline ml-1">
+          <%= 'Nieuwe gebruiker' %>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <%= content_tag :div, id: 'users-index', class: 'row', data: {users: @users_json} do %>
+    <div class="col-sm-12">
+      <b-table :fields="fields" :items="users" responsive="" show-empty="" sort-by="name" striped="">
+        <template slot="name" slot-scope="data">
+          <a :href="`/users/${data.item.id}`">
+            :data.value
+          </a></template>
+        <template slot="empty">
+          <p class="my-1 text-center">
+            <em><%= 'Er zijn geen gebruikers om weer te geven' %>
+
+            </em></p></template>
+      </b-table>
+    </div>
+    <% end %>
+  <hr/>
+</div>
