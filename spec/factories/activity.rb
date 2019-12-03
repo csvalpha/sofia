@@ -10,5 +10,9 @@ FactoryBot.define do
       start_time { Faker::Time.between(80.days.ago, 75.days.ago).beginning_of_hour }
       end_time { 74.days.ago.beginning_of_hour }
     end
+
+    trait :manually_locked do
+      association :locked_by, factory: :user
+    end
   end
 end
