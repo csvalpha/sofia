@@ -3,6 +3,10 @@ class ActivityPolicy < ApplicationPolicy
     user&.treasurer? || user&.main_bartender?
   end
 
+  def lock?
+    user&.treasurer? && !record.locked?
+  end
+
   def activity_report?
     user&.treasurer?
   end
