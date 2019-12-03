@@ -68,13 +68,16 @@ class UsersController < ApplicationController
     @token = JSON.parse(token_response)['access_token']
   end
 
-  def activities
+  def activities # rubocop:disable Metrics/AbcSize
     user = User.find(params.require(:id))
     authorize user
 
-    activities = Activity.select(%i[id title start_time]).joins(:orders).merge(policy_scope(Order).orders_for(user)).distinct
+    user_orders = policy_scope(Order).orders_for(user)
+    activities = Activity.select(%i[id title start_time]).joins(:orders).merge(user_orders).distinct
+    activity_totals = user_orders.joins(:order_rows).group(:activity_id).sum('product_count * price_per_product')
+    activities_hash = activities.map { |a| { id: a.id, title: a.title, start_time: a.start_time, order_total: activity_totals[a.id] } }
 
-    render json: activities
+    render json: activities_hash
   end
 
   private

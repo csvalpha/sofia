@@ -1,10 +1,16 @@
 - content_for :title, "Activiteit #{@activity.title} - SOFIA"
 
+- content_for :modal
+  = render 'edit_modal'
+
 .container.footer-padding
   .row.justify-content-between
     .col-sm-12.col-md-6.py-2
 
       h1 = fa_icon 'calendar', class: 'mr-2', text: @activity.title
+      button.btn.btn-sm.btn-primary.mb-2 role='button' data-toggle='modal' data-target='#edit_activity_modal'
+        = fa_icon 'pencil'
+        = ' Naam aanpassen'
 
       table.table.table-sm
         tbody
