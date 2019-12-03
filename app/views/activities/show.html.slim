@@ -34,8 +34,12 @@
         - if @activity.locked?
           .card-text
             div class='alert alert-danger'
-              = 'Deze activiteit is langer dan een maand geleden afgelopen. Er kunnen geen nieuwe '
+              = 'Deze activiteit is vergrendeld. Er kunnen geen nieuwe '
               = 'bestellingen worden geplaatst en geen saldocorrecties meer worden toegevoegd'
+          - if @activity.locked_by
+            .card-text
+              div class='alert alert-info'
+                = "Deze activiteit is vergrendeld door #{@activity.locked_by.name}"
         - else
           p.card-text = 'Je kan bestellingen plaatsen in het streepscherm.'
 
