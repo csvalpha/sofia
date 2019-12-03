@@ -10,9 +10,6 @@ if [ "${TYPE}" = "lint" ] || [ "${TYPE}" = "" ]; then
   echo "--- :parcel: Brakeman"
   bundle exec brakeman -z --no-pager
 
-  echo "--- :html: Slim lint"
-  bundle exec slim-lint
-
   echo "--- :ruby: Bundle audit"
   gem install bundler-audit
   bundle-audit update && bundle-audit check --ignore CVE-2015-9284
