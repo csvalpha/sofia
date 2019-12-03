@@ -24,14 +24,16 @@
 
     <% if @show_navigationbar %>
       <%= render partial: 'partials/navigation_bar' %>
-
-    <% end; if @show_extras %>
-      <%= render partial: 'partials/flash' %>
-
     <% end %>
+
+    <% if @show_extras %>
+      <%= render partial: 'partials/flash' %>
+    <% end %>
+
     <main>
       <%= yield %>
     </main>
+
     <% if @show_extras %>
       <%= render partial: 'partials/footer' %>
     <% end %>

@@ -10,13 +10,13 @@
       <span>
         <%= link_to refresh_user_list_users_path, class: 'btn btn-primary btn-sm mr-1' do %>
         <%= fa_icon 'refresh' %>
-          <span class="d-none d-md-inline ml-1"><%= 'Synchroniseer gebruikers' %></span>
+          <span class="d-none d-md-inline ml-1">Synchroniseer gebruikers</span>
         <% end %>
 
         <button class="btn btn-sm btn-primary" data-target="#edit_user_modal" data-toggle="modal" role="button">
           <%= fa_icon 'plus' %>
           <span class="d-none d-md-inline ml-1">
-            <%= 'Nieuwe gebruiker' %>
+            Nieuwe gebruiker
           </span>
       </button>
       </span>
@@ -32,7 +32,7 @@
           </a></template>
         <template slot="empty">
           <p class="my-1 text-center">
-            <em><%= 'Er zijn geen gebruikers om weer te geven' %>
+            <em>Er zijn geen gebruikers om weer te geven
 
             </em></p></template>
       </b-table>

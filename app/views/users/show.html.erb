@@ -1,6 +1,6 @@
 <% content_for :title, "Gebruiker #{@user.name}- SOFIA" %>
 <% content_for :modal do %>
-  <%= render 'mutation_modal'  %>
+  <%= render 'mutation_modal' %>
 <% end %>
 
 
@@ -18,7 +18,8 @@
         <tbody>
         <% if @user.birthday %>
           <tr>
-            <th scope="row"><%= 'Geboortedatum' %>
+            <th scope="row">
+              Geboortedatum
             </th>
             <td class="text-right"><%= l @user.birthday, format: :long %>
             </td>
@@ -26,20 +27,23 @@
         <% end; %>
         <% if @user.email %>
           <tr>
-            <th scope="row"><%= 'Email' %>
+            <th scope="row">
+              Email
             </th>
             <td class="text-right"><%= @user.email %>
             </td>
           </tr>
         <% end %>
         <tr>
-          <th scope="row"><%= 'Aangemaakt op' %>
+          <th scope="row">
+            Aangemaakt op
           </th>
           <td class="text-right"><%= l @user.created_at, format: :long %>
           </td>
         </tr>
         <tr>
-          <th scope="row"><%= 'Accountbron' %>
+          <th scope="row">
+            Accountbron
           </th>
           <% if @user.provider == 'banana_oauth2' %>
             <td class="text-right"><%= link_to 'C.S.V. Alpha', "#{Rails.application.config.x.banana_api_url}/users/#{@user.uid}" %>
@@ -54,7 +58,7 @@
       <% if current_user.treasurer? %>
         <button class="btn btn-sm btn-secondary pull-right" data-target="#new_mutation_modal" data-toggle="modal" role="button">
           <%= fa_icon 'plus', class: 'mr-1' %>
-          <%= 'Inleggen' %>
+          Inleggen
 
         </button>
       <% end %>
@@ -64,93 +68,89 @@
           <% @user.credit <= 0 ? 'text-danger' : '' %>">
           <%= number_to_currency(@user.credit, unit: '€') %>
         </span>
-        </h2>
+      </h2>
+    </div>
+    <div class="col-sm-12 col-md-6 py-2">
+      <div class="card">
+        <div class="card-header">
+          <ul class="nav nav-tabs card-header-tabs" id="infoTabs" role="tablist">
+            <li class="nav-item">
+
+              <a aria-controls="creditInfo" aria-selected="true" class="nav-link active" data-toggle="tab" href="#creditInfo" id="creditInfo-tab" role="tab">
+                Inleggen
+              </a></li>
+            <li class="nav-item">
+
+              <a aria-controls="roleInfo" aria-selected="false" class="nav-link" data-toggle="tab" href="#roleInfo" id="roleInfo-tab" role="tab">
+                Rollen en rechten
+              </a></li>
+          </ul>
         </div>
-          <div class="col-sm-12 col-md-6 py-2">
-            <div class="card">
-              <div class="card-header">
-                <ul class="nav nav-tabs card-header-tabs" id="infoTabs" role="tablist">
-                  <li class="nav-item">
+        <div class="card-body p-1">
+          <div class="tab-content p-2" id="infoTabsContent">
+            <div aria-labelledby="creditInfo-tab" class="tab-pane show active" id="creditInfo" role="tabpanel">
+              <%= content_tag :div, class: "alert mb-1 alert-#{@user.credit <= 0 ? 'danger' : 'info'}" do %>
+                <h4 class="alert-heading">
+                  <%= @user.credit <= 0 ? 'Je staat rood!' : 'Inleggen' %>
 
-                    <a aria-controls="creditInfo" aria-selected="true" class="nav-link active" data-toggle="tab" href="#creditInfo" id="creditInfo-tab" role="tab">
-                      <%= 'Inleggen' %>
-                    </a></li>
-                  <li class="nav-item">
+                </h4>
+                <p class="card-text">
+                  <%= 'Om je saldo aan te vullen moet je zelf geld overmaken. ' %>
+                  <%= 'Dat kan naar NL68 INGB 0008 1654 20 t.n.v. Stichting Societeit Flux ' %>
+                  <%= 'onder vermelding van je naam en \'Inleg Zatladder\'.' %>
+                </p>
+                <small class="mb-0"><%= 'Het kan enkele dagen duren voor je betaling is verwerkt.' %>
 
-                    <a aria-controls="roleInfo" aria-selected="false" class="nav-link" data-toggle="tab" href="#roleInfo" id="roleInfo-tab" role="tab">
-                      <%= 'Rollen en rechten' %>
+                </small>
+              <% end %></div>
+            <div aria-labelledby="roleInfo-tab" class="tab-pane p-2" id="roleInfo" role="tabpanel">
+              <b-button class="pull-right" size="sm" v-b-toggle.role-sync-description="">
+                <%= fa_icon 'question-circle' %>
 
-                    </a></li>
-                </ul>
-              </div>
-              <div class="card-body p-1">
-                <div class="tab-content p-2" id="infoTabsContent">
-                  <div aria-labelledby="creditInfo-tab" class="tab-pane show active" id="creditInfo" role="tabpanel">
-                    <%= content_tag :div, class: "alert mb-1 alert-#{@user.credit <= 0 ? 'danger' : 'info'}" do %>
-                      <h4 class="alert-heading">
-                        <%= @user.credit <= 0 ? 'Je staat rood!' : 'Inleggen' %>
+              </b-button>
+              <h2 class="card-title">
+                Rollen
+              </h2>
+              <b-collapse class="mt-2" id="role-sync-description">
+                <p class="alert alert-light card-text">
+                  Rollen worden gesynchroniseerd als de gebruiker zelf inlogt
+                </p>
+              </b-collapse>
+              <p class="card-text d-none d-md-block">
+                <%= 'Rechten zijn afhankelijk van de rollen die een gebruiker in het streepsysteem heeft. ' %>
+                <%= 'Rollen worden bepaald aan de hand van de groepen waar een gebruiker lid van is in de Alpha website.' %>
 
-                      </h4>
-                      <p class="card-text">
-                        <%= 'Om je saldo aan te vullen moet je zelf geld overmaken. ' %>
-                        <%= 'Dat kan naar NL68 INGB 0008 1654 20 t.n.v. Stichting Societeit Flux ' %>
-                        <%= 'onder vermelding van je naam en \'Inleg Zatladder\'.' %>
-                      </p>
-                      <small class="mb-0"><%= 'Het kan enkele dagen duren voor je betaling is verwerkt.' %>
+              </p>
+              <% if @user.roles_users.any? %>
+                <ul class="mb-1">
+                  <% @user.roles_users.each do |role| %>
+                    <li><%= role.name %>
+                    </li>
+                  <% end %></ul>
+              <% else %>
+                <p><%= @user.name %> heeft geen speciale rollen binnen het streepsysteem
 
-                      </small>
-                    <% end %></div>
-                  <div aria-labelledby="roleInfo-tab" class="tab-pane p-2" id="roleInfo" role="tabpanel">
-                    <b-button class="pull-right" size="sm" v-b-toggle.role-sync-description="">
-                      <%= fa_icon 'question-circle' %>
-
-                    </b-button>
-                    <h2 class="card-title">
-                      <%= 'Rollen' %>
-
-                    </h2>
-                    <b-collapse class="mt-2" id="role-sync-description">
-                      <p class="alert alert-light card-text">
-                        <%= 'Rollen worden gesynchroniseerd als de gebruiker zelf inlogt' %>
-
-                      </p></b-collapse>
-                    <p class="card-text d-none d-md-block">
-                      <%= 'Rechten zijn afhankelijk van de rollen die een gebruiker in het streepsysteem heeft. ' %>
-                      <%= 'Rollen worden bepaald aan de hand van de groepen waar een gebruiker lid van is in de Alpha website.' %>
-
-                    </p>
-                    <% if @user.roles_users.any? %>
-                      <ul class="mb-1">
-                        <% @user.roles_users.each do |role| %>
-                          <li><%= role.name %>
-                          </li>
-                        <% end %></ul>
-                    <% else %>
-                      <p><%= @user.name %> heeft geen speciale rollen binnen het streepsysteem
-
-                      </p>
-                    <% end %></div>
-                </div>
-              </div>
-            </div>
+                </p>
+              <% end %></div>
           </div>
         </div>
-          <hr/>
+      </div>
+    </div>
+  </div>
+  <hr/>
 
   <div class="col-sm-12">
     <div class="row card d-block">
       <div class="card-header">
         <ul class="nav nav-tabs card-header-tabs" id="userTabs" role="tablist">
           <li class="nav-item">
-
             <a aria-controls="orders" aria-selected="true" class="nav-link active" data-toggle="tab" href="#orders" id="orders-tab" role="tab">
-              <%= 'Bestellingen' %>
-            </a></li>
+              Bestellingen
+            </a>
+          </li>
           <li class="nav-item">
-
             <a aria-controls="creditMutations" aria-selected="false" class="nav-link" data-toggle="tab" href="#creditMutations" id="creditMutations-tab" role="tab">
-              <%= 'Inleg en saldocorrecties' %>
-
+              Inleg en saldocorrecties
             </a></li>
         </ul>
       </div>
@@ -165,15 +165,10 @@
               <table class="table">
                 <thead>
                 <tr>
-                  <th scope="col"><%= '#' %>
-                  </th>
-                  <th scope="col"><%= 'Datum' %>
-                  </th>
-                  <th scope="col"><%= 'Beschrijving' %>
-                  </th>
-                  <th class="text-right" scope="col"><%= 'Bedrag' %>
-
-                  </th>
+                  <th scope="col"> #</th>
+                  <th scope="col">Datum</th>
+                  <th scope="col">Beschrijving</th>
+                  <th class="text-right" scope="col">Bedrag</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -181,20 +176,18 @@
                   <tr>
                     <td class="text-center" colspan="4">
                       <p class="my-1">
-                        <em><%= "#{@user.name} heeft nog niet ingelegd en er zijn nog geen correcties" %>
-                        </em></p></td>
+                        <em> <%= @user.name %>  heeft nog niet ingelegd en er zijn nog geen correcties
+                        </em>
+                      </p>
+                    </td>
                   </tr>
                 <% else %>
                   <% @user.credit_mutations.order(created_at: :desc).each do |mutation| %>
                     <tr>
-                      <th scope="row"><%= mutation.id %>
-                      </th>
-                      <td><%= l(mutation.created_at, format: :with_year) %>
-                      </td>
-                      <td><%= mutation.description %>
-                      </td>
-                      <td class="text-right"><%= number_to_currency(mutation.amount, unit: '€') %>
-                      </td>
+                      <th scope="row"><%= mutation.id %></th>
+                      <td><%= l(mutation.created_at, format: :with_year) %></td>
+                      <td><%= mutation.description %></td>
+                      <td class="text-right"><%= number_to_currency(mutation.amount, unit: '€') %></td>
                     </tr>
                   <% end %>
                 <% end %>
