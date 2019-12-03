@@ -3,6 +3,10 @@ class ActivityPolicy < ApplicationPolicy
     user&.treasurer? || user&.main_bartender?
   end
 
+  def update?
+    user&.treasurer? || user&.main_bartender?
+  end
+
   def activity_report?
     user&.treasurer?
   end
