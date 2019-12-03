@@ -31,8 +31,8 @@ class ActivitiesController < ApplicationController
     @activity = Activity.find(params[:id])
     authorize @activity
 
-    if @activity.update( params.require(:activity).permit(%i[title]))
-      flash[:success] = 'Activiteit opgeslagen'
+    if @activity.update(params.require(:activity).permit(%i[title]))
+      flash[:success] = 'Activiteit gewijzigd'
     else
       flash[:error] = "Activiteit wijzigen mislukt; #{@activity.errors.full_messages.join(', ')}"
     end

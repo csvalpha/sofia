@@ -1,0 +1,26 @@
+<%= content_tag :div, class: 'modal', id: 'edit_activity_modal', role: 'dialog', 'aria-labelledby' => 'edit_activity_modal_label', 'aria-hidden' => 'true' do -%>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          Activiteit wijzigen
+        </h5>
+
+        <button class="close" data-dismiss="modal" aria-label="close">
+          <span aria-hidden="true"> <%= fa_icon 'times' %></span>
+        </button>
+      </div>
+      <%= simple_form_for(@activity, wrapper: :horizontal_form) do |f| %>
+        <div class="modal-body" id="activities_modal">
+          <%= f.input :title, placeholder: 'Titel', required: true %>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-dismiss="modal">
+            Annuleren
+          </button>
+          <%= f.button :submit, 'Activiteit wijzigen', class: 'btn btn-primary', method: :patch %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
