@@ -73,8 +73,10 @@ class UsersController < ApplicationController
     authorize user
 
     activities = Activity.select(%i[id title start_time]).joins(:orders).merge(policy_scope(Order).orders_for(user)).distinct
+    activity_totals = Activity.joins(:orders => :order_rows).group(:id).sum('product_count * price_per_product')
+    activities_hash = activities.map { |a| {id: a.id, title: a.title, start_time: a.start_time, order_total: activity_totals[a.id] } }
 
-    render json: activities
+    render json: activities_hash
   end
 
   private

@@ -7,8 +7,8 @@
           {{formatDate(row.item.start_time)}}
         </template>
 
-        <template slot="title" slot-scope="row">
-          {{row.item.title}}
+        <template slot="order_total" slot-scope="row">
+          {{row.item.order_total}}
           <span class="pull-right">
             <i @click.stop="row.toggleDetails" :class="['order-history--details-expand', 'fa', 'fa-lg', 'pl-2', row.detailsShowing ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down']"></i>
           </span>
@@ -55,6 +55,10 @@
           title: {
             label: 'Titel',
             sortable: false
+          },
+          order_total: {
+              label: 'Totaal',
+              sortable: false
           }
         },
       };
