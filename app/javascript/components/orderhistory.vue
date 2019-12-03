@@ -8,7 +8,7 @@
         </template>
 
         <template slot="order_total" slot-scope="row">
-          {{row.item.order_total}}
+          {{doubleToCurrency(row.item.order_total)}}
           <span class="pull-right">
             <i @click.stop="row.toggleDetails" :class="['order-history--details-expand', 'fa', 'fa-lg', 'pl-2', row.detailsShowing ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down']"></i>
           </span>
