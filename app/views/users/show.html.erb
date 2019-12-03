@@ -1,9 +1,9 @@
 <% content_for :title, "Gebruiker #{@user.name}- SOFIA" %>
 <% content_for :modal do %>
-  <%=  %>
+  <%= render 'mutation_modal'  %>
 <% end %>
 
-<%= render 'mutation_modal' %>
+
 
 <%= content_tag :div, id: 'user-container', class: 'container footer-padding', data: {user: @user_json} do %>
   <div class="row justify-content-between">
