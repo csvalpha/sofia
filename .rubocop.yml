@@ -25,6 +25,9 @@ Rails/UnknownEnv:
     - test
     - staging
 
+Rails/FilePath:
+  EnforcedStyle: arguments
+
 Metrics/BlockLength:
   Exclude:
     - '**/Guardfile'
