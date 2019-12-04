@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   devise :omniauthable, omniauth_providers: [:banana_oauth2]
+  devise :database_authenticatable
   has_many :orders, dependent: :destroy
   has_many :order_rows, through: :orders, dependent: :destroy
   has_many :credit_mutations, dependent: :destroy
@@ -57,6 +58,15 @@ class User < ApplicationRecord
 
     roles_users_not_to_have = roles_users - roles_users_to_have
     roles_users_not_to_have.map(&:destroy)
+  end
+
+
+  def email_required?
+    false
+  end
+
+  def email_changed?
+    false
   end
 
   # TODO: Spec this method
