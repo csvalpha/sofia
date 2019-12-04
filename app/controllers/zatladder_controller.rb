@@ -1,9 +1,9 @@
 class ZatladderController < ApplicationController
   include OctoberHelper
-  sudo
 
   before_action :authenticate_user!
   after_action :verify_authorized
+  sudo
 
   def index
     authorize :zatladder
