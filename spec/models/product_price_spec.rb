@@ -12,6 +12,12 @@ RSpec.describe ProductPrice, type: :model do
       it { expect(product_price).not_to be_valid }
     end
 
+    context 'when with too much price' do
+      subject(:product_price) { FactoryBot.build_stubbed(:product_price, price: 101) }
+
+      it { expect(product_price).not_to be_valid }
+    end
+
     context 'when without a list' do
       subject(:product_price) { FactoryBot.build_stubbed(:product_price, price_list: nil) }
 
