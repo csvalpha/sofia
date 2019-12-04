@@ -27,6 +27,19 @@ class ActivitiesController < ApplicationController
     redirect_to activities_url
   end
 
+  def update
+    @activity = Activity.find(params[:id])
+    authorize @activity
+
+    if @activity.update(params.require(:activity).permit(%i[title]))
+      flash[:success] = 'Activiteit hernoemd'
+    else
+      flash[:error] = "Activiteit hernoemen mislukt; #{@activity.errors.full_messages.join(', ')}"
+    end
+
+    redirect_to @activity
+  end
+
   def show # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @activity = Activity.includes(:price_list,
                                   { orders: [{ order_rows: :product }, :user, :created_by] },
@@ -67,6 +80,21 @@ class ActivitiesController < ApplicationController
     # Set flags for application.html.slim
     @show_navigationbar = false
     @show_extras = false
+  end
+
+  def lock
+    activity = Activity.find(params[:id])
+    authorize activity
+
+    activity.locked_by = current_user
+
+    if activity.save
+      flash[:success] = 'Successfully locked activity'
+    else
+      flash[:error] = activity.errors.full_messages.join(', ')
+    end
+
+    redirect_to activity
   end
 
   private
