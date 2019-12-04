@@ -2,6 +2,7 @@ class PriceListsController < ApplicationController
   before_action :authenticate_user!
 
   after_action :verify_authorized
+  sudo only: :index
 
   def index
     recent_price_lists = PriceList.order(created_at: :desc).limit(5)

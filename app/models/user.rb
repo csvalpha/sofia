@@ -60,7 +60,6 @@ class User < ApplicationRecord
     roles_users_not_to_have.map(&:destroy)
   end
 
-
   def email_required?
     false
   end

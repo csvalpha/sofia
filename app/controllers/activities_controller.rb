@@ -63,7 +63,7 @@ class ActivitiesController < ApplicationController
     @count_per_product = @activity.count_per_product
   end
 
-  def order_screen
+  def order_screen # rubocop:disable Metrics/MethodLength
     reset_sudo_session!
     authorize Activity
 

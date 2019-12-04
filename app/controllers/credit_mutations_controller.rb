@@ -1,6 +1,7 @@
 class CreditMutationsController < ApplicationController
   before_action :authenticate_user!
   after_action :verify_authorized
+  sudo only: :index
 
   def index
     @credit_mutations = CreditMutation.includes(model_includes).order(created_at: :desc)
