@@ -1,48 +1,39 @@
-//input {
-//  -webkit-appearance: none;
-//}
-
 .sudo-header {
   margin: 2em auto;
   text-align: center;
-
-  img {
-    margin-top: -60px;
-    max-width: 280px;
-  }
 }
 
 .sudo-form {
-  background-color: #fff;
-  border-radius: 5px;
-  padding: 2em;
   margin: 0 auto;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .2);
+  background-color: #fff;
+  padding: 2em;
   max-width: 340px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2);
 
   input {
     display: block;
-    width: 100%;
-    font-size: 16px;
-    line-height: 2em;
-    padding: 4px;
-    border-radius: 5px;
     border: 1px solid #ececec;
+    border-radius: 5px;
+    padding: 4px;
+    width: 100%;
+    line-height: 2em;
+    font-size: 16px;
   }
 
-  input[type="submit"] {
-    cursor: pointer;
+  [type='submit'] {
     margin: 1em auto;
-    width: 60%;
-    padding: 4px;
-    background-color: #ececec;
+    border: 0;
     border-radius: 25px;
-    border: none;
+    background-color: #ececec;
+    cursor: pointer;
+    padding: 4px;
+    width: 60%;
   }
 }
 
 .sudo-tip {
   margin-top: 2em;
-  font-size: 14px;
   text-align: center;
+  font-size: 14px;
 }
