@@ -24,6 +24,11 @@ Rails.application.routes.draw do
   resources :products, only: %i[create update], defaults: { format: :json }
   resources :credit_mutations, only: %i[index create]
   resources :zatladder, only: %i[index]
+  resources :sudo, only: [] do
+    collection do
+      get :exit
+    end
+  end
 
   devise_scope :user do
     delete 'sign_out', to: 'devise/sessions#destroy', as: :destroy_user_session

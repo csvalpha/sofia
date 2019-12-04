@@ -30,6 +30,12 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
           = nav_link zatladder_index_path, class: 'nav-link'
             = fa_icon 'list', class: 'mr-2', text: 'Zatladder'
 
+    - if session[:sudo_session]
+      .navbar-nav
+        = nav_link exit_sudo_index_path, class: 'nav-item'
+          span.nav-link
+            = fa_icon 'unlock', class: 'mr-2', text: 'Penningmeester modus'
+
     - if current_user
       .navbar-nav
         = nav_link current_user, class: 'nav-item'
