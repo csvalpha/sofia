@@ -64,6 +64,7 @@ class ActivitiesController < ApplicationController
   end
 
   def order_screen
+    reset_sudo_session!
     authorize Activity
 
     @activity = Activity.includes([:price_list, price_list: { product_price: :product }])

@@ -24,3 +24,12 @@ nl:
     credit_mutation: 1400
     cash: 1000
     pin: 2060
+
+  sudo_rails:
+    page_header: Voer wachtwoord in
+    button: Inloggen
+    password: Wachtwoord
+    forgot_pass: Wachtwoord vergeten?
+    tip: |-
+      Je logt nu in om bij het penningmeester gedeelte te kunnen. <br />
+      We vragen geen wachtwoord meer voor <i>%{session_duration}</i>.

@@ -393,6 +393,9 @@ GEM
     sshkit (1.20.0)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
+    sudo_rails (0.5.0)
+      rails (>= 4.2)
+      sassc-rails
     sysexits (1.2.0)
     temple (0.8.2)
     terminal-notifier-guard (1.7.0)
@@ -491,6 +494,7 @@ DEPENDENCIES
   spring
   spring-commands-rspec
   spring-watcher-listen
+  sudo_rails
   terminal-notifier-guard
   timecop
   turbolinks (~> 5.2)
