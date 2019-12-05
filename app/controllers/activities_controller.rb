@@ -73,20 +73,8 @@ class ActivitiesController < ApplicationController
     authorize Activity
 
     activity = Activity.includes(:price_list, orders: [{ order_rows: :product }, :user]).find(params[:id])
-    # binding.pry
-    # count_per_product = if params[:pin]
-    #                       activity.count_per_product(paid_with_pin: true)
-    #                     elsif params[:cash]
-    #                       activity.count_per_product(paid_with_cash: true)
-    #                     else
-    #                       activity.count_per_product(params[:user_id])
-    #                     end
-    if params.permit(:user, :paid_with_pin, :paid_with_cash).empty?
-      render json: activity.count_per_product
-    else
-      render json: activity.count_per_product(**params.permit(:user, :paid_with_pin, :paid_with_cash).to_h.symbolize_keys)
-    end
 
+    render json: activity.count_per_product(**params.permit(:user, :paid_with_pin, :paid_with_cash).to_h.symbolize_keys)
   end
 
   private
