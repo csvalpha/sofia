@@ -89,7 +89,7 @@ class ActivitiesController < ApplicationController
     activity.locked_by = current_user
 
     if activity.save
-      flash[:success] = 'Successfully locked activity'
+      flash[:success] = 'Activiteit is succesvol vergrendeld'
     else
       flash[:error] = activity.errors.full_messages.join(', ')
     end
