@@ -30,7 +30,7 @@
           id: 0
         }
       },
-      include_payment: {
+      includePayment: {
         type: Boolean,
         default: false
       }
@@ -85,6 +85,20 @@
           response.data.forEach((a) => {
             this.suggestions.push(a);
           });
+          if (this.includePayment) {
+            if ("gepind".indexOf(this.query.toLowerCase()) >= 0) {
+              this.suggestions.push({
+                name: "Gepind",
+                paid_with_pin: true
+              })
+            }
+            if ("contant betaald".indexOf(this.query.toLowerCase()) >= 0) {
+              this.suggestions.push({
+                name: "Contant betaald",
+                paid_with_cash: true
+              })
+            }
+          }
           this.updateValue();
         });
         this.suggestionsUpdatedAt = new Date();

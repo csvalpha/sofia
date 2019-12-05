@@ -52,12 +52,8 @@ class Activity < ApplicationRecord
     @revenue_total ||= revenue_with_cash + revenue_with_pin + revenue_with_credit
   end
 
-  def count_per_product(user = nil, paid_with_pin = false, paid_with_cash = false)
-    records = if user
-                orders.where(user: user)
-              else
-                orders.where(paid_with_pin: paid_with_pin, paid_with_cash: paid_with_cash)
-              end
+  def count_per_product(**args)
+    records = orders.where(**args)
 
     @count_per_product = OrderRow.where(order: records).group(:product_id, :name).joins(:product)
                                  .pluck(:name, 'SUM(product_count)', 'SUM(product_count * price_per_product)')
