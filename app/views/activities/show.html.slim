@@ -229,7 +229,7 @@
                         tr
                           th scope='row' = product.name
                           td.text-right = "#{sum} x"
-  - unless @activity.locked?
+  - if current_user.treasurer? && !@activity.locked?
     .row
       .col-sm-6
         .alert.alert-danger
