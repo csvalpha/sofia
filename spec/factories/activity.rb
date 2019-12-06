@@ -10,14 +10,14 @@ FactoryBot.define do
       start_time { Faker::Time.between(80.days.ago, 75.days.ago).beginning_of_hour }
       end_time { 74.days.ago.beginning_of_hour }
 
-      before(:create) do |activity, evaluator|
+      before(:create) do |activity, _evaluator|
         # Set end_time back to valid value, otherwise validations will not pass
         activity.end_time = Faker::Time.between(1.day.from_now, 2.days.from_now).beginning_of_hour
       end
 
-      after(:create) do |activity, evaluator|
+      after(:create) do |activity, _evaluator|
         # Skip validations and make activity locked by setting end_time back
-        activity.update_attribute(:end_time, 74.days.ago.beginning_of_hour)
+        activity.update_attribute(:end_time, 74.days.ago.beginning_of_hour) # rubocop:disable Rails/SkipsModelValidations
       end
     end
 
