@@ -130,6 +130,21 @@ RSpec.describe Activity, type: :model do
     it { expect(described_class.current).not_to include past_activity }
   end
 
+  describe '.not_locked' do
+    let(:not_locked_activity) { FactoryBot.create(:activity) }
+    let(:time_locked_activity) { FactoryBot.create(:activity, :locked) }
+    let(:manually_locked_activity) { FactoryBot.create(:activity, :manually_locked) }
+
+    before do
+      not_locked_activity
+      time_locked_activity
+      manually_locked_activity
+    end
+
+    it { expect(described_class.not_locked.size).to eq 1 }
+    it { expect(described_class.not_locked).to include not_locked_activity }
+  end
+
   describe 'reporting' do
     subject(:activity) { FactoryBot.create(:activity) }
 

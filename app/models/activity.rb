@@ -21,6 +21,10 @@ class Activity < ApplicationRecord
           Time.zone.now).order(:start_time, :end_time)
   })
 
+  scope :not_locked, (lambda {
+    where('end_time >= ? AND locked_by_id IS NULL', Time.zone.now - 2.months)
+  })
+
   delegate :products, to: :price_list
 
   def credit_mutations_total
