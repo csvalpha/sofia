@@ -25,3 +25,5 @@ jobs:
           MERGE_LABELS: "automerge"
           UPDATE_LABELS: ""
           UPDATE_METHOD: "rebase"
+          MERGE_RETRIES: "12"
+          MERGE_RETRY_SLEEP: "40000"
