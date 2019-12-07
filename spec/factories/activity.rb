@@ -12,7 +12,7 @@ FactoryBot.define do
 
       before(:create) do |activity, _evaluator|
         # Set end_time back to valid value, otherwise validations will not pass
-        activity.end_time = Faker::Time.between(1.day.from_now, 2.days.from_now).beginning_of_hour
+        activity.end_time = Faker::Time.between(from: 1.day.from_now, to: 2.days.from_now).beginning_of_hour
       end
 
       after(:create) do |activity, _evaluator|
