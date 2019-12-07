@@ -9,7 +9,7 @@ class Activity < ApplicationRecord
   validates_datetime :end_time, after: :start_time
   validate :activity_not_locked
 
-  before_destroy :destroyable?
+  before_destroy :can_destroy?
 
   scope :upcoming, (lambda {
     where('(start_time < ? and end_time > ?) or start_time > ?', Time.zone.now,
@@ -88,6 +88,10 @@ class Activity < ApplicationRecord
     end_time + 2.months
   end
 
+  def destroyable?
+    !locked? && orders.empty? && credit_mutations.empty?
+  end
+
   private
 
   def activity_not_locked
@@ -96,8 +100,8 @@ class Activity < ApplicationRecord
     errors.add(:base, 'Activity cannot be changed when locked') if locked? && changed?
   end
 
-  def destroyable?
-    throw(:abort) if locked?
+  def can_destroy?
+    throw(:abort) unless destroyable?
   end
 
   def time_locked?
