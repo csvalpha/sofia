@@ -1,0 +1,203 @@
+<% content_for :title, "Streepscherm #{@activity.title} - SOFIA" %>
+<%= content_tag :div, id: 'order-screen', class: 'order-screen',
+                data: {users: @users_json, product_prices: @product_prices_json, activity: @activity_json} do
+
+%>
+  <b-modal id="credit-mutation-modal" ref="creditMutationModal" title="Inleggen">
+    <form :class="{ 'was-validated': creditMutationFormInvalid }" class="col-12 mt-2" novalidate="">
+      <div class="form-group row">
+        <div class="col-4">
+          <label class="col-form-label" for="creditMutationAmountInput">
+            Inleg *
+          </label>
+        </div>
+        <div class="col-8">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <div class="input-group-text">
+                <%= fa_icon 'euro' %>
+              </div>
+            </div>
+
+            <input class="form-control" id="creditMutationAmountInput" placeholder="10.00" required="" type="text" v-model="creditMutationAmount"/>
+            <div class="invalid-feedback">
+              Bedrag is verplicht
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-4">
+          <label class="col-form-label" for="creditMutationDescriptionInput">
+            Beschrijving *
+          </label></div>
+        <div class="col-8">
+          <input class="form-control" id="creditMutationDescriptionInput" placeholder="Inleg contant" required="" type="text" v-model="creditMutationDescription"/>
+          <div class="invalid-feedback">
+            Beschrijving is verplicht
+          </div>
+        </div>
+      </div>
+      <fieldset disabled="true">
+        <div class="form-group row">
+          <label class="col-4 col-form-label">
+            Activiteit *
+          </label>
+          <div class="col-8">
+            <input :value="activity.title" class="form-control" type="text"/>
+            <small class="form-text text-muted">
+              Omdat deze inleg aangemaakt wordt tijdens een activiteit kan je dit niet aanpassen
+            </small>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+    <div slot="modal-footer">
+      <button aria-label="Close" class="btn btn-secondary mr-1" data-dismiss="modal" type="button">
+        Annuleren
+      </button>
+      <button @click="saveCreditMutation($event)" class="btn btn-primary" type="sumbit">
+        Inleg aanmaken
+      </button>
+    </div>
+  </b-modal>
+  <nav class="header">
+    <ul class="header-nav">
+      <li class="header-nav-item header-nav-home">
+        <span @click="payWithCash ? payWithCash = false : (payWithPin ? payWithPin = false : selectedUser = null)"
+              class="user-details-close" v-if="selectedUser || payWithCash || payWithPin">
+          <%= fa_icon 'chevron-left' %>
+          </span>
+        <span v-else="">
+          <%= link_to @activity, class: 'nav-link' do %>
+          <%= fa_icon 'home' %>
+          <% end %>
+        </span>
+      </li>
+      <li class="header-nav-item">
+        <span class="mr-3">
+          <%= @activity.title %>
+        </span>
+        <small class="font-weight-light d-inline-block">
+          <%= l @activity.start_time, format: :date_only %>
+        </small>
+      </li>
+    </ul>
+    <div class="row col-lg-4 pull-right no-gutters" style="flex-direction: row-reverse">
+      <b-btn class="m-3" v-on:click="keepUserSelected = !keepUserSelected" variant="outline-secondary">
+        <span v-if="keepUserSelected">
+          <%= fa_icon 'check-square lg', class: 'mr-1' %>
+        </span>
+        <span v-if="!keepUserSelected">
+          <%= fa_icon 'square lg', class: 'mr-1' %>
+        </span>
+        <span>
+          Persoon onthouden
+        </span>
+      </b-btn>
+    </div>
+
+    <flash>
+    </flash>
+  </nav>
+  <div class="side-panel">
+    <user-selection :pay-with-cash="payWithCash" :pay-with-pin="payWithPin" :selected-user="selectedUser"
+                    :users="users" v-on:selectcash="selectCash" v-on:selectpin="selectPin" v-on:updateuser="setUser($event)">
+    </user-selection>
+    <div class="orders" v-if="selectedUser || payWithCash || payWithPin">
+      <h4 class="orders-header py-4">
+        Bestelling
+      </h4>
+      <div class="orders-rows container">
+        <template v-for="(orderRow, index) in orderRows">
+          <div class="orders-rows-row row py-2">
+            <div class="orders-rows-row-count col-3 px-1 px-md-2 px-lg-3">
+              <%= fa_icon 'plus-square-o lg', class: 'orders-rows-row-count-icon', '@click': 'increaseRowAmount(orderRow)' %>
+              <div>
+                <%= '{{orderRow.amount}}' %>
+              </div>
+              <%= fa_icon('minus-square-o lg', class: 'orders-rows-row-count-icon', '@click': 'decreaseRowAmount(orderRow)') %>
+            </div>
+            <div class="orders-rows-row-product-name col-6">
+              {{orderRow.productPrice.product.name}}
+            </div>
+            <div class="orders-rows-row-product-price col-3 px-1 px-lg-3 d-flex justify-content-between">
+              <span :title="doubleToCurrency(orderRow.productPrice.price) + ' p.s.'">
+                {{doubleToCurrency(orderRow.productPrice.price * orderRow.amount)}}
+              </span>
+              <span @click="dropOrderRow(index)" class="order-rows-row-remove ml-1">
+                <%= fa_icon 'times-circle lg' %>
+              </span>
+            </div>
+          </div>
+        </template>
+
+        <template v-if="!orderRows.length">
+          <p class="text-center font-weight-light pt-3">
+            <em>
+              Geen producten geselecteerd
+            </em>
+          </p>
+        </template>
+      </div>
+      <div class="orders-rows-total container">
+        <div class="orders-rows-total-dividor mb-1">
+        </div>
+        <div class="row justify-content-end">
+          <h4 class="col-3">
+            Totaal:
+          </h4>
+          <h4 class="col-3 px-2">
+            {{doubleToCurrency(orderTotal())}}
+          </h4>
+        </div>
+      </div>
+      <div class="orders-confirmation">
+        <button @click="confirmOrder" class="btn btn-block btn-lg btn-success"
+                v-bind:class="{ 'btn-warning' : (orderRequiresAge() && selectedUser && selectedUser.minor) }"
+                v-bind:disabled="orderConfirmButtonDisabled()">
+          <span class="text-uppercase">
+            Bestelling plaatsen
+          </span>
+          <br/>
+          <small v-if="orderRequiresAge() && selectedUser && selectedUser.minor">
+            <span>
+              <%= fa_icon 'exclamation-triangle ' %>
+            </span>
+            <span>
+              {{selectedUser.name}} is minderjarig!
+              </span>
+          </small>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="order-grid" v-if="!selectedUser && !payWithCash && !payWithPin">
+    <activity-orders :activity="activity" editable="" expand_first="">
+    </activity-orders>
+  </div>
+  <div class="product-grid" v-if="selectedUser || payWithCash || payWithPin">
+    <div @click="selectProduct(productPrice)" class="product-grid-product"
+         v-bind:class="{ 'product-requires-age' : (selectedUser && selectedUser.minor && productPrice.product.requires_age) }"
+         v-for="productPrice in productPrices">
+      <span class="product-grid-product-requires-age py-1 fa-stack" v-if="selectedUser && selectedUser.minor && productPrice.product.requires_age">
+        <i class="fa fa-circle fa-circle-lighter fa-stack-2x">
+        </i>
+        <span class="fa fa-stack-1x fa-inverse fa-plus18">
+        </span>
+      </span>
+      <span class="product-grid-product-name">
+        {{productPrice.product.name}}
+      </span>
+      <span class="product-grid-product-price">
+        {{doubleToCurrency(productPrice.price)}}
+      </span>
+    </div>
+    <em class="no-items" v-if="!productPrices.length">
+      <span>
+        Nog geen producten beschikbaar in de prijslijst  <%= @activity.price_list.name %> .
+        Klik <%= link_to 'hier', price_lists_path %> om prijzen aan te maken.
+      </span>
+    </em>
+  </div>
+<% end %>

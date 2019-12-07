@@ -1,0 +1,105 @@
+<% content_for :title, 'SOFIA – Streepsysteem der C.S.V. Alpha' %>
+<%= render partial: 'partials/tomato_quote' %>
+
+<div class="container py-sm-3">
+  <div class="row">
+    <% if current_user&.treasurer? || current_user&.main_bartender? %>
+      <div class="col-12 col-md-6 mb-2">
+        <div class="card">
+          <h5 class="card-header">Welkom,  <%= current_user.name %>
+          </h5>
+          <div class="card-body">
+            <p class="card-text">
+              <strong>
+                Dit zijn jouw rollen in het streepsysteem
+              </strong>
+            </p>
+            <ul>
+              <% current_user.roles.each do |role| %>
+                <li>
+                  <%= role.name %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 mb-2">
+        <div class="card">
+          <h4 class="card-header">
+            <%= fa_icon 'calendar', class: 'mr-1' %>
+            Komende activiteiten
+          </h4>
+          <div class="card-body">
+            <% if @upcoming_activities&.empty? %>
+              <p class="card-text">
+                <%= 'Er zijn geen activiteiten gepland. Maak er een aan op de activiteitenpagina.' %>
+              </p>
+              <%= link_to 'Activiteiten', activities_path, class: 'btn btn-primary btn-block' %>
+            <% else %>
+              <p class="card-text">
+                <%= 'Dit zijn de eerstvolgende vijf activiteiten:' %>
+              </p>
+              <ol>
+                <% @upcoming_activities.each do |activity| %>
+                  <li>
+                    <%= link_to "#{activity.title} – #{l activity.start_time}", activity %>
+                  </li>
+                <% end %>
+              </ol>
+              <% if @current_activities&.any? %>
+                <hr/>
+                <h4 class="card-title text-center">
+                  Direct naar het streepscherm
+                </h4>
+                <% @current_activities.each do |activity| %>
+                  <%= link_to order_screen_activity_url(activity), class: 'btn btn-primary btn-block' do %>
+                    <span>
+                      <%= fa_icon 'calculator', class: 'mr-1' %>
+                      <%= activity.title %>
+                      <br/>
+                      <small>
+                        <%= l activity.start_time %>
+                      </small>
+                    </span>
+                  <% end %>
+                <% end %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% elsif current_user %>
+      <div class="col-12 col-md-4 mb-2 mx-auto">
+        <div class="card">
+          <h4 class="card-header">
+            Welkom,  <%= current_user.name %>
+          </h4>
+          <div class="card-body">
+            <p>
+              Je hebt geen speciale rollen binnen het streepsysteem;
+              je kan hier wel je saldo en bestelgeschiedenis zien
+            </p>
+            <%= link_to current_user, class: 'btn btn-primary btn-block' do %>
+              <%= fa_icon 'user', class: 'mr-1' %>
+              Naar mijn account
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <%= render partial: 'partials/login_prompt' %>
+    <% end %>
+    </div>
+
+    <div class="d-flex flex-column mt-4 py-4 align-items-center">
+      <blockquote class="blockquote text-center">
+        <p class="mb-0">Vakmanschap is meesterschap
+        </p>
+        <footer class="blockquote-footer">
+          Gerard Brummer, Grolsch
+        </footer>
+      </blockquote>
+    </div>
+  </div>
+</div>
