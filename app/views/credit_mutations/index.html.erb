@@ -1,0 +1,66 @@
+<% content_for :title, 'Inleg en saldocorrecties - SOFIA' %>
+<% content_for :modal do %>
+  <%= render 'modal' %>
+<% end %>
+
+<div class="container footer-padding">
+  <div class="row py-4">
+    <div class="col-sm-12">
+      <h1>
+        Inleg en saldocorrecties
+      </h1>
+      <div class="d-flex justify-content-between mb-3 align-items-center">
+        <span>
+          Alle bedragen die ingelegd zijn bij activiteiten, inleg die handmatig ingevoerd is, en gedane correcties.
+        </span>
+        <button class="btn btn-sm btn-primary" data-target="#new_mutation_modal" data-toggle="modal" role="button">
+          <%= fa_icon 'plus', class: 'mr-1' %>
+          Nieuwe inleg of correctie
+        </button>
+      </div>
+    </div>
+    <div class="col-sm-12">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th scope="col">Beschrijving</th>
+            <th scope="col">Gebruiker</th>
+            <th scope="col">Activiteit</th>
+            <th class="text-nowrap" scope="col">
+              Geregistreerd door
+            </th>
+            <th scope="col">Bedrag</th>
+            <th scope="col">Datum</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @credit_mutations&.each do |mutation| %>
+            <tr>
+              <td>
+                <%= mutation.description %>
+              </td>
+              <td>
+                <%= link_to mutation.user.name, mutation.user %>
+              </td>
+              <td>
+                <% if mutation.activity %>
+                  <%= link_to mutation.activity&.title, mutation.activity %>
+                <% end %></td>
+              <td>
+                <%= link_to mutation.created_by.name, mutation.created_by %>
+              </td>
+              <td class="text-nowrap">
+                <%= number_to_currency(mutation.amount, unit: '€') %>
+              </td>
+              <td class="text-nowrap">
+                <%= l(mutation.created_at, format: :with_year) %>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

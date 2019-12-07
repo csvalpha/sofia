@@ -1,0 +1,54 @@
+<div aria-hidden="true" aria-labelledby="new_mutation_modal_label" class="modal" id="new_mutation_modal" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <%= @new_mutation.persisted? ? 'Inleg wijzigen' : 'Nieuwe inleg' %>
+        </h5>
+        <button aria-label="close" class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">
+            <%= fa_icon 'times' %>
+          </span>
+        </button>
+      </div><%= simple_form_for @new_mutation, wrapper: :horizontal_form do |f| %>
+        <div class="modal-body" id="mutations_modal">
+          <%= f.input :description, placeholder: 'Beschrijving', required: true %>
+          <%= f.input :amount, as: :float %>
+
+          <div class="form-group row">
+            <label class="col-3 col-form-label" for="mutations_users">
+              <abbr class="mr-1" title="required">*</abbr>
+              Gebruiker
+            </label>
+            <template>
+              <div class="col-9" style="position:relative">
+
+                <input class="d-none" name="credit_mutation[user_id]" v-bind:value="selectedSuggestion.id" value="<%= @new_mutation.user&.id %>"/>
+                <input @input="updateValue" @keydown.enter="selectFirstSuggestion" aria-haspopup="true" autocomplete="off"
+                       class="form-control" placeholder="Start typing..." required="true" type="text"
+                       v-bind:aria-expanded="dropdownOpened" v-model="query" value="<%= @new_mutation.user&.name %>">
+
+                <div class="row">
+                  <ul class="dropdown-menu ml-3" v-bind:class="{'show':dropdownOpened}">
+                    <li class="dropdown-item" v-for="(suggestion, index) in suggestions" v-on:click.prevent="suggestionClicked(index)">
+                      <a href="#">
+                        {{ suggestion.name }}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-dismiss="modal" type="button">
+            Annuleren
+          </button>
+          <%= f.button :submit, 'Inleg opslaan', class: 'btn btn-primary' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
