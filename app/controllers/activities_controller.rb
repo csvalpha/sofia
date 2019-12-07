@@ -1,10 +1,11 @@
 class ActivitiesController < ApplicationController
   before_action :authenticate_user!
   after_action :verify_authorized
+  after_action :verify_policy_scoped, only: :index
 
   def index # rubocop:disable Metrics/AbcSize
-    @activities = Activity.includes(%i[price_list created_by]).order(start_time: :desc)
-    authorize @activities
+    authorize Activity
+    @activities = policy_scope(Activity.includes(%i[price_list created_by]).order(start_time: :desc))
 
     @activity = Activity.new(
       start_time: (Time.zone.now + 2.hours).beginning_of_hour,
