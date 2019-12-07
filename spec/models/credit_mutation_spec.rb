@@ -37,4 +37,10 @@ RSpec.describe CreditMutation, type: :model do
       it { expect(mutation).not_to be_valid }
     end
   end
+
+  describe '#destroy' do
+    let(:order) { FactoryBot.create(:order) }
+
+    it { expect(order.destroy).to eq false }
+  end
 end
