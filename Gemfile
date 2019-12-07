@@ -29,7 +29,6 @@ gem 'sidekiq', '~> 5.2.1'
 gem 'sidekiq-scheduler', '~> 3.0'
 gem 'simple_form', '~> 5.0'
 gem 'slack-notifier', '~> 2.3.2'
-gem 'slim', '~> 4.0'
 gem 'turbolinks', '~> 5.2'
 gem 'uglifier', '~> 4.1'
 gem 'validates_timeliness', '~> 4.1'
@@ -49,7 +48,6 @@ group :development, :test do
   gem 'pry-rails'
   gem 'rb-readline'
   gem 'rspec-rails'
-  gem 'slim_lint'
 end
 
 group :development do

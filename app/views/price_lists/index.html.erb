@@ -1,0 +1,107 @@
+<% content_for :title, 'Prijslijsten - SOFIA' %>
+<% content_for :modal do %>
+  <%= render 'modal' %>
+<% end %>
+
+<div class="container py-2 footer-padding">
+  <div class="row">
+    <div class="col-sm-12">
+      <h1>
+        Prijslijsten
+      </h1>
+      <div class="d-flex justify-content-between mb-3 align-items-center">
+        <span>
+          Hier worden de vijf nieuwste prijslijsten en alle producten getoond.
+        </span>
+        <button class="btn btn-sm btn-primary" data-target="#editPriceListModal" data-toggle="modal" role="button">
+          <%= fa_icon 'plus', class: 'mr-1' %>
+          Nieuwe prijslijst
+        </button>
+      </div>
+
+      <%= content_tag :table, id: 'price_lists_table', class: 'table table-striped table-responsive-md',
+                      data: {price_lists: @recent_price_lists_json, products: @products_json} do %>
+        <thead class="table-header-rotated products">
+        <tr>
+          <th class="products-id" scope="col">ID</th>
+          <th class="products-name" scope="col">Product</th>
+          <th class="products-category" scope="col">Categorie</th>
+          <th class="products-pricelist rotate" scope="col" v-for="priceList in priceLists">
+            <div class="center-text" v-bind:title="priceList.name">
+              <span>
+                {{ priceList.name }}
+              </span>
+            </div>
+          </th>
+          <th class="products-actions" v-if="priceLists.length > 0">
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr @keyup.enter="saveProduct(product)" @keyup.esc="cancelEditProduct(product)" class="products-product" v-for="product in products" v-on:dblclick="editProduct(product)">
+          <template v-if="product.editing">
+            <td class="products-cancel-edit" v-on:click="cancelEditProduct(product)">
+              <span title="Cancel" v-if="product.id">
+                <%= fa_icon 'undo lg' %>
+              </span>
+              <span title="Remove" v-else="">
+                <%= fa_icon 'times lg' %>
+              </span>
+            </td>
+            <td class="products-new">
+              <div class="input-group">
+                <input class="form-control" placeholder="Productnaam" type="text" v-model="product.name"/>
+              </div>
+            </td>
+            <td class="products-new">
+              <div class="input-group">
+                <select class="form-control" v-model="product.category">
+                  <% Product.categories.each do |category| %>
+                    <%= content_tag :option, value: category.first do %>
+                      <%= t category.first %>
+                    <% end %>
+                  <% end %>
+                </select>
+              </div>
+            </td>
+            <td class="products-new-price" v-for="priceList in priceLists">
+              <div class="input-group">
+                <input class="form-control" placeholder="2.18" type="text" v-model="findPrice(product, priceList).price"/>
+              </div>
+            </td>
+            <td class="products-save-new" v-on:click="saveProduct(product)">
+            <span class="btn btn-primary">
+              <%= fa_icon 'floppy-o lg' %>
+            </span></td>
+          </template>
+          <template v-else="">
+            <th scope="row">{{ product.id }}</th>
+            <td>{{ product.name }}</td>
+            <td>{{ product.t_category }}</td>
+            <td class="product-price center-text" v-for="priceList in priceLists">
+              <span v-bind:title="product.name + ' in lijst ' + priceList.name">
+                {{ productPriceToCurrency(findPrice(product, priceList)) }}
+              </span>
+            </td>
+            <td class="products-new-edit-button" v-if="priceLists.length > 0">
+              <button class="btn btn-sm btn-outline-secondary" v-on:click="editProduct(product)">
+                <%= fa_icon 'pencil' %>
+              </button>
+            </td>
+          </template>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <button class="btn btn-secondary btn-sm btn-block products-button-new" v-on:click.prevent="newProduct">
+              Voeg een nieuw product toe
+              <%= fa_icon 'plus-square', class: 'pl-2' %>
+            </button>
+          </td>
+          <td colspan="6"></td>
+        </tr>
+        </tbody>
+      <% end %>
+    </div>
+  </div>
+  <hr class="mb-3"/>
+</div>
