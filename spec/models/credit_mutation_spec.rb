@@ -30,7 +30,7 @@ RSpec.describe CreditMutation, type: :model do
       it { expect(mutation).not_to be_valid }
     end
 
-    context 'when with too much amount' do
+    context 'when with too high amount' do
       subject(:mutation) { FactoryBot.build_stubbed(:credit_mutation, amount: 1001) }
 
       it { expect(mutation).not_to be_valid }
