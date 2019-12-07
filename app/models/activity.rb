@@ -1,4 +1,6 @@
 class Activity < ApplicationRecord
+  before_destroy :can_destroy?
+
   has_many :orders, dependent: :destroy
   has_many :credit_mutations, dependent: :destroy
   belongs_to :price_list
@@ -9,7 +11,6 @@ class Activity < ApplicationRecord
   validates_datetime :end_time, after: :start_time
   validate :activity_not_locked
 
-  before_destroy :can_destroy?
 
   scope :upcoming, (lambda {
     where('(start_time < ? and end_time > ?) or start_time > ?', Time.zone.now,
