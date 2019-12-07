@@ -5,7 +5,7 @@ describe ActivitiesController, type: :controller do
     let(:activity) do
       FactoryBot.create(:activity, price_list: FactoryBot.create(:price_list))
     end
-    let(:additional_records) { }
+    let(:additional_records) {}
     let(:request) do
       delete :destroy, params: { id: activity.id }
     end

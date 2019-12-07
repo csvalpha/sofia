@@ -11,7 +11,6 @@ class Activity < ApplicationRecord
   validates_datetime :end_time, after: :start_time
   validate :activity_not_locked
 
-
   scope :upcoming, (lambda {
     where('(start_time < ? and end_time > ?) or start_time > ?', Time.zone.now,
           Time.zone.now, Time.zone.now).order(:start_time, :end_time)

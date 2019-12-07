@@ -10,6 +10,11 @@
           <%= fa_icon 'pencil' %> Naam aanpassen
         </button>
       <% end %>
+      <% if @activity.destroyable? %>
+        <%= button_to @activity, method: :delete, class: 'btn btn-sm btn-danger mb-2' do %>
+          <%= fa_icon 'trash' %> Activiteit verwijderen
+        <% end %>
+      <% end %>
 
       <table class="table table-sm">
         <tbody>
