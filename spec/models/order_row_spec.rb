@@ -75,4 +75,10 @@ RSpec.describe OrderRow, type: :model do
       it { expect(order_row.available_products).to match_array(all_products) }
     end
   end
+
+  describe '#destroy' do
+    let(:order) { FactoryBot.create(:order) }
+
+    it { expect(order.destroy).to eq false }
+  end
 end

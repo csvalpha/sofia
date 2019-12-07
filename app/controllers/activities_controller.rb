@@ -41,6 +41,19 @@ class ActivitiesController < ApplicationController
     redirect_to @activity
   end
 
+  def destroy
+    @activity = Activity.find(params[:id])
+    authorize @activity
+
+    if @activity.destroy
+      flash[:success] = 'Activiteit verwijderd'
+    else
+      flash[:error] = "Activiteit verwijderen mislukt; #{@activity.errors.full_messages.join(', ')}"
+    end
+
+    redirect_to Activity
+  end
+
   def show # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @activity = Activity.includes(:price_list,
                                   { orders: [{ order_rows: :product }, :user, :created_by] },

@@ -7,6 +7,8 @@ class CreditMutation < ApplicationRecord
 
   validate :activity_not_locked
 
+  before_destroy -> { throw(:abort) }
+
   def activity_not_locked
     return if activity.blank?
 

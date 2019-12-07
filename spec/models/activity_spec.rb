@@ -104,6 +104,40 @@ RSpec.describe Activity, type: :model do
     end
   end
 
+  describe '#destroyable' do
+    context 'when locked' do
+      let(:activity) { FactoryBot.create(:activity, :locked) }
+
+      it { expect(activity.destroyable?).to eq false }
+    end
+
+    context 'when with orders' do
+      let(:activity) { FactoryBot.create(:activity) }
+
+      before do
+        FactoryBot.create(:order, activity: activity)
+      end
+
+      it { expect(activity.destroyable?).to eq false }
+    end
+
+    context 'when with credit mutations' do
+      let(:activity) { FactoryBot.create(:activity) }
+
+      before do
+        FactoryBot.create(:credit_mutation, activity: activity)
+      end
+
+      it { expect(activity.destroyable?).to eq false }
+    end
+
+    context 'when empty' do
+      let(:activity) { FactoryBot.create(:activity) }
+
+      it { expect(activity.destroyable?).to eq true }
+    end
+  end
+
   describe '.upcoming' do
     let(:past_activity) do
       FactoryBot.create(:activity, start_time: 2.days.ago, end_time: 1.day.ago)
