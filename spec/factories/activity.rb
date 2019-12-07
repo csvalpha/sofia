@@ -1,13 +1,13 @@
 FactoryBot.define do
   factory :activity do
     title { Faker::Book.title }
-    start_time { Faker::Time.between(1.day.ago, Time.zone.today).beginning_of_hour }
-    end_time { Faker::Time.between(1.day.from_now, 2.days.from_now).beginning_of_hour }
+    start_time { Faker::Time.between(from: 1.day.ago, to: Time.zone.today).beginning_of_hour }
+    end_time { Faker::Time.between(from: 1.day.from_now, to: 2.days.from_now).beginning_of_hour }
     association :created_by, factory: :user
     price_list
 
     trait :locked do
-      start_time { Faker::Time.between(80.days.ago, 75.days.ago).beginning_of_hour }
+      start_time { Faker::Time.between(from: 80.days.ago, to: 75.days.ago).beginning_of_hour }
       end_time { 74.days.ago.beginning_of_hour }
     end
 
