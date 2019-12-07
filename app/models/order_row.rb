@@ -12,6 +12,8 @@ class OrderRow < ApplicationRecord
 
   before_create :copy_product_price
 
+  before_destroy -> { throw(:abort) }
+
   def copy_product_price
     self.price_per_product = order.activity.price_list.product_price_for(product).price
   end
