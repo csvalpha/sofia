@@ -61,6 +61,12 @@ RSpec.describe Activity, type: :model do
 
       it { expect(activity).not_to be_valid }
     end
+
+    context 'when locked manually' do
+      subject(:activity) { FactoryBot.build(:activity, :manually_locked) }
+
+      it { expect(activity).not_to be_valid }
+    end
   end
 
   describe 'cannot destroy an activity when locked' do
@@ -72,6 +78,12 @@ RSpec.describe Activity, type: :model do
 
     context 'when after two months' do
       subject(:activity) { FactoryBot.build(:activity, :locked) }
+
+      it { expect(activity.destroy).to eq false }
+    end
+
+    context 'when manually locked' do
+      subject(:activity) { FactoryBot.build(:activity, :manually_locked) }
 
       it { expect(activity.destroy).to eq false }
     end
@@ -89,6 +101,40 @@ RSpec.describe Activity, type: :model do
       subject(:activity) { FactoryBot.build(:activity) }
 
       it { expect(activity.locked?).to be false }
+    end
+  end
+
+  describe '#destroyable' do
+    context 'when locked' do
+      let(:activity) { FactoryBot.create(:activity, :locked) }
+
+      it { expect(activity.destroyable?).to eq false }
+    end
+
+    context 'when with orders' do
+      let(:activity) { FactoryBot.create(:activity) }
+
+      before do
+        FactoryBot.create(:order, activity: activity)
+      end
+
+      it { expect(activity.destroyable?).to eq false }
+    end
+
+    context 'when with credit mutations' do
+      let(:activity) { FactoryBot.create(:activity) }
+
+      before do
+        FactoryBot.create(:credit_mutation, activity: activity)
+      end
+
+      it { expect(activity.destroyable?).to eq false }
+    end
+
+    context 'when empty' do
+      let(:activity) { FactoryBot.create(:activity) }
+
+      it { expect(activity.destroyable?).to eq true }
     end
   end
 
@@ -116,6 +162,21 @@ RSpec.describe Activity, type: :model do
 
     it { expect(described_class.current).to include current_activity }
     it { expect(described_class.current).not_to include past_activity }
+  end
+
+  describe '.not_locked' do
+    let(:not_locked_activity) { FactoryBot.create(:activity) }
+    let(:time_locked_activity) { FactoryBot.create(:activity, :locked) }
+    let(:manually_locked_activity) { FactoryBot.create(:activity, :manually_locked) }
+
+    before do
+      not_locked_activity
+      time_locked_activity
+      manually_locked_activity
+    end
+
+    it { expect(described_class.not_locked.size).to eq 1 }
+    it { expect(described_class.not_locked).to include not_locked_activity }
   end
 
   describe 'reporting' do

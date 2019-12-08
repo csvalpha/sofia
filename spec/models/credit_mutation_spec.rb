@@ -30,11 +30,23 @@ RSpec.describe CreditMutation, type: :model do
       it { expect(mutation).not_to be_valid }
     end
 
+    context 'when with too high amount' do
+      subject(:mutation) { FactoryBot.build_stubbed(:credit_mutation, amount: 1001) }
+
+      it { expect(mutation).not_to be_valid }
+    end
+
     context 'when with a locked activity' do
       let(:activity) { FactoryBot.build(:activity, :locked) }
       let(:mutation) { FactoryBot.build(:credit_mutation, activity: activity) }
 
       it { expect(mutation).not_to be_valid }
     end
+  end
+
+  describe '#destroy' do
+    let(:order) { FactoryBot.create(:order) }
+
+    it { expect(order.destroy).to eq false }
   end
 end

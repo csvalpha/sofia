@@ -1,14 +1,15 @@
 class Activity < ApplicationRecord
+  before_destroy :can_destroy?
+
   has_many :orders, dependent: :destroy
   has_many :credit_mutations, dependent: :destroy
   belongs_to :price_list
   belongs_to :created_by, class_name: 'User', inverse_of: :activities
+  belongs_to :locked_by, class_name: 'User', optional: true
 
   validates :title, :start_time, :end_time, :price_list, :created_by, presence: true
   validates_datetime :end_time, after: :start_time
   validate :activity_not_locked
-
-  before_destroy :destroyable?
 
   scope :upcoming, (lambda {
     where('(start_time < ? and end_time > ?) or start_time > ?', Time.zone.now,
@@ -18,6 +19,10 @@ class Activity < ApplicationRecord
   scope :current, (lambda {
     where('(start_time < ? and end_time > ?)', Time.zone.now,
           Time.zone.now).order(:start_time, :end_time)
+  })
+
+  scope :not_locked, (lambda {
+    where('end_time >= ? AND locked_by_id IS NULL', Time.zone.now - 2.months)
   })
 
   delegate :products, to: :price_list
@@ -80,20 +85,30 @@ class Activity < ApplicationRecord
   end
 
   def locked?
-    end_time && Time.zone.now > lock_date
+    locked_by || time_locked?
   end
 
   def lock_date
     end_time + 2.months
   end
 
+  def destroyable?
+    !locked? && orders.empty? && credit_mutations.empty?
+  end
+
   private
 
   def activity_not_locked
-    errors.add(:base, 'Activity cannot be changed after lock date') if locked? && changed?
+    return if locked_by_id_changed?(from: nil)
+
+    errors.add(:base, 'Activity cannot be changed when locked') if locked? && changed?
   end
 
-  def destroyable?
-    throw(:abort) if locked?
+  def can_destroy?
+    throw(:abort) unless destroyable?
+  end
+
+  def time_locked?
+    end_time && Time.zone.now > lock_date
   end
 end

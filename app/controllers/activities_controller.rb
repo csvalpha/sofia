@@ -1,10 +1,11 @@
 class ActivitiesController < ApplicationController
   before_action :authenticate_user!
   after_action :verify_authorized
+  after_action :verify_policy_scoped, only: :index
 
   def index # rubocop:disable Metrics/AbcSize
-    @activities = Activity.includes(%i[price_list created_by]).order(start_time: :desc)
-    authorize @activities
+    authorize Activity
+    @activities = policy_scope(Activity.includes(%i[price_list created_by]).order(start_time: :desc))
 
     @activity = Activity.new(
       start_time: (Time.zone.now + 2.hours).beginning_of_hour,
@@ -25,6 +26,32 @@ class ActivitiesController < ApplicationController
     end
 
     redirect_to activities_url
+  end
+
+  def update
+    @activity = Activity.find(params[:id])
+    authorize @activity
+
+    if @activity.update(params.require(:activity).permit(%i[title]))
+      flash[:success] = 'Activiteit hernoemd'
+    else
+      flash[:error] = "Activiteit hernoemen mislukt; #{@activity.errors.full_messages.join(', ')}"
+    end
+
+    redirect_to @activity
+  end
+
+  def destroy
+    @activity = Activity.find(params[:id])
+    authorize @activity
+
+    if @activity.destroy
+      flash[:success] = 'Activiteit verwijderd'
+    else
+      flash[:error] = "Activiteit verwijderen mislukt; #{@activity.errors.full_messages.join(', ')}"
+    end
+
+    redirect_to Activity
   end
 
   def show # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
@@ -75,6 +102,21 @@ class ActivitiesController < ApplicationController
     activity = Activity.includes(:price_list, orders: [{ order_rows: :product }, :user]).find(params[:id])
 
     render json: activity.count_per_product(**params.permit(:user, :paid_with_pin, :paid_with_cash).to_h.symbolize_keys)
+  end
+
+  def lock
+    activity = Activity.find(params[:id])
+    authorize activity
+
+    activity.locked_by = current_user
+
+    if activity.save
+      flash[:success] = 'Activiteit is succesvol vergrendeld'
+    else
+      flash[:error] = activity.errors.full_messages.join(', ')
+    end
+
+    redirect_to activity
   end
 
   private

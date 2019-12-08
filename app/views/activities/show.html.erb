@@ -1,0 +1,340 @@
+<% content_for :title, "Activiteit #{@activity.title} - SOFIA" %>
+<div id="activity" class="container footer-padding">
+  <div class="row justify-content-between">
+    <div class="col-sm-12 col-md-6 py-2">
+      <h1>
+        <%= fa_icon 'calendar', class: 'mr-2', text: @activity.title %>
+      </h1>
+      <% unless @activity.locked? %>
+        <button class="btn btn-sm btn-primary mb-2" role="button" data-toggle="modal" data-target="#edit_activity_modal">
+          <%= fa_icon 'pencil' %> Naam aanpassen
+        </button>
+      <% end %>
+      <% if @activity.destroyable? %>
+        <%= button_to @activity, method: :delete, class: 'btn btn-sm btn-danger mb-2' do %>
+          <%= fa_icon 'trash' %> Activiteit verwijderen
+        <% end %>
+      <% end %>
+
+      <table class="table table-sm">
+        <tbody>
+        <tr>
+          <th scope="row">Starttijd</th>
+          <td><%= l @activity.start_time, format: :long %></td>
+        </tr>
+        <tr>
+          <th scope="row">Eindtijd</th>
+          <td><%= l @activity.end_time, format: :long %></td>
+        </tr>
+        <tr>
+          <th scope="row">Vergrendelt op</th>
+          <td><%= l @activity.lock_date, format: :long %></td>
+        </tr>
+        <tr>
+          <th scope="row">Prijslijst</th>
+          <td><%= @price_list.name %></td>
+        </tr>
+        <tr>
+          <th scope="row">Gemaakt door</th>
+          <td><%= @activity.created_by.name %></td>
+        </tr>
+        <tr>
+          <th scope="row">Tappers</th>
+          <td><%= @bartenders.map(&:name).join(', ') %></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card col-sm-12 col-md-6 col-lg-4 py-2 align-self-start">
+      <div class="card-body">
+        <h2 class="card-title">
+          Streepscherm
+        </h2>
+        <% if @activity.locked? %>
+          <div class="card-text">
+            <div class="alert alert-danger">
+              Deze activiteit is vergrendeld.
+              Er kunnen geen nieuwe bestellingen worden geplaatst en geen saldocorrecties meer worden toegevoegd.
+            </div>
+          </div>
+          <% if @activity.locked_by %>
+            <div class="card-text">
+              <div class="alert alert-info">
+                Deze activiteit is vergrendeld door <%= @activity.locked_by.name %>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="card-text">
+            Je kan bestellingen plaatsen in het streepscherm.
+          </p>
+          <%= link_to order_screen_activity_url(@activity), class: 'btn btn-primary btn-block' do %>
+            Naar het streepscherm
+            <%= fa_icon 'calculator', class: 'ml-1' %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <hr/>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <ul class="nav nav-tabs" id="activityTabs" role="tablist">
+        <li class="nav-item">
+          <a aria-controls="summary" aria-selected="true" class="nav-link active" data-toggle="tab" href="#summary" id="summary-tab" role="tab">
+            Samenvatting
+          </a>
+        </li>
+        <li class="nav-item">
+          <a aria-controls="credit_mutations" aria-selected="false" class="nav-link" data-toggle="tab" href="#credit_mutations" id="credit_mutations-tab" role="tab">
+            Inleg en correcties
+          </a>
+        </li>
+        <% if current_user.treasurer? %>
+          <li class="nav-item">
+            <a aria-controls="orders" aria-selected="false" class="nav-link" data-toggle="tab" href="#orders" id="orders-tab" role="tab">
+              Bestellingen
+            </a>
+          </li>
+        <% end %>
+        <li class="nav-item">
+          <a aria-controls="product_totals-tab" aria-selected="false" class="nav-link" data-toggle="tab" href="#product_totals" id="product_totals-tab" role="tab">
+            Producttotalen
+          </a>
+        </li>
+      </ul>
+      <div class="tab-content p-2" id="activityTabsContent">
+        <div aria-labelledby="summary-tab" class="tab-pane show active" id="summary" role="tabpanel">
+          <div class="row justify-content-between">
+            <% if @credit_mutations.empty? && @orders.empty? %>
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <tbody>
+                  <tr>
+                    <td class="text-center" colspan="4">
+                      <p class="my-1">
+                        <em>
+                          Er zijn nog geen bestellingen en er is nog niet ingelegd
+                        </em>
+                      </p>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            <% else %>
+              <div class="col-12 col-md-6">
+                <table class="table table-sm">
+                  <thead>
+                  <tr>
+                    <th scope="col">Resultaat</th>
+                    <th scope="col">Code</th>
+                    <th class="text-right" scope="col">Credit</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <% Product.categories.each do |category| %>
+                    <tr>
+                      <td><%= t(category.first).capitalize %>
+                      </td>
+                      <td><%= t("codes.#{category.first}") %>
+                      </td>
+                      <td class="text-right">
+                        <%= number_to_currency(@revenue_by_category[category[0]] || 0, unit: '€') %>
+                      </td>
+                    </tr>
+                  <% end %>
+                  <tr>
+                    <th class="pl-4" scope="row">Totaal opbrengsten</th>
+                    <td></td>
+                    <td class="text-right">
+                      <strong><%= number_to_currency(@revenue_total, unit: '€') %>
+                      </strong>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-12 col-md-5">
+                <table class="table table-sm">
+                  <thead>
+                  <tr>
+                    <th scope="col">Balans</th>
+                    <th scope="col">Code</th>
+                    <th class="text-right" scope="col">Credit</th>
+                    <th class="text-right" scope="col">Debit</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <td>Inleg Zatladder Inlegsysteem</td>
+                    <td><%= t('codes.credit_mutation') %>                    </td>
+                    <td class="text-right">
+                      <%= number_to_currency(@credit_mutations_total, unit: '€') %>
+                    </td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Contante bestellingen</td>
+                    <td></td>
+                    <td class="text-right"><%= number_to_currency(@revenue_with_cash, unit: '€') %></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td title="Contante inleg plus contante betalingen">
+                      <strong>
+                        Totaal kas
+                      </strong>
+                    </td>
+                    <td><%= t('codes.cash') %></td>
+                    <td></td>
+                    <td class="text-right"><%= number_to_currency(@cash_total, unit: '€') %></td>
+                  </tr>
+                  <tr>
+                    <td>Omzet Pin</td>
+                    <td><%= t('codes.pin') %></td>
+                    <td></td>
+                    <td class="text-right"><%= number_to_currency(@revenue_with_pin, unit: '€') %></td>
+                  </tr>
+                  <tr>
+                    <td>Omzet Zatladder Inlegsysteem</td>
+                    <td><%= t('codes.credit_mutation') %></td>
+                    <td></td>
+                    <td class="text-right"><%= number_to_currency(@revenue_with_credit, unit: '€') %></td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            <% end %></div>
+        </div>
+        <div aria-labelledby="credit_mutations-tab" class="tab-pane" id="credit_mutations" role="tabpanel">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <% if @credit_mutations.empty? %>
+                <tr>
+                  <td class="text-center" colspan="4">
+                    <p class="my-1">
+                      <em>
+                        Er zijn nog geen correcties en er is nog niet ingelegd
+                      </em>
+                    </p>
+                  </td>
+                </tr>
+              <% else %>
+                <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Tijd</th>
+                  <th scope="col">Gebruiker</th>
+                  <th scope="col">Bedrag</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% @credit_mutations.each do |mutation| %>
+                  <tr>
+                    <th scope="row"><%= mutation.id %></th>
+                    <td><%= l mutation.created_at, format: :time_only %></td>
+                    <td><%= link_to mutation.user.name, mutation.user %></td>
+                    <td><%= number_to_currency(mutation.amount, unit: '€') %></td>
+                  </tr>
+                <% end %>
+                </tbody>
+              <% end %>
+            </table>
+          </div>
+        </div>
+        <% if current_user.treasurer? %>
+          <div aria-labelledby="orders-tab" class="tab-pane" id="orders" role="tabpanel">
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <% if @orders.empty? %>
+                  <tr>
+                    <td class="text-center" colspan="4">
+                      <p class="my-1">
+                        <em>
+                          Er zijn nog geen bestellingen
+                        </em>
+                      </p>
+                    </td>
+                  </tr>
+                <% else %>
+                  <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Tijd</th>
+                    <th scope="col">Gebruiker</th>
+                    <th scope="col">Bedrag</th>
+                    <th scope="col">Producten</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <% @orders.each do |order| %>
+                    <tr>
+                      <th scope="row"><%= order.id %>
+                      </th>
+                      <td><%= l order.created_at, format: :time_only %></td>
+                      <td>
+                        <% if order.user.present? %>
+                          <%= link_to order.user.name, order.user %>
+                        <% end %>
+                        <% if order.paid_with_pin %>
+                          <em>
+                            Gepind
+                          </em>
+                        <% end %>
+                        <% if order.paid_with_cash %>
+                          <em>
+                            Contant betaald
+                          </em>
+                        <% end %></td>
+                      <td><%= number_to_currency(order.order_total, unit: '€') %></td>
+                      <td>
+                        <% order.order_rows.each_with_index do |order_row, i| %>
+                          <%= order_row.product.name %>
+                          <% if order_row.product_count > 1 %>
+                            ( <%= order_row.product_count %> x)
+                          <% end %>
+                          <% if i < order.order_rows.size - 1 %>
+                            ,
+                          <% end %>
+                        <% end %>
+                      </td>
+                    </tr>
+                  <% end %>
+                  </tbody>
+                <% end %>
+              </table>
+            </div>
+          </div>
+        <% end %>
+        <div aria-labelledby="product_totals-tab" class="tab-pane" id="product_totals" role="tabpanel">
+          <div class="row">
+            <div class="col-6 mx-auto">
+              <product-totals activity="<%= @activity.id %>"></product-totals>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <% if current_user.treasurer? && !@activity.locked? %>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="alert alert-danger">
+          <div>
+            Het vergendelen van de activiteit zorgt er voor dat er geen wijzigingen meer op uitgevoerd kunnen worden.
+            <b>Deze actie is niet ongedaan te maken!</b>
+          </div>
+          <div class="mt-3">
+            <%= simple_form_for @activity, url: lock_activity_path, method: 'POST' do |f| %>
+              <%= f.button :submit, 'Activiteit vergrendelen', class: 'btn btn-danger' %>
+            <% end %>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  <% end %>
+</div>

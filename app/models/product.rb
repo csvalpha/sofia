@@ -1,5 +1,5 @@
 class Product < ApplicationRecord
-  enum category: %i[beer non_alcoholic distilled wine food tobacco]
+  enum category: { beer: 0, non_alcoholic: 1, distilled: 2, wine: 3, food: 4, tobacco: 5 }
 
   has_many :product_prices, dependent: :destroy
   has_many :price_lists, through: :product_prices, dependent: :restrict_with_error

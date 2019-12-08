@@ -7,7 +7,7 @@ class PriceList < ApplicationRecord
 
   def product_price_for(product)
     @product_price ||= ProductPrice.includes(:product).where(price_list: self)
-    @product_price.select { |pp| pp.product == product }.first
+    @product_price.find { |pp| pp.product == product }
   end
 
   def to_s

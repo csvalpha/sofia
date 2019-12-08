@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_26_165012) do
+ActiveRecord::Schema.define(version: 2019_12_03_092019) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,7 +24,9 @@ ActiveRecord::Schema.define(version: 2019_09_26_165012) do
     t.datetime "updated_at", null: false
     t.bigint "price_list_id"
     t.bigint "created_by_id"
+    t.bigint "locked_by_id"
     t.index ["created_by_id"], name: "index_activities_on_created_by_id"
+    t.index ["locked_by_id"], name: "index_activities_on_locked_by_id"
     t.index ["price_list_id"], name: "index_activities_on_price_list_id"
   end
 
@@ -138,6 +140,7 @@ ActiveRecord::Schema.define(version: 2019_09_26_165012) do
   end
 
   add_foreign_key "activities", "users", column: "created_by_id"
+  add_foreign_key "activities", "users", column: "locked_by_id"
   add_foreign_key "credit_mutations", "users", column: "created_by_id"
   add_foreign_key "orders", "users", column: "created_by_id"
 end

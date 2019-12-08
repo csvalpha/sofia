@@ -1,10 +1,11 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: 'callbacks' }
 
-  resources :activities, only: %i[index show create update] do
+  resources :activities, only: %i[index show create update destroy] do
     member do
       get :order_screen
       get :product_totals
+      post :lock
     end
   end
 

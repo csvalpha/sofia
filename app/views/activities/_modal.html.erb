@@ -1,0 +1,55 @@
+<%= content_tag :div, class: 'modal', id: 'edit_activity_modal', role: 'dialog', 'aria-labelledby' => 'edit_activity_modal_label', 'aria-hidden' => 'true', data: {price_lists: @price_lists_json} do %>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          Nieuwe activiteit
+        </h5>
+        <button aria-label="close" class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">
+            <%= fa_icon 'times' %>
+          </span>
+        </button>
+      </div><%= simple_form_for @activity, wrapper: :horizontal_form do |f| %>
+        <div class="modal-body" id="activities_modal">
+          <%= f.input :title, placeholder: 'Titel', required: true %>
+          <%= f.input :start_time, as: :string, order: %i[hour minute day month year] %>
+          <%= f.input :end_time, as: :string, order: %i[hour minute day month year] %>
+
+          <div class="form-group row">
+            <label class="col-3 col-form-label" for="activity_price_list">
+              <abbr class="mr-1" title="required">*</abbr>
+              Prijslijst
+
+            </label>
+            <template>
+              <div class="col-9" style="position:relative">
+                <input class="d-none" name="activity[price_list_id]" v-bind:value="selectedSuggestion.id"/>
+
+                <input @focus="openSuggestions" @input="openSuggestions" aria-haspopup="true" autocomplete="off"
+                       class="form-control" placeholder="Begin met typen..." required="true" type="text"
+                       v-bind:aria-expanded="dropdownOpened" v-model="query"/>
+                <div class="row">
+                  <ul class="dropdown-menu ml-3" v-bind:class="{'show':dropdownOpened}">
+
+                    <li class="dropdown-item" v-for="(suggestion, index) in suggestions" v-on:click.prevent="suggestionClicked(index)">
+                      <a href="#">
+                        {{ suggestion.name }}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-dismiss="modal" type="button">
+            Annuleren
+          </button>
+          <%= f.button :submit, 'Activiteit opslaan', class: 'btn btn-primary' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

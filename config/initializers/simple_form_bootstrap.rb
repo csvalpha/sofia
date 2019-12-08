@@ -9,7 +9,7 @@ SimpleForm.setup do |config|
     b.optional :maxlength
     b.optional :minlength
     b.optional :pattern
-    b.optional :min_max
+    b.use :min_max
     b.optional :readonly
 
     b.use :label, class: 'col-form-label' do
@@ -61,7 +61,7 @@ SimpleForm.setup do |config|
     b.optional :maxlength
     b.optional :minlength
     b.optional :pattern
-    b.optional :min_max
+    b.use :min_max
     b.optional :readonly
 
     b.use :label, class: 'col-md-3 col-form-label'
@@ -119,7 +119,7 @@ SimpleForm.setup do |config|
     b.optional :maxlength
     b.optional :minlength
     b.optional :pattern
-    b.optional :min_max
+    b.use :min_max
     b.optional :readonly
 
     b.use :label, class: 'sr-only'

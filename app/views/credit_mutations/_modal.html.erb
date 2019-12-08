@@ -1,0 +1,40 @@
+<div aria-hidden="true" aria-labelledby="new_mutation_modal_label" class="modal" id="new_mutation_modal" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <%= @new_mutation.persisted? ? 'Inleg wijzigen' : 'Nieuwe inleg' %>
+        </h5>
+        <button aria-label="close" class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">
+            <%= fa_icon 'times' %>
+          </span>
+        </button>
+      </div><%= simple_form_for @new_mutation, wrapper: :horizontal_form do |f| %>
+        <div class="modal-body" id="mutations_modal">
+          <%= f.input :description, placeholder: 'Beschrijving' %>
+          <%= f.input :amount, as: :float %>
+
+          <div class="form-group row">
+            <label class="col-3 col-form-label" for="mutations_users">
+              <abbr class="mr-1" title="required">*</abbr>
+              Gebruiker
+            </label>
+            <template>
+              <div class="col-9" style="position:relative">
+                <user-input name="credit_mutation[user_id]"></user-input>
+              </div>
+            </template>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-dismiss="modal" type="button">
+            Annuleren
+          </button>
+          <%= f.button :submit, 'Inleg opslaan', class: 'btn btn-primary' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

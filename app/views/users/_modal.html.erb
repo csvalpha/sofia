@@ -1,0 +1,31 @@
+<div aria-hidden="true" aria-labelledby="edit_user_model_label" class="modal fade" id="edit_user_modal" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <%= @new_user.persisted? ? 'Gebruiker wijzigen' : 'Nieuwe gebruiker' %>
+        </h5>
+        <button aria-label="close" class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">
+            <%= fa_icon 'times' %>
+          </span>
+        </button>
+      </div>
+      <%= simple_form_for @new_user, wrapper: :horizontal_form do |f| %>
+
+        <div class="modal-body" id="activities_modal">
+          <%= f.input :name, placeholder: 'Naam', required: true %>
+          <%= f.input :email, placeholder: 'E-Mail' %>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-dismiss="modal" type="button">
+            Annuleren
+          </button>
+          <%= f.button :submit, 'Gebruiker opslaan', class: 'btn btn-primary' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

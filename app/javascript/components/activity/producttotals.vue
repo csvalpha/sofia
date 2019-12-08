@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="product-totals">
-    <user-input class="mb-3" v-model="user" include-payment="true"></user-input>
+    <user-input class="mb-3" v-model="user" :include-payment="true"></user-input>
 
     <spinner class="pb-3 m-auto" size="large" v-if="isLoading" />
     <div class="table-responsive" v-else>

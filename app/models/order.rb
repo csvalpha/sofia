@@ -13,7 +13,7 @@ class Order < ApplicationRecord
   validate :user_or_cash_or_pin
   validate :activity_not_locked
 
-  before_destroy :destroyable?
+  before_destroy -> { throw(:abort) }
 
   scope :orders_for, (->(user) { where(user: user) })
 
@@ -29,9 +29,5 @@ class Order < ApplicationRecord
 
   def activity_not_locked
     errors.add(:activity, 'has been locked') if changed? && activity.locked?
-  end
-
-  def destroyable?
-    throw(:abort) if activity.locked?
   end
 end
