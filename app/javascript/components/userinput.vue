@@ -30,7 +30,11 @@
           id: 0
         }
       },
-      includePayment: {
+      includePin: {
+        type: Boolean,
+        default: false
+      },
+      includeCash: {
         type: Boolean,
         default: false
       }
@@ -85,13 +89,15 @@
           response.data.forEach((a) => {
             this.suggestions.push(a);
           });
-          if (this.includePayment) {
+          if (this.includePin) {
             if ("gepind".indexOf(this.query.toLowerCase()) >= 0) {
               this.suggestions.push({
                 name: "Gepind",
                 paid_with_pin: true
               })
             }
+          }
+          if (this.includeCash) {
             if ("contant betaald".indexOf(this.query.toLowerCase()) >= 0) {
               this.suggestions.push({
                 name: "Contant betaald",

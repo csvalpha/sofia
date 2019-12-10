@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="product-totals">
-    <user-input class="mb-3" v-model="user" :include-payment="true"></user-input>
+    <user-input class="mb-3" v-model="user" :include-pin="true" :include-cash="true"></user-input>
 
     <spinner class="pb-3 m-auto" size="large" v-if="isLoading" />
     <div class="table-responsive" v-else>
@@ -56,17 +56,17 @@
       loadProductTotals() {
         this.isLoading = true;
 
-        let url = '/activities/'+this.activity+'/product_totals';
+        let params = {};
         if (this.user.id > 0) {
-          url += '?user='+this.user.id;
+          params.user = this.user.id;
         }
         if (this.user.paid_with_cash) {
-          url += '?paid_with_cash=true';
+          params.paid_with_cash = true;
         }
         if (this.user.paid_with_pin) {
-          url += '?paid_with_pin=true';
+          params.paid_with_pin = true;
         }
-        this.$http.get(url).then((response) => {
+        this.$http.get('/activities/'+this.activity+'/product_totals', { params }).then((response) => {
           this.orderTotals = response.body;
           this.isLoading = false;
         })
