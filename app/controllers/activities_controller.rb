@@ -1,4 +1,4 @@
-class ActivitiesController < ApplicationController
+class ActivitiesController < ApplicationController # rubocop:disable Metrics/ClassLength
   before_action :authenticate_user!
   after_action :verify_authorized
   after_action :verify_policy_scoped, only: :index
