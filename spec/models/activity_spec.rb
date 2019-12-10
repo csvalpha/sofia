@@ -259,8 +259,8 @@ RSpec.describe Activity, type: :model do
         FactoryBot.create(:order_row, order: order, product_count: 3, product: products.last)
       end
 
-      it { expect(activity.count_per_product[products.first]).to eq 2 }
-      it { expect(activity.count_per_product[products.last]).to eq 3 }
+      it { expect(activity.count_per_product.find { |item| item[:name] == products.first[:name] }[:amount]).to eq 2 }
+      it { expect(activity.count_per_product.find { |item| item[:name] == products.last[:name] }[:amount]).to eq 3 }
     end
 
     describe '#revenue_by_category' do
