@@ -56,16 +56,7 @@
       loadProductTotals() {
         this.isLoading = true;
 
-        let params = {};
-        if (this.user.id > 0) {
-          params.user = this.user.id;
-        }
-        if (this.user.paid_with_cash) {
-          params.paid_with_cash = true;
-        }
-        if (this.user.paid_with_pin) {
-          params.paid_with_pin = true;
-        }
+        let params = {user: this.user.id, paid_with_cash: this.user.paid_with_cash, paid_with_pin: this.user.paid_with_pin};
         this.$http.get('/activities/'+this.activity+'/product_totals', { params }).then((response) => {
           this.orderTotals = response.body;
           this.isLoading = false;
