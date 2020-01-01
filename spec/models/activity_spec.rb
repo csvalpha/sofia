@@ -251,16 +251,47 @@ RSpec.describe Activity, type: :model do
     end
 
     describe '#count_per_product' do
-      let(:order) { FactoryBot.create(:order, activity: activity) }
       let(:products) { activity.price_list.products.sample(2) }
+      let(:unbound_order) { FactoryBot.create(:order, activity: activity)}
 
       before do
         FactoryBot.create(:order_row, order: order, product_count: 2, product: products.first)
         FactoryBot.create(:order_row, order: order, product_count: 3, product: products.last)
+        FactoryBot.create(:order_row, order: unbound_order, product_count: 4, product: products.first)
       end
 
-      it { expect(activity.count_per_product.find { |item| item[:name] == products.first[:name] }[:amount]).to eq 2 }
-      it { expect(activity.count_per_product.find { |item| item[:name] == products.last[:name] }[:amount]).to eq 3 }
+      context 'without arguments' do
+        let(:order) { FactoryBot.create(:order, activity: activity) }
+
+        it { expect(activity.count_per_product.find { |item| item[:name] == products.first[:name] }[:amount]).to eq 6 }
+        it { expect(activity.count_per_product.find { |item| item[:name] == products.last[:name] }[:amount]).to eq 3 }
+      end
+
+      context 'for specific user' do
+        let(:user) { FactoryBot.create(:user)}
+        let(:order) { FactoryBot.create(:order, activity: activity, user: user) }
+
+        it { expect(activity.count_per_product(user: user).find { |item| item[:name] == products.first[:name] }[:amount]).to eq 2 }
+        it { expect(activity.count_per_product(user: user).find { |item| item[:name] == products.last[:name] }[:amount]).to eq 3 }
+      end
+
+      context 'paid with pin' do
+        let(:order) { FactoryBot.create(:order, activity: activity, paid_with_pin: true) }
+
+        it { expect(activity.count_per_product(paid_with_pin: true).find { |item| item[:name] == products.first[:name] }[:amount]).to eq 2 }
+        it { expect(activity.count_per_product(paid_with_pin: true).find { |item| item[:name] == products.last[:name] }[:amount]).to eq 3 }
+      end
+
+      context 'paid with cash' do
+        let(:order) { FactoryBot.create(:order, activity: activity, paid_with_cash: true) }
+
+        it { expect(activity.count_per_product(paid_with_cash: true).find { |item| item[:name] == products.first[:name] }[:amount]).to eq 2 }
+        it { expect(activity.count_per_product(paid_with_cash: true).find { |item| item[:name] == products.last[:name] }[:amount]).to eq 3 }
+      end
+
+
+
+
     end
 
     describe '#revenue_by_category' do
