@@ -252,7 +252,7 @@ RSpec.describe Activity, type: :model do
 
     describe '#count_per_product' do
       let(:products) { activity.price_list.products.sample(2) }
-      let(:unbound_order) { FactoryBot.create(:order, activity: activity)}
+      let(:unbound_order) { FactoryBot.create(:order, activity: activity) }
 
       before do
         FactoryBot.create(:order_row, order: order, product_count: 2, product: products.first)
@@ -267,31 +267,28 @@ RSpec.describe Activity, type: :model do
         it { expect(activity.count_per_product.find { |item| item[:name] == products.last[:name] }[:amount]).to eq 3 }
       end
 
-      context 'for specific user' do
-        let(:user) { FactoryBot.create(:user)}
+      context 'when specific user' do
+        let(:user) { FactoryBot.create(:user) }
         let(:order) { FactoryBot.create(:order, activity: activity, user: user) }
 
         it { expect(activity.count_per_product(user: user).find { |item| item[:name] == products.first[:name] }[:amount]).to eq 2 }
         it { expect(activity.count_per_product(user: user).find { |item| item[:name] == products.last[:name] }[:amount]).to eq 3 }
       end
 
-      context 'paid with pin' do
+      context 'when paid with pin' do
         let(:order) { FactoryBot.create(:order, activity: activity, paid_with_pin: true) }
 
         it { expect(activity.count_per_product(paid_with_pin: true).find { |item| item[:name] == products.first[:name] }[:amount]).to eq 2 }
         it { expect(activity.count_per_product(paid_with_pin: true).find { |item| item[:name] == products.last[:name] }[:amount]).to eq 3 }
       end
 
-      context 'paid with cash' do
+      context 'when paid with cash' do
         let(:order) { FactoryBot.create(:order, activity: activity, paid_with_cash: true) }
+        let(:count_per_product) { activity.count_per_product(paid_with_cash: true) }
 
-        it { expect(activity.count_per_product(paid_with_cash: true).find { |item| item[:name] == products.first[:name] }[:amount]).to eq 2 }
-        it { expect(activity.count_per_product(paid_with_cash: true).find { |item| item[:name] == products.last[:name] }[:amount]).to eq 3 }
+        it { expect(count_per_product.find { |item| item[:name] == products.first[:name] }[:amount]).to eq 2 }
+        it { expect(count_per_product.find { |item| item[:name] == products.last[:name] }[:amount]).to eq 3 }
       end
-
-
-
-
     end
 
     describe '#revenue_by_category' do
