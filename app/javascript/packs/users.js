@@ -17,17 +17,20 @@ document.addEventListener('turbolinks:load', () => {
       data: () => {
         return {
           users: users,
-          fields: {
-            id: {
-              label: 'ID',
+          fields: [
+            {
+              key: 'id',
+              label: '#',
               sortable: true,
               isRowHeader: true
             },
-            name: {
+            {
+              key: 'name',
               label: 'Naam',
               sortable: true
             },
-            credit: {
+            {
+              key: 'credit',
               label: 'Saldo',
               sortable: true,
               tdClass: (value) => {
@@ -35,7 +38,7 @@ document.addEventListener('turbolinks:load', () => {
               },
               formatter: (value) => `€ ${parseFloat(value).toFixed(2)}`,
             }
-          }
+          ]
         };
       },
     });
