@@ -10,10 +10,6 @@
           <span v-else-if="row.item.paid_with_cash">Contant betaald</span>
         </template>
 
-        <template v-slot:cell(created_at)="row">
-          {{formatDate(row.item.created_at)}}
-        </template>
-
         <template v-slot:cell(order_total)="row">
           <span class="pull-right">
             {{doubleToCurrency(row.item.order_total)}}
@@ -72,7 +68,8 @@ export default {
         {
           key: 'created_at',
           label: 'Tijdstip',
-          sortable: true
+          sortable: true,
+          formatter: this.formatDate
         },
         {
           key: 'user',

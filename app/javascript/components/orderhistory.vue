@@ -3,9 +3,6 @@
     <b-col>
       <b-table show-empty :busy.sync="isLoading" :items="activityProvider" :fields="fields"
                no-provider-sorting sort-by="start_time" sort-desc>
-        <template v-slot:cell(start_time)="row">
-          {{formatDate(row.item.start_time)}}
-        </template>
 
         <template v-slot:cell(order_total)="row">
           {{doubleToCurrency(row.item.order_total)}}
@@ -51,7 +48,8 @@
           {
             key: 'start_time',
             label: 'Datum',
-            sortable: true
+            sortable: true,
+            formatter: this.formatDate
           },
           {
             key: 'title',
@@ -80,10 +78,6 @@
 
       doubleToCurrency(price) {
         return `€ ${parseFloat(price).toFixed(2)}`;
-      },
-
-      formatTime(time) {
-        return moment(time).format('HH:mm');
       },
 
       formatDate(time) {
