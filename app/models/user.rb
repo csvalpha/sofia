@@ -24,11 +24,6 @@ class User < ApplicationRecord
     "#{Rails.application.config.x.banana_api_url}#{avatar_thumb_url}"
   end
 
-  def profile_url
-    default_options = Rails.application.config.action_mailer.default_url_options
-    URI::Generic.build(default_options.merge(path: "/users/#{id}")).to_s
-  end
-
   def age
     return nil unless birthday
 
@@ -68,6 +63,7 @@ class User < ApplicationRecord
     user.update_role(auth[:info][:groups])
     user
   end
+
   # :nocov:
 
   def self.full_name_from_attributes(first_name, last_name_prefix, last_name)

@@ -31,7 +31,7 @@ RSpec.describe CreditInsufficientNotificationJob, type: :job do
 
     it { expect(emails.size).to eq 2 }
     it { expect(emails.first.to.first).to eq negative_user.email }
-    it { expect(emails.first.body.to_s).to include "http://testhost:1337/users/#{negative_user.id}" }
+    it { expect(emails.first.body.to_s).to include 'http://testhost:1337/payments/add' }
     it { expect(emails.second.to.first).to eq treasurer.email }
     it { expect(emails.second.body.to_s).to include negative_user_without_email.name }
     it { expect(emails.second.body.to_s).not_to include user_without_email.name }

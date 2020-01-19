@@ -94,13 +94,17 @@
 
                 </h4>
                 <p class="card-text">
-                  <%= 'Om je saldo aan te vullen moet je zelf geld overmaken. ' %>
+                  <%= 'Om je saldo aan te vullen kan je zelf geld overmaken of betalen met iDEAL. ' %>
                   <%= 'Dat kan naar NL68 INGB 0008 1654 20 t.n.v. Stichting Societeit Flux ' %>
                   <%= 'onder vermelding van je naam en \'Inleg Zatladder\'.' %>
-                </p>
-                <small class="mb-0"><%= 'Het kan enkele dagen duren voor je betaling is verwerkt.' %>
 
-                </small>
+                  <%= link_to add_payments_path do %>
+                    <%= 'Klik hier om je saldo over te maken via iDEAL ' %>
+                  <% end %>
+
+                </p>
+
+
               <% end %></div>
             <div aria-labelledby="roleInfo-tab" class="tab-pane p-2" id="roleInfo" role="tabpanel">
               <b-button class="pull-right" size="sm" v-b-toggle.role-sync-description="">

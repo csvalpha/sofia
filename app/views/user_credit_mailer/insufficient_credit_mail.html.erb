@@ -8,9 +8,23 @@
 <br />
 
 <p style="margin: 0; font-size: 16px; line-height: 20px">
-  Uw saldo aanvullen kan door het geld over te maken naar <span style="white-space: nowrap;">NL68 INGB 0008 1654 20</span>
+  U kunt uw saldo automatisch opwaarderen door op onderstaande knop te klikken.
+  Als u zelf een bedrag wilt invoeren
+  <%= link_to  controller: 'payments', action: 'add' do %>
+    klik dan hier.
+  <% end %>
+</p>
+
+<br />
+
+<p style="margin: 0; font-size: 16px; line-height: 20px">
+  Uw saldo aanvullen kan ook door het geld over te maken naar <span style="white-space: nowrap;">NL68 INGB 0008 1654 20</span>
   ten name van Stichting Sociëteit Flux onder vermelding van je naam en
-  'inleg zatladder'. Mocht u meer details willen, of van mening zijn dat uw saldo
+  'inleg zatladder'. Hiermee kan het echter enkele dagen duren voordat het saldo op uw account staat
+</p>
+
+<p>
+  Mocht u meer details willen, of van mening zijn dat uw saldo
   niet klopt kunt u contact opnemen met de penningmeester via
   <a href="mailto:penningmeester@societeitflux.nl">penningmeester@societeitflux.nl</a>.
 </p>

@@ -1,0 +1,39 @@
+<% content_for :title, "Saldo opwaarderen voor #{@user.name} - SOFIA" %>
+
+<%= content_tag :div, id: 'payment-add', class: 'container footer-padding', data: {user_credit: @user.credit, payment_amount: @payment.amount} do %>
+  <div class="container footer-padding">
+    <div class="row py-4">
+      <div class="col-12">
+        <h1>
+          Saldo opwaarderen voor <%= @user.name %>
+        </h1>
+
+        <%= simple_form_for(@payment, wrapper: :horizontal_form) do |f| %>
+          <div class="col-12">
+            <p>
+              Voer hier het bedrag in dat je wilt inleggen. Hierna zal je worden doorgestuurd naar de betaalomgeving.
+              Let op: Het bedrag moet gescheiden worden door een punt. Gebruik geen komma!
+            </p>
+            <%= f.input :amount, as: :float, input_html: {"v-model": "paymentAmount"}, required: true, label: 'Bedrag'  %>
+          </div>
+
+          <div class="col-4 offset-8 alert alert-info" v-if="amountValid()">
+            Saldo na inleg: {{ newCredit }}
+          </div>
+
+          <div class="col-4 offset-8 alert alert-danger" v-if="!amountValid()">
+            U heeft een incorrect getal ingevoerd.
+          </div>
+
+          <div class="row">
+            <div class="col-3 offset-9">
+              <%= f.button :submit, 'Betalen met iDEAL', class: 'btn btn-primary', 'v-bind:disabled': '!amountValid()' %>
+            </div>
+
+          </div>
+
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
