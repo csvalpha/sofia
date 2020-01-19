@@ -1,4 +1,8 @@
 <% content_for :title, "Activiteit #{@activity.title} - SOFIA" %>
+<% content_for :modal do %>
+  <%= render 'edit_modal' %>
+<% end %>
+
 <div id="activity" class="container footer-padding">
   <div class="row justify-content-between">
     <div class="col-sm-12 col-md-6 py-2">
@@ -162,24 +166,24 @@
                   <tr>
                     <th scope="col">Balans</th>
                     <th scope="col">Code</th>
-                    <th class="text-right" scope="col">Credit</th>
                     <th class="text-right" scope="col">Debit</th>
+                    <th class="text-right" scope="col">Credit</th>
                   </tr>
                   </thead>
                   <tbody>
                   <tr>
                     <td>Inleg Zatladder Inlegsysteem</td>
                     <td><%= t('codes.credit_mutation') %>                    </td>
+                    <td></td>
                     <td class="text-right">
                       <%= number_to_currency(@credit_mutations_total, unit: '€') %>
                     </td>
-                    <td></td>
                   </tr>
                   <tr>
                     <td>Contante bestellingen</td>
                     <td></td>
-                    <td class="text-right"><%= number_to_currency(@revenue_with_cash, unit: '€') %></td>
                     <td></td>
+                    <td class="text-right"><%= number_to_currency(@revenue_with_cash, unit: '€') %></td>
                   </tr>
                   <tr>
                     <td title="Contante inleg plus contante betalingen">
@@ -188,20 +192,20 @@
                       </strong>
                     </td>
                     <td><%= t('codes.cash') %></td>
-                    <td></td>
                     <td class="text-right"><%= number_to_currency(@cash_total, unit: '€') %></td>
+                    <td></td>
                   </tr>
                   <tr>
                     <td>Omzet Pin</td>
                     <td><%= t('codes.pin') %></td>
-                    <td></td>
                     <td class="text-right"><%= number_to_currency(@revenue_with_pin, unit: '€') %></td>
+                    <td></td>
                   </tr>
                   <tr>
                     <td>Omzet Zatladder Inlegsysteem</td>
                     <td><%= t('codes.credit_mutation') %></td>
-                    <td></td>
                     <td class="text-right"><%= number_to_currency(@revenue_with_credit, unit: '€') %></td>
+                    <td></td>
                   </tr>
                   </tbody>
                 </table>

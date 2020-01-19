@@ -3,24 +3,21 @@
     <b-col>
       <b-table show-empty :busy.sync="isLoading" :items="ordersProvider" :fields="fields"
         no-provider-sorting sort-by="created_at" sort-desc>
-        <template slot="user" slot-scope="row">
+
+        <template v-slot:cell(user)="row">
           <span v-if="row.item.user">{{row.item.user.name}}</span>
           <span v-else-if="row.item.paid_with_pin">Gepind</span>
           <span v-else-if="row.item.paid_with_cash">Contant betaald</span>
         </template>
 
-        <template slot="created_at" slot-scope="row">
-          {{formatDate(row.item.created_at)}}
-        </template>
-
-        <template slot="order_total" slot-scope="row">
+        <template v-slot:cell(order_total)="row">
           <span class="pull-right">
             {{doubleToCurrency(row.item.order_total)}}
             <i @click.stop="row.toggleDetails" :class="['order-history--details-expand', 'fa', 'fa-lg', 'pl-2', row.detailsShowing ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down']"></i>
           </span>
         </template>
 
-        <template slot="empty">
+        <template v-slot:empty>
           <p class="my-1 text-center">
             <em>Er zijn geen bestellingen om weer te geven</em>
           </p>
@@ -59,29 +56,34 @@ export default {
   data: function () {
     return {
       isLoading: false,
-      fields: {
-        id: {
+      fields: [
+        {
+          key: 'id',
           label: '#',
           sortable: true,
           thClass: 'text-center',
           tdClass: 'text-center',
           isRowHeader: true
         },
-        created_at: {
+        {
+          key: 'created_at',
           label: 'Tijdstip',
-          sortable: true
+          sortable: true,
+          formatter: this.formatDate
         },
-        user: {
+        {
+          key: 'user',
           label: 'Gebruiker',
           sortable: true,
           tdClass: (user) => user ? '' : 'font-italic'
         },
-        order_total: {
-          label: 'Bedrag',
+        {
+          key: 'order_total',
+          label : 'Bedrag',
           sortable: false,
           thClass: 'text-right pr-4'
         }
-      },
+      ]
     };
   },
 

@@ -3,18 +3,15 @@
     <b-col>
       <b-table show-empty :busy.sync="isLoading" :items="activityProvider" :fields="fields"
                no-provider-sorting sort-by="start_time" sort-desc>
-        <template slot="start_time" slot-scope="row">
-          {{formatDate(row.item.start_time)}}
-        </template>
 
-        <template slot="order_total" slot-scope="row">
+        <template v-slot:cell(order_total)="row">
           {{doubleToCurrency(row.item.order_total)}}
           <span class="pull-right">
             <i @click.stop="row.toggleDetails" :class="['order-history--details-expand', 'fa', 'fa-lg', 'pl-2', row.detailsShowing ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down']"></i>
           </span>
         </template>
 
-        <template slot="empty">
+        <template v-slot:empty>
           <p class="my-1 text-center">
             <em>Er zijn geen bestellingen om weer te geven</em>
           </p>
@@ -47,20 +44,24 @@
     data: function () {
       return {
         isLoading: false,
-        fields: {
-          start_time: {
+        fields: [
+          {
+            key: 'start_time',
             label: 'Datum',
-            sortable: true
+            sortable: true,
+            formatter: this.formatDate
           },
-          title: {
+          {
+            key: 'title',
             label: 'Titel',
             sortable: false
           },
-          order_total: {
-              label: 'Totaal',
-              sortable: false
+          {
+            key: 'order_total',
+            label: 'Totaal',
+            sortable: false
           }
-        },
+        ]
       };
     },
 
@@ -77,10 +78,6 @@
 
       doubleToCurrency(price) {
         return `€ ${parseFloat(price).toFixed(2)}`;
-      },
-
-      formatTime(time) {
-        return moment(time).format('HH:mm');
       },
 
       formatDate(time) {

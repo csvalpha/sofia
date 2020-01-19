@@ -32,6 +32,9 @@
           <% @activities&.each do |activity| %>
             <tr>
               <td>
+                <% if activity.locked? %>
+                  <%= fa_icon 'lock' %>
+                <% end %>
                 <%= link_to activity.title, activity %>
               </td>
               <td>

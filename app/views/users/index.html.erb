@@ -26,11 +26,11 @@
   <%= content_tag :div, id: 'users-index', class: 'row', data: {users: @users_json} do %>
     <div class="col-sm-12">
       <b-table :fields="fields" :items="users" responsive="" show-empty="" sort-by="name" striped="">
-        <template slot="name" slot-scope="data">
+        <template v-slot:cell(name)="data">
           <a :href="`/users/${data.item.id}`">
             {{data.value}}
           </a></template>
-        <template slot="empty">
+        <template v-slot:empty>
           <p class="my-1 text-center">
             <em>Er zijn geen gebruikers om weer te geven
 
