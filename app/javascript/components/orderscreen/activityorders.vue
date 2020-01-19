@@ -35,7 +35,7 @@
 import Spinner from 'vue-simple-spinner';
 import axios from 'axios';
 import moment from 'moment';
-import ProductTable from './producttable.vue';
+import ProductTable from '../producttable.vue';
 
 export default {
   props: {

@@ -23,21 +23,7 @@
             </label>
             <template>
               <div class="col-9" style="position:relative">
-
-                <input class="d-none" name="credit_mutation[user_id]" v-bind:value="selectedSuggestion.id" value="<%= @new_mutation.user&.id %>"/>
-                <input @input="updateValue" @keydown.enter="selectFirstSuggestion" aria-haspopup="true" autocomplete="off"
-                       class="form-control" placeholder="Start typing..." required="true" type="text"
-                       v-bind:aria-expanded="dropdownOpened" v-model="query" value="<%= @new_mutation.user&.name %>">
-
-                <div class="row">
-                  <ul class="dropdown-menu ml-3" v-bind:class="{'show':dropdownOpened}">
-                    <li class="dropdown-item" v-for="(suggestion, index) in suggestions" v-on:click.prevent="suggestionClicked(index)">
-                      <a href="#">
-                        {{ suggestion.name }}
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+                <user-input name="credit_mutation[user_id]"></user-input>
               </div>
             </template>
           </div>

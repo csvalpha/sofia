@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :activities, only: %i[index show create update destroy] do
     member do
       get :order_screen
+      get :product_totals
       post :lock
     end
   end

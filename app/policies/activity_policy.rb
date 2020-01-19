@@ -32,4 +32,8 @@ class ActivityPolicy < ApplicationPolicy
   def order_screen?
     user&.treasurer? || user&.main_bartender?
   end
+
+  def product_totals?
+    user&.treasurer? || user&.main_bartender?
+  end
 end

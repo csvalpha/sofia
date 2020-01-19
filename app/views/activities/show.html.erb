@@ -3,7 +3,7 @@
   <%= render 'edit_modal' %>
 <% end %>
 
-<div class="container footer-padding">
+<div id="activity" class="container footer-padding">
   <div class="row justify-content-between">
     <div class="col-sm-12 col-md-6 py-2">
       <h1>
@@ -315,36 +315,7 @@
         <div aria-labelledby="product_totals-tab" class="tab-pane" id="product_totals" role="tabpanel">
           <div class="row">
             <div class="col-6 mx-auto">
-              <div class="table-responsive">
-                <table class="table table-sm">
-                  <% if @count_per_product.empty? %>
-                    <tr>
-                      <td class="text-center" colspan="4">
-                        <p class="my-1">
-                          <em>
-                            Er zijn geen producten verkocht
-                          </em>
-                        </p>
-                      </td>
-                    </tr>
-                  <% else %>
-                    <thead>
-                    <tr>
-                      <th scope="col">Product</th>
-                      <th class="text-right" scope="col">Aantal keer besteld</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <% @count_per_product.each do |product, sum| %>
-                      <tr>
-                        <th scope="row"><%= product.name %></th>
-                        <td class="text-right"> <%= sum %>  x</td>
-                      </tr>
-                    <% end %>
-                    </tbody>
-                  <% end %>
-                </table>
-              </div>
+              <product-totals activity="<%= @activity.id %>"></product-totals>
             </div>
           </div>
         </div>

@@ -57,8 +57,12 @@ class Activity < ApplicationRecord
     @revenue_total ||= revenue_with_cash + revenue_with_pin + revenue_with_credit
   end
 
-  def count_per_product
-    @count_per_product ||= OrderRow.where(order: orders).group(:product).sum(:product_count)
+  def count_per_product(**args)
+    records = orders.where(**args)
+
+    @count_per_product = OrderRow.where(order: records).group(:product_id, :name).joins(:product)
+                                 .pluck(:name, Arel.sql('SUM(product_count)'), Arel.sql('SUM(product_count * price_per_product)'))
+    @count_per_product.map { |name, amount, price| { name: name, amount: amount.to_i, price: price.to_f } }
   end
 
   def revenue_by_category

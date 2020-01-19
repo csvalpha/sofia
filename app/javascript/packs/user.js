@@ -3,7 +3,7 @@ import TurbolinksAdapter from 'vue-turbolinks';
 import axios from 'axios';
 import BootstrapVue from 'bootstrap-vue';
 
-import OrderHistory from '../components/orderhistory.vue';
+import OrderHistory from '../components/user/orderhistory.vue';
 
 Vue.use(TurbolinksAdapter);
 Vue.use(BootstrapVue);

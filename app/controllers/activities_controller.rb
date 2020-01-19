@@ -1,4 +1,4 @@
-class ActivitiesController < ApplicationController
+class ActivitiesController < ApplicationController # rubocop:disable Metrics/ClassLength
   before_action :authenticate_user!
   after_action :verify_authorized
   after_action :verify_policy_scoped, only: :index
@@ -94,6 +94,13 @@ class ActivitiesController < ApplicationController
     # Set flags for application.html.slim
     @show_navigationbar = false
     @show_extras = false
+  end
+
+  def product_totals
+    authorize Activity
+
+    activity = Activity.includes(:price_list, orders: [{ order_rows: :product }, :user]).find(params[:id])
+    render json: activity.count_per_product(**params.permit(:user, :paid_with_pin, :paid_with_cash).to_h.symbolize_keys)
   end
 
   def lock
