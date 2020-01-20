@@ -26,9 +26,7 @@
       },
       value: {
         type: Object,
-        default: {
-          id: 0
-        }
+        default: {}
       },
       includePin: {
         type: Boolean,
@@ -59,9 +57,7 @@
       updateValue() {
         if (this.query === '') {
           // Clear user
-          this.selectedSuggestion = {
-            id: 0
-          };
+          this.selectedSuggestion = {};
           this.$emit('input', this.selectedSuggestion);
         }
 
