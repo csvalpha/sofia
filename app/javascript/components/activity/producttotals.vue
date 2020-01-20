@@ -55,7 +55,6 @@
         this.isLoading = true;
 
         let params = {user: this.user.id, paid_with_cash: this.user.paid_with_cash, paid_with_pin: this.user.paid_with_pin};
-        console.log(params);
         this.$http.get('/activities/'+this.activity+'/product_totals', { params }).then((response) => {
           this.orderTotals = response.body;
           this.isLoading = false;
