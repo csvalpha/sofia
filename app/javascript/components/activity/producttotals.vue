@@ -40,9 +40,7 @@
 
     data() {
       return {
-        user: {
-          id: 0
-        },
+        user: {},
         orderTotals: [],
         isLoading: true
       }
