@@ -12,9 +12,9 @@
         </button>
       </div><%= simple_form_for @activity, wrapper: :horizontal_form do |f| %>
         <div class="modal-body" id="activities_modal">
-          <%= f.input :title, placeholder: 'Titel', required: true %>
-          <%= f.input :start_time, as: :string, order: %i[hour minute day month year] %>
-          <%= f.input :end_time, as: :string, order: %i[hour minute day month year] %>
+          <%= f.input :title, label: 'Titel', placeholder: 'Titel', required: true %>
+          <%= f.input :start_time, as: :string, label: 'Begintijd', order: %i[hour minute day month year] %>
+          <%= f.input :end_time, as: :string, label: 'Eindtijd', order: %i[hour minute day month year] %>
 
           <div class="form-group row">
             <label class="col-3 col-form-label" for="activity_price_list">

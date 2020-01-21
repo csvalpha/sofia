@@ -12,7 +12,7 @@
       </div>
       <%= simple_form_for(@activity, wrapper: :horizontal_form, method: :patch) do |f| %>
         <div class="modal-body" id="activities_modal">
-          <%= f.input :title, placeholder: 'Titel', required: true %>
+          <%= f.input :title, label: 'Titel', placeholder: 'Titel', required: true %>
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" data-dismiss="modal">
