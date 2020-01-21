@@ -15,8 +15,8 @@
       <%= simple_form_for @new_user, wrapper: :horizontal_form do |f| %>
 
         <div class="modal-body" id="activities_modal">
-          <%= f.input :name, placeholder: 'Naam', required: true %>
-          <%= f.input :email, placeholder: 'E-Mail' %>
+          <%= f.input :name, label: 'Naam', placeholder: 'Naam', required: true %>
+          <%= f.input :email, label: 'E-mailadres', placeholder: 'E-mailadres' %>
         </div>
 
         <div class="modal-footer">

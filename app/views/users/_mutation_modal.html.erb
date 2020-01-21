@@ -19,8 +19,8 @@
             <%= 'om zo een saldo te corrigeren.' %>
 
           </p>
-          <%= f.input :description, placeholder: 'Beschrijving', required: true %>
-          <%= f.input :amount, as: :float, placeholder: '2,00', required: true %>
+          <%= f.input :description, label: 'Beschrijving', placeholder: 'Beschrijving', required: true %>
+          <%= f.input :amount, as: :float, label: 'Bedrag', placeholder: '2.00', required: true %>
           <input class="d-none" name="credit_mutation[user_id]" value="<%= @new_mutation.user&.id %>"/>
         </div>
         <div class="modal-footer">

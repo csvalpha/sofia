@@ -13,8 +13,8 @@
         </button>
       </div><%= simple_form_for @new_mutation, wrapper: :horizontal_form do |f| %>
         <div class="modal-body" id="mutations_modal">
-          <%= f.input :description, placeholder: 'Beschrijving' %>
-          <%= f.input :amount, as: :float %>
+          <%= f.input :description, label: 'Beschrijving', placeholder: 'Beschrijving' %>
+          <%= f.input :amount, as: :float, label: 'Bedrag', placeholder: '2.00' %>
 
           <div class="form-group row">
             <label class="col-3 col-form-label" for="mutations_users">
