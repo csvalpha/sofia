@@ -1,7 +1,7 @@
 <p style="margin: 0; font-size: 16px; line-height: 20px">
-  U heeft op het moment een negatief Flux saldo. U wordt verzocht dit aan te
-  vullen tot minstens 5 euro positief zoals beschreven in het Huishoudelijk
-  Regelement van onze stichting.
+  Uw Flux saldo bedraagt momenteel: <span style="color:#ff0000;"><%= number_to_currency(@user.credit, unit: '€') %></span>
+  U wordt verzocht dit aan te vullen tot minstens 5 euro positief zoals
+  beschreven in het Huishoudelijk Regelement van onze stichting.
 </p>
 
 <br />
