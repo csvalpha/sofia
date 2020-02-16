@@ -26,7 +26,7 @@
       },
       value: {
         type: Object,
-        default: {}
+        default: () => ({})
       },
       includePin: {
         type: Boolean,
