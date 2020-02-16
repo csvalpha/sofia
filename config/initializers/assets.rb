@@ -9,7 +9,7 @@ Rails.application.config.assets.version = '1.0'
 Rails.application.config.assets.paths << Rails.root.join('node_modules')
 Rails.application.config.assets.paths << Rails.root.join('node_modules', 'bootstrap', 'dist', 'js')
 Rails.application.config.assets.paths << Rails.root.join('node_modules', 'bootstrap', 'scss')
-Rails.application.config.assets.paths << Rails.root.join('node_modules', 'raven-js', 'dist')
+Rails.application.config.assets.paths << Rails.root.join('node_modules', '@sentry', 'browser', 'build')
 Rails.application.config.assets.paths << Rails.root.join('node_modules', 'webfontloader')
 
 # Precompile additional assets.

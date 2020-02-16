@@ -14,7 +14,8 @@
 //= require turbolinks
 //= require jquery3
 //= require bootstrap.bundle.min.js
-//= require raven.min.js
+// bundle.min.js is sentry browser
+//= require bundle.min.js
 //= require webfontloader.js
 //= require turbolinks-animate/src/index.js
 //= require_tree .
@@ -26,7 +27,10 @@ WebFont.load({
   }
 });
 
-Raven.config('https://56243c9c41a549ba92e50b0a5b642e32@sentry.io/267713').install();
+
+Sentry.init({
+  dsn: 'https://56243c9c41a549ba92e50b0a5b642e32@sentry.io/267713',
+});
 
 document.addEventListener( 'turbolinks:load', function() {
   TurbolinksAnimate.init({
