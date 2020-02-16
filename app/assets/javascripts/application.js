@@ -27,11 +27,6 @@ WebFont.load({
   }
 });
 
-
-Sentry.init({
-  dsn: 'https://56243c9c41a549ba92e50b0a5b642e32@sentry.io/267713',
-});
-
 document.addEventListener( 'turbolinks:load', function() {
   TurbolinksAnimate.init({
     element: document.querySelector('main'),
