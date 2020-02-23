@@ -17,6 +17,20 @@
     <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/animate.css@3.5.2/animate.min.css" rel="stylesheet"/>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport"/>
 
+    <script>
+      Sentry.init({
+        dsn: 'https://56243c9c41a549ba92e50b0a5b642e32@sentry.io/267713',
+        debug: true,
+        environment: '<%= Rails.env %>'
+      });
+
+      Sentry.configureScope(scope => {
+        scope.setUser({ id: <%= current_user&.id || 'null' %> });
+      });
+    </script>
+
+
+
     <%= csrf_meta_tags %>
 
   </head>

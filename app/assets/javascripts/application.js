@@ -14,7 +14,8 @@
 //= require turbolinks
 //= require jquery3
 //= require bootstrap.bundle.min.js
-//= require raven.min.js
+// bundle.min.js is sentry browser
+//= require bundle.min.js
 //= require webfontloader.js
 //= require turbolinks-animate/src/index.js
 //= require_tree .
@@ -25,8 +26,6 @@ WebFont.load({
     families: ['Roboto:300,400,500']
   }
 });
-
-Raven.config('https://56243c9c41a549ba92e50b0a5b642e32@sentry.io/267713').install();
 
 document.addEventListener( 'turbolinks:load', function() {
   TurbolinksAnimate.init({
