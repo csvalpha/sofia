@@ -27,6 +27,10 @@ class Activity < ApplicationRecord
 
   delegate :products, to: :price_list
 
+  def manually_added_users_with_orders
+    orders.by_manually_added_user.map { |order| order.user }
+  end
+
   def credit_mutations_total
     @credit_mutations_total ||= credit_mutations.sum(:amount)
   end
