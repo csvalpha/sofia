@@ -2,12 +2,12 @@ development:
   adapter: async
 
 test:
-  adapter: async
+  adapter: test
 
 production: &production
   adapter: redis
   url: redis://:<%= ENV['REDIS_PASSWORD'] %>@<%= ENV['REDIS_HOST'] %>:6379/1
-  channel_prefix: tomato_production
+  channel_prefix: sofia_production
 
 staging:
   <<: *production
