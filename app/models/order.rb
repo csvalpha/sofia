@@ -16,6 +16,7 @@ class Order < ApplicationRecord
   before_destroy -> { throw(:abort) }
 
   scope :orders_for, (->(user) { where(user: user) })
+  scope :by_manually_added_user, -> { joins(:user).where('users.provider IS NULL') }
 
   def order_total
     @sum ||= order_rows.sum('product_count * price_per_product')
