@@ -324,7 +324,7 @@
   </div>
 
   <% if current_user.treasurer? %>
-    <% if @activity.manually_added_users_with_orders %>
+    <% if @activity.manually_added_users_with_orders.any? %>
       <div class="row">
         <div class="col-sm-6">
           <div class="alert alert-danger">
