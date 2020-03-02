@@ -36,7 +36,7 @@ Metrics/BlockLength:
     - 'config/routes.rb'
     - 'spec/**/*'
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 140
 
 Metrics/MethodLength:
@@ -93,3 +93,12 @@ Style/StringMethods:
 
 Naming/MemoizedInstanceVariableName:
   Enabled: false
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
