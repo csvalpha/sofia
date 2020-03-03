@@ -73,6 +73,10 @@ Rails.application.configure do
     Bullet.console = true
   end
 
+  # Run Sidekiq inline
+  require 'sidekiq/testing'
+  Sidekiq::Testing.inline!
+
   # Require key to be able to boot
   config.require_master_key = true
 end

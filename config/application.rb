@@ -41,5 +41,6 @@ module Sofia
 
     config.x.mailgun_api_key      = credentials.dig(Rails.env.to_sym, :mailgun_api_key)
     config.x.sentry_dsn           = credentials.dig(Rails.env.to_sym, :sentry_dsn)
+    config.x.healthcheck_ids      = credentials.dig(Rails.env.to_sym, :healthcheck_ids)
   end
 end
