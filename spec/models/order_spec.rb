@@ -67,4 +67,20 @@ RSpec.describe Order, type: :model do
 
     it { expect(order.destroy).to eq false }
   end
+
+  describe '.by_manually_added_user' do
+    let(:manually_added_user) { FactoryBot.create(:user) }
+    let(:manually_added_user_order) { FactoryBot.create(:order, user: manually_added_user) }
+
+    let(:provider_added_user) { FactoryBot.create(:user, provider: 'some_provider') }
+    let(:provider_added_user_order) { FactoryBot.create(:order, user: provider_added_user) }
+
+    before do
+      manually_added_user_order
+      provider_added_user_order
+    end
+
+    it { expect(described_class.by_manually_added_user).to include manually_added_user_order }
+    it { expect(described_class.by_manually_added_user).not_to include provider_added_user_order }
+  end
 end
