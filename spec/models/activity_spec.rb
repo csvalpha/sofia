@@ -339,4 +339,21 @@ RSpec.describe Activity, type: :model do
 
     it { expect(activity.locked?).to eq true }
   end
+
+  describe '#manually_added_users_with_orders' do
+    subject(:activity) { FactoryBot.create(:activity) }
+
+    let(:manually_added_user) { FactoryBot.create(:user) }
+    let(:manually_added_user_order) { FactoryBot.create(:order, user: manually_added_user, activity: activity) }
+
+    let(:provider_added_user) { FactoryBot.create(:user, provider: 'some_provider') }
+    let(:provider_added_user_order) { FactoryBot.create(:order, user: provider_added_user, activity: activity) }
+
+    before do
+      manually_added_user_order
+      provider_added_user_order
+    end
+
+    it { expect(activity.manually_added_users_with_orders).to eq [manually_added_user] }
+  end
 end
