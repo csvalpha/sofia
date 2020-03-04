@@ -3,6 +3,7 @@ class Activity < ApplicationRecord
 
   has_many :orders, dependent: :destroy
   has_many :credit_mutations, dependent: :destroy
+  has_many :ordering_users, through: :orders, source: :user
   belongs_to :price_list
   belongs_to :created_by, class_name: 'User', inverse_of: :activities
   belongs_to :locked_by, class_name: 'User', optional: true
@@ -28,7 +29,7 @@ class Activity < ApplicationRecord
   delegate :products, to: :price_list
 
   def manually_added_users_with_orders
-    orders.by_manually_added_user.map(&:user)
+    ordering_users.where('provider IS NULL').distinct
   end
 
   def credit_mutations_total
