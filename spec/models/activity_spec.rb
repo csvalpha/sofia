@@ -346,11 +346,15 @@ RSpec.describe Activity, type: :model do
     let(:manually_added_user) { FactoryBot.create(:user) }
     let(:manually_added_user_order) { FactoryBot.create(:order, user: manually_added_user, activity: activity) }
 
+    # Make sure that a user only shows up once in the list, even if he/she has placed multiple orders
+    let(:second_manually_added_user_order) { FactoryBot.create(:order, user: manually_added_user, activity: activity) }
+
     let(:provider_added_user) { FactoryBot.create(:user, provider: 'some_provider') }
     let(:provider_added_user_order) { FactoryBot.create(:order, user: provider_added_user, activity: activity) }
 
     before do
       manually_added_user_order
+      second_manually_added_user_order
       provider_added_user_order
     end
 
