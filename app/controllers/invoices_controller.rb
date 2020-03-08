@@ -20,11 +20,13 @@ class InvoicesController < ApplicationController
     else
       flash[:error] = @invoice.errors.full_messages.join(', ')
     end
+
+    redirect_to invoices_path
   end
 
   private
 
   def permitted_attributes
-    params.require(:invoice).permit(%i[user activity])
+    params.require(:invoice).permit(%i[user_id activity_id])
   end
 end

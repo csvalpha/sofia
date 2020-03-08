@@ -17,12 +17,6 @@ RSpec.describe Invoice, type: :model do
 
       it { expect(invoice).not_to be_valid }
     end
-
-    context 'when without amount' do
-      subject(:invoice) { FactoryBot.build_stubbed(:invoice, amount: nil) }
-
-      it { expect(invoice).not_to be_valid }
-    end
   end
 
   describe '#set_amount' do
@@ -37,5 +31,16 @@ RSpec.describe Invoice, type: :model do
     end
 
     it { expect(invoice.amount).to eq activity.revenue_by_user(user)}
+  end
+
+  describe '#set_human_id' do
+    let(:invoice) { FactoryBot.build(:invoice)}
+
+    before do
+      FactoryBot.create_list(:invoice, 2)
+      invoice.save
+    end
+
+    it { expect(invoice.human_id).to eq "#{Time.zone.now.year}0003"}
   end
 end
