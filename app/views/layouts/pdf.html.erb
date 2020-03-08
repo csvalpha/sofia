@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title><%= yield(:title) %></title>
+  <%= wicked_pdf_stylesheet_link_tag 'application' %>
+
+  <%#= wicked_pdf_stylesheet_link_tag "invoice" %>
+</head>
+<body>
+  <%= yield %>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<% content_for :title, "Factuur #{@invoice.human_id}- SOFIA" %>
+
+
+<div id="activity" class="container footer-padding">
+  <div class="row justify-content-between">
+    <div class="col-4">
+      <%= wicked_pdf_image_tag '/images/flux_logo.png', class: 'h-100' %>
+      <%= image_tag '/images/flux_logo.png', class: 'h-100' %>
+    </div>
+    <div class="col-8 py-2">
+      <h3>Stichting Sociëteit Flux</h3>
+      <b>
+        https://societeitflux.nl <br/>
+        Oude Markt 24-3, 7511 GB Enschede
+      </b>
+      <table class="table table-sm">
+        <tbody>
+        <tr>
+          <th scope="row">
+            Tel
+          </th>
+          <td class="text-right">
+            +316 14584829
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">
+            E-mail
+          </th>
+          <td class="text-right">
+            penningmeester@societeitflux.nl
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">
+            IBAN
+          </th>
+          <td class="text-right">
+            NL68INGB0008165420
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">
+            KvK
+          </th>
+          <td class="text-right">
+            41 032 169
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <hr/>
+
+  <div class="row justify-content-between">
+    <div class="col-6">
+      <h1>Factuur</h1>
+      <p>
+        <%= @invoice.user.name %><br />
+        Datum: <%= @invoice.created_at.strftime('%d/%m/%Y') %><br />
+        Factuurnummer: <%= @invoice.human_id %>
+      </p>
+
+      <p>
+        Geachte,<br/><br />
+        Op <%= @invoice.activity.start_time.strftime('%d %B') %> heeft u tijdens een borrel een aantal consumpties afgenomen. In verband
+        daarmee breng ik de kosten van &euro; <%= number_to_currency(@invoice.amount, unit: '€') %> bij u in rekening.
+      </p>
+    </div>
+
+    <div class="col-12">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col">Consumpties</th>
+          <th scope="col">Aantal</th>
+          <th scope="col">Bedrag</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @invoice.activity.count_per_product(user: @invoice.user).each do |item| %>
+          <tr>
+            <td><%= item[:name] %></td>
+            <td><%= item[:amount] %></td>
+            <td><%= item[:price] %></td>
+          </tr>
+        <% end %>
+        </tbody>
+        <tfoot>
+        <tr>
+          <th scope="col">Totaal</th>
+          <th scope="col"></th>
+          <th scope="col"><%= number_to_currency(@invoice.amount, unit: '€') %></th>
+        </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="col-6">
+      <p>
+        Wij verzoeken u dit bedrag binnen 14 dagen over te maken op rekeningnummer <b>NL68 INGB
+        0008 1654 20</b> ten name van <b>Stichting Sociëteit Flux</b> te Enschede, met vermelding van het
+        factuurnummer dat u hierboven aan de brief kan vinden.<br /><br />
+
+
+        Namens de Stichting Sociëteit Flux verblijf ik,<br/><br/>
+
+        Hoogachtend,<br/>
+        Wilco van Beijnum<br/>
+        h.t. Penningmeester der Stichting Sociëteit Flux<br/>
+      </p>
+    </div>
+  </div>
+</div>
