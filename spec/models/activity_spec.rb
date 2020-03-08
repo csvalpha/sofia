@@ -325,8 +325,8 @@ RSpec.describe Activity, type: :model do
 
     describe '#revenue_by_user' do
       let(:user) { FactoryBot.create(:user) }
-      let(:price) { FactoryBot.create(:product_price, price: 2, )}
-      let(:activity) { FactoryBot.create(:activity, price_list: price.price_list)}
+      let(:price) { FactoryBot.create(:product_price, price: 2) }
+      let(:activity) { FactoryBot.create(:activity, price_list: price.price_list) }
       let(:order) { FactoryBot.create(:order, activity: activity, user: user) }
 
       before do

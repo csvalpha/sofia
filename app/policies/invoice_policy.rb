@@ -3,7 +3,7 @@ class InvoicePolicy < ApplicationPolicy
     user&.treasurer?
   end
 
-  def send?
+  def send_invoice?
     user&.treasurer?
   end
 end

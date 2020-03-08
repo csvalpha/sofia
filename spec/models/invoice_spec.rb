@@ -28,7 +28,8 @@ RSpec.describe Invoice, type: :model do
   describe '#set_amount' do
     let(:activity) { FactoryBot.create(:activity) }
     let(:user) { FactoryBot.create(:user) }
-    subject(:invoice) { FactoryBot.build(:invoice, activity: activity, user: user)}
+
+    subject(:invoice) { FactoryBot.build(:invoice, activity: activity, user: user) }
 
     before do
       FactoryBot.create_list(:order, 5, :with_items, user: user, activity: activity)
@@ -37,18 +38,18 @@ RSpec.describe Invoice, type: :model do
       invoice.reload
     end
 
-    it { expect(invoice.amount).to eq activity.revenue_by_user(user)}
+    it { expect(invoice.amount).to eq activity.revenue_by_user(user) }
   end
 
   describe '#set_human_id' do
-    let(:activity) { FactoryBot.create(:activity, :manually_locked)}
-    let(:invoice) { FactoryBot.build(:invoice, activity: activity)}
+    let(:activity) { FactoryBot.create(:activity, :manually_locked) }
+    let(:invoice) { FactoryBot.build(:invoice, activity: activity) }
 
     before do
       FactoryBot.create_list(:invoice, 2)
       invoice.save
     end
 
-    it { expect(invoice.human_id).to eq "#{Time.zone.now.year}0003"}
+    it { expect(invoice.human_id).to eq "#{Time.zone.now.year}0003" }
   end
 end

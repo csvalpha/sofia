@@ -1,7 +1,6 @@
 <% content_for :title, 'Facturen - SOFIA' %>
 <% content_for :modal do %>
   <%= render 'modal' %>
-  <%= render 'send' %>
 <% end %>
 
 
@@ -47,9 +46,9 @@
                 <%= number_to_currency(invoice.amount, unit: '€') %>
               </td>
               <td>
-                <button class="btn btn-sm btn-primary" data-target="#send_invoice_modal" onclick="setSendModalObject(<%= invoice.id %>)" data-toggle="modal" role="button">
-                  Verstuur
-                </button>
+                <%= simple_form_for invoice, wrapper: :horizontal_form, url: send_invoice_invoice_path(id: invoice.id), method: :post do |f| %>
+                  <%= f.button :submit, 'Factuur versturen', class: 'btn btn-primary' %>
+                <% end %>
               </td>
             </tr>
           <% end %>
