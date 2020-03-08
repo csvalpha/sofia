@@ -8,7 +8,25 @@ class InvoicesController < ApplicationController
     @invoices = Invoice.all
     @activities_json = Activity.all.to_json(only: %i[id title])
     @invoice = Invoice.new
+  end
 
+  def show
+    @invoice = Invoice.find(params[:id])
+    authorize @invoice
+
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render pdf: "Factuur #{@invoice.human_id}",
+               page_size: 'A4',
+               template: "invoices/show.html.erb",
+               layout: "pdf.html.erb",
+               orientation: "Landscape",
+               lowquality: true,
+               zoom: 1,
+               dpi: 75
+      end
+    end
   end
 
   def create
