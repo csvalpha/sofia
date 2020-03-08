@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :invoice do
     user
-    activity
+    association :activity, factory: [:activity, :manually_locked]
   end
 end
