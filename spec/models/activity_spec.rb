@@ -323,6 +323,20 @@ RSpec.describe Activity, type: :model do
       it { expect(activity.revenue_per_product[product]).to eq 2 }
     end
 
+    describe '#revenue_by_user' do
+      let(:user) { FactoryBot.create(:user) }
+      let(:price) { FactoryBot.create(:product_price, price: 2, )}
+      let(:activity) { FactoryBot.create(:activity, price_list: price.price_list)}
+      let(:order) { FactoryBot.create(:order, activity: activity, user: user) }
+
+      before do
+        FactoryBot.create(:order_row, order: order, product: price.product, product_count: 10)
+        FactoryBot.create(:order_row, order: order, product: price.product, product_count: 40)
+      end
+
+      it { expect(activity.revenue_by_user(user)).to eq 100 }
+    end
+
     describe '#bartenders' do
       let(:bartender) { FactoryBot.create(:user) }
 
