@@ -10,7 +10,7 @@ class InvoicesController < ApplicationController
     @invoice = Invoice.new
   end
 
-  def show
+  def show # rubocop:disable Metrics/MethodLength
     @invoice = Invoice.find(params[:id])
     authorize @invoice
 
@@ -19,9 +19,9 @@ class InvoicesController < ApplicationController
       format.pdf do
         render pdf: "Factuur #{@invoice.human_id}",
                page_size: 'A4',
-               template: "invoices/show.html.erb",
-               layout: "pdf.html.erb",
-               orientation: "Landscape",
+               template: 'invoices/show.html.erb',
+               layout: 'pdf.html.erb',
+               orientation: 'Landscape',
                lowquality: true,
                zoom: 1,
                dpi: 75
@@ -46,7 +46,10 @@ class InvoicesController < ApplicationController
     @invoice = Invoice.find(params[:id])
     authorize @invoice
 
-    InvoiceMailer.invoice_mail(@invoice)
+    InvoiceMailer.invoice_mail(@invoice).deliver_now
+
+    flash[:success] = "Factuur verzonden naar #{@invoice.user.name}"
+    redirect_to invoices_path
   end
 
   private
