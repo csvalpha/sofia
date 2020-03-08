@@ -24,4 +24,18 @@ RSpec.describe Invoice, type: :model do
       it { expect(invoice).not_to be_valid }
     end
   end
+
+  describe '#set_amount' do
+    let(:activity) { FactoryBot.create(:activity) }
+    let(:user) { FactoryBot.create(:user) }
+    subject(:invoice) { FactoryBot.build(:invoice, activity: activity, user: user)}
+
+    before do
+      FactoryBot.create_list(:order, 5, :with_items, user: user, activity: activity)
+      invoice.save
+      invoice.reload
+    end
+
+    it { expect(invoice.amount).to eq activity.revenue_by_user(user)}
+  end
 end
