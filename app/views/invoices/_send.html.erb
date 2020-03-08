@@ -1,0 +1,28 @@
+<%= content_tag :div, class: 'modal', id: 'send_invoice_molda', role: 'dialog', 'aria-labelledby' => 'send_invoice_modal_label', 'aria-hidden' => 'true' do %>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          Factuur versturen
+        </h5>
+        <button aria-label="close" class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">
+            <%= fa_icon 'times' %>
+          </span>
+        </button>
+      </div>
+      <%= simple_form_for @invoice, wrapper: :horizontal_form, url: send_invoice_invoice_path do |f| %>
+        <div class="modal-body" id="activities_modal">
+          <%= f.input :email, label: 'Mailadres', placeholder: 'Mailadres', value: @invoice.user.email, required: true %>
+          <%= f.input :id, hidden: true %>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-dismiss="modal" type="button">
+            Annuleren
+          </button>
+          <%= f.button :submit, 'Factuur verzenden', class: 'btn btn-primary' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

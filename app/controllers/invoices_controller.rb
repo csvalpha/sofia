@@ -42,6 +42,13 @@ class InvoicesController < ApplicationController
     redirect_to invoices_path
   end
 
+  def send_invoice
+    @invoice = Invoice.find(params[:id])
+    authorize @invoice
+
+    InvoiceMailer.invoice_mail(@invoice)
+  end
+
   private
 
   def permitted_attributes

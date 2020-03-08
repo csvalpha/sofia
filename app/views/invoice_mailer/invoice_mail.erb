@@ -1,0 +1,15 @@
+<p style="margin: 0;font-size: 16px;line-height: 20px">
+  Op <%= l @invoice.activity.start_time, format: :date_long %> heeft u tijdens een borrel een aantal consumpties afgenomen. In verband
+  daarmee breng ik de kosten van <%= number_to_currency(@invoice.amount, unit: '€') %> bij u in rekening. In de bijlage vindt u de specificatie.
+  <br /><br />
+
+  Wij verzoeken u dit bedrag binnen <b>14 dagen</b> over te maken op rekeningnummer <b>NL68 INGB
+  0008 1654 20</b> ten name van <b>Stichting Sociëteit Flux</b> te Enschede, met vermelding van het
+  factuurnummer <%= @invoice.human_id %>
+  <br/><br/>
+
+  Mocht u hier vragen over hebben kunt u antwoorden op deze email, of zelf contact opnemen met
+  <a mailto="penningmeester@societeitflux.nl">penningmeester@societeitflux.nl</a>
+</p>
+
+<br />
