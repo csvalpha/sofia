@@ -1,4 +1,8 @@
 <% content_for :title, 'Facturen - SOFIA' %>
+<% content_for :modal do %>
+  <%= render 'modal' %>
+<% end %>
+
 
 <div class="container footer-padding">
   <div class="row pt-4">
@@ -6,6 +10,9 @@
       <h1>
         Facturen
       </h1>
+      <button class="btn btn-sm btn-primary" data-target="#new_invoice_modal" data-toggle="modal" role="button">
+        Nieuwe factuur
+      </button>
     </div>
     <div class="col-sm-12">
       <div class="table-responsive">
