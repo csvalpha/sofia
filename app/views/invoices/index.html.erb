@@ -1,6 +1,7 @@
 <% content_for :title, 'Facturen - SOFIA' %>
 <% content_for :modal do %>
   <%= render 'modal' %>
+  <%= render 'send' %>
 <% end %>
 
 
@@ -24,6 +25,7 @@
             <th scope="col">Gebruiker</th>
             <th scope="col">Activiteit</th>
             <th scope="col">Bedrag</th>
+            <th scope="col">Verstuur</th>
           </tr>
           </thead>
           <tbody>
@@ -43,6 +45,11 @@
               </td>
               <td>
                 <%= number_to_currency(invoice.amount, unit: '€') %>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-primary" data-target="#send_invoice_modal" onclick="setSendModalObject(<%= invoice.id %>)" data-toggle="modal" role="button">
+                  Verstuur
+                </button>
               </td>
             </tr>
           <% end %>
