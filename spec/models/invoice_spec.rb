@@ -17,6 +17,12 @@ RSpec.describe Invoice, type: :model do
 
       it { expect(invoice).not_to be_valid }
     end
+
+    context 'when with non-locked activity' do
+      subject(:invoice) { FactoryBot.build_stubbed(:invoice, activity: FactoryBot.build_stubbed(:activity)) }
+
+      it { expect(invoice).not_to be_valid }
+    end
   end
 
   describe '#set_amount' do
@@ -26,6 +32,7 @@ RSpec.describe Invoice, type: :model do
 
     before do
       FactoryBot.create_list(:order, 5, :with_items, user: user, activity: activity)
+      activity.update(locked_by: user)
       invoice.save
       invoice.reload
     end
@@ -34,7 +41,8 @@ RSpec.describe Invoice, type: :model do
   end
 
   describe '#set_human_id' do
-    let(:invoice) { FactoryBot.build(:invoice)}
+    let(:activity) { FactoryBot.create(:activity, :manually_locked)}
+    let(:invoice) { FactoryBot.build(:invoice, activity: activity)}
 
     before do
       FactoryBot.create_list(:invoice, 2)

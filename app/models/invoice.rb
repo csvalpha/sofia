@@ -3,6 +3,7 @@ class Invoice < ApplicationRecord
   belongs_to :activity
 
   validates :user, :activity, presence: true
+  validate :activity_is_locked
 
   before_save :set_amount
   before_save :set_human_id
@@ -17,5 +18,9 @@ class Invoice < ApplicationRecord
 
   def set_amount
     self.amount = activity.revenue_by_user(user)
+  end
+
+  def activity_is_locked
+    errors.add(:activity, 'should be locked') unless activity&.locked?
   end
 end
