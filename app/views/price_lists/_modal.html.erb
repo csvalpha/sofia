@@ -18,7 +18,7 @@
           <button class="btn btn-secondary" data-dismiss="modal" type="button">
             Annuleren
           </button>
-          <%= f.button :submit, 'Prijslijst opslaan', class: 'btn btn-primary' %>
+          <%= f.button :submit, 'Prijslijst opslaan', :data => {:disable_with => 'Bezig...'}, class: 'btn btn-primary' %>
         </div>
       <% end %>
     </div>

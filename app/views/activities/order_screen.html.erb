@@ -56,7 +56,7 @@
       <button aria-label="Close" class="btn btn-secondary mr-1" data-dismiss="modal" type="button">
         Annuleren
       </button>
-      <button @click="saveCreditMutation($event)" class="btn btn-primary" type="sumbit">
+      <button @click="saveCreditMutation" class="btn btn-primary" type="sumbit" :disabled="isSubmitting">
         Inleg aanmaken
       </button>
     </div>
@@ -154,8 +154,8 @@
       </div>
       <div class="orders-confirmation">
         <button @click="confirmOrder" class="btn btn-block btn-lg btn-success"
-                v-bind:class="{ 'btn-warning' : (orderRequiresAge() && selectedUser && selectedUser.minor) }"
-                v-bind:disabled="orderConfirmButtonDisabled()">
+                :class="{ 'btn-warning' : (orderRequiresAge() && selectedUser && selectedUser.minor) }"
+                :disabled="orderConfirmButtonDisabled()">
           <span class="text-uppercase">
             Bestelling plaatsen
           </span>

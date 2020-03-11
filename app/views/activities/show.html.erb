@@ -347,7 +347,7 @@
             </div>
             <div class="mt-3">
               <%= simple_form_for @activity, url: lock_activity_path, method: 'POST' do |f| %>
-                <%= f.button :submit, 'Activiteit vergrendelen', class: 'btn btn-danger' %>
+                <%= f.button :submit, 'Activiteit vergrendelen', :data => {:disable_with => 'Bezig...'}, class: 'btn btn-danger' %>
               <% end %>
             </div>
           </div>
