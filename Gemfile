@@ -37,6 +37,7 @@ gem 'uglifier', '~> 4.1'
 gem 'validates_timeliness', '~> 4.1'
 gem 'webpacker', '~> 4.2'
 gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
 
 group :development, :test do
   gem 'awesome_print'
