@@ -6,7 +6,7 @@ class InvoicesController < ApplicationController
     authorize Invoice
 
     @invoices = Invoice.all
-    @activities_json = Activity.all.to_json(only: %i[id title])
+    @activities_json = Activity.all.to_json(only: %i[id title start_time])
     @invoice = Invoice.new
   end
 

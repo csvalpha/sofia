@@ -47,6 +47,10 @@ document.addEventListener('turbolinks:load', () => {
         openSuggestions: function() {
           this.open = true;
         },
+
+        toDate: function(dateTimeFormat) {
+          return new Date(dateTimeFormat).toDateString();
+        }
       }
     });
   }
