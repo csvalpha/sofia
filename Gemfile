@@ -19,8 +19,8 @@ gem 'pg', '~> 1.0'
 gem 'puma', '~> 4.0'
 gem 'pundit', '~> 2.0'
 gem 'rack-attack', '~> 6.0'
-gem 'rails', '~> 5.2'
-gem 'rails-i18n', '~> 5.1'
+gem 'rails', '~> 6.0'
+gem 'rails-i18n', '~> 6.0'
 gem 'redis-rails', '~> 5.0'
 gem 'rest-client', '~> 2.0'
 gem 'sassc-rails', '~> 2.1'
@@ -47,7 +47,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'rb-readline'
-  gem 'rspec-rails'
+  gem 'rspec-rails', '= 4.0.0.beta4'
 end
 
 group :development do
