@@ -21,6 +21,7 @@ class CreditInsufficientNotificationJob < ApplicationJob
     User.all.select { |user| user.credit.negative? }
   end
 
+  # rubocop:disable Metrics/AbcSize
   def send_notification_delivery_reports(success_count, unnotifyable_users)
     User.treasurer.each do |treasurer|
       UserCreditMailer.credit_delivery_report_mail(
@@ -32,6 +33,9 @@ class CreditInsufficientNotificationJob < ApplicationJob
 
     SlackMessageJob.perform_later("Er is voor #{Rails.application.config.x.banana_api_host} een saldomail "\
       "verstuurd naar #{success_count} mensen, en #{unnotifyable_users.count} saldomail(s) kon(den) niet "\
-      'verzonden worden door het ontbrekenvan een e-mail adres.')
+      'verzonden worden door het ontbreken van een e-mail adres.')
+
+    HealthCheckJob.perform_later('credit_insufficient')
   end
+  # rubocop:enable Metrics/AbcSize
 end
