@@ -42,7 +42,8 @@ document.addEventListener('turbolinks:load', () => {
           orderRows: [],
           creditMutationAmount: null,
           creditMutationDescription: 'Inleg contant',
-          creditMutationFormInvalid: false
+          creditMutationFormInvalid: false,
+          isSubmitting: false
         };
       },
       methods: {
@@ -108,6 +109,8 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         confirmOrder() {
+          this.isSubmitting = true;
+
           let order = {};
           const order_rows_attributes = this.orderRows.map((row) => {
             if (row.amount) {
@@ -138,7 +141,7 @@ document.addEventListener('turbolinks:load', () => {
             };
           }
 
-          this.$http.post('/orders.json', {
+          this.$http.post('/orders', {
             order: order
           }).then((response) => {
             const user = response.body.user;
@@ -157,11 +160,17 @@ document.addEventListener('turbolinks:load', () => {
               // re-set user to update credit
               this.setUser(response.body.user);
             }
-          }, this.handleXHRError );
+
+            this.isSubmitting = false;
+          }, (response) => {
+            this.handleXHRError(response);
+
+            this.isSubmitting = false;
+          });
         },
 
         orderConfirmButtonDisabled() {
-          return !(this.selectedUser || this.payWithCash || this.payWithPin) || this.totalProductCount() == 0;
+          return !(this.selectedUser || this.payWithCash || this.payWithPin) || this.totalProductCount() == 0 || this.isSubmitting;
         },
 
         totalProductCount() {
@@ -171,15 +180,18 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         saveCreditMutation(event) {
+          this.isSubmitting = true;
+
           this.creditMutationFormInvalid = (!this.selectedUser
             || !this.creditMutationAmount || !this.creditMutationDescription);
 
           if (this.creditMutationFormInvalid) {
             // Prevent event propagation so modal stays visible
+            this.isSubmitting = false;
             return event.stopPropagation();
           }
 
-          this.$http.post('/credit_mutations.json', {
+          this.$http.post('/credit_mutations', {
             credit_mutation: {
               user_id: this.selectedUser.id,
               activity_id: this.activity.id,
@@ -202,7 +214,13 @@ document.addEventListener('turbolinks:load', () => {
             this.creditMutationDescription = 'Inleg contant';
             const additionalInfo = `${response.body.user.name} - ${this.doubleToCurrency(response.body.amount)}`;
             this.sendFlash('Inleg opgeslagen.', additionalInfo, 'success');
-          }, this.handleXHRError);
+
+            this.isSubmitting = false;
+          }, (response) => {
+            this.handleXHRError(response);
+
+            this.isSubmitting = false;
+          });
         },
 
         handleXHRError(error) {

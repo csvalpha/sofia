@@ -18,7 +18,7 @@
           <button class="btn btn-secondary" data-dismiss="modal">
             Annuleren
           </button>
-          <%= f.button :submit, 'Naam wijzigen', class: 'btn btn-primary', method: :patch %>
+          <%= f.button :submit, 'Naam wijzigen', :data => {:disable_with => 'Bezig...'}, class: 'btn btn-primary', method: :patch %>
         </div>
       <% end %>
     </div>
