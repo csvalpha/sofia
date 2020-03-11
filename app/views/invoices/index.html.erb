@@ -31,7 +31,7 @@
           <% @invoices&.each do |invoice| %>
             <tr>
               <td>
-                <%= invoice.id %>
+                 <%= link_to invoice.id, invoice %>
               </td>
               <td>
                 <%= invoice.human_id %>
