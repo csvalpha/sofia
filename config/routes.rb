@@ -32,6 +32,8 @@ Rails.application.routes.draw do
 
   # Sidekiq dashboard
   require 'sidekiq/web'
+  require 'sidekiq-scheduler/web'
+
   # See https://github.com/mperham/sidekiq/wiki/Monitoring#forbidden
   Sidekiq::Web.set :session_secret, Rails.application.credentials[:secret_key_base]
 
