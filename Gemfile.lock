@@ -120,7 +120,7 @@ GEM
       railties (>= 4.2.0)
     faker (2.10.2)
       i18n (>= 1.6, < 2)
-    faraday (0.17.3)
+    faraday (1.0.0)
       multipart-post (>= 1.2, < 3)
     ffi (1.12.2)
     font-awesome-rails (4.7.0.5)
@@ -365,8 +365,8 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    sentry-raven (2.13.0)
-      faraday (>= 0.7.6, < 1.0)
+    sentry-raven (3.0.0)
+      faraday (>= 1.0)
     shellany (0.0.1)
     sidekiq (6.0.5)
       connection_pool (>= 2.2.2)
@@ -491,7 +491,7 @@ DEPENDENCIES
   rubocop-rails
   rubocop-rspec
   sassc-rails (~> 2.1)
-  sentry-raven (~> 2.3)
+  sentry-raven (~> 3.0)
   sidekiq (~> 6.0)
   sidekiq-scheduler (~> 3.0)
   simple_form (~> 5.0)

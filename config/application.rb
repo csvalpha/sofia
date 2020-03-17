@@ -16,8 +16,7 @@ module Sofia
     config.i18n.default_locale = :nl
     config.i18n.fallbacks = [:nl]
 
-    config.cache_store = :redis_store, "#{Rails.application.config_for(:cable)['url']}/cache",
-                         { expires_in: 90.minutes }
+    config.cache_store = :redis_cache_store, { url: Rails.application.config_for(:cable)['url'] }
     config.active_job.queue_adapter = :sidekiq
 
     config.exceptions_app = routes
