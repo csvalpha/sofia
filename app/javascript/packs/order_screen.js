@@ -248,6 +248,14 @@ document.addEventListener('turbolinks:load', () => {
         }
       },
 
+      computed: {
+        sumupUrl: function() {
+          let affilateKey = element.dataset.sumupKey;
+          let callback = element.dataset.sumupCallback;
+          return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&total=${this.orderTotal()}&currency=EUR&title=Bestelling SOFIA&callback=${callback}`;
+        },
+      },
+
       // Listen to escape button which are dispatched on the body content_tag
       // https://vuejsdevelopers.com/2017/05/01/vue-js-cant-help-head-body/
       created: function() {

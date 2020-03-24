@@ -1,6 +1,6 @@
 <% content_for :title, "Streepscherm #{@activity.title} - SOFIA" %>
 <%= content_tag :div, id: 'order-screen', class: 'order-screen',
-                data: {users: @users_json, product_prices: @product_prices_json, activity: @activity_json} do
+                data: {users: @users_json, product_prices: @product_prices_json, activity: @activity_json, sumup_callback: sumup_callback_activity_url, sumup_key: @sumup_key} do
 
 %>
   <b-modal id="credit-mutation-modal" ref="creditMutationModal" title="Inleggen">
@@ -83,6 +83,20 @@
         </small>
       </li>
     </ul>
+    <div class="row col-lg-4">
+      <% flash.each do |key, value| %>
+        <div class="col-12 pt-2 text-center">
+          <div class="alert alert-dismissible fade show <%= flash_class key %>" role="alert">
+            <%= value %>
+            <button aria-label="Close" class="close" data-dismiss="alert" type="button">
+                  <span aria-hidden="true">
+                    <%= fa_icon 'times' %>
+                  </span>
+            </button>
+          </div>
+        </div>
+      <% end %>
+    </div>
     <div class="row col-lg-4 pull-right no-gutters" style="flex-direction: row-reverse">
       <b-btn class="m-3" v-on:click="keepUserSelected = !keepUserSelected" variant="outline-secondary">
         <span v-if="keepUserSelected">
@@ -153,9 +167,25 @@
         </div>
       </div>
       <div class="orders-confirmation">
+        <div class="btn-group btn-group-lg btn-block" role="group" v-if="payWithPin && <%= @sumup_enabled.to_s %>">
+          <a role="button" class="btn btn-success col-9"
+             @click="confirmOrder"
+             :class="{ 'disabled': orderConfirmButtonDisabled() }"
+             :href="sumupUrl">
+            <span class="text-uppercase">
+              Sumup betaling
+            </span>
+          </a>
+          <button type="button" class="btn btn-dark" v-bind:disabled="orderConfirmButtonDisabled()"
+                  @click="confirmOrder">
+            <%= fa_icon 'money' %>
+          </button>
+        </div>
+
         <button @click="confirmOrder" class="btn btn-block btn-lg btn-success"
                 :class="{ 'btn-warning' : (orderRequiresAge() && selectedUser && selectedUser.minor) }"
-                :disabled="orderConfirmButtonDisabled()">
+                :disabled="orderConfirmButtonDisabled()"
+                v-if="!payWithPin || !<%= @sumup_enabled.to_s %>">
           <span class="text-uppercase">
             Bestelling plaatsen
           </span>
@@ -166,7 +196,7 @@
             </span>
             <span>
               {{selectedUser.name}} is minderjarig!
-              </span>
+            </span>
           </small>
         </button>
       </div>
