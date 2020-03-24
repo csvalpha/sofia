@@ -57,14 +57,14 @@
       <h1>Factuur</h1>
       <p>
         <%= @invoice.user.name %><br />
-        Datum: <%= @invoice.created_at.strftime('%d/%m/%Y') %><br />
+        Datum: <%= l @invoice.created_at, format: :date_only %><br />
         Factuurnummer: <%= @invoice.human_id %>
       </p>
 
       <p>
         Geachte,<br/><br />
-        Op <%= @invoice.activity.start_time.strftime('%d %B') %> heeft u tijdens een borrel een aantal consumpties afgenomen. In verband
-        daarmee breng ik de kosten van &euro; <%= number_to_currency(@invoice.amount, unit: '€') %> bij u in rekening.
+        Op <%= l @invoice.activity.start_time, format: :date_long %> heeft u tijdens een borrel een aantal consumpties afgenomen. In verband
+        daarmee breng ik de kosten van <%= number_to_currency(@invoice.amount, unit: '€') %> bij u in rekening.
       </p>
     </div>
 
@@ -82,7 +82,7 @@
           <tr>
             <td><%= item[:name] %></td>
             <td><%= item[:amount] %></td>
-            <td><%= item[:price] %></td>
+            <td><%= number_to_currency(item[:price], unit: '€') %></td>
           </tr>
         <% end %>
         </tbody>
