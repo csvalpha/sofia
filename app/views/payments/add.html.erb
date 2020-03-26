@@ -17,19 +17,20 @@
             <%= f.input :amount, as: :float, input_html: {"v-model": "paymentAmount"}, required: true, label: 'Bedrag'  %>
           </div>
 
-          <div class="col-4 offset-8 alert alert-info" v-if="amountValid()">
-            Saldo na inleg: {{ newCredit }}
-          </div>
-
-          <div class="col-4 offset-8 alert alert-danger" v-if="!amountValid()">
-            U heeft een incorrect getal ingevoerd.
-          </div>
-
-          <div class="row">
-            <div class="col-3 offset-9">
-              <%= f.button :submit, 'Betalen met iDEAL', class: 'btn btn-primary', 'v-bind:disabled': '!amountValid()' %>
+          <div class="col-md-4 col-sm-8 col-12 offset-md-8 offset-sm-4" v-if="amountValid()">
+            <div class="alert alert-info">
+              Saldo na inleg: {{ newCredit }}
             </div>
+          </div>
 
+          <div class="col-md-4 col-sm-8 col-12 offset-md-8 offset-sm-4" v-if="!amountValid()">
+            <div class="alert alert-danger">
+              U heeft een incorrect getal ingevoerd.
+            </div>
+          </div>
+
+          <div class="col-12">
+            <%= f.button :submit, 'Betalen met iDEAL', class: 'btn btn-primary float-right', 'v-bind:disabled': '!amountValid()' %>
           </div>
 
         <% end %>
