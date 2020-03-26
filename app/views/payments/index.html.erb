@@ -1,0 +1,30 @@
+<% content_for :title, "Betalingen - SOFIA" %>
+
+<div class="container footer-padding">
+  <div class="row pt-4">
+    <div class="col-sm-12 d-flex justify-content-between align-items-center">
+      <h1>Betalingen</h1>
+    </div>
+
+    <table class="table table-striped mt-2">
+      <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Status</th>
+        <th scope="col">Bedrag</th>
+        <th scope="col">Gebruiker</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @payments.each do |payment| %>
+        <tr>
+          <th scope="row"><%= payment.id %></th>
+          <td><%= t(payment.status).humanize %></td>
+          <td><%= number_to_currency(payment.amount, unit: '€') %></td>
+          <td><%= link_to payment.user.name, payment.user %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

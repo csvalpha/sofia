@@ -14,6 +14,13 @@ nl:
   food: 'etenswaren'
   tobacco: 'rookwaren'
 
+  open: 'open'
+  paid: 'betaald'
+  pending: 'in afwachting'
+  failed: 'mislukt'
+  canceled: 'geanuleerd'
+  expired: 'verlopen'
+
   codes:
     beer: 8010
     non_alcoholic: 8020

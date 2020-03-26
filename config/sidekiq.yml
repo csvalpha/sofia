@@ -6,6 +6,8 @@
 schedule:
   CreditInsufficientNotificationJob:
     cron: '0 0 10 * * 4'  # At 10:00:00 on Thursday => https://crontab.guru/#0_10_*_*_4
+  PaymentPollJob:
+    cron: '*/5 * * * *' # Every 5 minutes => https://crontab.guru/#*/5_*_*_*_*
   HealthCheckJob:
     cron : '*/30 * * * *' # Every 30 minutes => https://crontab.guru/#*/30_*_*_*_*
     args: ['sidekiq']

@@ -41,6 +41,11 @@
 
           <% end %>
         </li>
+        <li class="nav-item">
+          <%= nav_link payments_path, class: 'nav-link' do %>
+            <%= fa_icon 'credit-card', class: 'mr-2', text: 'Betalingen' %>
+          <% end %>
+        </li>
       <% end %>
     </ul>
     <% if current_user %>

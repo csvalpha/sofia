@@ -69,6 +69,17 @@ ActiveRecord::Schema.define(version: 2020_03_24_110203) do
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
+  create_table "payments", force: :cascade do |t|
+    t.string "mollie_id"
+    t.decimal "amount", precision: 8, scale: 2
+    t.integer "status", default: 0, null: false
+    t.bigint "user_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_payments_on_user_id"
+  end
+
   create_table "price_lists", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "deleted_at"
