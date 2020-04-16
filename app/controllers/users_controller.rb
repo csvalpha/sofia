@@ -8,10 +8,23 @@ class UsersController < ApplicationController
     authorize @users
 
     @users_credits = User.calculate_credits
+    @users_with_credits = @users.as_json
+                              .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
-    @users_json = @users.as_json
-                        .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
-                        .to_json(only: %w[id name credit])
+    @users_json = @users_with_credits.to_json(only: %w[id name credit])
+
+    @banana_users_total = @users_with_credits
+                               .filter { |u| u['provider'] == 'banana_oauth2' }
+                               .inject(0) { |sum, u| sum + u['credit'] }
+
+    @users_totals = @users_with_credits
+                        .filter { |u| u['provider'] != 'banana_oauth2' and u['credit'] != 0 }
+
+    @users_totals.unshift({
+        'id' => '',
+        'name' => 'Alpha gebruikers',
+        'credit' => @banana_users_total
+    })
 
     @new_user = User.new
   end

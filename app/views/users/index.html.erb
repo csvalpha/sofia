@@ -38,5 +38,37 @@
       </b-table>
     </div>
   <% end %>
+
   <hr/>
+
+  <h3>Totalen</h3>
+
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>#</th>
+        <th>Naam</th>
+        <th>Saldo</th>
+      </tr>
+      </thead>
+      <tbody>
+        <% @users_totals.each do |user| %>
+          <tr>
+            <th><%= user['id'] %></th>
+            <td>
+              <a href="/users/<%= user['id'] %>">
+                <%= user['name'] %>
+              </a>
+            </td>
+            <td>
+              <span class="<%= user['credit'] <= 0 ? 'text-danger' : '' %>">
+                <%= number_to_currency(user['credit'], unit: '€') %>
+              </span>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>
