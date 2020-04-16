@@ -3,28 +3,28 @@ class UsersController < ApplicationController
 
   after_action :verify_authorized
 
-  def index
+  def index # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     @users = User.all.order(:name)
     authorize @users
 
     @users_credits = User.calculate_credits
     @users_with_credits = @users.as_json
-                              .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
+                                .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
     @users_json = @users_with_credits.to_json(only: %w[id name credit])
 
     @banana_users_total = @users_with_credits
-                               .filter { |u| u['provider'] == 'banana_oauth2' }
-                               .inject(0) { |sum, u| sum + u['credit'] }
+                          .filter { |u| u['provider'] == 'banana_oauth2' }
+                          .inject(0) { |sum, u| sum + u['credit'] }
 
     @users_totals = @users_with_credits
-                        .filter { |u| u['provider'] != 'banana_oauth2' and u['credit'] != 0 }
+                    .filter { |u| u['provider'] != 'banana_oauth2' && u['credit'] != 0 }
 
     @users_totals.unshift({
-        'id' => '',
-        'name' => 'Alpha gebruikers',
-        'credit' => @banana_users_total
-    })
+                            'id' => '',
+                            'name' => 'Alpha gebruikers',
+                            'credit' => @banana_users_total
+                          })
 
     @new_user = User.new
   end
