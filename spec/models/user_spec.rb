@@ -31,6 +31,24 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '.manual' do
+    context 'when manual created' do
+      subject(:user) { FactoryBot.create(:user, provider: nil) }
+
+      before { user }
+
+      it { expect(described_class.manual).to include user }
+    end
+
+    context 'when created via provider' do
+      subject(:user) { FactoryBot.create(:user, provider: 'another_provider') }
+
+      before { user }
+
+      it { expect(described_class.manual).not_to include user }
+    end
+  end
+
   describe '.treasurer' do
     context 'when treasurer' do
       subject(:user) { FactoryBot.create(:user) }

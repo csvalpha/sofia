@@ -12,6 +12,7 @@ class User < ApplicationRecord
   validates :uid, uniqueness: true, allow_blank: true
 
   scope :in_banana, (-> { where(provider: 'banana_oauth2') })
+  scope :manual, (-> { where(provider: nil) })
   scope :treasurer, (-> { joins(:roles).merge(Role.treasurer) })
 
   def credit

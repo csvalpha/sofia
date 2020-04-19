@@ -23,52 +23,11 @@
     </div>
   </div>
 
-  <%= content_tag :div, id: 'users-index', class: 'row', data: {users: @users_json} do %>
-    <div class="col-sm-12">
-      <b-table :fields="fields" :items="users" responsive="" show-empty="" sort-by="name" striped="">
-        <template v-slot:cell(name)="data">
-          <a :href="`/users/${data.item.id}`">
-            {{data.value}}
-          </a></template>
-        <template v-slot:empty>
-          <p class="my-1 text-center">
-            <em>Er zijn geen gebruikers om weer te geven
+  <%= content_tag :div, id: 'users-index', class: 'row', data: {manual_users: @manual_users_json, amber_users: @amber_users_json} do %>
+    <users-table :title="'Handmatig aangemaakte gebruikers'" :users="manual_users">
+    </users-table>
 
-            </em></p></template>
-      </b-table>
-    </div>
+    <users-table :title="'Amber gebruikers'" :users="amber_users">
+    </users-table>
   <% end %>
-
-  <hr/>
-
-  <h3>Totalen</h3>
-
-  <div class="table-responsive">
-    <table class="table table-striped">
-      <thead>
-      <tr>
-        <th>#</th>
-        <th>Naam</th>
-        <th>Saldo</th>
-      </tr>
-      </thead>
-      <tbody>
-        <% @users_totals.each do |user| %>
-          <tr>
-            <th><%= user['id'] %></th>
-            <td>
-              <a href="/users/<%= user['id'] %>">
-                <%= user['name'] %>
-              </a>
-            </td>
-            <td>
-              <span class="<%= user['credit'] <= 0 ? 'text-danger' : '' %>">
-                <%= number_to_currency(user['credit'], unit: '€') %>
-              </span>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
 </div>

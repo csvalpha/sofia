@@ -2,6 +2,7 @@ import Vue from 'vue/dist/vue.esm';
 import TurbolinksAdapter from 'vue-turbolinks';
 import axios from 'axios';
 import BootstrapVue from 'bootstrap-vue';
+import UsersTable from '../components/user/userstable.vue';
 
 Vue.use(TurbolinksAdapter);
 Vue.use(BootstrapVue);
@@ -11,35 +12,16 @@ document.addEventListener('turbolinks:load', () => {
 
   var element = document.getElementById('users-index');
   if (element !== null) {
-    var users = JSON.parse(element.dataset.users);
+    var manual_users = JSON.parse(element.dataset.manualUsers);
+    var amber_users = JSON.parse(element.dataset.amberUsers);
     new Vue({
       el: element,
-      data: () => {
-        return {
-          users: users,
-          fields: [
-            {
-              key: 'id',
-              label: '#',
-              sortable: true,
-              isRowHeader: true
-            },
-            {
-              key: 'name',
-              label: 'Naam',
-              sortable: true
-            },
-            {
-              key: 'credit',
-              label: 'Saldo',
-              sortable: true,
-              tdClass: (value) => {
-                return value <= 0 ? 'text-danger' : '';
-              },
-              formatter: (value) => `€ ${parseFloat(value).toFixed(2)}`,
-            }
-          ]
-        };
+      data: () => ({
+        manual_users,
+        amber_users
+      }),
+      components: {
+        UsersTable
       },
     });
   }
