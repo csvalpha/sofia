@@ -4,30 +4,29 @@
 <% end %>
 
 <div class="container footer-padding">
-  <div class="row pt-4">
-    <div class="col-sm-12 d-flex justify-content-between align-items-center">
-      <h1>Gebruikers</h1>
+  <h1 class="my-4">Gebruikers</h1>
+
+  <%= content_tag :div, id: 'users-index', data: {manual_users: @manual_users_json, amber_users: @amber_users_json} do %>
+    <div class="d-flex justify-content-between align-items-center">
+      <h3>Handmatig aangemaakte gebruikers</h3>
+      <button class="btn btn-sm btn-primary" data-target="#edit_user_modal" data-toggle="modal" role="button">
+        <%= fa_icon 'plus' %>
+        <span class="d-none d-md-inline ml-1">
+          Nieuwe gebruiker
+        </span>
+      </button>
+    </div>
+    <users-table :users="manual_users"></users-table>
+
+    <div class="d-flex justify-content-between align-items-center">
+      <h3>Amber gebruikers</h3>
       <span>
         <%= link_to refresh_user_list_users_path, class: 'btn btn-primary btn-sm mr-1' do %>
-        <%= fa_icon 'refresh' %>
+          <%= fa_icon 'refresh' %>
           <span class="d-none d-md-inline ml-1">Synchroniseer gebruikers</span>
         <% end %>
-
-        <button class="btn btn-sm btn-primary" data-target="#edit_user_modal" data-toggle="modal" role="button">
-          <%= fa_icon 'plus' %>
-          <span class="d-none d-md-inline ml-1">
-            Nieuwe gebruiker
-          </span>
-      </button>
       </span>
     </div>
-  </div>
-
-  <%= content_tag :div, id: 'users-index', class: 'row', data: {manual_users: @manual_users_json, amber_users: @amber_users_json} do %>
-    <users-table :title="'Handmatig aangemaakte gebruikers'" :users="manual_users">
-    </users-table>
-
-    <users-table :title="'Amber gebruikers'" :users="amber_users">
-    </users-table>
+    <users-table :users="amber_users"></users-table>
   <% end %>
 </div>

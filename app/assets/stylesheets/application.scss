@@ -43,6 +43,15 @@ body {
   }
 }
 
+.users-table [aria-colindex="1"] {
+  /* ID column */
+  width: 100px;
+}
+.users-table [aria-colindex="3"] {
+  /* Saldo column */
+  width: 150px;
+}
+
 .b-table-details--header {
   background-color: $gray-200;
   text-transform: uppercase;
