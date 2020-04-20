@@ -3,15 +3,18 @@ class UsersController < ApplicationController
 
   after_action :verify_authorized
 
-  def index
-    @users = User.all.order(:name)
-    authorize @users
+  def index # rubocop:disable Metrics/AbcSize
+    authorize User
 
+    @manual_users = User.manual.order(:name)
+    @amber_users = User.in_banana.order(:name)
     @users_credits = User.calculate_credits
 
-    @users_json = @users.as_json
-                        .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
-                        .to_json(only: %w[id name credit])
+    @manual_users_json = @manual_users.as_json(only: %w[id name])
+                                      .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
+
+    @amber_users_json = @amber_users.as_json(only: %w[id name])
+                                    .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
     @new_user = User.new
   end
