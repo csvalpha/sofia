@@ -4,6 +4,7 @@ class CreateInvoices < ActiveRecord::Migration[5.2]
       t.string :human_id, unique: true, null: false
       t.references :user, null: false
       t.references :activity, null: false
+      t.integer :status, default: 0, null: false
       t.decimal :amount, precision: 8, scale: 2
 
       t.datetime :deleted_at
