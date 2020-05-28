@@ -4,7 +4,7 @@
 <div id="activity" class="container footer-padding">
   <div class="row justify-content-between">
     <div class="col-4">
-      <%= image_tag '/images/flux_logo.png', class: 'h-100 col-12' %>
+      <%= image_tag '/images/flux_logo.png', class: 'col-12' %>
     </div>
     <div class="col-8 py-2">
       <h3>Stichting Sociëteit Flux</h3>
@@ -72,9 +72,9 @@
       <table class="table table-striped">
         <thead>
         <tr>
-          <th scope="col">Consumpties</th>
-          <th scope="col">Aantal</th>
-          <th scope="col">Bedrag</th>
+          <td scope="col">Consumpties</td>
+          <td scope="col">Aantal</td>
+          <td scope="col">Bedrag</td>
         </tr>
         </thead>
         <tbody>
@@ -88,9 +88,9 @@
         </tbody>
         <tfoot>
         <tr>
-          <th scope="col">Totaal</th>
-          <th scope="col"></th>
-          <th scope="col"><%= number_to_currency(@invoice.amount, unit: '€') %></th>
+          <td scope="col">Totaal</td>
+          <td scope="col"></td>
+          <td scope="col"><%= number_to_currency(@invoice.amount, unit: '€') %></td>
         </tr>
         </tfoot>
       </table>

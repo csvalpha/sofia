@@ -1,10 +1,11 @@
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
 <!DOCTYPE html>
 <html>
 <head>
 <title><%= yield(:title) %></title>
   <%= wicked_pdf_stylesheet_link_tag 'application' %>
-
-  <%#= wicked_pdf_stylesheet_link_tag "invoice" %>
+  <%= wicked_pdf_stylesheet_link_tag 'pdf' %>
 </head>
 <body>
   <%= yield %>

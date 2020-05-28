@@ -1,0 +1,4 @@
+// There is a bug with Bootstrap tables in PDF, so we use td in a th, but it needs to be bold
+thead td, tfoot td {
+  font-weight: bold;
+}
