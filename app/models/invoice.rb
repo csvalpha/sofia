@@ -10,8 +10,6 @@ class Invoice < ApplicationRecord
   before_save :set_amount
   before_save :set_human_id
 
-
-
   private
 
   def set_human_id

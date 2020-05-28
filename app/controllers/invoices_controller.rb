@@ -10,7 +10,7 @@ class InvoicesController < ApplicationController
     @invoice = Invoice.new
   end
 
-  def show # rubocop:disable Metrics/MethodLength
+  def show
     @invoice = Invoice.find(params[:id])
     authorize @invoice
 
@@ -18,13 +18,8 @@ class InvoicesController < ApplicationController
       format.html
       format.pdf do
         render pdf: "Factuur #{@invoice.human_id}",
-               page_size: 'A4',
                template: 'invoices/show.html.erb',
-               layout: 'pdf.html.erb',
-               orientation: 'Landscape',
-               lowquality: true,
-               zoom: 1,
-               dpi: 75
+               lowquality: true
       end
     end
   end
