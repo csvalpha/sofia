@@ -24,6 +24,7 @@
             <th scope="col">Gebruiker</th>
             <th scope="col">Activiteit</th>
             <th scope="col">Bedrag</th>
+            <th scope="col">Status</th>
             <th scope="col">Verstuur</th>
           </tr>
           </thead>
@@ -44,6 +45,9 @@
               </td>
               <td>
                 <%= number_to_currency(invoice.amount, unit: '€') %>
+              </td>
+              <td>
+                <%= invoice.status || 'null' %>
               </td>
               <td>
                 <%= simple_form_for invoice, wrapper: :horizontal_form, url: send_invoice_invoice_path(id: invoice.id), method: :post do |f| %>

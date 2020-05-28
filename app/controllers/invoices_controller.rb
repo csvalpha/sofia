@@ -47,6 +47,7 @@ class InvoicesController < ApplicationController
     authorize @invoice
 
     InvoiceMailer.invoice_mail(@invoice).deliver_now
+    @invoice.update(status: 'sent')
 
     flash[:success] = "Factuur verzonden naar #{@invoice.user.name}"
     redirect_to invoices_path

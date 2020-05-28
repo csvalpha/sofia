@@ -1,4 +1,6 @@
 class Invoice < ApplicationRecord
+  enum status: { pending: 0, sent: 1 }
+
   belongs_to :user
   belongs_to :activity
 
@@ -7,6 +9,8 @@ class Invoice < ApplicationRecord
 
   before_save :set_amount
   before_save :set_human_id
+
+
 
   private
 
