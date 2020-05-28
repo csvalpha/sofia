@@ -16,7 +16,8 @@ AllCops:
     - 'vendor/**/*'
     - '.pryrc'
   DisplayCopNames: true
-  DisplayStyleGuide: true
+  DisplayStyleGuide: true.
+  NewCops: enable
 
 Rails/UnknownEnv:
   Environments:
@@ -93,18 +94,3 @@ Style/StringMethods:
 
 Naming/MemoizedInstanceVariableName:
   Enabled: false
-
-Style/HashEachMethods:
-  Enabled: true
-
-Style/HashTransformKeys:
-  Enabled: true
-
-Style/HashTransformValues:
-  Enabled: true
-
-Lint/RaiseException:
-  Enabled: true
-
-Lint/StructNewOverride:
-  Enabled: true
