@@ -31,3 +31,7 @@ nl:
     credit_mutation: '0610'
     cash: 1000
     pin: 2060
+
+  views:
+    pagination:
+      truncate: "&hellip;"
