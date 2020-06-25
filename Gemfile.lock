@@ -71,7 +71,7 @@ GEM
     bootsnap (1.4.6)
       msgpack (~> 1.0)
     brakeman (4.8.2)
-    browser (2.7.1)
+    browser (4.2.0)
     builder (3.2.4)
     bullet (6.1.0)
       activesupport (>= 3.0.0)
@@ -468,7 +468,7 @@ DEPENDENCIES
   better_errors
   bootsnap (~> 1.4)
   brakeman
-  browser (~> 2.7)
+  browser (~> 4.2)
   bullet
   capistrano-sidekiq
   colorize
