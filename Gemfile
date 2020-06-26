@@ -35,7 +35,7 @@ gem 'slack-notifier', '~> 2.3'
 gem 'turbolinks', '~> 5.2'
 gem 'uglifier', '~> 4.1'
 gem 'validates_timeliness', '~> 4.1'
-gem 'webpacker', '~> 4.2'
+gem 'webpacker', '~> 5.1'
 
 group :development, :test do
   gem 'awesome_print'
