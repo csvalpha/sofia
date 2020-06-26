@@ -1,4 +1,4 @@
-FROM ruby:2.6.2-slim
+FROM ruby:2.7.1-slim
 
 # Add build-essential tools
 RUN apt-get update -qq \
