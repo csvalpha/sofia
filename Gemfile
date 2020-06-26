@@ -50,7 +50,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'rb-readline'
-  gem 'rspec-rails', '= 4.0.0.beta4'
+  gem 'rspec-rails'
 end
 
 group :development do
