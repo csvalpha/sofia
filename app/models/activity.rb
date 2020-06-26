@@ -63,7 +63,7 @@ class Activity < ApplicationRecord
   end
 
   def count_per_product(**args)
-    records = orders.where(**args)
+    records = orders.where(args)
 
     @count_per_product = OrderRow.where(order: records).group(:product_id, :name).joins(:product)
                                  .pluck(:name, Arel.sql('SUM(product_count)'), Arel.sql('SUM(product_count * price_per_product)'))
