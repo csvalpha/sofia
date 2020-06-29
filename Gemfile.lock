@@ -202,7 +202,7 @@ GEM
       rake
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
-    mini_racer (0.2.14)
+    mini_racer (0.2.15)
       libv8 (> 7.3)
     minitest (5.14.1)
     mollie-api-ruby (4.7.1)
@@ -461,7 +461,7 @@ GEM
     websocket-driver (0.7.2)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    zeitwerk (2.3.0)
+    zeitwerk (2.3.1)
 
 PLATFORMS
   ruby
