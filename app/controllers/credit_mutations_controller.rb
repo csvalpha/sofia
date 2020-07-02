@@ -3,7 +3,9 @@ class CreditMutationsController < ApplicationController
   after_action :verify_authorized
 
   def index
-    @credit_mutations = CreditMutation.includes(model_includes).order(created_at: :desc)
+    @credit_mutations = CreditMutation.includes(model_includes)
+                                      .order(created_at: :desc)
+                                      .page params[:page]
     authorize @credit_mutations
 
     @new_mutation = CreditMutation.new

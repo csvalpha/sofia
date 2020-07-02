@@ -8,7 +8,9 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
 
   def index # rubocop:disable Metrics/AbcSize
     authorize Activity
-    @activities = policy_scope(Activity.includes(%i[price_list created_by]).order(start_time: :desc))
+    @activities = policy_scope(Activity.includes(%i[price_list created_by])
+                                   .order(start_time: :desc)
+                                   .page(params[:page]))
 
     @activity = Activity.new(
       start_time: (Time.zone.now + 2.hours).beginning_of_hour,
