@@ -5,9 +5,10 @@ class AddFunctionalNameToRole < ActiveRecord::Migration[5.1]
 
     Role.all.each do |role|
       name = role.read_attribute(:name)
-      if name == 'Treasurer'
+      case name
+      when 'Treasurer'
         role.update!(role_type: :treasurer)
-      elsif name == 'Main Bartender'
+      when 'Main Bartender'
         role.update!(role_type: :main_bartender)
       end
     end
