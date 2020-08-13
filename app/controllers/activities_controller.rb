@@ -85,7 +85,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
   def order_screen # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     authorize Activity
 
-    @activity = Activity.includes([:price_list, price_list: { product_price: :product }])
+    @activity = Activity.includes([:price_list, { price_list: { product_price: :product } }])
                         .find(params[:id])
 
     @product_prices_json = sorted_product_price(@activity).to_json(
