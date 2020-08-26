@@ -75,6 +75,9 @@ RSpec/NestedGroups:
 RSpec/MultipleExpectations:
   Max: 5
 
+RSpec/MultipleMemoizedHelpers:
+  Enabled: False
+
 Style/AutoResourceCleanup:
   Enabled: true
 

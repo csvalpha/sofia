@@ -60,7 +60,7 @@ class UsersController < ApplicationController
     render json: @users
   end
 
-  def api_token # rubocop:disable Metrics/AbcSize
+  def api_token
     return @token if @token
 
     options = { grant_type: 'client_credentials',
@@ -99,7 +99,7 @@ class UsersController < ApplicationController
                               'Authorization' => "Bearer #{api_token}"))['data']
   end
 
-  def find_or_create_user(user_json)
+  def find_or_create_user(user_json) # rubocop:disable Metrics/AbcSize
     fields = user_json['attributes']
     u = User.find_or_initialize_by(uid: user_json['id'])
     u.name = User.full_name_from_attributes(fields['first_name'],
