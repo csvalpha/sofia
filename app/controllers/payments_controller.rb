@@ -3,7 +3,7 @@ class PaymentsController < ApplicationController
   after_action :verify_authorized, only: %i[index create]
 
   def index
-    @payments = Payment.all.order(:created_at)
+    @payments = Payment.all.order(created_at: :desc)
     authorize @payments
   end
 
