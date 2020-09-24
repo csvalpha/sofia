@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'bcrypt', '~> 3.1'
 gem 'bootsnap', '~> 1.4'
-gem 'browser', '~> 4.2'
+gem 'browser', '~> 5.0'
 gem 'devise', '~>4.5'
 gem 'devise-i18n', '~>1.8'
 gem 'factory_bot_rails', '~> 6.0'
