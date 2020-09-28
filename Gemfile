@@ -2,24 +2,25 @@ source 'https://rubygems.org'
 
 gem 'bcrypt', '~> 3.1'
 gem 'bootsnap', '~> 1.4'
-gem 'browser', '~> 2.7'
+gem 'browser', '~> 4.2'
 gem 'devise', '~>4.5'
 gem 'devise-i18n', '~>1.8'
-gem 'factory_bot_rails', '~> 5.0'
+gem 'factory_bot_rails', '~> 6.0'
 gem 'faker', '~> 2.8'
 gem 'font-awesome-rails', '~> 4.7'
 gem 'http', '~> 4.0'
 gem 'jbuilder', '~> 2.9'
 gem 'jquery-rails', '~> 4.3'
+gem 'kaminari', '~> 1.2.1'
 gem 'mailgun-ruby', '~> 1.2'
 gem 'mini_racer', '~> 0.2'
 gem 'mollie-api-ruby', '~> 4.3'
 gem 'omniauth', '~> 1.7'
 gem 'omniauth-oauth2', '~> 1.4'
-gem 'paper_trail', '~> 10.2'
+gem 'paper_trail', '~> 11.0'
 gem 'paranoia', '~> 2.2'
 gem 'pg', '~> 1.0'
-gem 'puma', '~> 4.0'
+gem 'puma', '~> 5.0'
 gem 'pundit', '~> 2.0'
 gem 'rack-attack', '~> 6.0'
 gem 'rails', '~> 6.0'
@@ -35,7 +36,7 @@ gem 'slack-notifier', '~> 2.3'
 gem 'turbolinks', '~> 5.2'
 gem 'uglifier', '~> 4.1'
 gem 'validates_timeliness', '~> 4.1'
-gem 'webpacker', '~> 4.2'
+gem 'webpacker', '~> 5.1'
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 
@@ -52,7 +53,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'rb-readline'
-  gem 'rspec-rails', '= 4.0.0.beta4'
+  gem 'rspec-rails'
 end
 
 group :development do
@@ -63,7 +64,7 @@ group :development do
   gem 'spring', require: false
   gem 'spring-commands-rspec', require: false
   gem 'spring-watcher-listen', require: false
-  gem 'web-console', '~> 3.7'
+  gem 'web-console', '~> 4.0'
 end
 
 group :test do

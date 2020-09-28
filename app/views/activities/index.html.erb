@@ -9,7 +9,7 @@
       <h1>
         Activiteiten
       </h1>
-      <button class="btn btn-sm btn-primary" data-target="#edit_activity_modal" data-toggle="modal" role="button">
+      <button class="btn btn-sm btn-primary" data-target="#new_activity_modal" data-toggle="modal" role="button">
         <%= fa_icon 'plus' %>
         <span class="d-none d-md-inline ml-1">
           Nieuwe activiteit
@@ -55,5 +55,6 @@
         </table>
       </div>
     </div>
+    <%= paginate @activities %>
   </div>
 </div>

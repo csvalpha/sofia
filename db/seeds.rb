@@ -1,4 +1,4 @@
-require_relative './seeds/products.rb'
+require_relative './seeds/products'
 
 # rubocop:disable Rails/Output
 p 'Seeding products...'

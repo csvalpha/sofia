@@ -9,19 +9,19 @@
     <table class="table table-striped mt-2">
       <thead>
       <tr>
-        <th scope="col">#</th>
-        <th scope="col">Status</th>
-        <th scope="col">Bedrag</th>
         <th scope="col">Gebruiker</th>
+        <th scope="col">Bedrag</th>
+        <th scope="col">Status</th>
+        <th scope="col">Datum</th>
       </tr>
       </thead>
       <tbody>
       <% @payments.each do |payment| %>
         <tr>
-          <th scope="row"><%= payment.id %></th>
-          <td><%= t(payment.status).humanize %></td>
+          <th scope="row"><%= link_to payment.user.name, payment.user %></th>
           <td><%= number_to_currency(payment.amount, unit: '€') %></td>
-          <td><%= link_to payment.user.name, payment.user %></td>
+          <td><%= t(payment.status).humanize %></td>
+          <td><%= l(payment.created_at, format: :with_year) %></td>
         </tr>
       <% end %>
       </tbody>

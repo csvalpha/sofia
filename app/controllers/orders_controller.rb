@@ -71,6 +71,6 @@ class OrdersController < ApplicationController
   def json_includes
     { user: { methods: %i[credit avatar_thumb_or_default_url minor] },
       activity: { only: %i[id title] },
-      order_rows: { only: [:id, :product_count, product: { only: %i[id name credit] }] } }
+      order_rows: { only: [:id, :product_count, { product: { only: %i[id name credit] } }] } }
   end
 end
