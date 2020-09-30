@@ -11,6 +11,16 @@ RSpec.describe User, type: :model do
 
       it { expect(user).not_to be_valid }
     end
+
+    context 'when deactivating with credit' do
+      subject(:user) { FactoryBot.create(:user, deactivated_at: Time.zone.now) }
+
+      before do
+        FactoryBot.create(:order_with_items, user: user)
+      end
+
+      it { expect(user).not_to be_valid }
+    end
   end
 
   describe '.in_banana' do
