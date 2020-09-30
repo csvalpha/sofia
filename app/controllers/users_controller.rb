@@ -6,8 +6,8 @@ class UsersController < ApplicationController
   def index # rubocop:disable Metrics/AbcSize
     authorize User
 
-    @manual_users = User.manual.order(:name)
-    @amber_users = User.in_banana.order(:name)
+    @manual_users = User.manual.active.order(:name)
+    @amber_users = User.in_banana.active.order(:name)
     @users_credits = User.calculate_credits
 
     @manual_users_json = @manual_users.as_json(only: %w[id name])

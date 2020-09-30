@@ -41,6 +41,15 @@
           <td class="text-right"><%= l @user.created_at, format: :long %>
           </td>
         </tr>
+        <% if @user.deactivated_at %>
+          <tr>
+            <th scope="row">
+              Gedeactiveerd op
+            </th>
+            <td class="text-right"><%= l @user.deactivated_at, format: :long %>
+            </td>
+          </tr>
+        <% end %>
         <tr>
           <th scope="row">
             Accountbron
