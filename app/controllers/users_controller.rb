@@ -25,6 +25,8 @@ class UsersController < ApplicationController
 
     @user_json = @user.to_json(only: %i[id name])
     @new_mutation = CreditMutation.new(user: @user)
+
+    @new_user = @user
   end
 
   def create
@@ -38,6 +40,24 @@ class UsersController < ApplicationController
     end
 
     redirect_to users_path
+  end
+
+  def update
+    @user = User.find(params[:id])
+    authorize @user
+
+    data = params.require(:user).permit(%i[username email deactivated_at])
+    if data[:deactivated_at] == "1"
+      data[:deactivated_at] = Time.zone.now
+    end
+
+    if @user.update(data)
+      flash[:success] = 'Gebruiker geupdate'
+    else
+      flash[:error] = "Gebruiker updaten mislukt; #{@user.errors.full_messages.join(', ')}"
+    end
+
+    redirect_to @user
   end
 
   def refresh_user_list

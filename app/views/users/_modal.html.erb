@@ -17,6 +17,10 @@
         <div class="modal-body" id="activities_modal">
           <%= f.input :name, label: 'Naam', placeholder: 'Naam', required: true %>
           <%= f.input :email, label: 'E-mailadres', placeholder: 'E-mailadres' %>
+          <% if @new_user.persisted? %>
+            <%= f.input :deactivated_at, :as => :boolean, label: "Deactiveren" %>
+          <% end %>
+
         </div>
 
         <div class="modal-footer">
