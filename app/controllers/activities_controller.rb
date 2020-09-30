@@ -142,7 +142,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
 
   def users_hash
     users_credits = User.calculate_credits
-    User.order(:name).map do |user|
+    User.active.order(:name).map do |user|
       hash = user.attributes
       hash[:minor] = user.minor
       hash[:avatar_thumb_or_default_url] = user.avatar_thumb_or_default_url
