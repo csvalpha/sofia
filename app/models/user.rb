@@ -89,6 +89,8 @@ class User < ApplicationRecord
   private
 
   def no_deactivation_when_nonzero_credit
-    errors.add(:deactivated_at, 'cannot deactivate when credit is non zero') if credit != 0
+    return unless deactivated_at && credit != 0
+
+    errors.add(:deactivated_at, 'cannot deactivate when credit is non zero')
   end
 end
