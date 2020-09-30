@@ -75,7 +75,7 @@ class UsersController < ApplicationController
   def search
     authorize User
 
-    @users = User.where('lower(name) LIKE ?', "%#{params[:query]&.downcase}%")
+    @users = User.active.where('lower(name) LIKE ?', "%#{params[:query]&.downcase}%")
 
     render json: @users
   end
