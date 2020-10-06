@@ -137,7 +137,7 @@ ActiveRecord::Schema.define(version: 2020_09_28_160044) do
     t.string "avatar_thumb_url"
     t.string "email"
     t.date "birthday"
-    t.datetime "deactivated_at"
+    t.boolean "deactivated", default: false, null: false
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
