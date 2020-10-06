@@ -3,6 +3,7 @@ import TurbolinksAdapter from 'vue-turbolinks';
 import VueResource from 'vue-resource';
 
 import UserInput from '../components/userinput.vue';
+import moment from "moment";
 
 Vue.use(TurbolinksAdapter);
 Vue.use(VueResource);
@@ -47,9 +48,8 @@ document.addEventListener('turbolinks:load', () => {
         openSuggestions: function() {
           this.open = true;
         },
-
-        toDate: function(dateTimeFormat) {
-          return new Date(dateTimeFormat).toDateString();
+        formatDate(time) {
+          return moment(time).format('DD-MM-YY HH:mm');
         }
       }
     });

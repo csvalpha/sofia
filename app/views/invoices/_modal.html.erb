@@ -31,7 +31,7 @@
 
                     <li class="dropdown-item" v-for="(suggestion, index) in suggestions" v-on:click.prevent="suggestionClicked(index)">
                       <a href="#">
-                        {{ suggestion.title }} ({{ toDate(suggestion.start_time) }})
+                        {{ suggestion.title }} ({{ formatDate(suggestion.start_time) }})
                       </a>
                     </li>
                   </ul>

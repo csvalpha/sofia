@@ -47,7 +47,7 @@
                 <%= number_to_currency(invoice.amount, unit: '€') %>
               </td>
               <td>
-                <%= invoice.status || 'null' %>
+                <%= t(invoice.status).humanize %>
               </td>
               <td>
                 <%= simple_form_for invoice, wrapper: :horizontal_form, url: send_invoice_invoice_path(id: invoice.id), method: :post do |f| %>
