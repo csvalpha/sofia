@@ -3,7 +3,7 @@ class UsersController < ApplicationController
 
   after_action :verify_authorized
 
-  def index # rubocop:disable Metrics/AbcSize
+  def index # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     authorize User
 
     @manual_users = User.manual.active.order(:name)
@@ -18,7 +18,7 @@ class UsersController < ApplicationController
                                     .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
     @inactive_users_json = @inactive_users.as_json(only: %w[id name])
-                            .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
+                                          .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
     @new_user = User.new
   end
