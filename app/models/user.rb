@@ -10,9 +10,12 @@ class User < ApplicationRecord
 
   validates :name, presence: true
   validates :uid, uniqueness: true, allow_blank: true
+  validate :no_deactivation_when_nonzero_credit
 
   scope :in_banana, (-> { where(provider: 'banana_oauth2') })
   scope :manual, (-> { where(provider: nil) })
+  scope :active, (-> { where(deactivated: false) })
+  scope :inactive, (-> { where(deactivated: true) })
   scope :treasurer, (-> { joins(:roles).merge(Role.treasurer) })
 
   def credit
@@ -82,5 +85,13 @@ class User < ApplicationRecord
     User.all.joins(:order_rows)
         .where('orders.created_at >= ? AND orders.created_at < ?', from, to)
         .group(:id).sum('product_count * price_per_product')
+  end
+
+  private
+
+  def no_deactivation_when_nonzero_credit
+    return unless deactivated && credit != 0
+
+    errors.add(:deactivated, 'cannot deactivate when credit is non zero')
   end
 end

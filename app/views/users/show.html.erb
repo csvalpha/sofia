@@ -1,6 +1,7 @@
 <% content_for :title, "Gebruiker #{@user.name}- SOFIA" %>
 <% content_for :modal do %>
   <%= render 'mutation_modal' %>
+  <%= render 'modal' %>
 <% end %>
 
 
@@ -41,6 +42,15 @@
           <td class="text-right"><%= l @user.created_at, format: :long %>
           </td>
         </tr>
+        <% if @user.deactivated %>
+          <tr>
+            <th scope="row">
+              Gedeactiveerd
+            </th>
+            <td class="text-right"><%= @user.deactivated %>
+            </td>
+          </tr>
+        <% end %>
         <tr>
           <th scope="row">
             Accountbron
@@ -56,10 +66,13 @@
         </tbody>
       </table>
       <% if current_user.treasurer? %>
+        <button class="btn btn-sm btn-primary pull-right ml-2" data-target="#edit_user_modal" data-toggle="modal" role="button">
+          <%= fa_icon 'pencil', class: 'mr-1' %>
+          Gebruiker wijzigen
+        </button>
         <button class="btn btn-sm btn-secondary pull-right" data-target="#new_mutation_modal" data-toggle="modal" role="button">
           <%= fa_icon 'plus', class: 'mr-1' %>
           Inleggen
-
         </button>
       <% end %>
       <h2>

@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   resources :orders, only: %i[index create update]
   resources :price_lists, only: %i[index create update]
 
-  resources :users, only: %i[index show create] do
+  resources :users, only: %i[index show create update] do
     collection do
       get :refresh_user_list
       post :search

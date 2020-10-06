@@ -14,11 +14,13 @@ document.addEventListener('turbolinks:load', () => {
   if (element !== null) {
     var manual_users = JSON.parse(element.dataset.manualUsers);
     var amber_users = JSON.parse(element.dataset.amberUsers);
+    var inactive_users = JSON.parse(element.dataset.inactiveUsers);
     new Vue({
       el: element,
       data: () => ({
         manual_users,
-        amber_users
+        amber_users,
+        inactive_users
       }),
       components: {
         UsersTable
