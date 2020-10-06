@@ -15,6 +15,7 @@ class User < ApplicationRecord
   scope :in_banana, (-> { where(provider: 'banana_oauth2') })
   scope :manual, (-> { where(provider: nil) })
   scope :active, (-> { where(deactivated: false) })
+  scope :inactive, (-> { where(deactivated: true) })
   scope :treasurer, (-> { joins(:roles).merge(Role.treasurer) })
 
   def credit

@@ -75,17 +75,19 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '.active' do
+  describe '.active / .inactive' do
     context 'when active' do
       subject(:user) { FactoryBot.create(:user) }
 
       it { expect(described_class.active).to include user }
+      it { expect(described_class.inactive).not_to include user }
     end
 
     context 'when deactivated' do
       subject(:user) { FactoryBot.create(:user, deactivated: true) }
 
       it { expect(described_class.active).not_to include user }
+      it { expect(described_class.inactive).to include user }
     end
   end
 
