@@ -6,8 +6,6 @@
 <div class="container footer-padding">
   <h1 class="my-4">Gebruikers</h1>
 
-  <%= @inactive_users_json %>
-
   <%= content_tag :div, id: 'users-index', data: {manual_users: @manual_users_json, amber_users: @amber_users_json, inactive_users: @inactive_users_json} do %>
     <div class="d-flex justify-content-between align-items-center">
       <h3>Handmatig aangemaakte gebruikers</h3>
