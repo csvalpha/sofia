@@ -42,14 +42,12 @@ class UsersController < ApplicationController
     redirect_to users_path
   end
 
-  def update
+  def update # rubocop:disable Metrics/AbcSize
     @user = User.find(params[:id])
     authorize @user
 
     data = params.require(:user).permit(%i[username email deactivated_at])
-    if data[:deactivated_at] == "1"
-      data[:deactivated_at] = Time.zone.now
-    end
+    data[:deactivated_at] = Time.zone.now if data[:deactivated_at] == '1'
 
     if @user.update(data)
       flash[:success] = 'Gebruiker geupdate'
