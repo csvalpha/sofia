@@ -14,7 +14,7 @@ class User < ApplicationRecord
 
   scope :in_banana, (-> { where(provider: 'banana_oauth2') })
   scope :manual, (-> { where(provider: nil) })
-  scope :active, (-> { where(deactivated_at: nil) })
+  scope :active, (-> { where(deactivated: false) })
   scope :treasurer, (-> { joins(:roles).merge(Role.treasurer) })
 
   def credit
@@ -89,8 +89,8 @@ class User < ApplicationRecord
   private
 
   def no_deactivation_when_nonzero_credit
-    return unless deactivated_at && credit != 0
+    return unless deactivated && credit != 0
 
-    errors.add(:deactivated_at, 'cannot deactivate when credit is non zero')
+    errors.add(:deactivated, 'cannot deactivate when credit is non zero')
   end
 end
