@@ -57,7 +57,7 @@
       <h1>Factuur</h1>
       <p>
         <%= @invoice.user.name %><br />
-        Datum: <%= l @invoice.created_at, format: :date_only %><br />
+        Datum: <%= l @invoice.created_at, format: :date_long_with_year %><br />
         Factuurnummer: <%= @invoice.human_id %>
       </p>
 

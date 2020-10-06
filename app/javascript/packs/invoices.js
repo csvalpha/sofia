@@ -3,7 +3,7 @@ import TurbolinksAdapter from 'vue-turbolinks';
 import VueResource from 'vue-resource';
 
 import UserInput from '../components/userinput.vue';
-import moment from "moment";
+import moment from 'moment';
 
 Vue.use(TurbolinksAdapter);
 Vue.use(VueResource);

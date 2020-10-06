@@ -5,6 +5,7 @@ nl:
       with_year: '%d-%m-%y %H:%M'
       long: '%d %B %Y %H:%M'
       date_long: '%e %B'
+      date_long_with_year: '%e %B %Y'
       date_only: '%d-%b-%y'
       time_only: '%H:%M'
 
