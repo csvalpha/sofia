@@ -6,7 +6,7 @@
 <div class="container footer-padding">
   <h1 class="my-4">Gebruikers</h1>
 
-  <%= content_tag :div, id: 'users-index', data: {manual_users: @manual_users_json, amber_users: @amber_users_json} do %>
+  <%= content_tag :div, id: 'users-index', data: {manual_users: @manual_users_json, amber_users: @amber_users_json, inactive_users: @inactive_users_json} do %>
     <div class="d-flex justify-content-between align-items-center">
       <h3>Handmatig aangemaakte gebruikers</h3>
       <button class="btn btn-sm btn-primary" data-target="#edit_user_modal" data-toggle="modal" role="button">
@@ -28,5 +28,12 @@
       </span>
     </div>
     <users-table :users="amber_users"></users-table>
+
+    <% if @inactive_users.any? %>
+      <div class="d-flex justify-content-between align-items-center">
+        <h3>Inactieve gebruikers</h3>
+      </div>
+      <users-table :users="inactive_users"></users-table>
+    <%end %>
   <% end %>
 </div>

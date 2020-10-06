@@ -3,11 +3,12 @@ class UsersController < ApplicationController
 
   after_action :verify_authorized
 
-  def index # rubocop:disable Metrics/AbcSize
+  def index # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     authorize User
 
-    @manual_users = User.manual.order(:name)
-    @amber_users = User.in_banana.order(:name)
+    @manual_users = User.manual.active.order(:name)
+    @amber_users = User.in_banana.active.order(:name)
+    @inactive_users = User.inactive.order(:name)
     @users_credits = User.calculate_credits
 
     @manual_users_json = @manual_users.as_json(only: %w[id name])
@@ -16,6 +17,9 @@ class UsersController < ApplicationController
     @amber_users_json = @amber_users.as_json(only: %w[id name])
                                     .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
+    @inactive_users_json = @inactive_users.as_json(only: %w[id name])
+                                          .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
+
     @new_user = User.new
   end
 
@@ -23,8 +27,10 @@ class UsersController < ApplicationController
     @user = User.includes(:credit_mutations, roles_users: :role).find(params[:id])
     authorize @user
 
-    @user_json = @user.to_json(only: %i[id name])
+    @user_json = @user.to_json(only: %i[id name deactivated])
     @new_mutation = CreditMutation.new(user: @user)
+
+    @new_user = @user
   end
 
   def create
@@ -38,6 +44,19 @@ class UsersController < ApplicationController
     end
 
     redirect_to users_path
+  end
+
+  def update
+    @user = User.find(params[:id])
+    authorize @user
+
+    if @user.update(params.require(:user).permit(%i[username email deactivated]))
+      flash[:success] = 'Gebruiker geupdate'
+    else
+      flash[:error] = "Gebruiker updaten mislukt; #{@user.errors.full_messages.join(', ')}"
+    end
+
+    redirect_to @user
   end
 
   def refresh_user_list
@@ -55,7 +74,7 @@ class UsersController < ApplicationController
   def search
     authorize User
 
-    @users = User.where('lower(name) LIKE ?', "%#{params[:query]&.downcase}%")
+    @users = User.active.where('lower(name) LIKE ?', "%#{params[:query]&.downcase}%")
 
     render json: @users
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_24_110203) do
+ActiveRecord::Schema.define(version: 2020_09_28_160044) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -137,6 +137,7 @@ ActiveRecord::Schema.define(version: 2020_03_24_110203) do
     t.string "avatar_thumb_url"
     t.string "email"
     t.date "birthday"
+    t.boolean "deactivated", default: false, null: false
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
