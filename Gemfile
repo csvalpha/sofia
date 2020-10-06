@@ -37,6 +37,8 @@ gem 'turbolinks', '~> 5.2'
 gem 'uglifier', '~> 4.1'
 gem 'validates_timeliness', '~> 4.1'
 gem 'webpacker', '~> 5.1'
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
 
 group :development, :test do
   gem 'awesome_print'

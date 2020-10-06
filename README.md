@@ -31,6 +31,7 @@ _On Linux-like systems_
   1. `bundle exec rails s -p 5000` (port specified so it doesn't use the same as Banana API)
 1. Go to http://localhost:5000 and you should see SOFIA running
 1. Copy `.env.example` to `.env` with `cp .env.example .env` and edit the values where necessary
+1. (When you want to use the invoice module) Follow https://github.com/zakird/wkhtmltopdf_binary_gem#installation-and-usage
 
 ### Credentials
 

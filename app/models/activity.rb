@@ -85,6 +85,11 @@ class Activity < ApplicationRecord
     end
   end
 
+  def revenue_by_user(user)
+    user_orders = orders.where(user: user)
+    OrderRow.where(order: user_orders).sum('product_count * price_per_product')
+  end
+
   def bartenders
     orders.map(&:created_by).uniq || []
   end

@@ -1,0 +1,64 @@
+<% content_for :title, 'Facturen - SOFIA' %>
+<% content_for :modal do %>
+  <%= render 'modal' %>
+<% end %>
+
+
+<div class="container footer-padding">
+  <div class="row pt-4">
+    <div class="col-sm-12 d-flex justify-content-between align-items-center">
+      <h1>
+        Facturen
+      </h1>
+      <button class="btn btn-sm btn-primary" data-target="#new_invoice_modal" data-toggle="modal" role="button">
+        Nieuwe factuur
+      </button>
+    </div>
+    <div class="col-sm-12">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Factuurnummer</th>
+            <th scope="col">Gebruiker</th>
+            <th scope="col">Activiteit</th>
+            <th scope="col">Bedrag</th>
+            <th scope="col">Status</th>
+            <th scope="col">Verstuur</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @invoices&.each do |invoice| %>
+            <tr>
+              <td>
+                 <%= link_to invoice.id, invoice %>
+              </td>
+              <td>
+                <%= link_to invoice.human_id, invoice %>
+              </td>
+              <td>
+                <%= link_to invoice.user.name, invoice.user %>
+              </td>
+              <td>
+                <%= link_to invoice.activity.title, invoice.activity %>
+              </td>
+              <td>
+                <%= number_to_currency(invoice.amount, unit: '€') %>
+              </td>
+              <td>
+                <%= t(invoice.status).humanize %>
+              </td>
+              <td>
+                <%= simple_form_for invoice, wrapper: :horizontal_form, url: send_invoice_invoice_path(id: invoice.id), method: :post do |f| %>
+                  <%= f.button :submit, 'Factuur versturen', class: 'btn btn-primary' %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

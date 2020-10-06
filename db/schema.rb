@@ -44,6 +44,19 @@ ActiveRecord::Schema.define(version: 2020_09_28_160044) do
     t.index ["user_id"], name: "index_credit_mutations_on_user_id"
   end
 
+  create_table "invoices", force: :cascade do |t|
+    t.string "human_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "activity_id", null: false
+    t.integer "status", default: 0, null: false
+    t.decimal "amount", precision: 8, scale: 2
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["activity_id"], name: "index_invoices_on_activity_id"
+    t.index ["user_id"], name: "index_invoices_on_user_id"
+  end
+
   create_table "order_rows", force: :cascade do |t|
     t.bigint "order_id", null: false
     t.bigint "product_id", null: false

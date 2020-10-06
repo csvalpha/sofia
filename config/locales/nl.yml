@@ -4,6 +4,8 @@ nl:
       default: '%d-%m %H:%M'
       with_year: '%d-%m-%y %H:%M'
       long: '%d %B %Y %H:%M'
+      date_long: '%e %B'
+      date_long_with_year: '%e %B %Y'
       date_only: '%d-%b-%y'
       time_only: '%H:%M'
 
@@ -20,6 +22,7 @@ nl:
   failed: 'mislukt'
   canceled: 'geanuleerd'
   expired: 'verlopen'
+  sent: 'verstuurd'
 
   codes:
     beer: 8010
