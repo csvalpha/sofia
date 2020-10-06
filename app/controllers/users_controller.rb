@@ -46,8 +46,6 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     authorize @user
 
-    binding.pry
-
     if @user.update(params.require(:user).permit(%i[username email deactivated]))
       flash[:success] = 'Gebruiker geupdate'
     else

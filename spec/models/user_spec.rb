@@ -13,7 +13,7 @@ RSpec.describe User, type: :model do
     end
 
     context 'when deactivating with credit' do
-      subject(:user) { FactoryBot.create(:user, deactivated_at: Time.zone.now) }
+      subject(:user) { FactoryBot.create(:user, deactivated: true) }
 
       before do
         FactoryBot.create(:order_with_items, user: user)
@@ -72,6 +72,20 @@ RSpec.describe User, type: :model do
 
     context 'when not treasurer' do
       it { expect(described_class.treasurer).not_to include user }
+    end
+  end
+
+  describe '.active' do
+    context 'when active' do
+      subject(:user) { FactoryBot.create(:user) }
+
+      it { expect(described_class.active).to include user }
+    end
+
+    context 'when deactivated' do
+      subject(:user) { FactoryBot.create(:user, deactivated: true) }
+
+      it { expect(described_class.active).not_to include user }
     end
   end
 
