@@ -54,10 +54,12 @@ $ EDITOR="code --wait" bundle exec rails credentials:edit
 In OAuth Banana (github.com/csvalpha/alpha-banana-api), execute the following command (in `rails console`):
 
 ```ruby
-Doorkeeper::Application.create(name: 'SOFIA - Streepsysteem der C.S.V. Alpha', redirect_uri: 'http://localhost:5000/users/auth/banana_oauth2/callback', scopes: 'public tomato')
+app = Doorkeeper::Application.create(name: 'SOFIA - Streepsysteem der C.S.V. Alpha', redirect_uri: 'http://localhost:5000/users/auth/banana_oauth2/callback', scopes: 'public tomato')
+app.uid
+app.plaintext_secret
 ```
 
-Next, copy the uid and secret to the `.env` in SOFIA (as `banana_client_id` and `banana_client_secret`).
+Next, copy the uid and plaintext secret to the `.env` in SOFIA (as `banana_client_id` and `banana_client_secret`).
 
 ### Configuring roles
 
