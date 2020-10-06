@@ -8,6 +8,7 @@ class UsersController < ApplicationController
 
     @manual_users = User.manual.active.order(:name)
     @amber_users = User.in_banana.active.order(:name)
+    @inactive_users = User.inactive.order(:name)
     @users_credits = User.calculate_credits
 
     @manual_users_json = @manual_users.as_json(only: %w[id name])
@@ -15,6 +16,9 @@ class UsersController < ApplicationController
 
     @amber_users_json = @amber_users.as_json(only: %w[id name])
                                     .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
+
+    @inactive_users_json = @inactive_users.as_json(only: %w[id name])
+                            .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
     @new_user = User.new
   end
