@@ -51,6 +51,11 @@
               </div>
             </template>
           </div>
+          <hr>
+          <h5>Gebruiker attributen vervangen</h5>
+          <small>Deze attributen vervangen de standaard waarden vanuit het account. Leeglaten als standaard gebruikt moet worden.</small>
+          <%= f.input :name_override, label: 'Naam' %>
+          <%= f.input :email_override, label: 'Email' %>
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" data-dismiss="modal" type="button">
