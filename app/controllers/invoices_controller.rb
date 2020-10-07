@@ -51,6 +51,6 @@ class InvoicesController < ApplicationController
   private
 
   def permitted_attributes
-    params.require(:invoice).permit(%i[user_id activity_id])
+    params.require(:invoice).permit(%i[user_id activity_id name_override email_override])
   end
 end

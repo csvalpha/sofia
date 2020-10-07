@@ -10,6 +10,14 @@ class Invoice < ApplicationRecord
   before_save :set_amount
   before_save :set_human_id
 
+  def name
+    name_override || user.name
+  end
+
+  def email
+    email_override || user.email
+  end
+
   private
 
   def set_human_id
