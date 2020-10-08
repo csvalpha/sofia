@@ -21,29 +21,29 @@ RSpec.describe Invoice, type: :model do
 
   describe '#name' do
     context 'when with override' do
-      subject(:invoice) { FactoryBot.build(:invoice, name_override: "Name") }
+      subject(:invoice) { FactoryBot.build(:invoice, name_override: 'Name') }
 
-      it { expect(invoice.name).to eq "Name"}
+      it { expect(invoice.name).to eq 'Name' }
     end
 
     context 'when without override' do
       subject(:invoice) { FactoryBot.build(:invoice) }
 
-      it { expect(invoice.name).to eq invoice.user.name}
+      it { expect(invoice.name).to eq invoice.user.name }
     end
   end
 
   describe '#email' do
     context 'when with override' do
-      subject(:invoice) { FactoryBot.build(:invoice, email_override: "test@example.com") }
+      subject(:invoice) { FactoryBot.build(:invoice, email_override: 'test@example.com') }
 
-      it { expect(invoice.email).to eq "test@example.com"}
+      it { expect(invoice.email).to eq 'test@example.com' }
     end
 
     context 'when without override' do
       subject(:invoice) { FactoryBot.build(:invoice) }
 
-      it { expect(invoice.email).to eq invoice.user.email}
+      it { expect(invoice.email).to eq invoice.user.email }
     end
   end
 

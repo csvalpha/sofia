@@ -52,7 +52,7 @@ document.addEventListener('turbolinks:load', () => {
           return moment(time).format('DD-MM-YY HH:mm');
         },
         addRow() {
-          $('#invoice_rows').append($('#invoice_row').clone())
+          document.getElementById('invoice_rows').appendChild(document.getElementById('invoice_row').cloneNode(true));
         }
       }
     });
