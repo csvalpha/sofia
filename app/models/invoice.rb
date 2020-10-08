@@ -3,6 +3,7 @@ class Invoice < ApplicationRecord
 
   belongs_to :user
   belongs_to :activity
+  has_many :invoice_rows
 
   validates :user, :activity, presence: true
   validate :activity_is_locked
