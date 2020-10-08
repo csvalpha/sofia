@@ -9,7 +9,6 @@ class Invoice < ApplicationRecord
   validates :user, :activity, presence: true
   validate :activity_is_locked
 
-  before_save :set_amount
   before_save :set_human_id
 
   def name
@@ -20,6 +19,10 @@ class Invoice < ApplicationRecord
     email_override || user.email
   end
 
+  def amount
+    activity.revenue_by_user(user) + rows.sum(&:total)
+  end
+
   private
 
   def set_human_id
@@ -27,10 +30,6 @@ class Invoice < ApplicationRecord
     invoice_number = this_year_invoices.count + 1
 
     self.human_id = "#{Time.zone.now.year}#{invoice_number.to_s.rjust(4, '0')}"
-  end
-
-  def set_amount
-    self.amount = activity.revenue_by_user(user)
   end
 
   def activity_is_locked

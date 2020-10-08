@@ -60,7 +60,6 @@ ActiveRecord::Schema.define(version: 2020_10_07_121611) do
     t.bigint "user_id", null: false
     t.bigint "activity_id", null: false
     t.integer "status", default: 0, null: false
-    t.decimal "amount", precision: 8, scale: 2
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
