@@ -19,32 +19,32 @@ RSpec.describe Invoice, type: :model do
     end
   end
 
-    describe '#amount' do
-      let(:activity) { FactoryBot.create(:activity) }
-      let(:user) { FactoryBot.create(:user) }
+  describe '#amount' do
+    let(:activity) { FactoryBot.create(:activity) }
+    let(:user) { FactoryBot.create(:user) }
 
-      subject(:invoice) { FactoryBot.build(:invoice, activity: activity, user: user) }
+    subject(:invoice) { FactoryBot.build(:invoice, activity: activity, user: user) }
 
-      before do
-        FactoryBot.create_list(:order, 5, :with_items, user: user, activity: activity)
-        activity.update(locked_by: user)
-        invoice.save
-        invoice.reload
-        FactoryBot.create(:invoice_row, invoice: invoice, amount: 5, price: 10)
-      end
-
-      it { expect(invoice.amount).to eq activity.revenue_by_user(user) + 50 }
+    before do
+      FactoryBot.create_list(:order, 5, :with_items, user: user, activity: activity)
+      activity.update(locked_by: user)
+      invoice.save
+      invoice.reload
+      FactoryBot.create(:invoice_row, invoice: invoice, amount: 5, price: 10)
     end
 
-    describe '#set_human_id' do
-      let(:activity) { FactoryBot.create(:activity, :manually_locked) }
-      let(:invoice) { FactoryBot.build(:invoice, activity: activity) }
-
-      before do
-        FactoryBot.create_list(:invoice, 2)
-        invoice.save
-      end
-
-      it { expect(invoice.human_id).to eq "#{Time.zone.now.year}0003" }
-    end
+    it { expect(invoice.amount).to eq activity.revenue_by_user(user) + 50 }
   end
+
+  describe '#set_human_id' do
+    let(:activity) { FactoryBot.create(:activity, :manually_locked) }
+    let(:invoice) { FactoryBot.build(:invoice, activity: activity) }
+
+    before do
+      FactoryBot.create_list(:invoice, 2)
+      invoice.save
+    end
+
+    it { expect(invoice.human_id).to eq "#{Time.zone.now.year}0003" }
+  end
+end

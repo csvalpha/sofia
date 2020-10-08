@@ -34,6 +34,6 @@ RSpec.describe InvoiceRow, type: :model do
   describe '#total' do
     subject(:invoice_row) { FactoryBot.build_stubbed(:invoice_row, amount: 5, price: 2) }
 
-    it { expect(invoice_row.total).to eq 10}
+    it { expect(invoice_row.total).to eq 10 }
   end
 end

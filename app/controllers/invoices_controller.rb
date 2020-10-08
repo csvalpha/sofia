@@ -57,7 +57,7 @@ class InvoicesController < ApplicationController
   end
 
   def remove_empty(hash)
-    hash.delete_if do |k, v|
+    hash.delete_if do |_k, v|
       (v.respond_to?(:empty?) ? v.empty? : !v) or v.instance_of?(Hash) && v.delete_blank.empty?
     end
   end

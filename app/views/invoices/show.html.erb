@@ -85,6 +85,13 @@
             <td><%= number_to_currency(item[:price], unit: '€') %></td>
           </tr>
         <% end %>
+        <% @invoice.rows.each do |item| %>
+          <tr>
+            <td><%= item.name %></td>
+            <td><%= item.amount %></td>
+            <td><%= number_to_currency(item.total, unit: '€') %></td>
+          </tr>
+        <% end %>
         </tbody>
         <tfoot>
         <tr>
