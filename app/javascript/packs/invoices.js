@@ -50,6 +50,9 @@ document.addEventListener('turbolinks:load', () => {
         },
         formatDate(time) {
           return moment(time).format('DD-MM-YY HH:mm');
+        },
+        addRow() {
+          $('#invoice_rows').append($('#invoice_row').clone())
         }
       }
     });
