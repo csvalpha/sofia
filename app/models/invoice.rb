@@ -3,7 +3,8 @@ class Invoice < ApplicationRecord
 
   belongs_to :user
   belongs_to :activity
-  has_many :invoice_rows
+  has_many :rows, class_name: 'InvoiceRow', inverse_of: :invoice
+  accepts_nested_attributes_for :rows
 
   validates :user, :activity, presence: true
   validate :activity_is_locked
