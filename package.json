@@ -31,7 +31,7 @@
     "vue-turbolinks": "^2.0",
     "webfontloader": "^1.6",
     "webpack": "^4.37",
-    "webpack-cli": "^3.3"
+    "webpack-cli": "^4.0.0"
   },
   "devDependencies": {
     "eslint": "^7.9.0",
