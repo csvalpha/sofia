@@ -30,7 +30,7 @@
     "vue-template-compiler": "^2.6",
     "vue-turbolinks": "^2.0",
     "webfontloader": "^1.6",
-    "webpack": "^4.37",
+    "webpack": "^5.2.0",
     "webpack-cli": "^3.3"
   },
   "devDependencies": {
