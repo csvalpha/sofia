@@ -15,7 +15,7 @@
     "babel-loader": "^8.0",
     "bootstrap": "^4.4",
     "bootstrap-vue": "^2.6",
-    "css-loader": "^4.3.0",
+    "css-loader": "^5.0.0",
     "eslint-plugin-vue": "^7.0.1",
     "jquery": "^3.4",
     "moment": "^2.24",
