@@ -72,9 +72,28 @@
       <table class="table table-striped">
         <thead>
         <tr>
-          <td scope="col">Consumpties</td>
-          <td scope="col">Aantal</td>
-          <td scope="col">Bedrag</td>
+          <td scope="col" class="col-10">Omschrijving</td>
+          <td scope="col" class="col-2">Bedrag</td>
+        </tr>
+        </thead>
+        <tbody>
+        <% @invoice.rows.each do |item| %>
+          <tr>
+            <td><%= item.name %></td>
+            <td><%= number_to_currency(item.total, unit: '€') %></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-12">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <td scope="col" class="col-8">Consumpties</td>
+          <td scope="col" class="col-2">Aantal</td>
+          <td scope="col" class="col-2">Bedrag</td>
         </tr>
         </thead>
         <tbody>
@@ -85,21 +104,18 @@
             <td><%= number_to_currency(item[:price], unit: '€') %></td>
           </tr>
         <% end %>
-        <% @invoice.rows.each do |item| %>
-          <tr>
-            <td><%= item.name %></td>
-            <td><%= item.amount %></td>
-            <td><%= number_to_currency(item.total, unit: '€') %></td>
-          </tr>
-        <% end %>
         </tbody>
-        <tfoot>
-        <tr>
-          <td scope="col">Totaal</td>
-          <td scope="col"></td>
-          <td scope="col"><%= number_to_currency(@invoice.amount, unit: '€') %></td>
-        </tr>
-        </tfoot>
+      </table>
+    </div>
+
+    <div class="col-12">
+      <table class="table table-striped">
+        <tbody>
+          <tr>
+            <td scope="col" class="col-10">Totaal</td>
+            <td scope="col" class="col-2"><%= number_to_currency(@invoice.amount, unit: '€') %></td>
+          </tr>
+        </tbody>
       </table>
     </div>
 
