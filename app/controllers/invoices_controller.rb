@@ -1,6 +1,5 @@
-include ApplicationHelper
-
 class InvoicesController < ApplicationController
+  include ApplicationHelper
   before_action :authenticate_user!
   after_action :verify_authorized
 

@@ -67,25 +67,26 @@
         daarmee breng ik de kosten van <%= number_to_currency(@invoice.amount, unit: '€') %> bij u in rekening.
       </p>
     </div>
-
-    <div class="col-12">
-      <table class="table table-striped">
-        <thead>
-        <tr>
-          <td scope="col" class="col-10">Omschrijving</td>
-          <td scope="col" class="col-2">Bedrag</td>
-        </tr>
-        </thead>
-        <tbody>
-        <% @invoice.rows.each do |item| %>
+    <% if @invoice.rows.any? %>
+      <div class="col-12">
+        <table class="table table-striped">
+          <thead>
           <tr>
-            <td><%= item.name %></td>
-            <td><%= number_to_currency(item.total, unit: '€') %></td>
+            <td scope="col" class="col-10">Omschrijving</td>
+            <td scope="col" class="col-2">Bedrag</td>
           </tr>
-        <% end %>
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+          <% @invoice.rows.each do |item| %>
+            <tr>
+              <td><%= item.name %></td>
+              <td><%= number_to_currency(item.total, unit: '€') %></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
 
     <div class="col-12">
       <table class="table table-striped">
