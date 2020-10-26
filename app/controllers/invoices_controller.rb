@@ -1,3 +1,5 @@
+include ApplicationHelper
+
 class InvoicesController < ApplicationController
   before_action :authenticate_user!
   after_action :verify_authorized
@@ -54,11 +56,5 @@ class InvoicesController < ApplicationController
 
   def permitted_attributes
     params.require(:invoice).permit(%i[user_id activity_id name_override email_override rows], rows_attributes: %i[name amount price])
-  end
-
-  def remove_empty(hash)
-    hash.delete_if do |_k, v|
-      (v.respond_to?(:empty?) ? v.empty? : !v) or v.instance_of?(Hash) && v.delete_blank.empty?
-    end
   end
 end

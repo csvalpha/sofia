@@ -15,4 +15,14 @@ module ApplicationHelper
       'alert' => 'alert-warning'
     }[level]
   end
+
+  def remove_empty(hash)
+    hash.each_with_object({}) do |(k, v), squeezed_hash|
+      if v.is_a?(Hash)
+        squeezed_hash[k] = remove_empty(v).reject { |_, value| value.empty? }
+      else
+        squeezed_hash[k] = v unless v.empty?
+      end
+    end
+  end
 end
