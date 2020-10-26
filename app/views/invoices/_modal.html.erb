@@ -59,7 +59,7 @@
           <%= f.input :email_override, label: 'Email' %>
 
           <hr>
-          <h5>Extra factuur regels <i class="fa fa-plus ml-4" @click="addRow"></i> </h5>
+          <h5>Extra factuur regels <i class="fa fa-plus ml-4" @click="addRow()"></i> </h5>
           <div id="invoice_rows">
             <div id="invoice_row" class="form-inline row m-2">
               <%= f.simple_fields_for :rows do |p| %>
