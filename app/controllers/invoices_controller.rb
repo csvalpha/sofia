@@ -40,6 +40,21 @@ class InvoicesController < ApplicationController
     redirect_to invoices_path
   end
 
+  def pay
+    @invoice = Invoice.find(params[:id])
+    authorize @invoice
+
+    payment = Payment.create_with_mollie(invoice: @invoice, amount: @invoice.amount)
+
+    if payment.valid?
+      checkout_url = payment.mollie_payment.checkout_url
+      redirect_to URI.parse(checkout_url).to_s
+    else
+      flash[:error] = payment.errors
+      redirect_to root_path
+    end
+  end
+
   def send_invoice
     @invoice = Invoice.find(params[:id])
     authorize @invoice
