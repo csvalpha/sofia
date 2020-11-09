@@ -38,6 +38,10 @@ users.each do |user|
                                               activity: (activities + [nil]).sample)
 end
 
+p 'Seeding invoices'
+FactoryBot.create_list(:invoice, 3, :with_rows)
+
+
 p 'Seeding roles...'
 Role.create(role_type: :treasurer, group_uid: 3)
 Role.create(role_type: :main_bartender, group_uid: 3)

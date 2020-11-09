@@ -10,6 +10,7 @@
       <thead>
       <tr>
         <th scope="col">Gebruiker</th>
+        <th scope="col">Factuur</th>
         <th scope="col">Bedrag</th>
         <th scope="col">Status</th>
         <th scope="col">Datum</th>
@@ -18,7 +19,16 @@
       <tbody>
       <% @payments.each do |payment| %>
         <tr>
-          <th scope="row"><%= link_to payment.user.name, payment.user %></th>
+          <td>
+            <% if payment.user %>
+              <%= link_to payment.user.name, payment.user %>
+            <% end %>
+          </td>
+          <td>
+            <% if payment.invoice %>
+              <%= link_to payment.invoice.human_id, payment.invoice %>
+            <% end %>
+          </td>
           <td><%= number_to_currency(payment.amount, unit: '€') %></td>
           <td><%= t(payment.status).humanize %></td>
           <td><%= l(payment.created_at, format: :with_year) %></td>
