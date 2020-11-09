@@ -24,6 +24,8 @@
             <th scope="col">Gebruiker</th>
             <th scope="col">Activiteit</th>
             <th scope="col">Bedrag</th>
+            <th scope="col">Naam</th>
+            <th scope="col">Mailadres</th>
             <th scope="col">Status</th>
             <th scope="col">Verstuur</th>
           </tr>
@@ -45,6 +47,12 @@
               </td>
               <td>
                 <%= number_to_currency(invoice.amount, unit: '€') %>
+              </td>
+              <td>
+                <%= invoice.name  %>
+              </td>
+              <td>
+                <%= invoice.email  %>
               </td>
               <td>
                 <%= t(invoice.status).humanize %>

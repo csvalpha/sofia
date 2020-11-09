@@ -1,6 +1,6 @@
 class InvoiceMailer < ApplicationMailer
   def invoice_mail(invoice)
-    @user = invoice.user
+    @user = OpenStruct.new(name: invoice.name)
     @invoice = invoice
     @cab_disabled = true
 
@@ -8,6 +8,6 @@ class InvoiceMailer < ApplicationMailer
       render_to_string(pdf: invoice.human_id.to_s, template: 'invoices/show.html.erb', layout: 'pdf.html.erb')
     )
 
-    mail to: @invoice.user.email, subject: "Factuur #{invoice.human_id} Stichting Sociëteit Flux"
+    mail to: @invoice.email, subject: "Factuur #{invoice.human_id} Stichting Sociëteit Flux"
   end
 end

@@ -1,5 +1,5 @@
 <%= content_tag :div, class: 'modal', id: 'new_invoice_modal', role: 'dialog', 'aria-labelledby' => 'new_invoice_modal_label', 'aria-hidden' => 'true', data: {activities: @activities_json} do %>
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">
@@ -51,6 +51,25 @@
               </div>
             </template>
           </div>
+          <hr>
+          <h5>Gebruiker attributen vervangen</h5>
+          <small>Deze attributen vervangen de standaard waarden vanuit het account. Leeglaten als standaard gebruikt
+            moet worden.</small>
+          <%= f.input :name_override, label: 'Naam' %>
+          <%= f.input :email_override, label: 'Email' %>
+
+          <hr>
+          <h5>Extra factuur regels <i class="fa fa-plus ml-4" @click="addRow()"></i> </h5>
+          <div id="invoice_rows">
+            <div id="invoice_row" class="form-inline row m-2">
+              <%= f.simple_fields_for :rows do |p| %>
+                <%= p.input :name, label: false, placeholder: 'Naam', wrapper_html: { class: 'col-4' } %>
+                <%= p.input :amount,  label: false, placeholder: 'Aantal', wrapper_html: { class: 'col-4' } %>
+                <%= p.input :price, label: false, placeholder: 'Prijs', wrapper_html: { class: 'col-4' } %>
+              <% end %>
+            </div>
+          </div>
+
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" data-dismiss="modal" type="button">

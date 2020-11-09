@@ -28,10 +28,10 @@ document.addEventListener('turbolinks:load', () => {
         allSuggestions: activities
       },
       computed: {
-        dropdownOpened () {
+        dropdownOpened() {
           return this.open === true;
         },
-        suggestions () {
+        suggestions() {
           return this.allSuggestions.filter(value => {
             return value.title.indexOf(this.query) >= 0;
           });
@@ -45,11 +45,14 @@ document.addEventListener('turbolinks:load', () => {
           this.open = false;
         },
 
-        openSuggestions: function() {
+        openSuggestions: function () {
           this.open = true;
         },
         formatDate(time) {
           return moment(time).format('DD-MM-YY HH:mm');
+        },
+        addRow() {
+          document.getElementById('invoice_rows').appendChild(document.getElementById('invoice_row').cloneNode(true));
         }
       }
     });

@@ -17,15 +17,37 @@ RSpec.describe Invoice, type: :model do
 
       it { expect(invoice).not_to be_valid }
     end
+  end
 
-    context 'when with non-locked activity' do
-      subject(:invoice) { FactoryBot.build_stubbed(:invoice, activity: FactoryBot.build_stubbed(:activity)) }
+  describe '#name' do
+    context 'when with override' do
+      subject(:invoice) { FactoryBot.build(:invoice, name_override: 'Name') }
 
-      it { expect(invoice).not_to be_valid }
+      it { expect(invoice.name).to eq 'Name' }
+    end
+
+    context 'when without override' do
+      subject(:invoice) { FactoryBot.build(:invoice) }
+
+      it { expect(invoice.name).to eq invoice.user.name }
     end
   end
 
-  describe '#set_amount' do
+  describe '#email' do
+    context 'when with override' do
+      subject(:invoice) { FactoryBot.build(:invoice, email_override: 'test@example.com') }
+
+      it { expect(invoice.email).to eq 'test@example.com' }
+    end
+
+    context 'when without override' do
+      subject(:invoice) { FactoryBot.build(:invoice) }
+
+      it { expect(invoice.email).to eq invoice.user.email }
+    end
+  end
+
+  describe '#amount' do
     let(:activity) { FactoryBot.create(:activity) }
     let(:user) { FactoryBot.create(:user) }
 
@@ -36,9 +58,10 @@ RSpec.describe Invoice, type: :model do
       activity.update(locked_by: user)
       invoice.save
       invoice.reload
+      FactoryBot.create(:invoice_row, invoice: invoice, amount: 5, price: 10)
     end
 
-    it { expect(invoice.amount).to eq activity.revenue_by_user(user) }
+    it { expect(invoice.amount).to eq activity.revenue_by_user(user) + 50 }
   end
 
   describe '#set_human_id' do

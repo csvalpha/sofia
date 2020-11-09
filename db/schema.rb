@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_28_160044) do
+ActiveRecord::Schema.define(version: 2020_10_07_121611) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,15 +44,27 @@ ActiveRecord::Schema.define(version: 2020_09_28_160044) do
     t.index ["user_id"], name: "index_credit_mutations_on_user_id"
   end
 
+  create_table "invoice_rows", force: :cascade do |t|
+    t.bigint "invoice_id"
+    t.string "name", null: false
+    t.integer "amount", null: false
+    t.decimal "price", precision: 8, scale: 2, null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["invoice_id"], name: "index_invoice_rows_on_invoice_id"
+  end
+
   create_table "invoices", force: :cascade do |t|
     t.string "human_id", null: false
     t.bigint "user_id", null: false
     t.bigint "activity_id", null: false
     t.integer "status", default: 0, null: false
-    t.decimal "amount", precision: 8, scale: 2
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "email_override"
+    t.string "name_override"
     t.index ["activity_id"], name: "index_invoices_on_activity_id"
     t.index ["user_id"], name: "index_invoices_on_user_id"
   end

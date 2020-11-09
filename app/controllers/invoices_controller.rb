@@ -1,13 +1,15 @@
 class InvoicesController < ApplicationController
+  include ApplicationHelper
   before_action :authenticate_user!
   after_action :verify_authorized
 
   def index
     authorize Invoice
 
-    @invoices = Invoice.all
+    @invoices = Invoice.all.order(created_at: :desc)
     @activities_json = Activity.all.to_json(only: %i[id title start_time])
     @invoice = Invoice.new
+    @invoice.rows.build
   end
 
   def show
@@ -25,7 +27,8 @@ class InvoicesController < ApplicationController
   end
 
   def create
-    @invoice = Invoice.new(permitted_attributes)
+    attributes = remove_empty(permitted_attributes.to_h)
+    @invoice = Invoice.new(attributes)
     authorize @invoice
 
     if @invoice.save
@@ -51,6 +54,6 @@ class InvoicesController < ApplicationController
   private
 
   def permitted_attributes
-    params.require(:invoice).permit(%i[user_id activity_id])
+    params.require(:invoice).permit(%i[user_id activity_id name_override email_override rows], rows_attributes: %i[name amount price])
   end
 end
