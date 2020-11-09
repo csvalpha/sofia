@@ -334,12 +334,13 @@
                 <%= link_to user.name, user %><br>
               <% end %>
             </div>
-
-            <div class="mt-3">
-              <%= simple_form_for @activity, url: send_invoices_activity_path, method: 'POST' do |f| %>
-                <%= f.button :submit, 'Factuur versturen', :data => {:disable_with => 'Bezig...'}, class: 'btn btn-danger' %>
-              <% end %>
-            </div>
+            <% if @activity.locked? %>
+              <div class="mt-3">
+                <%= simple_form_for @activity, url: send_invoices_activity_path, method: 'POST' do |f| %>
+                  <%= f.button :submit, 'Factuur versturen', :data => {:disable_with => 'Bezig...'}, class: 'btn btn-danger' %>
+                <% end %>
+              </div>
+            <% end %>
           </div>
         </div>
       </div>
