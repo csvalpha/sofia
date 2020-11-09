@@ -22,7 +22,7 @@ class ActivityPolicy < ApplicationPolicy
   end
 
   def send_invoices?
-    user&.treasurer?
+    user&.treasurer? && record.locked?
   end
 
   def destroy?
