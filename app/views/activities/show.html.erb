@@ -328,10 +328,18 @@
       <div class="row">
         <div class="col-sm-6">
           <div class="alert alert-danger">
-            Let op: er is gestreept op één of meer handmatig aangemaakte gebruikers:<br>
-            <% @activity.manually_added_users_with_orders.each do |user| %>
-              <%= link_to user.name, user %><br>
-            <% end %>
+            <div>
+              Let op: er is gestreept op één of meer handmatig aangemaakte gebruikers:<br>
+              <% @activity.manually_added_users_with_orders.each do |user| %>
+                <%= link_to user.name, user %><br>
+              <% end %>
+            </div>
+
+            <div class="mt-3">
+              <%= simple_form_for @activity, url: send_invoices_activity_path, method: 'POST' do |f| %>
+                <%= f.button :submit, 'Factuur versturen', :data => {:disable_with => 'Bezig...'}, class: 'btn btn-danger' %>
+              <% end %>
+            </div>
           </div>
         </div>
       </div>
