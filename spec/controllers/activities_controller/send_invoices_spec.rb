@@ -26,8 +26,7 @@ describe ActivitiesController, type: :controller do
 
       it 'enqueues invoice create job' do
         sign_in user
-        activity.locked_by = FactoryBot.create(:user)
-        activity.save
+        activity.update(locked_by: FactoryBot.create(:user))
         request
 
         expect(request.status).to eq 302
