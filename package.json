@@ -16,7 +16,7 @@
     "bootstrap": "^4.4",
     "bootstrap-vue": "^2.6",
     "css-loader": "^5.0.0",
-    "eslint-plugin-vue": "^7.0.1",
+    "eslint-plugin-vue": "^7.1.0",
     "jquery": "^3.4",
     "moment": "^2.24",
     "popper.js": "^1.16",
@@ -34,7 +34,7 @@
     "webpack-cli": "^4.1.0"
   },
   "devDependencies": {
-    "eslint": "^7.10.0",
+    "eslint": "^7.12.1",
     "eslint-loader": "^4.0.2",
     "sass-lint": "^1.13",
     "webpack-dev-server": "^3.10"
