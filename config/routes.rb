@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   resources :credit_mutations, only: %i[index create]
   resources :invoices, only: %i[index show create] do
     member do
+      get :pay
       post :send_invoice
     end
   end
@@ -34,6 +35,7 @@ Rails.application.routes.draw do
   resources :payments, only: %i[index create] do
     member do
       get :callback
+      get :invoice_callback
     end
     collection do
       get :add
