@@ -21,6 +21,10 @@ class ActivityPolicy < ApplicationPolicy
     user&.treasurer? && !record.locked?
   end
 
+  def send_invoices?
+    user&.treasurer?
+  end
+
   def destroy?
     user&.treasurer? || user&.main_bartender?
   end
