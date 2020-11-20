@@ -6,8 +6,4 @@ class InvoicePolicy < ApplicationPolicy
   def send_invoice?
     user&.treasurer?
   end
-
-  def pay?
-    true
-  end
 end

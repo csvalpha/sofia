@@ -1,7 +1,7 @@
 class InvoicesController < ApplicationController
   include ApplicationHelper
-  before_action :authenticate_user!
-  after_action :verify_authorized
+  before_action :authenticate_user!, except: :pay
+  after_action :verify_authorized, except: :pay
 
   def index
     authorize Invoice
@@ -42,7 +42,6 @@ class InvoicesController < ApplicationController
 
   def pay
     @invoice = Invoice.find(params[:id])
-    authorize @invoice
 
     payment = Payment.create_with_mollie("Betaling factuur #{@invoice.human_id}",
                                          invoice: @invoice, amount: @invoice.amount)
