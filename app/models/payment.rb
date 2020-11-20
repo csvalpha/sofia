@@ -53,12 +53,12 @@ class Payment < ApplicationRecord
   private
 
   def user_xor_invoice
-    errors.add(:payment, 'must belong to a user xor invoice') unless user ^ invoice
+    errors.add(:payment, 'must belong to a user xor invoice') unless user.present? ^ invoice.present?
   end
 
   def user_amount
     return unless user
 
-    errors.add(:amount, 'must be bigger than or equal to 20') unless amount >= 20
+    errors.add(:amount, 'must be bigger than or equal to 20') unless amount and amount >= 20
   end
 end
