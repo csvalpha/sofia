@@ -24,14 +24,14 @@ class Payment < ApplicationRecord
     COMPLETE_STATUSES.include?(status)
   end
 
-  def self.create_with_mollie(attributes = nil)
+  def self.create_with_mollie(description, attributes = nil)
     obj = create(attributes)
     return obj unless obj.valid?
 
     mollie_payment = Mollie::Payment.create(
       amount: { value: format('%<amount>.2f', amount: attributes[:amount]), currency: 'EUR' },
-      description: 'Sofia zatladder saldo inleg',
-      redirect_url: obj.callback_url
+      description: description,
+      redirect_url:  "http://#{Rails.application.config.x.tomato_host}/payments/#{obj.id}/callback"
     )
 
     obj.update(mollie_id: mollie_payment.id)
@@ -40,14 +40,6 @@ class Payment < ApplicationRecord
 
   def mollie_payment
     Mollie::Payment.get(mollie_id)
-  end
-
-  def callback_url
-    if user
-      "http://#{Rails.application.config.x.tomato_host}/users/#{id}/payment_callback"
-    elsif invoice
-      "http://#{Rails.application.config.x.tomato_host}/payments/#{id}/invoice_callback"
-    end
   end
 
   private
