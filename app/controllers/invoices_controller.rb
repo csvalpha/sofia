@@ -44,7 +44,8 @@ class InvoicesController < ApplicationController
     @invoice = Invoice.find(params[:id])
     authorize @invoice
 
-    payment = Payment.create_with_mollie(invoice: @invoice, amount: @invoice.amount)
+    payment = Payment.create_with_mollie("Betaling factuur #{@invoice.human_id}",
+                                         invoice: @invoice, amount: @invoice.amount)
 
     if payment.valid?
       checkout_url = payment.mollie_payment.checkout_url

@@ -42,9 +42,7 @@ class PaymentsController < ApplicationController
     else
       payment.update(status: payment.mollie_payment.status)
       if payment.mollie_payment.paid?
-        CreditMutation.create(user: payment.user,
-                              amount: payment.mollie_payment.amount.value,
-                              description: 'iDEAL inleg', created_by: payment.user)
+        PaymentDoneJob.perform_later(payment)
         flash[:success] = 'iDEAL betaling geslaagd'
       else
         flash[:error] = 'Uw iDEAL betaling is mislukt.
@@ -52,25 +50,10 @@ class PaymentsController < ApplicationController
       end
     end
 
-    redirect_to user_path(payment.user)
-  end
-
-  def invoice_callback
-    payment = Payment.find(params[:id])
-    authorize payment
-
-    payment.update(status: payment.mollie_payment.status)
-    if payment.mollie_payment.paid?
-      CreditMutation.create(user: payment.invoice.user,
-                            amount: payment.mollie_payment.amount.value,
-                            description: "Betaling factuur #{payment.invoice.human_id}", created_by: payment.user)
-      payment.invoice.update(status: 'paid')
-      flash[:success] = 'iDEAL betaling geslaagd'
+    if payment.user
+      redirect_to user_path(payment.user)
     else
-      flash[:error] = 'Uw iDEAL betaling is mislukt.
-                        Mocht het bedrag wel van uw rekening zijn gegaan neem dan contact op met de penningmeester'
+      redirect_to invoice_path(payment.invoice)
     end
-
-    redirect_to invoice_path(payment.invoice)
   end
 end

@@ -10,4 +10,12 @@ class InvoiceMailer < ApplicationMailer
 
     mail to: @invoice.email, subject: "Factuur #{invoice.human_id} Stichting Sociëteit Flux"
   end
+
+  def invoice_paid(invoice)
+    @user = OpenStruct.new(name: invoice.name)
+    @invoice = invoice
+    @cab_disabled = true
+
+    mail to: @invoice.email, subject: "Betaalbevesting factuur #{invoice.human_id} Stichting Sociëteit Flux"
+  end
 end
