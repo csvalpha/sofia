@@ -35,7 +35,6 @@ Rails.application.routes.draw do
   resources :payments, only: %i[index create] do
     member do
       get :callback
-      get :invoice_callback
     end
     collection do
       get :add

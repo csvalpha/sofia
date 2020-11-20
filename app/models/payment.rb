@@ -13,7 +13,7 @@ class Payment < ApplicationRecord
   belongs_to :invoice, optional: true
 
   validates :status, presence: true
-  validates :amount,  presence: true
+  validates :amount, presence: true
 
   validate :user_xor_invoice
   validate :user_amount
@@ -31,7 +31,7 @@ class Payment < ApplicationRecord
     mollie_payment = Mollie::Payment.create(
       amount: { value: format('%<amount>.2f', amount: attributes[:amount]), currency: 'EUR' },
       description: description,
-      redirect_url:  "http://#{Rails.application.config.x.tomato_host}/payments/#{obj.id}/callback"
+      redirect_url: "http://#{Rails.application.config.x.tomato_host}/payments/#{obj.id}/callback"
     )
 
     obj.update(mollie_id: mollie_payment.id)
@@ -51,6 +51,6 @@ class Payment < ApplicationRecord
   def user_amount
     return unless user
 
-    errors.add(:amount, 'must be bigger than or equal to 20') unless amount and amount >= 20
+    errors.add(:amount, 'must be bigger than or equal to 20') unless amount && (amount >= 20)
   end
 end
