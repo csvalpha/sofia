@@ -64,7 +64,7 @@ class PaymentsController < ApplicationController
       CreditMutation.create(user: payment.invoice.user,
                             amount: payment.mollie_payment.amount.value,
                             description: "Betaling factuur #{payment.invoice.human_id}", created_by: payment.user)
-      payemnt.invoice.update(status: 'paid')
+      payment.invoice.update(status: 'paid')
       flash[:success] = 'iDEAL betaling geslaagd'
     else
       flash[:error] = 'Uw iDEAL betaling is mislukt.
