@@ -40,7 +40,7 @@ class InvoicesController < ApplicationController
     redirect_to invoices_path
   end
 
-  def pay
+  def pay # rubocop:disable Metrics/AbcSize
     @invoice = Invoice.find(params[:id])
 
     payment = Payment.create_with_mollie("Betaling factuur #{@invoice.human_id}",

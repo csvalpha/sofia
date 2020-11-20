@@ -10,7 +10,8 @@ class PaymentsController < ApplicationController
   def create # rubocop:disable Metrics/AbcSize
     authorize :payment
 
-    payment = Payment.create_with_mollie(user: current_user, amount: params[:payment][:amount])
+    payment = Payment.create_with_mollie('Sofia zatladder saldo inleg',
+                                         user: current_user, amount: params[:payment][:amount])
 
     if payment.valid?
       checkout_url = payment.mollie_payment.checkout_url

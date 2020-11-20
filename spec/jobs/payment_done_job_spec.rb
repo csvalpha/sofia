@@ -6,7 +6,7 @@ describe PaymentDoneJob, type: :job do
 
     subject(:job) { perform_enqueued_jobs { described_class.perform_now(payment) } }
 
-    context 'When for user' do
+    context 'when for user' do
       let(:user) { FactoryBot.create(:user) }
       let(:payment) { FactoryBot.create(:payment, user: user, amount: 22) }
 
@@ -18,10 +18,10 @@ describe PaymentDoneJob, type: :job do
       it { expect(payment.status).to eq 'paid' }
       it { expect(user.credit_mutations.last.description).to eq 'iDEAL inleg' }
       it { expect(user.credit_mutations.last.amount).to eq 22.00 }
-      it { expect(emails.last.subject).to eq "Je saldo is bijgewerkt" }
+      it { expect(emails.last.subject).to eq 'Je saldo is bijgewerkt' }
     end
 
-    context "When for invoice" do
+    context 'when for invoice' do
       let(:invoice) { FactoryBot.create(:invoice) }
       let(:payment) { FactoryBot.create(:payment, user: nil, invoice: invoice, amount: invoice.amount) }
 

@@ -2,12 +2,8 @@ class PaymentDoneJob < ApplicationJob
   queue_as :default
 
   def perform(payment)
-    if payment.user
-      process_user(payment)
-    end
-    if payment.invoice
-      process_invoice(payment)
-    end
+    process_user(payment) if payment.user
+    process_invoice(payment) if payment.invoice
 
     payment.update(status: 'paid')
   end
@@ -24,8 +20,8 @@ class PaymentDoneJob < ApplicationJob
 
   def process_invoice(payment)
     CreditMutation.create(user: payment.invoice.user,
-                                     amount: payment.amount,
-                                     description: "Betaling factuur #{payment.invoice.human_id}", created_by: payment.user)
+                          amount: payment.amount,
+                          description: "Betaling factuur #{payment.invoice.human_id}", created_by: payment.user)
 
     InvoiceMailer.invoice_paid(payment.invoice).deliver_now
     payment.invoice.update(status: 'paid')

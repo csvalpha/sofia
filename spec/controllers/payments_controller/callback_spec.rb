@@ -10,7 +10,7 @@ describe PaymentsController, type: :controller do
 
     describe 'handles paid payment' do
       let(:payment) { FactoryBot.create(:payment, status: 'open', user: user, amount: '22.00') }
-      let(:request) { get :callback, params: {id: payment.id} }
+      let(:request) { get :callback, params: { id: payment.id } }
 
       let(:mollie) { instance_double(Mollie::Payment) }
 
@@ -27,7 +27,7 @@ describe PaymentsController, type: :controller do
 
     describe 'handles open payment' do
       let(:payment) { FactoryBot.create(:payment, status: 'open', user: user, amount: '22.00') }
-      let(:request) { get :callback, params: {id: payment.id} }
+      let(:request) { get :callback, params: { id: payment.id } }
 
       let(:mollie) { instance_double(Mollie::Payment) }
 
@@ -40,7 +40,6 @@ describe PaymentsController, type: :controller do
       end
 
       it { expect(PaymentDoneJob).not_to have_been_enqueued }
-
     end
   end
 end

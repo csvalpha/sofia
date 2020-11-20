@@ -36,7 +36,6 @@ RSpec.describe Payment, type: :model do
 
         it { expect(payment).to be_valid }
       end
-
     end
 
     context 'when without a status' do
