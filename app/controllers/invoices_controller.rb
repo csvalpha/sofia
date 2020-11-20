@@ -1,7 +1,7 @@
 class InvoicesController < ApplicationController
   include ApplicationHelper
   before_action :authenticate_user!, except: :pay
-  after_action :verify_authorized, except: :pay
+  after_action :verify_authorized
 
   def index
     authorize Invoice
@@ -40,8 +40,9 @@ class InvoicesController < ApplicationController
     redirect_to invoices_path
   end
 
-  def pay # rubocop:disable Metrics/AbcSize
+  def pay # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @invoice = Invoice.find(params[:id])
+    authorize @invoice
 
     payment = Payment.create_with_mollie("Betaling factuur #{@invoice.human_id}",
                                          invoice: @invoice, amount: @invoice.amount)
