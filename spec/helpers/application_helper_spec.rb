@@ -10,7 +10,7 @@ RSpec.describe ApplicationHelper, type: :helper do
 
   describe '#remove_empty' do
     context 'when with nested hash' do
-      let(:hash) { { "a": '1', "b": '', "c": { "a": '4', "b": '' } } }
+      let(:hash) { { a: '1', b: '', c: { a: '4', b: '' } } }
 
       it { expect(remove_empty(hash.to_h)).to eq({ a: '1', c: { a: '4' } }) }
     end
