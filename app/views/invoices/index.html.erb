@@ -58,8 +58,10 @@
                 <%= t(invoice.status).humanize %>
               </td>
               <td>
-                <%= simple_form_for invoice, wrapper: :horizontal_form, url: send_invoice_invoice_path(id: invoice.id), method: :post do |f| %>
-                  <%= f.button :submit, 'Factuur versturen', class: 'btn btn-primary' %>
+                <% if invoice.pending? %>
+                  <%= simple_form_for invoice, wrapper: :horizontal_form, url: send_invoice_invoice_path(id: invoice.id), method: :post do |f| %>
+                    <%= f.button :submit, 'Factuur versturen', class: 'btn btn-primary' %>
+                  <% end %>
                 <% end %>
               </td>
             </tr>
