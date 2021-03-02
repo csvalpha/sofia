@@ -29,7 +29,7 @@ class Activity < ApplicationRecord
   delegate :products, to: :price_list
 
   def manually_added_users_with_orders
-    ordering_users.where('provider IS NULL').distinct
+    ordering_users.where(provider: nil).distinct
   end
 
   def credit_mutations_total

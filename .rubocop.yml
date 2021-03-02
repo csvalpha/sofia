@@ -97,3 +97,6 @@ Style/StringMethods:
 
 Naming/MemoizedInstanceVariableName:
   Enabled: false
+
+RSpec/FilePath:
+  Enabled: false
