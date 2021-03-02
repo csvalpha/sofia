@@ -8,6 +8,6 @@ class InvoicePolicy < ApplicationPolicy
   end
 
   def pay?
-    !record.paid?
+    show?
   end
 end

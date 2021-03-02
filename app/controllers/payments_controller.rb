@@ -54,7 +54,7 @@ class PaymentsController < ApplicationController
     if payment.user
       redirect_to user_path(payment.user)
     else
-      redirect_to invoice_path(payment.invoice)
+      redirect_to invoice_path(payment.invoice.token)
     end
   end
 end

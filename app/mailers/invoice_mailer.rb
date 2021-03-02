@@ -2,7 +2,7 @@ class InvoiceMailer < ApplicationMailer
   def invoice_mail(invoice)
     @user = OpenStruct.new(name: invoice.name)
     @invoice = invoice
-    @cab_link = url_for(controller: 'invoices', action: 'pay', id: invoice.id)
+    @cab_link = url_for(controller: 'invoices', action: 'show', id: invoice.token)
     @cab_text = 'iDeal betaling'
 
     attachments["#{invoice.human_id}.pdf"] = WickedPdf.new.pdf_from_string(

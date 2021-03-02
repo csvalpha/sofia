@@ -1,7 +1,7 @@
 class InvoicesController < ApplicationController
   include ApplicationHelper
-  before_action :authenticate_user!, except: :pay
-  after_action :verify_authorized
+  before_action :authenticate_user!, except: %w[show pay]
+  after_action :verify_authorized, except: %w[show pay]
 
   def index
     authorize Invoice
@@ -13,8 +13,7 @@ class InvoicesController < ApplicationController
   end
 
   def show
-    @invoice = Invoice.find(params[:id])
-    authorize @invoice
+    @invoice = invoice
 
     respond_to do |format|
       format.html
@@ -41,8 +40,12 @@ class InvoicesController < ApplicationController
   end
 
   def pay # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-    @invoice = Invoice.find(params[:id])
-    authorize @invoice
+    @invoice = invoice
+
+    if @invoice.paid?
+      redirect_to invoice_path params[:id]
+      return
+    end
 
     payment = Payment.create_with_mollie("Betaling factuur #{@invoice.human_id}",
                                          invoice: @invoice, amount: @invoice.amount)
@@ -52,7 +55,7 @@ class InvoicesController < ApplicationController
       redirect_to URI.parse(checkout_url).to_s
     else
       flash[:error] = payment.errors
-      redirect_to root_path
+      redirect_to invoice_path params[:id]
     end
   end
 
@@ -68,6 +71,13 @@ class InvoicesController < ApplicationController
   end
 
   private
+
+  def invoice
+    @invoice = Invoice.find(Integer(params[:id]))
+    authorize @invoice
+  rescue ArgumentError
+    @invoice = Invoice.find_by!(token: params[:id])
+  end
 
   def permitted_attributes
     params.require(:invoice).permit(%i[user_id activity_id name_override email_override rows], rows_attributes: %i[name amount price])

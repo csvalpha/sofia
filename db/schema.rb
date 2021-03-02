@@ -65,7 +65,9 @@ ActiveRecord::Schema.define(version: 2020_11_09_213126) do
     t.datetime "updated_at", null: false
     t.string "email_override"
     t.string "name_override"
+    t.string "token"
     t.index ["activity_id"], name: "index_invoices_on_activity_id"
+    t.index ["token"], name: "index_invoices_on_token", unique: true
     t.index ["user_id"], name: "index_invoices_on_user_id"
   end
 
