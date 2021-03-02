@@ -138,13 +138,13 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
     redirect_to activity
   end
 
-  def send_invoices
+  def create_invoices
     activity = Activity.find(params[:id])
     authorize activity
 
     ActivityInvoiceJob.perform_later(activity)
 
-    flash[:success] = "Factuur(en) verstuurd naar #{activity.manually_added_users_with_orders.size} gebruikers!"
+    flash[:success] = "Factuur(en) aangemaakt voor #{activity.manually_added_users_with_orders.size} gebruikers!"
     redirect_to activity
   end
 
