@@ -50,6 +50,11 @@
             <%= fa_icon 'credit-card', class: 'mr-2', text: 'Betalingen' %>
           <% end %>
         </li>
+        <li class="nav-item">
+          <%= nav_link finance_overview_index_path, class: 'nav-link' do %>
+            <%= fa_icon 'money', class: 'mr-2', text: 'Financien' %>
+          <% end %>
+        </li>
       <% end %>
     </ul>
     <% if current_user %>
