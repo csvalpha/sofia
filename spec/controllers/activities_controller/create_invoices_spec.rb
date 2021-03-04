@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 describe ActivitiesController, type: :controller do
-  describe 'POST send_invoices' do
+  describe 'POST create_invoices' do
     let(:activity) { FactoryBot.create(:activity) }
     let(:request) do
-      post :send_invoices, params: { id: activity.id }
+      post :create_invoices, params: { id: activity.id }
     end
 
     it 'unauthenticated when without permission' do
