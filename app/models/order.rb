@@ -21,6 +21,23 @@ class Order < ApplicationRecord
     @sum ||= order_rows.sum('product_count * price_per_product')
   end
 
+  def self.count_per_product(from_date, to_date)
+    records = Order.where(created_at: from_date..to_date)
+
+    order_rows = OrderRow.where(order: records).group(:product_id, :name).joins(:product)
+                         .pluck(:name, Arel.sql('SUM(product_count)'), Arel.sql('SUM(product_count * price_per_product)'))
+    order_rows.map { |name, amount, price| { name: name, amount: amount.to_i, price: price.to_f } }
+  end
+
+  def self.count_per_category(from_date, to_date)
+    records = Order.where(created_at: from_date..to_date)
+
+    order_rows = OrderRow.where(order: records).group(:category).joins(:product)
+                         .pluck(:category, Arel.sql('SUM(product_count)'), Arel.sql('SUM(product_count * price_per_product)'))
+
+    order_rows.map { |category, amount, price| { category: category, amount: amount.to_i, price: price.to_f } }
+  end
+
   private
 
   def user_or_cash_or_pin
