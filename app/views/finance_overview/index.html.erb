@@ -1,0 +1,71 @@
+<%= content_for :title, 'Financieel overzicht - SOFIA' %>
+<div class="container footer-padding">
+  <div class="row pt-4">
+    <div class="col-sm-12 d-flex justify-content-between align-items-center">
+      <h1>
+        Financieel overzicht
+      </h1>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <form class="form-inline" method="GET">
+        <div class="form-group mb-2">
+          <input type="date" class="form-control" id="staticEmail2" name="from_date" value="<%= @from_date %>">
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+          <input type="date" class="form-control" name="to_date" value="<%= @to_date %>">
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Periode wijzigen</button>
+      </form>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-6">
+      <h3>Product totalen</h3>
+      <table class="table table-striped mt-2">
+        <thead>
+        <tr>
+          <th scope="col">Product</th>
+          <th scope="col">Afzet</th>
+          <th scope="col">Omzet</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @count_per_product.each do |entry| %>
+          <tr>
+            <th scope="row"> <%= entry[:name] %></th>
+            <td> <%= entry[:amount] %></td>
+            <td> <%= number_to_currency(entry[:price], unit: '€') %> </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-6">
+      <h3>Categorie totalen</h3>
+      <table class="table table-striped mt-2">
+        <thead>
+        <tr>
+          <th scope="col">Product</th>
+          <th scope="col">Afzet</th>
+          <th scope="col">Omzet</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @count_per_category.each do |entry| %>
+          <tr>
+            <th scope="row"> <%= t(entry[:category]).capitalize %> </th>
+            <td> <%= entry[:amount] %></td>
+            <td> <%= number_to_currency(entry[:price], unit: '€') %> </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

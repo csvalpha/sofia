@@ -14,7 +14,7 @@ body {
 // ANIMATIONS
 .slide-fade-enter-active,
 .slide-fade-leave-active {
-  transition: all .3s ease;
+  transition: .3s ease;
 }
 
 .slide-fade-enter,
@@ -43,12 +43,13 @@ body {
   }
 }
 
-.users-table [aria-colindex="1"] {
-  /* ID column */
+.users-table [aria-colindex='1'] {
+  // ID column
   width: 100px;
 }
-.users-table [aria-colindex="3"] {
-  /* Saldo column */
+
+.users-table [aria-colindex='3'] {
+  // Saldo column
   width: 150px;
 }
 
