@@ -144,8 +144,8 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
 
     ActivityInvoiceJob.perform_later(activity)
 
-    flash[:success] = "#{pluralize(activity.manually_added_users_with_orders.size, 'factuur', plural: 'facturen')}
-                        aangemaakt! Verstuur deze via 'facturen'"
+    flash[:success] = "#{pluralize(activity.manually_added_users_with_orders.size, 'Factuur', plural: 'Facturen')}
+                        aangemaakt! Verstuur deze via 'Facturen'"
     redirect_to activity
   end
 
