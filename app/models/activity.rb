@@ -37,21 +37,18 @@ class Activity < ApplicationRecord
   end
 
   def revenue_with_cash
-    @revenue_with_cash ||= begin
+    @revenue_with_cash ||=
       OrderRow.where(order: orders.where(paid_with_cash: true)).sum('product_count * price_per_product')
-    end
   end
 
   def revenue_with_pin
-    @revenue_with_pin ||= begin
+    @revenue_with_pin ||=
       OrderRow.where(order: orders.where(paid_with_pin: true)).sum('product_count * price_per_product')
-    end
   end
 
   def revenue_with_credit
-    @revenue_with_credit ||= begin
+    @revenue_with_credit ||=
       OrderRow.where(order: orders.where(paid_with_cash: false, paid_with_pin: false)).sum('product_count * price_per_product')
-    end
   end
 
   def cash_total
@@ -71,18 +68,16 @@ class Activity < ApplicationRecord
   end
 
   def revenue_by_category
-    @revenue_by_category ||= begin
+    @revenue_by_category ||=
       revenue_per_product.each_with_object(Hash.new(0)) do |(product, price), hash|
         hash[product[:category]] += price
         hash
       end
-    end
   end
 
   def revenue_per_product
-    @revenue_per_product ||= begin
+    @revenue_per_product ||=
       OrderRow.where(order: orders).group(:product).sum('product_count * price_per_product')
-    end
   end
 
   def revenue_by_user(user)
