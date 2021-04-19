@@ -1,5 +1,7 @@
 class Invoice < ApplicationRecord
-  enum status: { pending: 0, sent: 1 }
+  has_secure_token
+
+  enum status: { pending: 0, sent: 1, paid: 3 }
 
   belongs_to :user
   belongs_to :activity

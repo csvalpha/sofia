@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_07_121611) do
+ActiveRecord::Schema.define(version: 2020_11_09_213126) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,7 +65,9 @@ ActiveRecord::Schema.define(version: 2020_10_07_121611) do
     t.datetime "updated_at", null: false
     t.string "email_override"
     t.string "name_override"
+    t.string "token"
     t.index ["activity_id"], name: "index_invoices_on_activity_id"
+    t.index ["token"], name: "index_invoices_on_token", unique: true
     t.index ["user_id"], name: "index_invoices_on_user_id"
   end
 
@@ -102,6 +104,8 @@ ActiveRecord::Schema.define(version: 2020_10_07_121611) do
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "invoice_id"
+    t.index ["invoice_id"], name: "index_payments_on_invoice_id"
     t.index ["user_id"], name: "index_payments_on_user_id"
   end
 

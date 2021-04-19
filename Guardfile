@@ -19,9 +19,9 @@ guard :rspec, cmd: 'bundle exec spring rspec' do
   dsl.watch_spec_files_for(rails.app_files)
   dsl.watch_spec_files_for(rails.views)
 
-  watch(%r{app/controllers/((.+)/)?application_controller.rb}) { 'spec/requests' }
-  watch(%r{^app/controllers/(.+)/(.+)_(controller)\.rb$}) do |m|
-    "spec/requests/#{m[1]}/#{m[2]}_#{m[3]}"
+  watch(%r{app/controllers/((.+)/)?application_controller.rb}) { 'spec/controllers' }
+  watch(%r{^app/controllers/(.+)_(controller)\.rb$}) do |m|
+    "spec/controllers/#{m[1]}_#{m[2]}"
   end
 
   watch('app/policies/application_policy.rb') { 'spec/requests' }

@@ -46,8 +46,27 @@
             41 032 169
           </td>
         </tr>
+        <tr>
+          <th scope="row">
+            Status
+          </th>
+          <td class="text-right">
+            <% if @invoice.paid? %>
+            Betaald
+            <% else %>
+            <span class="text-danger">Niet betaald</span>
+            <% end %>
+          </td>
+        </tr>
         </tbody>
       </table>
+
+      <% unless @invoice.paid? %>
+        <%= link_to pay_invoice_url @invoice.token do %>
+          <button class="col-3 offset-9 btn btn-primary">Betalen</button>
+        <% end %>
+      <% end %>
+
     </div>
   </div>
   <hr/>
