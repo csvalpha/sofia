@@ -1,8 +1,9 @@
 require 'browser/aliases'
 Browser::Base.include(Browser::Aliases)
-include ActionView::Helpers::TextHelper
 
 class ActivitiesController < ApplicationController # rubocop:disable Metrics/ClassLength
+  include ActionView::Helpers::TextHelper
+
   before_action :authenticate_user!
   after_action :verify_authorized, except: [:sumup_callback]
   after_action :verify_policy_scoped, only: :index
