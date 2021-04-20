@@ -6,8 +6,14 @@ RSpec.describe Payment, type: :model do
   describe '#valid' do
     it { expect(payment).to be_valid }
 
-    context 'when without a user' do
-      subject(:payment) { FactoryBot.build_stubbed(:payment, user: nil) }
+    context 'when without user and invoice' do
+      subject(:payment) { FactoryBot.build_stubbed(:payment, user: nil, invoice: nil) }
+
+      it { expect(payment).not_to be_valid }
+    end
+
+    context 'when with user and invoice' do
+      subject(:payment) { FactoryBot.build_stubbed(:payment, invoice: FactoryBot.create(:invoice)) }
 
       it { expect(payment).not_to be_valid }
     end
@@ -19,9 +25,17 @@ RSpec.describe Payment, type: :model do
     end
 
     context 'when with too few amount' do
-      subject(:payment) { FactoryBot.build_stubbed(:payment, amount: 19) }
+      context 'when with user' do
+        subject(:payment) { FactoryBot.build_stubbed(:payment, amount: 19) }
 
-      it { expect(payment).not_to be_valid }
+        it { expect(payment).not_to be_valid }
+      end
+
+      context 'when with invoice' do
+        subject(:payment) { FactoryBot.build_stubbed(:payment, :invoice, amount: 19) }
+
+        it { expect(payment).to be_valid }
+      end
     end
 
     context 'when without a status' do

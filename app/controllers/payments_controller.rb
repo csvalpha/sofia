@@ -10,7 +10,8 @@ class PaymentsController < ApplicationController
   def create # rubocop:disable Metrics/AbcSize
     authorize :payment
 
-    payment = Payment.create_with_mollie(user: current_user, amount: params[:payment][:amount])
+    payment = Payment.create_with_mollie('Sofia zatladder saldo inleg',
+                                         user: current_user, amount: params[:payment][:amount])
 
     if payment.valid?
       checkout_url = payment.mollie_payment.checkout_url
@@ -42,9 +43,7 @@ class PaymentsController < ApplicationController
     else
       payment.update(status: payment.mollie_payment.status)
       if payment.mollie_payment.paid?
-        CreditMutation.create(user: payment.user,
-                              amount: payment.mollie_payment.amount.value,
-                              description: 'iDEAL inleg', created_by: payment.user)
+        PaymentDoneJob.perform_later(payment)
         flash[:success] = 'iDEAL betaling geslaagd'
       else
         flash[:error] = 'Uw iDEAL betaling is mislukt.
@@ -52,6 +51,10 @@ class PaymentsController < ApplicationController
       end
     end
 
-    redirect_to user_path(payment.user)
+    if payment.user
+      redirect_to user_path(payment.user)
+    else
+      redirect_to invoice_path(payment.invoice.token)
+    end
   end
 end

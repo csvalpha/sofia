@@ -9,10 +9,14 @@ class Payment < ApplicationRecord
   enum status: { open: 0, pending: 1, paid: 2, failed: 3, canceled: 4, expired: 5 }
   COMPLETE_STATUSES = %w[paid failed canceled expired].freeze
 
-  belongs_to :user
+  belongs_to :user, optional: true
+  belongs_to :invoice, optional: true
 
-  validates :user, :status, presence: true
-  validates :amount, numericality: { greater_than_or_equal_to: 20 }, presence: true
+  validates :status, presence: true
+  validates :amount, presence: true
+
+  validate :user_xor_invoice
+  validate :user_amount
 
   scope :not_completed, (-> { where.not(status: COMPLETE_STATUSES) })
 
@@ -20,13 +24,13 @@ class Payment < ApplicationRecord
     COMPLETE_STATUSES.include?(status)
   end
 
-  def self.create_with_mollie(attributes = nil)
+  def self.create_with_mollie(description, attributes = nil)
     obj = create(attributes)
     return obj unless obj.valid?
 
     mollie_payment = Mollie::Payment.create(
       amount: { value: format('%<amount>.2f', amount: attributes[:amount]), currency: 'EUR' },
-      description: 'Sofia zatladder saldo inleg',
+      description: description,
       redirect_url: "http://#{Rails.application.config.x.tomato_host}/payments/#{obj.id}/callback"
     )
 
@@ -36,5 +40,17 @@ class Payment < ApplicationRecord
 
   def mollie_payment
     Mollie::Payment.get(mollie_id)
+  end
+
+  private
+
+  def user_xor_invoice
+    errors.add(:payment, 'must belong to a user xor invoice') unless user.present? ^ invoice.present?
+  end
+
+  def user_amount
+    return unless user
+
+    errors.add(:amount, 'must be bigger than or equal to 20') unless amount && (amount >= 20)
   end
 end
