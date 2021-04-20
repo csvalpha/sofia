@@ -2,6 +2,8 @@ require 'browser/aliases'
 Browser::Base.include(Browser::Aliases)
 
 class ActivitiesController < ApplicationController # rubocop:disable Metrics/ClassLength
+  include ActionView::Helpers::TextHelper
+
   before_action :authenticate_user!
   after_action :verify_authorized, except: [:sumup_callback]
   after_action :verify_policy_scoped, only: :index
@@ -135,6 +137,17 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
       flash[:error] = activity.errors.full_messages.join(', ')
     end
 
+    redirect_to activity
+  end
+
+  def create_invoices
+    activity = Activity.find(params[:id])
+    authorize activity
+
+    ActivityInvoiceJob.perform_later(activity)
+
+    flash[:success] = "#{pluralize(activity.manually_added_users_with_orders.size, 'factuur', plural: 'facturen')}
+                        aangemaakt! Verstuur deze via 'Facturen'"
     redirect_to activity
   end
 

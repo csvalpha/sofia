@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       get :sumup_callback
       get :product_totals
       post :lock
+      post :create_invoices
     end
   end
 
