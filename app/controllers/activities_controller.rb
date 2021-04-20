@@ -1,6 +1,5 @@
 require 'browser/aliases'
 Browser::Base.include(Browser::Aliases)
-include ActionView::Helpers::TextHelper
 
 class ActivitiesController < ApplicationController # rubocop:disable Metrics/ClassLength
   include ActionView::Helpers::TextHelper
