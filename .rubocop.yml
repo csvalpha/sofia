@@ -4,8 +4,8 @@ require:
   - rubocop-performance
 
 AllCops:
-  TargetRailsVersion: 5.1
-  TargetRubyVersion: 2.4
+  TargetRailsVersion: 6.0
+  TargetRubyVersion: 3.0
   Exclude:
     - 'bin/**/*'
     - 'db/schema.rb'
@@ -99,4 +99,7 @@ Naming/MemoizedInstanceVariableName:
   Enabled: false
 
 RSpec/FilePath:
+  Enabled: false
+
+Rails/BulkChangeTable:
   Enabled: false
