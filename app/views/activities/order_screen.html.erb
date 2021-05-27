@@ -53,7 +53,7 @@
       </fieldset>
     </form>
     <div slot="modal-footer">
-      <button aria-label="Close" class="btn btn-secondary me-1" data-dismiss="modal" type="button">
+      <button aria-label="Close" class="btn btn-secondary me-1" data-bs-dismiss="modal" type="button">
         Annuleren
       </button>
       <button @click="saveCreditMutation" class="btn btn-primary" type="sumbit" :disabled="isSubmitting">
@@ -88,11 +88,7 @@
         <div class="col-12 pt-2 text-center">
           <div class="alert alert-dismissible fade show <%= flash_class key %>" role="alert">
             <%= value %>
-            <button aria-label="Close" class="close" data-dismiss="alert" type="button">
-                  <span aria-hidden="true">
-                    <%= fa_icon 'times' %>
-                  </span>
-            </button>
+            <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button" />
           </div>
         </div>
       <% end %>

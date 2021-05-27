@@ -66,11 +66,11 @@
         </tbody>
       </table>
       <% if current_user.treasurer? %>
-        <button class="btn btn-sm btn-primary pull-right ms-2" data-target="#edit_user_modal" data-toggle="modal" role="button">
+        <button class="btn btn-sm btn-primary pull-right ms-2" data-bs-target="#edit_user_modal" data-bs-toggle="modal" role="button">
           <%= fa_icon 'pencil', class: 'me-1' %>
           Gebruiker wijzigen
         </button>
-        <button class="btn btn-sm btn-secondary pull-right" data-target="#new_mutation_modal" data-toggle="modal" role="button">
+        <button class="btn btn-sm btn-secondary pull-right" data-bs-target="#new_mutation_modal" data-bs-toggle="modal" role="button">
           <%= fa_icon 'plus', class: 'me-1' %>
           Inleggen
         </button>
@@ -88,12 +88,12 @@
           <ul class="nav nav-tabs card-header-tabs" id="infoTabs" role="tablist">
             <li class="nav-item">
 
-              <a aria-controls="creditInfo" aria-selected="true" class="nav-link active" data-toggle="tab" href="#creditInfo" id="creditInfo-tab" role="tab">
+              <a aria-controls="creditInfo" aria-selected="true" class="nav-link active" data-bs-toggle="tab" href="#creditInfo" id="creditInfo-tab" role="tab">
                 Inleggen
               </a></li>
             <li class="nav-item">
 
-              <a aria-controls="roleInfo" aria-selected="false" class="nav-link" data-toggle="tab" href="#roleInfo" id="roleInfo-tab" role="tab">
+              <a aria-controls="roleInfo" aria-selected="false" class="nav-link" data-bs-toggle="tab" href="#roleInfo" id="roleInfo-tab" role="tab">
                 Rollen en rechten
               </a></li>
           </ul>
@@ -160,12 +160,12 @@
       <div class="card-header">
         <ul class="nav nav-tabs card-header-tabs" id="userTabs" role="tablist">
           <li class="nav-item">
-            <a aria-controls="orders" aria-selected="true" class="nav-link active" data-toggle="tab" href="#orders" id="orders-tab" role="tab">
+            <a aria-controls="orders" aria-selected="true" class="nav-link active" data-bs-toggle="tab" href="#orders" id="orders-tab" role="tab">
               Bestellingen
             </a>
           </li>
           <li class="nav-item">
-            <a aria-controls="creditMutations" aria-selected="false" class="nav-link" data-toggle="tab" href="#creditMutations" id="creditMutations-tab" role="tab">
+            <a aria-controls="creditMutations" aria-selected="false" class="nav-link" data-bs-toggle="tab" href="#creditMutations" id="creditMutations-tab" role="tab">
               Inleg en saldocorrecties
             </a></li>
         </ul>
