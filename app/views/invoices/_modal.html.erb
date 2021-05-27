@@ -8,8 +8,8 @@
         <button aria-label="close" class="btn-close" data-bs-dismiss="modal" type="button" />
       </div>
       <%= simple_form_for @invoice, wrapper: :horizontal_form do |f| %>
-        <div class="modal-body" id="invoices_modal">
-          <div class="form-group row">
+        <div class="modal-body d-grid gap-2" id="invoices_modal">
+          <div class="row">
             <label class="col-3 col-form-label" for="activity_price_list">
               <abbr class="me-1" title="required">*</abbr>
               Activiteit
@@ -36,7 +36,7 @@
             </template>
           </div>
 
-          <div class="form-group row">
+          <div class="row">
             <label class="col-3 col-form-label" for="invoices_users">
               <abbr class="me-1" title="required">*</abbr>
               Gebruiker

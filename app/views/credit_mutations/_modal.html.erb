@@ -8,11 +8,11 @@
         </h5>
         <button aria-label="close" class="btn-close" data-bs-dismiss="modal" type="button" />
       </div><%= simple_form_for @new_mutation, wrapper: :horizontal_form do |f| %>
-        <div class="modal-body" id="mutations_modal">
+        <div class="modal-body d-grid gap-2" id="mutations_modal">
           <%= f.input :description, label: 'Beschrijving', placeholder: 'Beschrijving' %>
           <%= f.input :amount, as: :float, label: 'Bedrag', placeholder: '2.00' %>
 
-          <div class="form-group row">
+          <div class="row">
             <label class="col-3 col-form-label" for="mutations_users">
               <abbr class="me-1" title="required">*</abbr>
               Gebruiker
