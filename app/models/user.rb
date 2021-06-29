@@ -60,7 +60,7 @@ class User < ApplicationRecord
 
   def archive!
     attributes.each_key do |attribute|
-      self[attribute] = nil unless %w[deleted_at updated_at created_at provider id]
+      self[attribute] = nil unless %w[deleted_at updated_at created_at provider id uid]
                                          .include? attribute
     end
     self.name = "Gearchiveerde gebruiker #{self.id}"
