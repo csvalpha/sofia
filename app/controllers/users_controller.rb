@@ -67,7 +67,7 @@ class UsersController < ApplicationController
     end
 
     users_not_in_json = User.active.in_banana.where.not(uid: users_json.pluck('id'))
-    users_not_in_json.each { |user| user.archive! }
+    users_not_in_json.each(&:archive!)
 
     send_slack_users_refresh_notification
 
