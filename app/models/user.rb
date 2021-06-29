@@ -65,8 +65,8 @@ class User < ApplicationRecord
     end
     self.name = "Gearchiveerde gebruiker #{self.id}"
     self.deactivated = true
-    versions.destroy_all
     save
+    versions.destroy_all
   end
 
   # TODO: Spec this method
