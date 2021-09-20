@@ -100,7 +100,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
 
     is_mobile = Browser.new(request.user_agent).mobile?
     @sumup_key = Rails.application.config.x.sumup_key
-    @sumup_enabled = is_mobile && @sumup_key.present? || false
+    @sumup_enabled = (is_mobile && @sumup_key.present?) || false
 
     # Set flags for application.html.slim
     @show_navigationbar = false
