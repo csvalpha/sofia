@@ -230,7 +230,7 @@ RSpec.describe Activity, type: :model do
         FactoryBot.create(:order_row, product: product, order: pin_order, product_count: 4)
       end
 
-      it { expect(activity.cash_total).to eq 2 * product_price + 50 }
+      it { expect(activity.cash_total).to eq (2 * product_price) + 50 }
     end
 
     describe '#revenue_total' do

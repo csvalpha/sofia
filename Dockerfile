@@ -1,4 +1,4 @@
-FROM ruby:3.0.1-slim
+FROM ruby:3.0.2-slim
 
 # Add build-essential tools
 RUN apt-get update -qq \
@@ -11,7 +11,7 @@ RUN apt-get update -qq \
   wkhtmltopdf
 
 # Add Node, required for asset pipeline
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
   apt-get install -y nodejs && \
   npm install -q -g yarn
 
