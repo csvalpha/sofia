@@ -87,12 +87,13 @@ Rails.application.configure do
     scheme: 'https', host: Rails.application.config.x.tomato_host
   }
 
-  config.action_mailer.delivery_method = :mailgun
+  config.action_mailer.delivery_method = :smtp
   config.action_mailer.asset_host = "https://#{config.action_mailer.default_url_options[:host]}"
-  config.action_mailer.mailgun_settings = {
-    api_key: Rails.application.config.x.mailgun_api_key,
-    api_host: 'api.eu.mailgun.net',
-    domain: 'csvalpha.nl'
+  config.action_mailer.smtp_settings = {
+    address: 'smtp.improvmx.com',
+    user_name: Rails.application.config.x.smtp_username,
+    password: Rails.application.config.x.smtp_password,
+    port: 587
   }
 
   if ENV['RAILS_LOG_TO_STDOUT'].present?

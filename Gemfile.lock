@@ -226,8 +226,6 @@ GEM
     lumberjack (1.2.8)
     mail (2.7.1)
       mini_mime (>= 0.1.1)
-    mailgun-ruby (1.2.5)
-      rest-client (>= 2.0.2)
     marcel (1.0.1)
     method_source (1.0.0)
     mime-types (3.3.1)
@@ -538,7 +536,6 @@ DEPENDENCIES
   jquery-rails (~> 4.3)
   kaminari (~> 1.2.1)
   listen
-  mailgun-ruby (~> 1.2)
   mina (~> 1.2.3)
   mini_racer (~> 0.2)
   mollie-api-ruby (~> 4.3)

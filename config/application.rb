@@ -38,7 +38,8 @@ module Sofia
     config.x.slack_webhook        = credentials.dig(Rails.env.to_sym, :slack_webhook) || ''
     config.x.slack_channel        = '#monitoring'
 
-    config.x.mailgun_api_key      = credentials.dig(Rails.env.to_sym, :mailgun_api_key)
+    config.x.smtp_username        = credentials.dig(:production, :smtp_username)
+    config.x.smtp_password        = credentials.dig(:production, :smtp_password)
     config.x.sentry_dsn           = credentials.dig(Rails.env.to_sym, :sentry_dsn)
     config.x.sumup_key            = credentials.dig(Rails.env.to_sym, :sumup_affiliate_key)
     config.x.healthcheck_ids      = credentials.dig(Rails.env.to_sym, :healthcheck_ids)
