@@ -20,9 +20,10 @@ describe PaymentsController, type: :controller do
         allow(mollie).to receive(:paid?).and_return(true)
 
         request
+        payment.reload
       end
 
-      it { expect(PaymentDoneJob).to have_been_enqueued }
+      it { expect(payment.status).to eq 'paid' }
     end
 
     describe 'handles open payment' do
@@ -37,9 +38,10 @@ describe PaymentsController, type: :controller do
         allow(mollie).to receive(:paid?).and_return(false)
 
         request
+        payment.reload
       end
 
-      it { expect(PaymentDoneJob).not_to have_been_enqueued }
+      it { expect(payment.status).to eq 'open' }
     end
   end
 end

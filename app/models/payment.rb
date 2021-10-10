@@ -20,7 +20,9 @@ class Payment < ApplicationRecord
 
   scope :not_completed, (-> { where.not(status: COMPLETE_STATUSES) })
 
-  def completed
+  after_save :process_complete_payment!, if: Proc.new { |payment| payment.status_previously_was != 'paid' and payment.status == 'paid' }
+
+  def completed?
     COMPLETE_STATUSES.include?(status)
   end
 
@@ -40,6 +42,28 @@ class Payment < ApplicationRecord
 
   def mollie_payment
     Mollie::Payment.get(mollie_id)
+  end
+
+  def process_complete_payment!
+    process_user! if user
+    process_invoice! if invoice
+  end
+
+  def process_user!
+    mutation = CreditMutation.create(user: user,
+                                     amount: amount,
+                                     description: 'iDEAL inleg', created_by: user)
+
+    UserCreditMailer.new_credit_mutation_mail(mutation).deliver_later
+  end
+
+  def process_invoice!
+    CreditMutation.create(user: invoice.user,
+                          amount: amount,
+                          description: "Betaling factuur #{invoice.human_id}", created_by: invoice.user)
+    invoice.update(status: 'paid')
+
+    InvoiceMailer.invoice_paid(invoice).deliver_later
   end
 
   private

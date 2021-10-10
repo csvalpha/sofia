@@ -38,12 +38,11 @@ class PaymentsController < ApplicationController
       return
     end
 
-    if payment.completed
+    if payment.completed?
       flash[:error] = 'Deze betaling is al gesloten. Mocht het bedrag niet bij uw inleg staan neem dan contact op met de penningmeester.'
     else
       payment.update(status: payment.mollie_payment.status)
       if payment.mollie_payment.paid?
-        PaymentDoneJob.perform_later(payment)
         flash[:success] = 'iDEAL betaling geslaagd'
       else
         flash[:error] = 'Uw iDEAL betaling is mislukt.
