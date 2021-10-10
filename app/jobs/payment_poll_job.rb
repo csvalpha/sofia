@@ -1,7 +1,7 @@
 class PaymentPollJob < ApplicationJob
   queue_as :default
 
-  def perform # rubocop:disable Metrics/AbcSize
+  def perform
     Payment.not_completed.each do |payment|
       payment.update(status: payment.mollie_payment.status)
     end

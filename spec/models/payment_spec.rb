@@ -84,14 +84,14 @@ RSpec.describe Payment, type: :model do
       before do
         allow(payment).to receive(:process_complete_payment!)
 
-        Payment.statuses.each do |status, *|
+        described_class.statuses.each do |status, *|
           next if status == 'paid'
 
           payment.update(status: status)
         end
       end
 
-      it { expect(payment).to_not have_received(:process_complete_payment!) }
+      it { expect(payment).not_to have_received(:process_complete_payment!) }
     end
   end
 
@@ -107,7 +107,7 @@ RSpec.describe Payment, type: :model do
       end
 
       it { expect(payment).to have_received(:process_user!) }
-      it { expect(payment).to_not have_received(:process_invoice!) }
+      it { expect(payment).not_to have_received(:process_invoice!) }
     end
 
     context 'with invoice' do
@@ -121,7 +121,7 @@ RSpec.describe Payment, type: :model do
       end
 
       it { expect(payment).to have_received(:process_invoice!) }
-      it { expect(payment).to_not have_received(:process_user!) }
+      it { expect(payment).not_to have_received(:process_user!) }
     end
   end
 

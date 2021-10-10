@@ -20,7 +20,7 @@ class Payment < ApplicationRecord
 
   scope :not_completed, (-> { where.not(status: COMPLETE_STATUSES) })
 
-  after_save :process_complete_payment!, if: Proc.new { |payment| payment.status_previously_was != 'paid' and payment.status == 'paid' }
+  after_save :process_complete_payment!, if: proc { |payment| payment.status_previously_was != 'paid' and payment.status == 'paid' }
 
   def completed?
     COMPLETE_STATUSES.include?(status)
