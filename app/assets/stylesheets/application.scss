@@ -11,13 +11,25 @@ body {
   min-height: 100vh;
 }
 
-// Disable bootstrap default underlining links
+// Overwrite bootstrap styling
 a {
   text-decoration: none;
 }
 
 a:hover {
   text-decoration: underline;
+}
+
+a.btn:hover {
+  text-decoration: none;
+}
+
+.table th, .table td {
+  padding: 0.75rem;
+}
+
+.btn-secondary {
+  color: white;
 }
 
 // ANIMATIONS

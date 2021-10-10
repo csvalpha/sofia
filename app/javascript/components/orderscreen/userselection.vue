@@ -40,7 +40,7 @@
             <i class="fa fa-money fa-lg"></i>
           </h1>
 
-          <h4 class="font-weight-light text-center">
+          <h4 class="fw-light text-center">
             <em>Bestelling contant betalen</em>
           </h4>
         </div>
@@ -49,7 +49,7 @@
             <i class="fa fa-credit-card fa-lg"></i>
           </h1>
 
-          <h4 class="font-weight-light text-center">
+          <h4 class="fw-light text-center">
             <em>Bestelling met pin betalen</em>
           </h4>
         </div>

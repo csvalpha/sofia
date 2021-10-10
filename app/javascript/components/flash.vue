@@ -9,7 +9,7 @@
       <div class="flash-text">
         <i :class="activeNotification.iconObject"/>
 
-        <span class="me-4 font-weight-light">
+        <span class="me-4 fw-light">
           {{activeNotification.message}}
         </span>
 

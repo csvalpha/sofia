@@ -1,5 +1,5 @@
 <template lang="html">
-  <b-row class="order-history no-gutters">
+  <b-row class="order-history g-0">
     <b-col>
       <b-table show-empty :busy.sync="isLoading" :items="activityProvider" :fields="fields"
                no-provider-sorting sort-by="start_time" sort-desc>

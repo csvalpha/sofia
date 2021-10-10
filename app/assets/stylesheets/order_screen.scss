@@ -216,7 +216,7 @@
 
   .orders-rows {
     flex: 1 1 0;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 
   .orders-rows-row {

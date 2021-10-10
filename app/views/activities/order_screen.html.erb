@@ -76,12 +76,12 @@
         <span class="me-3">
           <%= @activity.title %>
         </span>
-        <small class="font-weight-light d-inline-block">
+        <small class="fw-light d-inline-block">
           <%= l @activity.start_time, format: :date_only %>
         </small>
       </li>
     </ul>
-    <div class="row col-lg-4">
+    <div class="row">
       <% flash.each do |key, value| %>
         <div class="col-12 pt-2 text-center">
           <div class="alert alert-dismissible fade show <%= flash_class key %>" role="alert">
@@ -91,7 +91,7 @@
         </div>
       <% end %>
     </div>
-    <div class="row col-lg-4 pull-right no-gutters" style="flex-direction: row-reverse">
+    <div class="d-flex flex-row-reverse">
       <b-btn class="m-3" v-on:click="keepUserSelected = !keepUserSelected" variant="outline-secondary">
         <span v-if="keepUserSelected">
           <%= fa_icon 'check-square lg', class: 'me-1' %>
@@ -141,7 +141,7 @@
         </template>
 
         <template v-if="!orderRows.length">
-          <p class="text-center font-weight-light pt-3">
+          <p class="text-center fw-light pt-3">
             <em>
               Geen producten geselecteerd
             </em>
