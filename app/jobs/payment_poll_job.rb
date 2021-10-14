@@ -3,12 +3,10 @@ class PaymentPollJob < ApplicationJob
 
   def perform
     Payment.not_completed.each do |payment|
-      begin
-        payment.update(status: payment.mollie_payment.status)
-      rescue ActiveRecord::StaleObjectError => e
-        # If the payment has not changed to paid with this concurrent update,
-        # it will be checked again the next time this poll job runs
-      end
+      payment.update(status: payment.mollie_payment.status)
+    rescue ActiveRecord::StaleObjectError
+      # If the payment has not changed to paid with this concurrent update,
+      # it will be checked again the next time this poll job runs
     end
 
     return unless Rails.env.production? || Rails.env.staging?

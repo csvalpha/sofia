@@ -45,7 +45,7 @@ class Payment < ApplicationRecord
   end
 
   def process_complete_payment!
-    return unless status_previously_was != 'paid' and status == 'paid'
+    return unless status_previously_was != 'paid' && status == 'paid'
 
     process_user! if user
     process_invoice! if invoice

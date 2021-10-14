@@ -31,7 +31,7 @@ class PaymentsController < ApplicationController
     @payment.amount = params[:resulting_credit].to_i - @user.credit if params[:resulting_credit]
   end
 
-  def callback # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def callback # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
     payment = Payment.find(params[:id])
     unless payment
       redirect_to users_path
