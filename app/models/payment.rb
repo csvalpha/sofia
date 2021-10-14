@@ -20,7 +20,7 @@ class Payment < ApplicationRecord
 
   scope :not_completed, (-> { where.not(status: COMPLETE_STATUSES) })
 
-  after_save :process_complete_payment!, if: proc { |payment| payment.status_previously_was != 'paid' and payment.status == 'paid' }
+  after_save :process_complete_payment!
 
   def completed?
     COMPLETE_STATUSES.include?(status)
@@ -45,6 +45,8 @@ class Payment < ApplicationRecord
   end
 
   def process_complete_payment!
+    return unless status_previously_was != 'paid' and status == 'paid'
+
     process_user! if user
     process_invoice! if invoice
   end
