@@ -41,12 +41,21 @@ class PaymentsController < ApplicationController
     if payment.completed?
       flash[:error] = 'Deze betaling is al gesloten. Mocht het bedrag niet bij uw inleg staan neem dan contact op met de penningmeester.'
     else
-      payment.update(status: payment.mollie_payment.status)
-      if payment.mollie_payment.paid?
-        flash[:success] = 'iDEAL betaling geslaagd'
-      else
-        flash[:error] = 'Uw iDEAL betaling is mislukt.
-                          Mocht het bedrag wel van uw rekening zijn gegaan neem dan contact op met de penningmeester'
+      tries = 3
+      begin
+        payment.update(status: payment.mollie_payment.status)
+        if payment.mollie_payment.paid?
+          flash[:success] = 'iDEAL betaling geslaagd'
+        else
+          flash[:error] = 'Uw iDEAL betaling is mislukt.
+                            Mocht het bedrag wel van uw rekening zijn gegaan neem dan contact op met de penningmeester'
+        end
+      rescue ActiveRecord::StaleObjectError => e
+        raise e unless (tries -= 1).positive?
+
+        # Refresh object from database
+        payment = Payment.find(params[:id])
+        retry
       end
     end
 
