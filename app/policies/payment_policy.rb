@@ -12,6 +12,6 @@ class PaymentPolicy < ApplicationPolicy
   end
 
   def invoice_callback?
-    record && !record.completed
+    record && !record.completed?
   end
 end

@@ -66,4 +66,85 @@ RSpec.describe Payment, type: :model do
       end
     end
   end
+
+  describe '#after_save' do
+    let(:user) { FactoryBot.create(:user) }
+
+    context 'when updating user payment to paid' do
+      subject(:payment) { FactoryBot.create(:payment, user: user, amount: 22.00, status: 'open') }
+
+      describe 'creates credit mutation' do
+        before do
+          payment.update(status: 'paid')
+        end
+
+        it { expect(user.credit_mutations.last.description).to eq 'iDEAL inleg' }
+        it { expect(user.credit_mutations.last.amount).to eq 22.00 }
+      end
+
+      describe 'enqueues mail' do
+        it { expect { payment.update(status: 'paid') }.to have_enqueued_mail(UserCreditMailer, :new_credit_mutation_mail) }
+      end
+    end
+
+    context 'when updating invoice payment to paid' do
+      let(:invoice_row) { FactoryBot.create(:invoice_row, amount: 1, price: 22.00) }
+      let(:invoice) { FactoryBot.create(:invoice, rows: [invoice_row], user: user) }
+
+      subject(:payment) { FactoryBot.create(:payment, user: nil, invoice: invoice, amount: invoice.amount, status: 'open') }
+
+      describe 'creates credit mutation' do
+        before do
+          payment.update(status: 'paid')
+        end
+
+        it { expect(invoice.status).to eq 'paid' }
+        it { expect(user.credit_mutations.last.description).to eq "Betaling factuur #{invoice.human_id}" }
+        it { expect(user.credit_mutations.last.amount).to eq 22.00 }
+      end
+
+      describe 'enqueues mail' do
+        it { expect { payment.update(status: 'paid') }.to have_enqueued_mail(InvoiceMailer, :invoice_paid) }
+      end
+    end
+
+    context 'when not updating payment to paid' do
+      subject(:payment) { FactoryBot.create(:payment, user: user, amount: 22.00, status: 'open') }
+
+      it { expect { payment.update(status: 'open') }.not_to change(CreditMutation, :count) }
+      it { expect { payment.update(status: 'pending') }.not_to change(CreditMutation, :count) }
+      it { expect { payment.update(status: 'failed') }.not_to change(CreditMutation, :count) }
+      it { expect { payment.update(status: 'canceled') }.not_to change(CreditMutation, :count) }
+      it { expect { payment.update(status: 'expired') }.not_to change(CreditMutation, :count) }
+    end
+
+    context 'when updating already paid payment' do
+      subject(:payment) { FactoryBot.create(:payment, user: user, amount: 22.00, status: 'paid') }
+
+      before do
+        payment.update(status: 'paid')
+      end
+
+      it { expect(user.credit_mutations.where(description: 'iDEAL inleg').where(amount: 22.00).count).to eq 1 }
+    end
+  end
+
+  describe '#update' do
+    context 'when concurrently updating payment to paid' do
+      subject(:payment) { FactoryBot.create(:payment, amount: 22.00, status: 'open') }
+
+      let(:concurrent_payment) { described_class.last }
+
+      before do
+        # Create payment and get concurrent payment
+        payment
+        concurrent_payment
+
+        # Update payment after getting concurrent payment
+        payment.update(status: 'paid')
+      end
+
+      it { expect { concurrent_payment.update(status: 'paid') }.to raise_error(ActiveRecord::StaleObjectError) }
+    end
+  end
 end

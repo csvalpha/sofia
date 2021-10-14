@@ -11,7 +11,7 @@ class Invoice < ApplicationRecord
   validates :user, :activity, presence: true
   validate :activity_is_locked
 
-  before_save :set_human_id
+  before_create :set_human_id
 
   def name
     name_override || user.name
