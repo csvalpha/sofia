@@ -34,7 +34,7 @@
     "webpack-cli": "^4.9.0"
   },
   "devDependencies": {
-    "eslint": "^7.28.0",
+    "eslint": "^8.0.1",
     "eslint-loader": "^4.0.2",
     "sass-lint": "^1.13",
     "webpack-dev-server": "^4.3.1"
