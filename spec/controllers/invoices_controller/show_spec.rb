@@ -27,7 +27,7 @@ describe InvoicesController, type: :controller do
     end
 
     context 'when as not authorized user with id' do
-      it 'forbids ' do
+      it 'forbids' do
         get :show, params: { id: invoice.id }
 
         expect(response).to have_http_status(:forbidden)
