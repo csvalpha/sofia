@@ -1,4 +1,4 @@
-FROM ruby:3.0.2-slim
+FROM ruby:3.0.3-slim
 
 # Add build-essential tools
 RUN apt-get update -qq \
