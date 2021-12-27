@@ -9,14 +9,14 @@
     "@babel/plugin-transform-runtime": "^7.5",
     "@babel/preset-env": "^7.8",
     "@rails/webpacker": "^5.4.0",
-    "@sentry/browser": "^6.15.0",
+    "@sentry/browser": "^6.16.1",
     "autosuggest-highlight": "^3.1",
     "axios": "^0.24.0",
     "babel-loader": "^8.0",
     "bootstrap": "^4.4",
     "bootstrap-vue": "^2.6",
     "css-loader": "^6.5.1",
-    "eslint-plugin-vue": "^8.1.1",
+    "eslint-plugin-vue": "^8.2.0",
     "jquery": "^3.4",
     "moment": "^2.24",
     "popper.js": "^1.16",
@@ -34,10 +34,10 @@
     "webpack-cli": "^4.9.1"
   },
   "devDependencies": {
-    "eslint": "^8.2.0",
+    "eslint": "^8.4.1",
     "eslint-loader": "^4.0.2",
     "sass-lint": "^1.13",
-    "webpack-dev-server": "^4.5.0"
+    "webpack-dev-server": "^4.6.0"
   },
   "scripts": {
     "lint": "yarn run eslint --ext .js --ext .jsx app/javascript"
