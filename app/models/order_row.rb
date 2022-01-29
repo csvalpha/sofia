@@ -2,7 +2,6 @@ class OrderRow < ApplicationRecord
   belongs_to :order, inverse_of: :order_rows
   belongs_to :product
 
-  validates :order, :product, presence: true
   validates :product_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :price_per_product, numericality: { greater_than: 0, allow_nil: true }
   validates :product, inclusion: { in: :available_products }

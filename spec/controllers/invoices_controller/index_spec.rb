@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe InvoicesController, type: :controller do
   describe 'GET index' do
-    let(:invoices) { FactoryBot.create_list(:invoice, 2) }
+    let(:invoices) { create_list(:invoice, 2) }
 
     before do
       invoices
@@ -10,7 +10,7 @@ describe InvoicesController, type: :controller do
 
     context 'when as treasurer' do
       it 'shows invoices' do
-        sign_in FactoryBot.create(:user, :treasurer)
+        sign_in create(:user, :treasurer)
         get :index
 
         expect(assigns(:invoices).size).to eq invoices.size
@@ -19,7 +19,7 @@ describe InvoicesController, type: :controller do
 
     context 'when as user' do
       it 'forbids' do
-        sign_in FactoryBot.create(:user)
+        sign_in create(:user)
         get :index
 
         expect(response).to have_http_status(:forbidden)

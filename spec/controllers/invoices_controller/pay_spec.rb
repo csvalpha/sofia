@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe InvoicesController, type: :controller do
   describe 'GET /:id/pay' do
-    let(:invoice) { FactoryBot.create(:invoice, :with_rows) }
+    let(:invoice) { create(:invoice, :with_rows) }
     let(:id) { invoice.id }
 
     let(:http_request) do
@@ -11,7 +11,7 @@ describe InvoicesController, type: :controller do
 
     context 'when authorized' do
       it 'creates a new payment' do
-        sign_in FactoryBot.create(:user, :treasurer)
+        sign_in create(:user, :treasurer)
 
         expect { http_request }.to(change(Payment, :count).by(1))
         expect(Payment.last.invoice).to eq invoice
@@ -37,10 +37,10 @@ describe InvoicesController, type: :controller do
     end
 
     context 'when with already paid payment' do
-      let(:invoice) { FactoryBot.create(:invoice, :with_rows, status: :paid) }
+      let(:invoice) { create(:invoice, :with_rows, status: :paid) }
 
       it 'redirects to invoice' do
-        sign_in FactoryBot.create(:user, :treasurer)
+        sign_in create(:user, :treasurer)
 
         expect(http_request).to redirect_to(invoice_url)
       end

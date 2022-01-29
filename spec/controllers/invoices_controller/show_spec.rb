@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe InvoicesController, type: :controller do
   describe 'GET show' do
-    let(:invoice) { FactoryBot.create(:invoice) }
+    let(:invoice) { create(:invoice) }
 
     before do
       invoice
@@ -10,7 +10,7 @@ describe InvoicesController, type: :controller do
 
     context 'when as treasurer' do
       it 'shows invoice' do
-        sign_in FactoryBot.create(:user, :treasurer)
+        sign_in create(:user, :treasurer)
         get :show, params: { id: invoice.id }
 
         expect(response).to have_http_status(:ok)
@@ -19,7 +19,7 @@ describe InvoicesController, type: :controller do
 
     context 'when as user' do
       it 'forbids' do
-        sign_in FactoryBot.create(:user)
+        sign_in create(:user)
         get :show, params: { id: invoice.id }
 
         expect(response).to have_http_status(:forbidden)

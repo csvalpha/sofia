@@ -3,13 +3,13 @@ require 'rails_helper'
 
 describe PaymentsController, type: :controller do
   describe 'GET callback' do
-    let(:user) { FactoryBot.create(:user) }
+    let(:user) { create(:user) }
     let(:payment) do
-      FactoryBot.build(:payment)
+      build(:payment)
     end
 
     describe 'handles paid payment' do
-      let(:payment) { FactoryBot.create(:payment, status: 'open', user: user, amount: '22.00') }
+      let(:payment) { create(:payment, status: 'open', user: user, amount: '22.00') }
       let(:request) { get :callback, params: { id: payment.id } }
 
       let(:mollie) { instance_double(Mollie::Payment) }
@@ -27,7 +27,7 @@ describe PaymentsController, type: :controller do
     end
 
     describe 'handles open payment' do
-      let(:payment) { FactoryBot.create(:payment, status: 'open', user: user, amount: '22.00') }
+      let(:payment) { create(:payment, status: 'open', user: user, amount: '22.00') }
       let(:request) { get :callback, params: { id: payment.id } }
 
       let(:mollie) { instance_double(Mollie::Payment) }
