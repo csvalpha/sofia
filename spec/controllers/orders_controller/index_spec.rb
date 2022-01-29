@@ -2,11 +2,11 @@ require 'rails_helper'
 
 describe OrdersController, type: :controller do
   describe 'GET index' do
-    let(:alice) { FactoryBot.create(:user, :treasurer) }
-    let(:eve) { FactoryBot.create(:user) }
+    let(:alice) { create(:user, :treasurer) }
+    let(:eve) { create(:user) }
 
-    let(:orders_alice) { FactoryBot.create_list(:order, 2, user: alice) }
-    let(:orders_eve) { FactoryBot.create_list(:order, 2, user: eve) }
+    let(:orders_alice) { create_list(:order, 2, user: alice) }
+    let(:orders_eve) { create_list(:order, 2, user: eve) }
 
     before do
       orders_alice

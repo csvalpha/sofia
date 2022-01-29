@@ -2,10 +2,10 @@ require 'rails_helper'
 
 describe PaymentsController, type: :controller do
   describe 'POST create' do
-    let(:user) { FactoryBot.create(:user) }
-    let(:eve) { FactoryBot.create(:user) }
+    let(:user) { create(:user) }
+    let(:eve) { create(:user) }
     let(:payment) do
-      FactoryBot.build(:payment, user: eve)
+      build(:payment, user: eve)
     end
     let(:request) do
       post :create, params: { payment: payment.attributes }
@@ -22,7 +22,7 @@ describe PaymentsController, type: :controller do
 
     context 'when with incorrect amount' do
       let(:payment) do
-        FactoryBot.build(:payment, amount: 0)
+        build(:payment, amount: 0)
       end
 
       it 'creates does not create an payment' do

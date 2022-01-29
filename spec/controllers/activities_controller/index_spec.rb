@@ -2,9 +2,9 @@ require 'rails_helper'
 
 describe ActivitiesController, type: :controller do
   describe 'GET index' do
-    let(:unlocked_activities) { FactoryBot.create(:activity) }
-    let(:locked_activities) { FactoryBot.create_list(:activity, 2, :locked) }
-    let(:price_lists) { FactoryBot.create_list(:price_list, 3) }
+    let(:unlocked_activities) { create(:activity) }
+    let(:locked_activities) { create_list(:activity, 2, :locked) }
+    let(:price_lists) { create_list(:price_list, 3) }
     let(:request) { get :index }
 
     before do
@@ -16,13 +16,13 @@ describe ActivitiesController, type: :controller do
     end
 
     describe 'when without permissions' do
-      let(:user) { FactoryBot.create(:user) }
+      let(:user) { create(:user) }
 
       it { expect(request.status).to eq 403 }
     end
 
     describe 'when as main-bartender' do
-      let(:user) { FactoryBot.create(:user, :main_bartender) }
+      let(:user) { create(:user, :main_bartender) }
 
       it do
         expect(request.status).to eq 200
@@ -33,7 +33,7 @@ describe ActivitiesController, type: :controller do
     end
 
     describe 'when as treasurer' do
-      let(:user) { FactoryBot.create(:user, :treasurer) }
+      let(:user) { create(:user, :treasurer) }
 
       it do
         expect(request.status).to eq 200

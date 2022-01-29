@@ -6,7 +6,6 @@ class Order < ApplicationRecord
   has_many :order_rows, dependent: :destroy
   accepts_nested_attributes_for :order_rows
 
-  validates :activity, :created_by, presence: true
   validates :paid_with_cash, inclusion: [true, false]
   validates :paid_with_pin, inclusion: [true, false]
 

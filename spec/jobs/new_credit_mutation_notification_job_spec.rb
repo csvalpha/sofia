@@ -2,9 +2,9 @@ require 'rails_helper'
 
 RSpec.describe NewCreditMutationNotificationJob, type: :job do
   describe '#perform' do
-    let(:user) { FactoryBot.create(:user, name: 'Buddy Normal', email: 'bahamas@example.com') }
+    let(:user) { create(:user, name: 'Buddy Normal', email: 'bahamas@example.com') }
     let(:emails) { ActionMailer::Base.deliveries }
-    let(:mutation) { FactoryBot.create(:credit_mutation, user: user, amount: -2.30) }
+    let(:mutation) { create(:credit_mutation, user: user, amount: -2.30) }
 
     subject(:job) { perform_enqueued_jobs { described_class.perform_now(mutation) } }
 
@@ -20,7 +20,7 @@ RSpec.describe NewCreditMutationNotificationJob, type: :job do
     end
 
     context 'when with no email address' do
-      let(:user) { FactoryBot.create(:user, name: 'Buddy Normal', email: nil) }
+      let(:user) { create(:user, name: 'Buddy Normal', email: nil) }
 
       it { expect(emails.size).to eq 0 }
     end
