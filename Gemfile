@@ -14,6 +14,7 @@ gem 'jquery-rails', '~> 4.3'
 gem 'kaminari', '~> 1.2.1'
 gem 'mini_racer', '~> 0.2'
 gem 'mollie-api-ruby', '~> 4.3'
+gem 'net-smtp', require: false
 gem 'omniauth', '~> 1.7'
 gem 'omniauth-oauth2', '~> 1.4'
 gem 'omniauth-rails_csrf_protection'
