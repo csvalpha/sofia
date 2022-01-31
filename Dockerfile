@@ -25,7 +25,8 @@ ARG RAILS_MASTER_KEY
 
 # Pre-install gems, so that can be cached
 COPY Gemfile* /app/
-RUN if [ "$RAILS_ENV" = "production" ] || [ "$RAILS_ENV" = "staging" ] ; then bundle install --without development test; else bundle install --without development ; fi
+RUN bundle config set --local without 'development'
+RUN if [ "$RAILS_ENV" = "production" ] || [ "$RAILS_ENV" = "staging" ] ; then bundle install test; else bundle install ; fi
 
 # Pre-install npm packages, so that can be cached
 COPY package.json yarn.lock /app/

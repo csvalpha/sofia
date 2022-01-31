@@ -4,7 +4,7 @@ class PriceListsController < ApplicationController
   after_action :verify_authorized
 
   def index
-    recent_price_lists = PriceList.order(created_at: :desc).limit(5)
+    recent_price_lists = PriceList.order(created_at: :desc).limit(6)
     products = Product.all.order(:id).includes(:product_prices)
 
     authorize recent_price_lists

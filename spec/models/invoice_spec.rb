@@ -1,19 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe Invoice, type: :model do
-  subject(:invoice) { FactoryBot.build_stubbed(:invoice) }
+  subject(:invoice) { build_stubbed(:invoice) }
 
   describe '#valid' do
     it { expect(invoice).to be_valid }
 
     context 'when without user' do
-      subject(:invoice) { FactoryBot.build_stubbed(:invoice, user: nil) }
+      subject(:invoice) { build_stubbed(:invoice, user: nil) }
 
       it { expect(invoice).not_to be_valid }
     end
 
     context 'when without activity' do
-      subject(:invoice) { FactoryBot.build_stubbed(:invoice, activity: nil) }
+      subject(:invoice) { build_stubbed(:invoice, activity: nil) }
 
       it { expect(invoice).not_to be_valid }
     end
@@ -21,13 +21,13 @@ RSpec.describe Invoice, type: :model do
 
   describe '#name' do
     context 'when with override' do
-      subject(:invoice) { FactoryBot.build(:invoice, name_override: 'Name') }
+      subject(:invoice) { build(:invoice, name_override: 'Name') }
 
       it { expect(invoice.name).to eq 'Name' }
     end
 
     context 'when without override' do
-      subject(:invoice) { FactoryBot.build(:invoice) }
+      subject(:invoice) { build(:invoice) }
 
       it { expect(invoice.name).to eq invoice.user.name }
     end
@@ -35,41 +35,41 @@ RSpec.describe Invoice, type: :model do
 
   describe '#email' do
     context 'when with override' do
-      subject(:invoice) { FactoryBot.build(:invoice, email_override: 'test@example.com') }
+      subject(:invoice) { build(:invoice, email_override: 'test@example.com') }
 
       it { expect(invoice.email).to eq 'test@example.com' }
     end
 
     context 'when without override' do
-      subject(:invoice) { FactoryBot.build(:invoice) }
+      subject(:invoice) { build(:invoice) }
 
       it { expect(invoice.email).to eq invoice.user.email }
     end
   end
 
   describe '#amount' do
-    let(:activity) { FactoryBot.create(:activity) }
-    let(:user) { FactoryBot.create(:user) }
+    let(:activity) { create(:activity) }
+    let(:user) { create(:user) }
 
-    subject(:invoice) { FactoryBot.build(:invoice, activity: activity, user: user) }
+    subject(:invoice) { build(:invoice, activity: activity, user: user) }
 
     before do
-      FactoryBot.create_list(:order, 5, :with_items, user: user, activity: activity)
+      create_list(:order, 5, :with_items, user: user, activity: activity)
       activity.update(locked_by: user)
       invoice.save
       invoice.reload
-      FactoryBot.create(:invoice_row, invoice: invoice, amount: 5, price: 10)
+      create(:invoice_row, invoice: invoice, amount: 5, price: 10)
     end
 
     it { expect(invoice.amount).to eq activity.revenue_by_user(user) + 50 }
   end
 
   describe '#set_human_id' do
-    let(:activity) { FactoryBot.create(:activity, :manually_locked) }
-    let(:invoice) { FactoryBot.build(:invoice, activity: activity) }
+    let(:activity) { create(:activity, :manually_locked) }
+    let(:invoice) { build(:invoice, activity: activity) }
 
     before do
-      FactoryBot.create_list(:invoice, 2)
+      create_list(:invoice, 2)
       invoice.save
     end
 

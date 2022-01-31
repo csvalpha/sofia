@@ -8,15 +8,15 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
   after_action :verify_authorized, except: [:sumup_callback]
   after_action :verify_policy_scoped, only: :index
 
-  def index # rubocop:disable Metrics/AbcSize
+  def index
     authorize Activity
     @activities = policy_scope(Activity.includes(%i[price_list created_by])
                                    .order(start_time: :desc)
                                    .page(params[:page]))
 
     @activity = Activity.new(
-      start_time: (Time.zone.now + 2.hours).beginning_of_hour,
-      end_time: (Time.zone.now + 6.hours).beginning_of_hour
+      start_time: 2.hours.from_now.beginning_of_hour,
+      end_time: 6.hours.from_now.beginning_of_hour
     )
 
     @price_lists_json = PriceList.all.to_json(only: %i[id name])

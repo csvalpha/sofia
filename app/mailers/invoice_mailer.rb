@@ -1,6 +1,6 @@
 class InvoiceMailer < ApplicationMailer
   def invoice_mail(invoice)
-    @user = OpenStruct.new(name: invoice.name)
+    @user = Struct.new(:name).new(invoice.name)
     @invoice = invoice
     @cab_link = url_for(controller: 'invoices', action: 'show', id: invoice.token)
     @cab_text = 'iDeal betaling'
@@ -13,7 +13,7 @@ class InvoiceMailer < ApplicationMailer
   end
 
   def invoice_paid(invoice)
-    @user = OpenStruct.new(name: invoice.name)
+    @user = Struct.new(:name).new(invoice.name)
     @invoice = invoice
     @cab_disabled = true
 

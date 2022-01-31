@@ -1,45 +1,45 @@
 require 'rails_helper'
 
 RSpec.describe Payment, type: :model do
-  subject(:payment) { FactoryBot.build_stubbed(:payment) }
+  subject(:payment) { build_stubbed(:payment) }
 
   describe '#valid' do
     it { expect(payment).to be_valid }
 
     context 'when without user and invoice' do
-      subject(:payment) { FactoryBot.build_stubbed(:payment, user: nil, invoice: nil) }
+      subject(:payment) { build_stubbed(:payment, user: nil, invoice: nil) }
 
       it { expect(payment).not_to be_valid }
     end
 
     context 'when with user and invoice' do
-      subject(:payment) { FactoryBot.build_stubbed(:payment, invoice: FactoryBot.create(:invoice)) }
+      subject(:payment) { build_stubbed(:payment, invoice: create(:invoice)) }
 
       it { expect(payment).not_to be_valid }
     end
 
     context 'when without an amount' do
-      subject(:payment) { FactoryBot.build_stubbed(:payment, amount: nil) }
+      subject(:payment) { build_stubbed(:payment, amount: nil) }
 
       it { expect(payment).not_to be_valid }
     end
 
     context 'when with too few amount' do
       context 'when with user' do
-        subject(:payment) { FactoryBot.build_stubbed(:payment, amount: 19) }
+        subject(:payment) { build_stubbed(:payment, amount: 19) }
 
         it { expect(payment).not_to be_valid }
       end
 
       context 'when with invoice' do
-        subject(:payment) { FactoryBot.build_stubbed(:payment, :invoice, amount: 19) }
+        subject(:payment) { build_stubbed(:payment, :invoice, amount: 19) }
 
         it { expect(payment).to be_valid }
       end
     end
 
     context 'when without a status' do
-      subject(:payment) { FactoryBot.build_stubbed(:payment, status: nil) }
+      subject(:payment) { build_stubbed(:payment, status: nil) }
 
       it { expect(payment).not_to be_valid }
     end
@@ -48,7 +48,7 @@ RSpec.describe Payment, type: :model do
   describe '.not_completed' do
     context 'when with not_completed status' do
       %w[open pending].each do |status|
-        subject(:payment) { FactoryBot.create(:payment, status: status) }
+        subject(:payment) { create(:payment, status: status) }
 
         before { payment }
 
@@ -58,7 +58,7 @@ RSpec.describe Payment, type: :model do
 
     context 'when with complete status' do
       %w[paid failed canceled expired].each do |status|
-        subject(:payment) { FactoryBot.create(:payment, status: status) }
+        subject(:payment) { create(:payment, status: status) }
 
         before { payment }
 
@@ -68,10 +68,10 @@ RSpec.describe Payment, type: :model do
   end
 
   describe '#after_save' do
-    let(:user) { FactoryBot.create(:user) }
+    let(:user) { create(:user) }
 
     context 'when updating user payment to paid' do
-      subject(:payment) { FactoryBot.create(:payment, user: user, amount: 22.00, status: 'open') }
+      subject(:payment) { create(:payment, user: user, amount: 22.00, status: 'open') }
 
       describe 'creates credit mutation' do
         before do
@@ -88,10 +88,10 @@ RSpec.describe Payment, type: :model do
     end
 
     context 'when updating invoice payment to paid' do
-      let(:invoice_row) { FactoryBot.create(:invoice_row, amount: 1, price: 22.00) }
-      let(:invoice) { FactoryBot.create(:invoice, rows: [invoice_row], user: user) }
+      let(:invoice_row) { create(:invoice_row, amount: 1, price: 22.00) }
+      let(:invoice) { create(:invoice, rows: [invoice_row], user: user) }
 
-      subject(:payment) { FactoryBot.create(:payment, user: nil, invoice: invoice, amount: invoice.amount, status: 'open') }
+      subject(:payment) { create(:payment, user: nil, invoice: invoice, amount: invoice.amount, status: 'open') }
 
       describe 'creates credit mutation' do
         before do
@@ -109,7 +109,7 @@ RSpec.describe Payment, type: :model do
     end
 
     context 'when not updating payment to paid' do
-      subject(:payment) { FactoryBot.create(:payment, user: user, amount: 22.00, status: 'open') }
+      subject(:payment) { create(:payment, user: user, amount: 22.00, status: 'open') }
 
       it { expect { payment.update(status: 'open') }.not_to change(CreditMutation, :count) }
       it { expect { payment.update(status: 'pending') }.not_to change(CreditMutation, :count) }
@@ -119,7 +119,7 @@ RSpec.describe Payment, type: :model do
     end
 
     context 'when updating already paid payment' do
-      subject(:payment) { FactoryBot.create(:payment, user: user, amount: 22.00, status: 'paid') }
+      subject(:payment) { create(:payment, user: user, amount: 22.00, status: 'paid') }
 
       before do
         payment.update(status: 'paid')
@@ -131,7 +131,7 @@ RSpec.describe Payment, type: :model do
 
   describe '#update' do
     context 'when concurrently updating payment to paid' do
-      subject(:payment) { FactoryBot.create(:payment, amount: 22.00, status: 'open') }
+      subject(:payment) { create(:payment, amount: 22.00, status: 'open') }
 
       let(:concurrent_payment) { described_class.last }
 

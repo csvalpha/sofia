@@ -8,7 +8,7 @@ class Activity < ApplicationRecord
   belongs_to :created_by, class_name: 'User', inverse_of: :activities
   belongs_to :locked_by, class_name: 'User', optional: true
 
-  validates :title, :start_time, :end_time, :price_list, :created_by, presence: true
+  validates :title, :start_time, :end_time, presence: true
   validates_datetime :end_time, after: :start_time
   validate :activity_not_locked
 
@@ -23,7 +23,7 @@ class Activity < ApplicationRecord
   })
 
   scope :not_locked, (lambda {
-    where('end_time >= ? AND locked_by_id IS NULL', Time.zone.now - 2.months)
+    where('end_time >= ? AND locked_by_id IS NULL', 2.months.ago)
   })
 
   delegate :products, to: :price_list

@@ -1,46 +1,46 @@
 require 'rails_helper'
 
 RSpec.describe Activity, type: :model do
-  subject(:activity) { FactoryBot.build_stubbed(:activity) }
+  subject(:activity) { build_stubbed(:activity) }
 
   describe '#valid' do
     it { expect(activity).to be_valid }
 
     context 'when without a title' do
-      subject(:activity) { FactoryBot.build_stubbed(:activity, title: nil) }
+      subject(:activity) { build_stubbed(:activity, title: nil) }
 
       it { expect(activity).not_to be_valid }
     end
 
     context 'when without a price list' do
-      subject(:activity) { FactoryBot.build_stubbed(:activity, price_list: nil) }
+      subject(:activity) { build_stubbed(:activity, price_list: nil) }
 
       it { expect(activity).not_to be_valid }
     end
 
     context 'when without a start time' do
-      subject(:activity) { FactoryBot.build_stubbed(:activity, start_time: nil) }
+      subject(:activity) { build_stubbed(:activity, start_time: nil) }
 
       it { expect(activity).not_to be_valid }
     end
 
     context 'when without an end time' do
-      subject(:activity) { FactoryBot.build_stubbed(:activity, end_time: nil) }
+      subject(:activity) { build_stubbed(:activity, end_time: nil) }
 
       it { expect(activity).not_to be_valid }
     end
 
     context 'when without a created by' do
-      subject(:activity) { FactoryBot.build_stubbed(:activity, created_by: nil) }
+      subject(:activity) { build_stubbed(:activity, created_by: nil) }
 
       it { expect(activity).not_to be_valid }
     end
 
     context 'when start time is after end time' do
       subject(:activity) do
-        FactoryBot.build_stubbed(:activity,
-                                 start_time: Time.zone.now + 1.second,
-                                 end_time: Time.zone.now)
+        build_stubbed(:activity,
+                      start_time: 1.second.from_now,
+                      end_time: Time.zone.now)
       end
 
       it { expect(activity).not_to be_valid }
@@ -51,19 +51,19 @@ RSpec.describe Activity, type: :model do
     before { activity.title = "#{activity.title}_new" }
 
     context 'when within two months' do
-      subject(:activity) { FactoryBot.build(:activity) }
+      subject(:activity) { build(:activity) }
 
       it { expect(activity).to be_valid }
     end
 
     context 'when after two months' do
-      subject(:activity) { FactoryBot.build(:activity, :locked) }
+      subject(:activity) { build(:activity, :locked) }
 
       it { expect(activity).not_to be_valid }
     end
 
     context 'when locked manually' do
-      subject(:activity) { FactoryBot.build(:activity, :manually_locked) }
+      subject(:activity) { build(:activity, :manually_locked) }
 
       it { expect(activity).not_to be_valid }
     end
@@ -71,19 +71,19 @@ RSpec.describe Activity, type: :model do
 
   describe 'cannot destroy an activity when locked' do
     context 'when within two months' do
-      subject(:activity) { FactoryBot.build(:activity) }
+      subject(:activity) { build(:activity) }
 
       it { expect(activity.destroy).to eq activity }
     end
 
     context 'when after two months' do
-      subject(:activity) { FactoryBot.build(:activity, :locked) }
+      subject(:activity) { build(:activity, :locked) }
 
       it { expect(activity.destroy).to eq false }
     end
 
     context 'when manually locked' do
-      subject(:activity) { FactoryBot.build(:activity, :manually_locked) }
+      subject(:activity) { build(:activity, :manually_locked) }
 
       it { expect(activity.destroy).to eq false }
     end
@@ -92,13 +92,13 @@ RSpec.describe Activity, type: :model do
   describe '#lock_date' do
     let(:start_time) { (2.months + 3.days).ago }
 
-    subject(:activity) { FactoryBot.build(:activity, start_time: start_time, end_time: start_time + 4.hours) }
+    subject(:activity) { build(:activity, start_time: start_time, end_time: start_time + 4.hours) }
 
     it { expect(activity.lock_date).to eq activity.end_time + 2.months }
     it { expect(activity.locked?).to be true }
 
     context 'when with recent activity' do
-      subject(:activity) { FactoryBot.build(:activity) }
+      subject(:activity) { build(:activity) }
 
       it { expect(activity.locked?).to be false }
     end
@@ -106,33 +106,33 @@ RSpec.describe Activity, type: :model do
 
   describe '#destroyable' do
     context 'when locked' do
-      let(:activity) { FactoryBot.create(:activity, :locked) }
+      let(:activity) { create(:activity, :locked) }
 
       it { expect(activity.destroyable?).to eq false }
     end
 
     context 'when with orders' do
-      let(:activity) { FactoryBot.create(:activity) }
+      let(:activity) { create(:activity) }
 
       before do
-        FactoryBot.create(:order, activity: activity)
+        create(:order, activity: activity)
       end
 
       it { expect(activity.destroyable?).to eq false }
     end
 
     context 'when with credit mutations' do
-      let(:activity) { FactoryBot.create(:activity) }
+      let(:activity) { create(:activity) }
 
       before do
-        FactoryBot.create(:credit_mutation, activity: activity)
+        create(:credit_mutation, activity: activity)
       end
 
       it { expect(activity.destroyable?).to eq false }
     end
 
     context 'when empty' do
-      let(:activity) { FactoryBot.create(:activity) }
+      let(:activity) { create(:activity) }
 
       it { expect(activity.destroyable?).to eq true }
     end
@@ -140,11 +140,11 @@ RSpec.describe Activity, type: :model do
 
   describe '.upcoming' do
     let(:past_activity) do
-      FactoryBot.create(:activity, start_time: 2.days.ago, end_time: 1.day.ago)
+      create(:activity, start_time: 2.days.ago, end_time: 1.day.ago)
     end
 
     subject(:future_activity) do
-      FactoryBot.create(:activity, start_time: 1.day.from_now, end_time: 2.days.from_now)
+      create(:activity, start_time: 1.day.from_now, end_time: 2.days.from_now)
     end
 
     it { expect(described_class.upcoming).to include future_activity }
@@ -153,11 +153,11 @@ RSpec.describe Activity, type: :model do
 
   describe '.current' do
     let(:past_activity) do
-      FactoryBot.create(:activity, start_time: 2.days.ago, end_time: 1.day.ago)
+      create(:activity, start_time: 2.days.ago, end_time: 1.day.ago)
     end
 
     subject(:current_activity) do
-      FactoryBot.create(:activity, start_time: 1.hour.ago, end_time: 2.hours.from_now)
+      create(:activity, start_time: 1.hour.ago, end_time: 2.hours.from_now)
     end
 
     it { expect(described_class.current).to include current_activity }
@@ -165,9 +165,9 @@ RSpec.describe Activity, type: :model do
   end
 
   describe '.not_locked' do
-    let(:not_locked_activity) { FactoryBot.create(:activity) }
-    let(:time_locked_activity) { FactoryBot.create(:activity, :locked) }
-    let(:manually_locked_activity) { FactoryBot.create(:activity, :manually_locked) }
+    let(:not_locked_activity) { create(:activity) }
+    let(:time_locked_activity) { create(:activity, :locked) }
+    let(:manually_locked_activity) { create(:activity, :manually_locked) }
 
     before do
       not_locked_activity
@@ -180,7 +180,7 @@ RSpec.describe Activity, type: :model do
   end
 
   describe 'reporting' do
-    subject(:activity) { FactoryBot.create(:activity) }
+    subject(:activity) { create(:activity) }
 
     describe '#credit_mutations_total' do
       context 'when without credit mutations' do
@@ -189,8 +189,8 @@ RSpec.describe Activity, type: :model do
 
       context 'when with credit mutations' do
         before do
-          FactoryBot.create(:credit_mutation, activity: activity, amount: 10)
-          FactoryBot.create(:credit_mutation, activity: activity, amount: 50)
+          create(:credit_mutation, activity: activity, amount: 10)
+          create(:credit_mutation, activity: activity, amount: 50)
         end
 
         it { expect(activity.credit_mutations_total).to eq 60 }
@@ -200,14 +200,14 @@ RSpec.describe Activity, type: :model do
     describe '#revenue_with(out)_cash' do
       let(:product) { activity.price_list.products.sample }
       let(:product_price) { activity.price_list.product_price_for(product).price }
-      let(:cash_order) { FactoryBot.create(:order, :cash, activity: activity) }
-      let(:pin_order) { FactoryBot.create(:order, :pin, activity: activity) }
-      let(:order) { FactoryBot.create(:order, activity: activity) }
+      let(:cash_order) { create(:order, :cash, activity: activity) }
+      let(:pin_order) { create(:order, :pin, activity: activity) }
+      let(:order) { create(:order, activity: activity) }
 
       before do
-        FactoryBot.create(:order_row, product: product, order: cash_order, product_count: 2)
-        FactoryBot.create(:order_row, product: product, order: order, product_count: 3)
-        FactoryBot.create(:order_row, product: product, order: pin_order, product_count: 4)
+        create(:order_row, product: product, order: cash_order, product_count: 2)
+        create(:order_row, product: product, order: order, product_count: 3)
+        create(:order_row, product: product, order: pin_order, product_count: 4)
       end
 
       it { expect(activity.revenue_with_cash).to eq product_price * 2 }
@@ -219,15 +219,15 @@ RSpec.describe Activity, type: :model do
     describe '#cash_total' do
       let(:product) { activity.price_list.products.sample }
       let(:product_price) { activity.price_list.product_price_for(product).price }
-      let(:cash_order) { FactoryBot.create(:order, :cash, activity: activity) }
-      let(:pin_order) { FactoryBot.create(:order, :pin, activity: activity) }
-      let(:order) { FactoryBot.create(:order, activity: activity) }
+      let(:cash_order) { create(:order, :cash, activity: activity) }
+      let(:pin_order) { create(:order, :pin, activity: activity) }
+      let(:order) { create(:order, activity: activity) }
 
       before do
-        FactoryBot.create(:credit_mutation, activity: activity, amount: 50)
-        FactoryBot.create(:order_row, product: product, order: cash_order, product_count: 2)
-        FactoryBot.create(:order_row, product: product, order: order, product_count: 3)
-        FactoryBot.create(:order_row, product: product, order: pin_order, product_count: 4)
+        create(:credit_mutation, activity: activity, amount: 50)
+        create(:order_row, product: product, order: cash_order, product_count: 2)
+        create(:order_row, product: product, order: order, product_count: 3)
+        create(:order_row, product: product, order: pin_order, product_count: 4)
       end
 
       it { expect(activity.cash_total).to eq (2 * product_price) + 50 }
@@ -236,15 +236,15 @@ RSpec.describe Activity, type: :model do
     describe '#revenue_total' do
       let(:product) { activity.price_list.products.sample }
       let(:product_price) { activity.price_list.product_price_for(product).price }
-      let(:cash_order) { FactoryBot.create(:order, :cash, activity: activity) }
-      let(:pin_order) { FactoryBot.create(:order, :pin, activity: activity) }
-      let(:order) { FactoryBot.create(:order, activity: activity) }
+      let(:cash_order) { create(:order, :cash, activity: activity) }
+      let(:pin_order) { create(:order, :pin, activity: activity) }
+      let(:order) { create(:order, activity: activity) }
 
       before do
-        FactoryBot.create(:credit_mutation, activity: activity, amount: 50)
-        FactoryBot.create(:order_row, product: product, order: cash_order, product_count: 2)
-        FactoryBot.create(:order_row, product: product, order: order, product_count: 3)
-        FactoryBot.create(:order_row, product: product, order: pin_order, product_count: 4)
+        create(:credit_mutation, activity: activity, amount: 50)
+        create(:order_row, product: product, order: cash_order, product_count: 2)
+        create(:order_row, product: product, order: order, product_count: 3)
+        create(:order_row, product: product, order: pin_order, product_count: 4)
       end
 
       it { expect(activity.revenue_total).to eq 9 * product_price }
@@ -252,38 +252,38 @@ RSpec.describe Activity, type: :model do
 
     describe '#count_per_product' do
       let(:products) { activity.price_list.products.sample(2) }
-      let(:unbound_order) { FactoryBot.create(:order, activity: activity) }
+      let(:unbound_order) { create(:order, activity: activity) }
 
       before do
-        FactoryBot.create(:order_row, order: order, product_count: 2, product: products.first)
-        FactoryBot.create(:order_row, order: order, product_count: 3, product: products.last)
-        FactoryBot.create(:order_row, order: unbound_order, product_count: 4, product: products.first)
+        create(:order_row, order: order, product_count: 2, product: products.first)
+        create(:order_row, order: order, product_count: 3, product: products.last)
+        create(:order_row, order: unbound_order, product_count: 4, product: products.first)
       end
 
       context 'without arguments' do
-        let(:order) { FactoryBot.create(:order, activity: activity) }
+        let(:order) { create(:order, activity: activity) }
 
         it { expect(activity.count_per_product.find { |item| item[:name] == products.first[:name] }[:amount]).to eq 6 }
         it { expect(activity.count_per_product.find { |item| item[:name] == products.last[:name] }[:amount]).to eq 3 }
       end
 
       context 'when specific user' do
-        let(:user) { FactoryBot.create(:user) }
-        let(:order) { FactoryBot.create(:order, activity: activity, user: user) }
+        let(:user) { create(:user) }
+        let(:order) { create(:order, activity: activity, user: user) }
 
         it { expect(activity.count_per_product(user: user).find { |item| item[:name] == products.first[:name] }[:amount]).to eq 2 }
         it { expect(activity.count_per_product(user: user).find { |item| item[:name] == products.last[:name] }[:amount]).to eq 3 }
       end
 
       context 'when paid with pin' do
-        let(:order) { FactoryBot.create(:order, activity: activity, paid_with_pin: true) }
+        let(:order) { create(:order, activity: activity, paid_with_pin: true) }
 
         it { expect(activity.count_per_product(paid_with_pin: true).find { |item| item[:name] == products.first[:name] }[:amount]).to eq 2 }
         it { expect(activity.count_per_product(paid_with_pin: true).find { |item| item[:name] == products.last[:name] }[:amount]).to eq 3 }
       end
 
       context 'when paid with cash' do
-        let(:order) { FactoryBot.create(:order, activity: activity, paid_with_cash: true) }
+        let(:order) { create(:order, activity: activity, paid_with_cash: true) }
         let(:count_per_product) { activity.count_per_product(paid_with_cash: true) }
 
         it { expect(count_per_product.find { |item| item[:name] == products.first[:name] }[:amount]).to eq 2 }
@@ -292,56 +292,56 @@ RSpec.describe Activity, type: :model do
     end
 
     describe '#revenue_by_category' do
-      let(:product) { FactoryBot.create(:product, category: :beer) }
-      let(:other_product) { FactoryBot.create(:product, category: :wine) }
-      let(:order) { FactoryBot.create(:order, activity: activity) }
+      let(:product) { create(:product, category: :beer) }
+      let(:other_product) { create(:product, category: :wine) }
+      let(:order) { create(:order, activity: activity) }
 
       before do
-        FactoryBot.create(:product_price, price_list: activity.price_list, product: product, price: 2)
-        FactoryBot.create(:product_price, price_list: activity.price_list, product: other_product, price: 3)
+        create(:product_price, price_list: activity.price_list, product: product, price: 2)
+        create(:product_price, price_list: activity.price_list, product: other_product, price: 3)
 
-        FactoryBot.create(:order_row, order: order, product: product, product_count: 1)
-        FactoryBot.create(:order_row, order: order, product: other_product, product_count: 1)
+        create(:order_row, order: order, product: product, product_count: 1)
+        create(:order_row, order: order, product: other_product, product_count: 1)
       end
 
       it { expect(activity.revenue_by_category['beer']).to eq 2 }
     end
 
     describe '#revenue_per_product' do
-      let(:product) { FactoryBot.create(:product, category: :beer) }
-      let(:other_product) { FactoryBot.create(:product, category: :wine) }
-      let(:order) { FactoryBot.create(:order, activity: activity) }
+      let(:product) { create(:product, category: :beer) }
+      let(:other_product) { create(:product, category: :wine) }
+      let(:order) { create(:order, activity: activity) }
 
       before do
-        FactoryBot.create(:product_price, price_list: activity.price_list, product: product, price: 2)
-        FactoryBot.create(:product_price, price_list: activity.price_list, product: other_product, price: 3)
+        create(:product_price, price_list: activity.price_list, product: product, price: 2)
+        create(:product_price, price_list: activity.price_list, product: other_product, price: 3)
 
-        FactoryBot.create(:order_row, order: order, product: product, product_count: 1)
-        FactoryBot.create(:order_row, order: order, product: other_product, product_count: 1)
+        create(:order_row, order: order, product: product, product_count: 1)
+        create(:order_row, order: order, product: other_product, product_count: 1)
       end
 
       it { expect(activity.revenue_per_product[product]).to eq 2 }
     end
 
     describe '#revenue_by_user' do
-      let(:user) { FactoryBot.create(:user) }
-      let(:price) { FactoryBot.create(:product_price, price: 2) }
-      let(:activity) { FactoryBot.create(:activity, price_list: price.price_list) }
-      let(:order) { FactoryBot.create(:order, activity: activity, user: user) }
+      let(:user) { create(:user) }
+      let(:price) { create(:product_price, price: 2) }
+      let(:activity) { create(:activity, price_list: price.price_list) }
+      let(:order) { create(:order, activity: activity, user: user) }
 
       before do
-        FactoryBot.create(:order_row, order: order, product: price.product, product_count: 10)
-        FactoryBot.create(:order_row, order: order, product: price.product, product_count: 40)
+        create(:order_row, order: order, product: price.product, product_count: 10)
+        create(:order_row, order: order, product: price.product, product_count: 40)
       end
 
       it { expect(activity.revenue_by_user(user)).to eq 100 }
     end
 
     describe '#bartenders' do
-      let(:bartender) { FactoryBot.create(:user) }
+      let(:bartender) { create(:user) }
 
       before do
-        FactoryBot.create(:order, created_by: bartender, activity: activity)
+        create(:order, created_by: bartender, activity: activity)
       end
 
       it { expect(activity.bartenders).to match_array [bartender] }
@@ -349,22 +349,22 @@ RSpec.describe Activity, type: :model do
   end
 
   describe '#locked?' do
-    subject(:activity) { FactoryBot.build_stubbed(:activity, :locked) }
+    subject(:activity) { build_stubbed(:activity, :locked) }
 
     it { expect(activity.locked?).to eq true }
   end
 
   describe '#manually_added_users_with_orders' do
-    subject(:activity) { FactoryBot.create(:activity) }
+    subject(:activity) { create(:activity) }
 
-    let(:manually_added_user) { FactoryBot.create(:user) }
-    let(:manually_added_user_order) { FactoryBot.create(:order, user: manually_added_user, activity: activity) }
+    let(:manually_added_user) { create(:user) }
+    let(:manually_added_user_order) { create(:order, user: manually_added_user, activity: activity) }
 
     # Make sure that a user only shows up once in the list, even if he/she has placed multiple orders
-    let(:second_manually_added_user_order) { FactoryBot.create(:order, user: manually_added_user, activity: activity) }
+    let(:second_manually_added_user_order) { create(:order, user: manually_added_user, activity: activity) }
 
-    let(:provider_added_user) { FactoryBot.create(:user, provider: 'some_provider') }
-    let(:provider_added_user_order) { FactoryBot.create(:order, user: provider_added_user, activity: activity) }
+    let(:provider_added_user) { create(:user, provider: 'some_provider') }
+    let(:provider_added_user_order) { create(:order, user: provider_added_user, activity: activity) }
 
     before do
       manually_added_user_order

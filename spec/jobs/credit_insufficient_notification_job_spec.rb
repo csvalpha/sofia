@@ -2,18 +2,18 @@ require 'rails_helper'
 
 RSpec.describe CreditInsufficientNotificationJob, type: :job do
   describe '#perform' do
-    let(:user) { FactoryBot.create(:user, name: 'Buddy Normal') }
-    let(:negative_user) { FactoryBot.create(:user, name: 'Bro Negative', email: 'user@csvalpha.nl') }
+    let(:user) { create(:user, name: 'Buddy Normal') }
+    let(:negative_user) { create(:user, name: 'Bro Negative', email: 'user@csvalpha.nl') }
     let(:negative_user_without_email) do
-      FactoryBot.create(:user, name: 'Evil Emailless', email: nil, provider: 'some_external_source')
+      create(:user, name: 'Evil Emailless', email: nil, provider: 'some_external_source')
     end
     let(:user_without_email) do
-      FactoryBot.create(:user, name: 'Good Emailless', email: nil, provider: 'some_external_source')
+      create(:user, name: 'Good Emailless', email: nil, provider: 'some_external_source')
     end
     let(:treasurer) do
-      FactoryBot.create(:user,
-                        name: 'Sis Treasures', email: 'treasurer@csvalpha.nl',
-                        roles: [FactoryBot.create(:role, role_type: :treasurer)])
+      create(:user,
+             name: 'Sis Treasures', email: 'treasurer@csvalpha.nl',
+             roles: [create(:role, role_type: :treasurer)])
     end
     let(:emails) { ActionMailer::Base.deliveries }
 
@@ -22,8 +22,8 @@ RSpec.describe CreditInsufficientNotificationJob, type: :job do
     before do
       ActionMailer::Base.deliveries = []
       user
-      FactoryBot.create(:credit_mutation, user: negative_user, amount: -2)
-      FactoryBot.create(:credit_mutation, user: negative_user_without_email, amount: -2)
+      create(:credit_mutation, user: negative_user, amount: -2)
+      create(:credit_mutation, user: negative_user_without_email, amount: -2)
       user_without_email
       treasurer
       job

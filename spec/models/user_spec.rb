@@ -1,22 +1,22 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  subject(:user) { FactoryBot.build_stubbed(:user) }
+  subject(:user) { build_stubbed(:user) }
 
   describe '#valid' do
     it { expect(user).to be_valid }
 
     context 'when without a name' do
-      subject(:user) { FactoryBot.build_stubbed(:user, name: nil) }
+      subject(:user) { build_stubbed(:user, name: nil) }
 
       it { expect(user).not_to be_valid }
     end
 
     context 'when deactivating with credit' do
-      subject(:user) { FactoryBot.create(:user, deactivated: true) }
+      subject(:user) { create(:user, deactivated: true) }
 
       before do
-        FactoryBot.create(:order_with_items, user: user)
+        create(:order_with_items, user: user)
       end
 
       it { expect(user).not_to be_valid }
@@ -25,7 +25,7 @@ RSpec.describe User, type: :model do
 
   describe '.in_banana' do
     context 'when in banana' do
-      subject(:user) { FactoryBot.create(:user, provider: 'banana_oauth2') }
+      subject(:user) { create(:user, provider: 'banana_oauth2') }
 
       before { user }
 
@@ -33,7 +33,7 @@ RSpec.describe User, type: :model do
     end
 
     context 'when not in banana' do
-      subject(:user) { FactoryBot.create(:user, provider: 'another_provider') }
+      subject(:user) { create(:user, provider: 'another_provider') }
 
       before { user }
 
@@ -43,7 +43,7 @@ RSpec.describe User, type: :model do
 
   describe '.manual' do
     context 'when manual created' do
-      subject(:user) { FactoryBot.create(:user, provider: nil) }
+      subject(:user) { create(:user, provider: nil) }
 
       before { user }
 
@@ -51,7 +51,7 @@ RSpec.describe User, type: :model do
     end
 
     context 'when created via provider' do
-      subject(:user) { FactoryBot.create(:user, provider: 'another_provider') }
+      subject(:user) { create(:user, provider: 'another_provider') }
 
       before { user }
 
@@ -61,11 +61,11 @@ RSpec.describe User, type: :model do
 
   describe '.treasurer' do
     context 'when treasurer' do
-      subject(:user) { FactoryBot.create(:user) }
+      subject(:user) { create(:user) }
 
-      let(:treasurer_role) { FactoryBot.create(:role, role_type: :treasurer) }
+      let(:treasurer_role) { create(:role, role_type: :treasurer) }
 
-      before { FactoryBot.create(:roles_users, user: user, role: treasurer_role) }
+      before { create(:roles_users, user: user, role: treasurer_role) }
 
       it { expect(described_class.treasurer).to include user }
     end
@@ -77,14 +77,14 @@ RSpec.describe User, type: :model do
 
   describe '.active / .inactive' do
     context 'when active' do
-      subject(:user) { FactoryBot.create(:user) }
+      subject(:user) { create(:user) }
 
       it { expect(described_class.active).to include user }
       it { expect(described_class.inactive).not_to include user }
     end
 
     context 'when deactivated' do
-      subject(:user) { FactoryBot.create(:user, deactivated: true) }
+      subject(:user) { create(:user, deactivated: true) }
 
       it { expect(described_class.active).not_to include user }
       it { expect(described_class.inactive).to include user }
@@ -92,13 +92,13 @@ RSpec.describe User, type: :model do
   end
 
   describe '#credit' do
-    subject(:user) { FactoryBot.create(:user) }
+    subject(:user) { create(:user) }
 
-    let(:order) { FactoryBot.create(:order, user: user) }
-    let(:product_price) { FactoryBot.create(:product_price, price_list: order.activity.price_list, price: 1.23) }
+    let(:order) { create(:order, user: user) }
+    let(:product_price) { create(:product_price, price_list: order.activity.price_list, price: 1.23) }
 
     before do
-      FactoryBot.create(:order_row, order: order, product: product_price.product, product_count: 1)
+      create(:order_row, order: order, product: product_price.product, product_count: 1)
     end
 
     it { expect(user.credit).to eq(-1.23) }
@@ -106,22 +106,22 @@ RSpec.describe User, type: :model do
 
   describe '#roles' do
     context 'when with a role' do
-      subject(:user) { FactoryBot.create(:user) }
+      subject(:user) { create(:user) }
 
-      let(:role) { FactoryBot.create(:role) }
+      let(:role) { create(:role) }
 
       before do
-        FactoryBot.create(:roles_users, role: role, user: user)
+        create(:roles_users, role: role, user: user)
       end
 
       it { expect(user.roles).to match_array [role] }
     end
 
     context 'when with a destroyed role' do
-      subject(:user) { FactoryBot.create(:user) }
+      subject(:user) { create(:user) }
 
-      let(:role) { FactoryBot.create(:role) }
-      let(:roles_users) { FactoryBot.create(:roles_users, role: role, user: user) }
+      let(:role) { create(:role) }
+      let(:roles_users) { create(:roles_users, role: role, user: user) }
 
       before do
         roles_users
@@ -134,13 +134,13 @@ RSpec.describe User, type: :model do
 
   describe '#avatar_thumb_or_default_url' do
     context 'when with avatar thumb url' do
-      subject(:user) { FactoryBot.create(:user, avatar_thumb_url: '/test.png') }
+      subject(:user) { create(:user, avatar_thumb_url: '/test.png') }
 
       it { expect(user.avatar_thumb_or_default_url).to eq "#{Rails.application.config.x.banana_api_url}/test.png" }
     end
 
     context 'when without avatar thumb url' do
-      subject(:user) { FactoryBot.create(:user) }
+      subject(:user) { create(:user) }
 
       it { expect(user.avatar_thumb_or_default_url).to eq '/images/avatar_thumb_default.png' }
     end
@@ -152,13 +152,13 @@ RSpec.describe User, type: :model do
     end
 
     context 'when birthday did not pass this year' do
-      let(:user) { FactoryBot.build(:user, birthday: (1.day.ago - 2.years)) }
+      let(:user) { build(:user, birthday: (1.day.ago - 2.years)) }
 
       it { expect(user.age).to eq 2 }
     end
 
     context 'when birthday did pass this year' do
-      let(:user) { FactoryBot.build(:user, birthday: (1.day.from_now - 2.years)) }
+      let(:user) { build(:user, birthday: (1.day.from_now - 2.years)) }
 
       it { expect(user.age).to eq 1 }
     end
@@ -170,13 +170,13 @@ RSpec.describe User, type: :model do
     end
 
     context 'when 18 or older' do
-      let(:user) { FactoryBot.build(:user, birthday: 18.years.ago - 1.day) }
+      let(:user) { build(:user, birthday: 18.years.ago - 1.day) }
 
       it { expect(user.minor).to eq false }
     end
 
     context 'when younger than 18' do
-      let(:user) { FactoryBot.build(:user, birthday: (18.years.ago + 1.day)) }
+      let(:user) { build(:user, birthday: (18.years.ago + 1.day)) }
 
       it { expect(user.minor).to eq true }
     end
@@ -184,19 +184,19 @@ RSpec.describe User, type: :model do
 
   describe '#treasurer?' do
     context 'when with treasurer role' do
-      subject(:user) { FactoryBot.create(:user) }
+      subject(:user) { create(:user) }
 
-      let(:role) { FactoryBot.create(:role, role_type: :treasurer) }
+      let(:role) { create(:role, role_type: :treasurer) }
 
       before do
-        FactoryBot.create(:roles_users, role: role, user: user)
+        create(:roles_users, role: role, user: user)
       end
 
       it { expect(user.treasurer?).to eq true }
     end
 
     context 'when without treasurer role' do
-      subject(:user) { FactoryBot.create(:user) }
+      subject(:user) { create(:user) }
 
       it { expect(user.treasurer?).to eq false }
     end
@@ -204,19 +204,19 @@ RSpec.describe User, type: :model do
 
   describe '#main_bartender?' do
     context 'when with main_bartender role' do
-      subject(:user) { FactoryBot.create(:user) }
+      subject(:user) { create(:user) }
 
-      let(:role) { FactoryBot.create(:role, role_type: :main_bartender) }
+      let(:role) { create(:role, role_type: :main_bartender) }
 
       before do
-        FactoryBot.create(:roles_users, role: role, user: user)
+        create(:roles_users, role: role, user: user)
       end
 
       it { expect(user.main_bartender?).to eq true }
     end
 
     context 'when without main_bartender role' do
-      subject(:user) { FactoryBot.create(:user) }
+      subject(:user) { create(:user) }
 
       it { expect(user.main_bartender?).to eq false }
     end
@@ -224,9 +224,9 @@ RSpec.describe User, type: :model do
 
   describe '#update_role' do
     context 'when getting new roles' do
-      subject(:user) { FactoryBot.create(:user) }
+      subject(:user) { create(:user) }
 
-      let(:role) { FactoryBot.create(:role) }
+      let(:role) { create(:role) }
 
       before do
         user.update_role([role.group_uid])
@@ -236,9 +236,9 @@ RSpec.describe User, type: :model do
     end
 
     context 'when losing roles' do
-      subject(:user) { FactoryBot.create(:user) }
+      subject(:user) { create(:user) }
 
-      let(:role) { FactoryBot.create(:role) }
+      let(:role) { create(:role) }
 
       before do
         user.update_role([role.group_uid])
@@ -260,24 +260,24 @@ RSpec.describe User, type: :model do
   end
 
   describe 'calculate_spendings' do
-    let(:user) { FactoryBot.create(:user) }
+    let(:user) { create(:user) }
 
-    let(:product_price) { FactoryBot.build(:product_price, price: 2.00) }
-    let(:price_list) { FactoryBot.build(:price_list, product_price: [product_price]) }
-    let(:activity) { FactoryBot.build(:activity, price_list: price_list) }
+    let(:product_price) { build(:product_price, price: 2.00) }
+    let(:price_list) { build(:price_list, product_price: [product_price]) }
+    let(:activity) { build(:activity, price_list: price_list) }
 
     let(:default_order) { { products: [product_price.product], activity: activity, user: user } }
 
     let(:order) do
-      FactoryBot.create(:order_with_items, default_order.merge(created_at: 4.weeks.ago))
+      create(:order_with_items, default_order.merge(created_at: 4.weeks.ago))
     end
 
     let(:second_order) do
-      FactoryBot.create(:order_with_items, default_order.merge(created_at: 1.week.ago))
+      create(:order_with_items, default_order.merge(created_at: 1.week.ago))
     end
 
     let(:third_order) do
-      FactoryBot.create(:order_with_items, default_order.merge(user: user, created_at: Time.zone.now))
+      create(:order_with_items, default_order.merge(user: user, created_at: Time.zone.now))
     end
 
     before do
@@ -327,16 +327,16 @@ RSpec.describe User, type: :model do
       let(:included_date) { Time.zone.local(2018, 6, 22) }
       let(:excluded_date) { Time.zone.local(2018, 6, 23) }
 
-      let(:order) { FactoryBot.create(:order_with_items, default_order.merge(created_at: included_date)) }
-      let(:second_order) { FactoryBot.create(:order_with_items, default_order.merge(created_at: excluded_date)) }
-      let(:third_order) { FactoryBot.create(:order_with_items, default_order.merge(created_at: excluded_date + 1.day)) }
+      let(:order) { create(:order_with_items, default_order.merge(created_at: included_date)) }
+      let(:second_order) { create(:order_with_items, default_order.merge(created_at: excluded_date)) }
+      let(:third_order) { create(:order_with_items, default_order.merge(created_at: excluded_date + 1.day)) }
 
       it { expect(spendings_hash[user.id]).to eq order.order_total }
     end
   end
 
   describe 'calculate_credits' do
-    let(:user) { FactoryBot.create(:user) }
+    let(:user) { create(:user) }
 
     subject(:credits_hash) { described_class.calculate_credits }
 
@@ -347,12 +347,12 @@ RSpec.describe User, type: :model do
     end
 
     context 'when with data' do
-      let(:product_price) { FactoryBot.build(:product_price, price: 2.18) }
-      let(:price_list) { FactoryBot.build(:price_list, product_price: [product_price]) }
-      let(:activity) { FactoryBot.build(:activity, price_list: price_list) }
+      let(:product_price) { build(:product_price, price: 2.18) }
+      let(:price_list) { build(:price_list, product_price: [product_price]) }
+      let(:activity) { build(:activity, price_list: price_list) }
 
       context 'without orders' do
-        let(:credit_mutation) { FactoryBot.create(:credit_mutation, user: user, amount: 20) }
+        let(:credit_mutation) { create(:credit_mutation, user: user, amount: 20) }
 
         before do
           credit_mutation
@@ -363,7 +363,7 @@ RSpec.describe User, type: :model do
 
       context 'without credit_mutations' do
         let(:order) do
-          FactoryBot.build(:order_with_items, products: [product_price.product], activity: activity, user: user)
+          build(:order_with_items, products: [product_price.product], activity: activity, user: user)
         end
 
         before do
@@ -375,9 +375,9 @@ RSpec.describe User, type: :model do
 
       context 'when with both' do
         let(:order) do
-          FactoryBot.build(:order_with_items, products: [product_price.product], activity: activity, user: user)
+          build(:order_with_items, products: [product_price.product], activity: activity, user: user)
         end
-        let(:credit_mutation) { FactoryBot.create(:credit_mutation, user: user, amount: 20) }
+        let(:credit_mutation) { create(:credit_mutation, user: user, amount: 20) }
 
         before do
           credit_mutation
@@ -390,7 +390,7 @@ RSpec.describe User, type: :model do
 
   describe '#archive!' do
     context 'when archiving a user' do
-      subject(:user) { FactoryBot.create(:user) }
+      subject(:user) { create(:user) }
 
       let(:nil_attributes) do
         %w[avatar_thumb_url email birthday]
