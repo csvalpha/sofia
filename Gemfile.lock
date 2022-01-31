@@ -107,6 +107,7 @@ GEM
     devise-i18n (1.10.1)
       devise (>= 4.8.0)
     diff-lcs (1.5.0)
+    digest (3.1.0)
     docile (1.4.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
@@ -198,6 +199,7 @@ GEM
     http_parser.rb (0.8.0)
     i18n (1.9.1)
       concurrent-ruby (~> 1.0)
+    io-wait (0.2.1)
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
@@ -251,8 +253,15 @@ GEM
     multi_xml (0.6.0)
     multipart-post (2.1.1)
     nenv (0.3.0)
+    net-protocol (0.1.2)
+      io-wait
+      timeout
     net-scp (3.0.0)
       net-ssh (>= 2.6.5, < 7.0.0)
+    net-smtp (0.3.1)
+      digest
+      net-protocol
+      timeout
     net-ssh (6.1.0)
     netrc (0.11.0)
     nio4r (2.5.8)
@@ -481,6 +490,7 @@ GEM
     tilt (2.0.10)
     timecop (0.9.4)
     timeliness (0.4.4)
+    timeout (0.2.0)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
@@ -548,6 +558,7 @@ DEPENDENCIES
   mina (~> 1.2.3)
   mini_racer (~> 0.2)
   mollie-api-ruby (~> 4.3)
+  net-smtp
   omniauth (~> 1.7)
   omniauth-oauth2 (~> 1.4)
   omniauth-rails_csrf_protection
