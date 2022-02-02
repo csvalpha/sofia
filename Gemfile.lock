@@ -253,6 +253,14 @@ GEM
     multi_xml (0.6.0)
     multipart-post (2.1.1)
     nenv (0.3.0)
+    net-imap (0.2.2)
+      digest
+      net-protocol
+      strscan
+    net-pop (0.1.1)
+      digest
+      net-protocol
+      timeout
     net-protocol (0.1.2)
       io-wait
       timeout
@@ -483,6 +491,7 @@ GEM
     sshkit (1.21.2)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
+    strscan (3.0.1)
     terminal-notifier-guard (1.7.0)
     thor (1.2.1)
     thwait (0.2.0)
@@ -558,6 +567,8 @@ DEPENDENCIES
   mina (~> 1.2.3)
   mini_racer (~> 0.2)
   mollie-api-ruby (~> 4.3)
+  net-imap
+  net-pop
   net-smtp
   omniauth (~> 1.7)
   omniauth-oauth2 (~> 1.4)
