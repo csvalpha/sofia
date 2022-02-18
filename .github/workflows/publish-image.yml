@@ -72,6 +72,13 @@ jobs:
             ${{ env.REGISTRY_URL }}/${{ github.repository_owner }}/${{ env.PROJECT_NAME }}:${{
             needs.metadata.outputs.tag }}
 
+      - name: Get sourcemaps from image
+        if: ${{ !(github.event_name == 'workflow_dispatch' && github.workflow == 'Publish Image') }}
+        env:
+          IMAGE_NAME: ${{ fromJSON(steps.build_push_image.outputs.metadata)['image.name'] }}
+        run: |
+          docker cp $(docker create $IMAGE_NAME):/app/public/packs/js/. sourcemaps
+
       - name: Create Sentry release
         if: ${{ !(github.event_name == 'workflow_dispatch' && github.workflow == 'Publish Image') }}
         uses: getsentry/action-release@744e4b262278339b79fb39c8922efcae71e98e39 # tag=v1.1.6
@@ -80,7 +87,9 @@ jobs:
           SENTRY_PROJECT: ${{ env.PROJECT_NAME }}
         with:
           finalize: false
+          sourcemaps: sourcemaps
           version: ${{ inputs.sha }}
+          url_prefix: ~/packs/js/
 
   update_check_run:
     name: Update Check Run
