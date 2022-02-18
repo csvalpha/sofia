@@ -134,9 +134,9 @@ jobs:
         id: get_url
         run: |
           if [ $GITHUB_REF_NAME = 'master' ]; then
-            echo '::set-output name=environment_url::https://csvalpha.nl/api'
+            echo '::set-output name=environment_url::https://streep.csvalpha.nl'
           else
-            echo '::set-output name=environment_url::https://staging.csvalpha.nl/api'
+            echo '::set-output name=environment_url::https://staging.streep.csvalpha.nl'
           fi
 
       - name: Checkout code
