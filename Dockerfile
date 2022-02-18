@@ -38,8 +38,8 @@ COPY . /app/
 # "--secret id=rails_master_key,env=RAILS_MASTER_KEY")
 RUN --mount=type=secret,id=rails_master_key \
   if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ]; then \
-    RAILS_MASTER_KEY="$(cat /run/secrets/rails_master_key)" \
-    bundle exec rails assets:precompile; else echo "Skip assets:precompile" \
+    RAILS_MASTER_KEY="$(cat /run/secrets/rails_master_key)"; \
+    bundle exec rails assets:precompile; else echo "Skip assets:precompile"; \
   fi
 
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
