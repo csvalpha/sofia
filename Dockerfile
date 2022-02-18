@@ -35,7 +35,7 @@ COPY . /app/
 
 # Precompile assets after copying app because whole Rails pipeline is needed.
 # (pass RAILS_MASTER_KEY to docker build with
-# "--secret id=rails_master_key,env=RAILS_MASTER_KEY")
+# `--secret id=rails_master_key,env=RAILS_MASTER_KEY`)
 RUN --mount=type=secret,id=rails_master_key \
   if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ]; then \
     RAILS_MASTER_KEY="$(cat /run/secrets/rails_master_key)"; \
@@ -43,4 +43,3 @@ RUN --mount=type=secret,id=rails_master_key \
   fi
 
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
-
