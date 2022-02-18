@@ -1,8 +1,8 @@
 FROM ruby:3.0.2-slim
 
 # Add build-essential tools.
-RUN apt-get update -qq \
-  && apt-get install -y \
+RUN apt-get update -qq && \
+  apt-get install -y \
   build-essential \
   git \
   libpq-dev \
@@ -42,10 +42,10 @@ COPY . /app/
 # Precompile assets after copying app because whole Rails pipeline is needed.
 RUN --mount=type=secret,id=rails_master_key \
   if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ]; then \
-    # Use secret if RAILS_MASTER_KEY build-arg is not set.
+    # Use secret if RAILS_MASTER_KEY build arg is not set.
     RAILS_MASTER_KEY="${RAILS_MASTER_KEY:-$(cat /run/secrets/rails_master_key)}" bundle exec rails assets:precompile; \
   else \
-    echo "Skip assets:precompile"; \
+    echo "Skipping assets:precompile"; \
   fi
 
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
