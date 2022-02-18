@@ -27,14 +27,22 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.get_metadata.outputs.tag }}
+      build_args: ${{ steps.get_metadata.outputs.build_args }}
     steps:
       - name: Get metadata
         id: get_metadata
+        env:
+          INPUT_SHA: ${{ inputs.sha }}
         run: |
           if [ $GITHUB_REF_NAME = 'master' ]; then
             echo '::set-output name=tag::latest'
           else
             echo '::set-output name=tag::'$GITHUB_REF_NAME
+          fi
+
+          if [ $GITHUB_REF_NAME = 'staging' ] || [ $GITHUB_REF_NAME = 'master' ]; then
+            BUILD_ARGS='BUILD_HASH='${INPUT_SHA:-$GITHUB_SHA}
+            echo '::set-output name=build_args::'$BUILD_ARGS
           fi
 
   publish:
@@ -64,6 +72,7 @@ jobs:
         with:
           push: true
           context: .
+          build-args: ${{ needs.metadata.outputs.build_args }}
           secrets: |
             rails_master_key=${{ secrets.RAILS_MASTER_KEY }}
           cache-from: type=gha,scope=main

@@ -2,6 +2,7 @@ Raven.configure do |config|
   config.dsn = Rails.application.config.x.sentry_dsn
   config.environments = %w[production staging]
   config.current_environment = Rails.env
+  config.release = ENV["BUILD_HASH"]
   config.async = lambda { |event|
     SentryJob.perform_later(event)
   }
