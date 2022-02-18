@@ -21,7 +21,6 @@ WORKDIR /app
 # Define args that can be supplied with `docker build --build-args RAILS_ENV=<env>`, defaults to production
 ARG RAILS_ENV=production
 ARG NODE_ENV=production
-ARG RAILS_MASTER_KEY
 
 # Pre-install gems, so that can be cached
 COPY Gemfile* /app/
@@ -34,8 +33,14 @@ RUN yarn install --frozen-lockfile
 
 COPY . /app/
 
-# Precompile assets after copying app because whole Rails pipeline is needed
-RUN if [ "$RAILS_ENV" = "production" ] || [ "$RAILS_ENV" = "staging" ] ; then bundle exec rails assets:precompile; else echo "Skip assets:precompile" ; fi
+# Precompile assets after copying app because whole Rails pipeline is needed.
+# (pass RAILS_MASTER_KEY to docker build with
+# "--secret id=rails_master_key,env=RAILS_MASTER_KEY")
+RUN --mount=type=secret,id=rails_master_key \
+  if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ]; then \
+    RAILS_MASTER_KEY="$(cat /run/secrets/rails_master_key)" \
+    bundle exec rails assets:precompile; else echo "Skip assets:precompile" \
+  fi
 
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
 

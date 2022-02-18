@@ -64,6 +64,8 @@ jobs:
         with:
           push: true
           context: .
+          secrets: |
+            RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}
           cache-from: type=gha,scope=main
           cache-to: type=gha,scope=main
           tags: |
