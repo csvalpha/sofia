@@ -14,6 +14,9 @@ gem 'jquery-rails', '~> 4.3'
 gem 'kaminari', '~> 1.2.1'
 gem 'mini_racer', '~> 0.2'
 gem 'mollie-api-ruby', '~> 4.3'
+gem 'net-imap', require: false
+gem 'net-pop', require: false
+gem 'net-smtp', require: false
 gem 'omniauth', '~> 1.7'
 gem 'omniauth-oauth2', '~> 1.4'
 gem 'omniauth-rails_csrf_protection'
@@ -24,7 +27,7 @@ gem 'puma', '~> 5.0'
 gem 'pundit', '~> 2.0'
 gem 'rack-attack', '~> 6.0'
 gem 'rails', '~> 6.0'
-gem 'rails-i18n', '~> 6.0'
+gem 'rails-i18n', '~> 7.0'
 gem 'redis-rails', '~> 5.0'
 gem 'rest-client', '~> 2.0'
 gem 'sassc-rails', '~> 2.1'
