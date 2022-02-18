@@ -76,7 +76,7 @@ Role.create(role_type: :main_bartender, group_uid: 2)
 
 ## Deploying
 
-Deploying procedure is the same as for the Banana project.
+Deploying procedure is the same as for the Amber project.
 See [DEPLOY.md](https://github.com/csvalpha/amber-api/blob/master/DEPLOY.md) for that.
 
 ## Contributing
