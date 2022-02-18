@@ -1,14 +1,15 @@
 Alpha SOFIA
 ============
 
-![Build Status](https://badge.buildkite.com/78b9e8a74bf2160a0d4cb7b72a17ee7d4a1590b3b3eaf847db.svg?branch=staging)
+[![Continuous Integration](https://github.com/csvalpha/sofia/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/csvalpha/sofia/actions/workflows/continuous-integration.yml)
+[![Continuous Delivery](https://github.com/csvalpha/sofia/actions/workflows/continuous-delivery.yml/badge.svg)](https://github.com/csvalpha/sofia/actions/workflows/continuous-delivery.yml)
 [![Depfu](https://badges.depfu.com/badges/511b8df2e034f68fa0e7b3a4ac476094/overview.svg)](https://depfu.com/github/csvalpha/sofia?project_id=7740)
 
-The source code belonging to Alpha SOFIA. It is a system built with Ruby on Rails with Turbolinks and a little VueJS, used to manage orders in our own bar "Flux". Users authenticate via OAuth API (currently "Alpha Banana") to see how much credit they got left, or to be able to register new orders and/or payments.
+The source code belonging to Alpha SOFIA. It is a system built with Ruby on Rails with Turbolinks and a little VueJS, used to manage orders in our own bar "Flux". Users authenticate via OAuth API (currently "Alpha AMBER") to see how much credit they got left, or to be able to register new orders and/or payments.
 
 Use this repository to build upon, use as-is, learn from it, prove a point or whatever 😏
 
-## Prerequisits
+## Prerequisites
 
 _On Linux-like systems_
 
@@ -74,9 +75,9 @@ Role.create(role_type: :main_bartender, group_uid: 2)
 ```
 
 ## Deploying
-Deploying procedure is the same as for the Banana project.
-See [DEPLOY.md](https://github.com/csvalpha/alpha-banana-api/blob/master/DEPLOY.md) for that.
 
+Deploying procedure is the same as for the Banana project.
+See [DEPLOY.md](https://github.com/csvalpha/amber-api/blob/master/DEPLOY.md) for that.
 
 ## Contributing
 
@@ -90,3 +91,4 @@ When submitting a PR, it'll need to be approved, but once approved (and green) y
 - [@Matthijsy](https://github.com/Matthijsy)
 - [@cpbscholten](https://github.com/cpbscholten)
 - [@wilco375](https://github.com/wilco375)
+- [@guidojw](https://github.com/guidojw)

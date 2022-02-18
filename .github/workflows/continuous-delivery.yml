@@ -1,0 +1,217 @@
+name: Continuous Delivery
+
+on:
+  workflow_dispatch:
+    inputs:
+      merge:
+        description: Merge staging into master first? (y/N)
+        required: false
+        default: 'n'
+
+concurrency:
+  group: cd-${{ github.ref_name }}
+
+env:
+  PROJECT_NAME: sofia
+  SENTRY_ORG: csvalpha
+  APP_ID: 152333
+
+jobs:
+  branch_check:
+    name: Branch Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate branch
+        run: |
+          if [ $GITHUB_REF_NAME != 'staging' ] && [ $GITHUB_REF_NAME != 'master' ]; then
+            echo 'This workflow can only be run on branches staging and master.'
+            exit 1
+          fi
+
+  metadata:
+    name: Metadata
+    runs-on: ubuntu-latest
+    needs: branch_check
+    outputs:
+      has_diff: ${{ steps.get_metadata.outputs.has_diff }}
+      stage: ${{ steps.get_metadata.outputs.stage }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
+
+      - name: Get metadata
+        id: get_metadata
+        env:
+          INPUT_MERGE: ${{ github.event.inputs.merge }}
+        run: |
+          if [ $GITHUB_REF_NAME = 'master' ]; then
+            if [ "${INPUT_MERGE,,}" = 'y' ]; then
+              git fetch origin staging
+              if ! git diff origin/master origin/staging --exit-code; then
+                echo '::set-output name=has_diff::true'
+              else
+                echo '::set-output name=has_diff::false'
+              fi
+            fi
+
+            echo '::set-output name=stage::production'
+          else
+            echo '::set-output name=stage::staging'
+          fi
+
+  merge:
+    name: Merge
+    runs-on: ubuntu-latest
+    needs: metadata
+    if: github.event.inputs.merge == 'y'
+    outputs:
+      sha: ${{ steps.get_sha.outputs.sha }}
+    steps:
+      - name: Validate inputs
+        env:
+          HAS_DIFF: ${{ fromJSON(needs.metadata.outputs.has_diff || false) }}
+        run: |
+          if [ $GITHUB_REF_NAME != 'master' ]; then
+            echo 'Can only merge when the workflow target branch is master.'
+            exit 1
+          fi
+
+          if ! $HAS_DIFF; then
+            echo 'There is no diff so a merge is not necessary, skipping next steps.'
+          fi
+
+      - name: Checkout code
+        if: fromJSON(needs.metadata.outputs.has_diff)
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
+
+      - name: Run merge
+        if: fromJSON(needs.metadata.outputs.has_diff)
+        uses: devmasx/merge-branch@854d3ac71ed1e9deb668e0074781b81fdd6e771f # tag=v1.4.0
+        with:
+          type: now
+          from_branch: staging
+          target_branch: master
+          github_token: ${{ github.token }}
+
+      - name: Get merge commit SHA
+        id: get_sha
+        if: fromJSON(needs.metadata.outputs.has_diff)
+        run: |
+          git fetch origin master
+          echo '::set-output name=sha::'$(git rev-parse origin/master)
+
+  continuous_integration:
+    name: Continuous Integration
+    needs: [metadata, merge]
+    if: fromJSON(needs.metadata.outputs.has_diff)
+    uses: csvalpha/amber-api/.github/workflows/continuous-integration.yml@staging
+    with:
+      sha: ${{ needs.merge.outputs.sha }}
+    secrets:
+      rails_master_key: ${{ secrets.RAILS_MASTER_KEY }}
+
+  publish_image:
+    name: Publish Image
+    needs: [metadata, merge]
+    if: fromJSON(needs.metadata.outputs.has_diff)
+    uses: csvalpha/amber-api/.github/workflows/publish-image.yml@staging
+    with:
+      sha: ${{ needs.merge.outputs.sha }}
+    secrets:
+      rails_master_key: ${{ secrets.RAILS_MASTER_KEY }}
+      sentry_auth_token: ${{ secrets.SENTRY_AUTH_TOKEN }}
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: [metadata, merge, continuous_integration, publish_image]
+    if: |
+      (github.ref_name == 'staging' || github.ref_name == 'master') && ((github.ref_name == 'master' &&
+      github.event.inputs.merge == 'y' && fromJSON(needs.metadata.outputs.has_diff) && success()) ||
+      ((github.event.inputs.merge != 'y' || !fromJSON(needs.metadata.outputs.has_diff)) && !cancelled()))
+    steps:
+      - name: Get environment URL
+        id: get_url
+        run: |
+          if [ $GITHUB_REF_NAME = 'master' ]; then
+            echo '::set-output name=environment_url::https://csvalpha.nl/api'
+          else
+            echo '::set-output name=environment_url::https://staging.csvalpha.nl/api'
+          fi
+
+      - name: Checkout code
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
+        with:
+          ref: ${{ needs.merge.outputs.sha }}
+
+      - name: Start deployment
+        uses: bobheadxi/deployments@f235d02c2daaaa84c710d013c7d39f7f0f8bf298 # tag=v0.6.2
+        id: start_deployment
+        with:
+          step: start
+          token: ${{ secrets.GITHUB_TOKEN }}
+          env: ${{ needs.metadata.outputs.stage }}
+
+      - name: Deploy
+        uses: appleboy/ssh-action@1d1b21ca96111b1eb4c03c21c14ebb971d2200f6 # tag=v0.1.4
+        env:
+          STAGE: ${{ needs.metadata.outputs.stage }}
+        with:
+          host: csvalpha.nl
+          username: github-actions
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: PROJECT_NAME,STAGE
+          script: |
+            cd /opt/docker/$PROJECT_NAME/$STAGE
+            docker-compose pull
+            docker-compose run --rm web rails db:migrate
+            docker-compose up -d
+
+      - name: Finalize Sentry release
+        uses: getsentry/action-release@744e4b262278339b79fb39c8922efcae71e98e39 # tag=v1.1.6
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_PROJECT: ${{ env.PROJECT_NAME }}
+        with:
+          environment: ${{ needs.metadata.outputs.stage }}
+          version: ${{ needs.merge.outputs.sha }}
+          set_commits: skip
+
+      - name: Finish deployment
+        uses: bobheadxi/deployments@f235d02c2daaaa84c710d013c7d39f7f0f8bf298 # tag=v0.6.2
+        if: steps.start_deployment.conclusion == 'success' && always()
+        with:
+          step: finish
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
+          deployment_id: ${{ steps.start_deployment.outputs.deployment_id }}
+          env_url: ${{ steps.get_url.outputs.environment_url }}
+
+  update_check_run:
+    name: Update Check Run
+    runs-on: ubuntu-latest
+    needs: [branch_check, metadata, merge, continuous_integration, publish_image, deploy]
+    if: (github.ref_name == 'staging' || github.ref_name == 'master') && always()
+    steps:
+      - name: Get conclusion
+        id: get_conclusion
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo '::set-output name=conclusion::success'
+          for RESULT in $RESULTS; do
+            if [ $RESULT = 'cancelled' ] || [ $RESULT = 'failure' ]; then
+              echo '::set-output name=conclusion::'$RESULT
+              break
+            fi
+          done
+
+      - name: Update Continuous Delivery check run
+        uses: guidojw/actions/update-check-run@2b1dea8cbd9e44491c269e771b75636026caf8ca # tag=v1.1.0
+        with:
+          app_id: ${{ env.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+          sha: ${{ needs.merge.outputs.sha }}
+          name: Continuous Delivery
+          conclusion: ${{ steps.get_conclusion.outputs.conclusion }}
+          details_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
