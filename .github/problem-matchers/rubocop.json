@@ -5,7 +5,7 @@
       "severity": "error",
       "pattern": [
         {
-          "regexp": "^(.+):(\\d+):(\\d+): C: ((.+): .+)$",
+          "regexp": "^(.+):(\\d+):(\\d+):\\sC:\\s((.+):\\s.+)$",
           "file": 1,
           "line": 2,
           "column": 3,
@@ -19,7 +19,7 @@
       "severity": "warning",
       "pattern": [
         {
-          "regexp": "^(.+):(\\d+):(\\d+): W: ((.+): .+)$",
+          "regexp": "^(.+):(\\d+):(\\d+):\\sW:\\s((.+):\\s.+)$",
           "file": 1,
           "line": 2,
           "column": 3,
