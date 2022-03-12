@@ -7,7 +7,7 @@ class UsersController < ApplicationController
     authorize User
 
     @manual_users = User.manual.active.order(:name)
-    @amber_users = User.in_banana.active.order(:name)
+    @amber_users = User.in_amber.active.order(:name)
     @inactive_users = User.inactive.order(:name)
     @users_credits = User.calculate_credits
 
@@ -66,7 +66,7 @@ class UsersController < ApplicationController
       find_or_create_user(user_json)
     end
 
-    users_not_in_json = User.active.in_banana.where.not(uid: users_json.pluck('id'))
+    users_not_in_json = User.active.in_amber.where.not(uid: users_json.pluck('id'))
     users_not_in_json.each(&:archive!)
 
     send_slack_users_refresh_notification
@@ -86,9 +86,9 @@ class UsersController < ApplicationController
     return @token if @token
 
     options = { grant_type: 'client_credentials',
-                client_id: Rails.application.config.x.banana_client_id,
-                client_secret: Rails.application.config.x.banana_client_secret }
-    token_response = RestClient.post "#{Rails.application.config.x.banana_api_url}/api/v1/oauth/token", options
+                client_id: Rails.application.config.x.amber_client_id,
+                client_secret: Rails.application.config.x.amber_client_secret }
+    token_response = RestClient.post "#{Rails.application.config.x.amber_api_url}/api/v1/oauth/token", options
 
     @token = JSON.parse(token_response)['access_token']
   end
@@ -112,12 +112,12 @@ class UsersController < ApplicationController
 
     # :nocov:
     SlackMessageJob.perform_later("User ##{current_user.id} (#{current_user.name}) "\
-                                  "is importing users from Banana (#{Rails.application.config.x.banana_api_host})")
+                                  "is importing users from Banana (#{Rails.application.config.x.amber_api_host})")
     # :nocov:
   end
 
   def users_json
-    JSON.parse(RestClient.get("#{Rails.application.config.x.banana_api_url}/api/v1/users?filter[group]=Leden",
+    JSON.parse(RestClient.get("#{Rails.application.config.x.amber_api_url}/api/v1/users?filter[group]=Leden",
                               'Authorization' => "Bearer #{api_token}"))['data']
   end
 
@@ -127,7 +127,7 @@ class UsersController < ApplicationController
     u.name = User.full_name_from_attributes(fields['first_name'],
                                             fields['last_name_prefix'],
                                             fields['last_name'])
-    u.provider = 'banana_oauth2'
+    u.provider = 'amber_oauth2'
     u.avatar_thumb_url = fields['avatar_thumb_url']
     u.email = fields['email']
     u.birthday = fields['birthday']

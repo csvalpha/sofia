@@ -23,21 +23,21 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '.in_banana' do
-    context 'when in banana' do
-      subject(:user) { create(:user, provider: 'banana_oauth2') }
+  describe '.in_amber' do
+    context 'when in amber' do
+      subject(:user) { create(:user, provider: 'amber_oauth2') }
 
       before { user }
 
-      it { expect(described_class.in_banana).to include user }
+      it { expect(described_class.in_amber).to include user }
     end
 
-    context 'when not in banana' do
+    context 'when not in amber' do
       subject(:user) { create(:user, provider: 'another_provider') }
 
       before { user }
 
-      it { expect(described_class.in_banana).not_to include user }
+      it { expect(described_class.in_amber).not_to include user }
     end
   end
 
@@ -136,7 +136,7 @@ RSpec.describe User, type: :model do
     context 'when with avatar thumb url' do
       subject(:user) { create(:user, avatar_thumb_url: '/test.png') }
 
-      it { expect(user.avatar_thumb_or_default_url).to eq "#{Rails.application.config.x.banana_api_url}/test.png" }
+      it { expect(user.avatar_thumb_or_default_url).to eq "#{Rails.application.config.x.amber_api_url}/test.png" }
     end
 
     context 'when without avatar thumb url' do

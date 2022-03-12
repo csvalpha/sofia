@@ -51,15 +51,15 @@ $ EDITOR="code --wait" bundle exec rails credentials:edit
 
 ### OAuth configuration
 
-In OAuth Banana (github.com/csvalpha/alpha-banana-api), execute the following command (in `rails console`):
+In OAuth Banana (github.com/csvalpha/amber-api), execute the following command (in `rails console`):
 
 ```ruby
-app = Doorkeeper::Application.create(name: 'SOFIA - Streepsysteem der C.S.V. Alpha', redirect_uri: 'http://localhost:5000/users/auth/banana_oauth2/callback', scopes: 'public tomato')
+app = Doorkeeper::Application.create(name: 'SOFIA - Streepsysteem der C.S.V. Alpha', redirect_uri: 'http://localhost:5000/users/auth/amber_oauth2/callback', scopes: 'public tomato')
 app.uid
 app.plaintext_secret
 ```
 
-Next, copy the uid and plaintext secret to the `.env` in SOFIA (as `banana_client_id` and `banana_client_secret`).
+Next, copy the uid and plaintext secret to the `.env` in SOFIA (as `amber_client_id` and `amber_client_secret`).
 
 ### Configuring roles
 
@@ -75,7 +75,7 @@ Role.create(role_type: :main_bartender, group_uid: 2)
 
 ## Deploying
 Deploying procedure is the same as for the Banana project.
-See [DEPLOY.md](https://github.com/csvalpha/alpha-banana-api/blob/master/DEPLOY.md) for that.
+See [DEPLOY.md](https://github.com/csvalpha/amber-api/blob/master/DEPLOY.md) for that.
 
 
 ## Contributing

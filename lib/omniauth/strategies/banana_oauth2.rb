@@ -3,10 +3,10 @@ require 'omniauth/strategies/oauth2'
 module OmniAuth
   module Strategies
     class BananaOauth2 < OmniAuth::Strategies::OAuth2
-      option :name, 'banana_oauth2'
+      option :name, 'amber_oauth2'
 
       option :client_options,
-             site: Rails.application.config.x.banana_api_url.to_s,
+             site: Rails.application.config.x.amber_api_url.to_s,
              authorize_url: '/oauth/authorize',
              token_url: '/api/v1/oauth/token'
 

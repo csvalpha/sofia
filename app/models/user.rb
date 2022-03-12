@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  devise :omniauthable, omniauth_providers: [:banana_oauth2]
+  devise :omniauthable, omniauth_providers: [:amber_oauth2]
   has_many :orders, dependent: :destroy
   has_many :order_rows, through: :orders, dependent: :destroy
   has_many :credit_mutations, dependent: :destroy
@@ -12,7 +12,7 @@ class User < ApplicationRecord
   validates :uid, uniqueness: true, allow_blank: true
   validate :no_deactivation_when_nonzero_credit
 
-  scope :in_banana, (-> { where(provider: 'banana_oauth2') })
+  scope :in_amber, (-> { where(provider: 'amber_oauth2') })
   scope :manual, (-> { where(provider: nil) })
   scope :active, (-> { where(deactivated: false) })
   scope :inactive, (-> { where(deactivated: true) })
@@ -25,7 +25,7 @@ class User < ApplicationRecord
   def avatar_thumb_or_default_url
     return '/images/avatar_thumb_default.png' unless avatar_thumb_url
 
-    "#{Rails.application.config.x.banana_api_url}#{avatar_thumb_url}"
+    "#{Rails.application.config.x.amber_api_url}#{avatar_thumb_url}"
   end
 
   def age
