@@ -32,7 +32,7 @@ module Sofia
       Rails.env.to_sym, :amber_client_secret
     ) || ENV['AMBER_CLIENT_SECRET']
 
-    config.x.amber_host          = credentials.dig(Rails.env.to_sym, :amber_host)
+    config.x.amber_host = credentials.dig(Rails.env.to_sym, :amber_host)
     config.x.tomato_host          = credentials.dig(Rails.env.to_sym, :tomato_host)
 
     config.x.slack_webhook        = credentials.dig(Rails.env.to_sym, :slack_webhook) || ''
