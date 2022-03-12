@@ -2,7 +2,7 @@ require 'omniauth/strategies/oauth2'
 
 module OmniAuth
   module Strategies
-    class BananaOauth2 < OmniAuth::Strategies::OAuth2
+    class AmberOauth2 < OmniAuth::Strategies::OAuth2
       option :name, 'amber_oauth2'
 
       option :client_options,

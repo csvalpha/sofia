@@ -27,10 +27,10 @@ module Sofia
     config.x.amber_api_host      = credentials.dig(Rails.env.to_sym, :amber_host)
     config.x.amber_api_url       = "#{Rails.env.development? ? 'http' : 'https'}://#{credentials.dig(Rails.env.to_sym, :amber_host)}"
 
-    config.x.amber_client_id     = credentials.dig(Rails.env.to_sym, :amber_client_id) || ENV['BANANA_CLIENT_ID']
+    config.x.amber_client_id     = credentials.dig(Rails.env.to_sym, :amber_client_id) || ENV['AMBER_CLIENT_ID']
     config.x.amber_client_secret = credentials.dig(
       Rails.env.to_sym, :amber_client_secret
-    ) || ENV['BANANA_CLIENT_SECRET']
+    ) || ENV['AMBER_CLIENT_SECRET']
 
     config.x.amber_host          = credentials.dig(Rails.env.to_sym, :amber_host)
     config.x.tomato_host          = credentials.dig(Rails.env.to_sym, :tomato_host)
