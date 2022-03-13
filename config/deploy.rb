@@ -1,4 +1,4 @@
-# Deploy is done via buildkite, see .buildkite directory
+# Deploy is done via GitHub Actions, see .github directory
 # This file is for mina to be able to connect to the rails console on the server
 
 require 'mina/rails'
