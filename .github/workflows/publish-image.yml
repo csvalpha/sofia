@@ -89,7 +89,7 @@ jobs:
         env:
           IMAGE_NAME: ${{ fromJSON(steps.build_push_image.outputs.metadata)['image.name'] }}
         run: |
-          docker cp $(docker create $IMAGE_NAME):/app/public/packs/js/. sourcemaps
+          docker cp "$(docker create "$IMAGE_NAME")":/app/public/packs/js/. sourcemaps
 
       - name: Create Sentry release
         if: ${{ !(github.event_name == 'workflow_dispatch' && github.workflow == 'Publish Image') }}
@@ -117,7 +117,7 @@ jobs:
           echo '::set-output name=conclusion::success'
           for RESULT in $RESULTS; do
             if [ "$RESULT" = 'cancelled' ] || [ "$RESULT" = 'failure' ]; then
-              echo '::set-output name=conclusion::'$RESULT
+              echo '::set-output name=conclusion::'"$RESULT"
               break
             fi
           done
