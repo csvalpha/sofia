@@ -1,0 +1,129 @@
+name: Publish Image
+
+on:
+  push:
+    branches: [staging, master]
+  workflow_call:
+    inputs:
+      sha:
+        required: false
+        type: string
+    secrets:
+      rails_master_key:
+        required: true
+      sentry_auth_token:
+        required: true
+  workflow_dispatch:
+
+env:
+  PROJECT_NAME: sofia
+  REGISTRY_URL: ghcr.io
+  SENTRY_ORG: csvalpha
+  APP_ID: 152333
+
+jobs:
+  metadata:
+    name: Metadata
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.get_metadata.outputs.tag }}
+      build_args: ${{ steps.get_metadata.outputs.build_args }}
+    steps:
+      - name: Get metadata
+        id: get_metadata
+        env:
+          INPUT_SHA: ${{ inputs.sha }}
+        run: |
+          if [ $GITHUB_REF_NAME = 'master' ]; then
+            echo '::set-output name=tag::latest'
+          else
+            echo '::set-output name=tag::'$GITHUB_REF_NAME
+          fi
+
+          if [ $GITHUB_REF_NAME = 'staging' ] || [ $GITHUB_REF_NAME = 'master' ]; then
+            BUILD_ARGS='BUILD_HASH='${INPUT_SHA:-$GITHUB_SHA}
+            echo '::set-output name=build_args::'$BUILD_ARGS
+          fi
+
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    needs: metadata
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
+        with:
+          ref: ${{ inputs.sha }}
+          fetch-depth: 0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@94ab11c41e45d028884a99163086648e898eed25 # tag=v1.6.0
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@42d299face0c5c43a0487c477f595ac9cf22f1a7 # tag=v1.13.0
+        with:
+          registry: ${{ env.REGISTRY_URL }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        id: build_push_image
+        uses: docker/build-push-action@7f9d37fa544684fb73bfe4835ed7214c255ce02b # tag=v2.9.0
+        with:
+          push: true
+          context: .
+          build-args: ${{ needs.metadata.outputs.build_args }}
+          secrets: |
+            rails_master_key=${{ secrets.RAILS_MASTER_KEY }}
+          cache-from: type=gha,scope=main
+          cache-to: type=gha,scope=main
+          tags: |
+            ${{ env.REGISTRY_URL }}/${{ github.repository_owner }}/${{ env.PROJECT_NAME }}:${{
+            needs.metadata.outputs.tag }}
+
+      - name: Get sourcemaps from image
+        if: ${{ !(github.event_name == 'workflow_dispatch' && github.workflow == 'Publish Image') }}
+        env:
+          IMAGE_NAME: ${{ fromJSON(steps.build_push_image.outputs.metadata)['image.name'] }}
+        run: |
+          docker cp $(docker create $IMAGE_NAME):/app/public/packs/js/. sourcemaps
+
+      - name: Create Sentry release
+        if: ${{ !(github.event_name == 'workflow_dispatch' && github.workflow == 'Publish Image') }}
+        uses: getsentry/action-release@744e4b262278339b79fb39c8922efcae71e98e39 # tag=v1.1.6
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_PROJECT: ${{ env.PROJECT_NAME }}
+        with:
+          finalize: false
+          sourcemaps: sourcemaps
+          version: ${{ inputs.sha }}
+          url_prefix: ~/packs/js/
+
+  update_check_run:
+    name: Update Check Run
+    runs-on: ubuntu-latest
+    needs: [metadata, publish]
+    if: github.event_name == 'workflow_dispatch' && github.workflow == 'Publish Image' && always()
+    steps:
+      - name: Get conclusion
+        id: get_conclusion
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo '::set-output name=conclusion::success'
+          for RESULT in $RESULTS; do
+            if [ $RESULT = 'cancelled' ] || [ $RESULT = 'failure' ]; then
+              echo '::set-output name=conclusion::'$RESULT
+              break
+            fi
+          done
+
+      - name: Update Publish Image check run
+        uses: guidojw/actions/update-check-run@2b1dea8cbd9e44491c269e771b75636026caf8ca # tag=v1.1.0
+        with:
+          app_id: ${{ env.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+          name: Publish Image
+          conclusion: ${{ steps.get_conclusion.outputs.conclusion }}
+          details_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

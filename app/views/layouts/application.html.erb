@@ -23,7 +23,8 @@
       <script>
         Sentry.init({
           dsn: '<%= Rails.application.config.x.sentry_dsn %>',
-          environment: '<%= Rails.env %>'
+          environment: '<%= Rails.env %>',
+          release: '<%= ENV['BUILD_HASH'] %>'
         });
 
         Sentry.configureScope(scope => {

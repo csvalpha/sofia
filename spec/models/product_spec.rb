@@ -21,7 +21,7 @@ RSpec.describe Product, type: :model do
     context 'when updating the name' do
       subject(:product) { create(:product) }
 
-      it { expect(product.update(name: 'new_name')).to eq false }
+      it { expect(product.update(name: 'new_name')).to be false }
     end
   end
 
@@ -29,13 +29,13 @@ RSpec.describe Product, type: :model do
     context 'when with requires age category' do
       subject(:product) { create(:product, category: %w[beer distilled wine tobacco].sample) }
 
-      it { expect(product.requires_age).to eq true }
+      it { expect(product.requires_age).to be true }
     end
 
     context 'when with non requires age category' do
       subject(:product) { create(:product, category: %w[food non_alcoholic].sample) }
 
-      it { expect(product.requires_age).to eq false }
+      it { expect(product.requires_age).to be false }
     end
   end
 
