@@ -6,12 +6,15 @@ on:
   workflow_call:
     inputs:
       sha:
+        description: The commit SHA to run the workflow on
         required: false
         type: string
     secrets:
       rails_master_key:
+        description: The Rails master key
         required: true
       sentry_auth_token:
+        description: The Sentry integration's token
         required: true
   workflow_dispatch:
 
@@ -34,15 +37,15 @@ jobs:
         env:
           INPUT_SHA: ${{ inputs.sha }}
         run: |
-          if [ $GITHUB_REF_NAME = 'master' ]; then
+          if [ "$GITHUB_REF_NAME" = 'master' ]; then
             echo '::set-output name=tag::latest'
           else
-            echo '::set-output name=tag::'$GITHUB_REF_NAME
+            echo '::set-output name=tag::'"$GITHUB_REF_NAME"
           fi
 
-          if [ $GITHUB_REF_NAME = 'staging' ] || [ $GITHUB_REF_NAME = 'master' ]; then
+          if [ "$GITHUB_REF_NAME" = 'staging' ] || [ "$GITHUB_REF_NAME" = 'master' ]; then
             BUILD_ARGS='BUILD_HASH='${INPUT_SHA:-$GITHUB_SHA}
-            echo '::set-output name=build_args::'$BUILD_ARGS
+            echo '::set-output name=build_args::'"$BUILD_ARGS"
           fi
 
   publish:
@@ -113,7 +116,7 @@ jobs:
         run: |
           echo '::set-output name=conclusion::success'
           for RESULT in $RESULTS; do
-            if [ $RESULT = 'cancelled' ] || [ $RESULT = 'failure' ]; then
+            if [ "$RESULT" = 'cancelled' ] || [ "$RESULT" = 'failure' ]; then
               echo '::set-output name=conclusion::'$RESULT
               break
             fi
