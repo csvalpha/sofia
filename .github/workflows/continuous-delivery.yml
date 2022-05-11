@@ -185,6 +185,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           status: ${{ job.status }}
           deployment_id: ${{ steps.start_deployment.outputs.deployment_id }}
+          env: ${{ needs.metadata.outputs.stage }}
           env_url: ${{ steps.get_url.outputs.environment_url }}
 
   update_check_run:
