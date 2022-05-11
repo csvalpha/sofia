@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
+        uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e # tag=v2.4.2
         with:
           ref: ${{ inputs.sha }}
 
@@ -47,7 +47,7 @@ jobs:
           - 5432:5432
     steps:
       - name: Checkout code
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
+        uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e # tag=v2.4.2
         with:
           ref: ${{ inputs.sha }}
 
@@ -84,7 +84,7 @@ jobs:
           - 5432:5432
     steps:
       - name: Checkout code
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
+        uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e # tag=v2.4.2
         with:
           ref: ${{ inputs.sha }}
 
