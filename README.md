@@ -4,7 +4,7 @@ Alpha SOFIA
 ![Build Status](https://badge.buildkite.com/78b9e8a74bf2160a0d4cb7b72a17ee7d4a1590b3b3eaf847db.svg?branch=staging)
 [![Depfu](https://badges.depfu.com/badges/511b8df2e034f68fa0e7b3a4ac476094/overview.svg)](https://depfu.com/github/csvalpha/sofia?project_id=7740)
 
-The source code belonging to Alpha SOFIA. It is a system built with Ruby on Rails with Turbolinks and a little VueJS, used to manage orders in our own bar "Flux". Users authenticate via OAuth API (currently "Alpha Amber") to see how much credit they got left, or to be able to register new orders and/or payments.
+The source code belonging to Alpha SOFIA. It is a system built with Ruby on Rails with Turbolinks and a little VueJS, used to manage orders in our own bar "Flux". Users authenticate via OAuth API (currently "Alpha AMBER") to see how much credit they got left, or to be able to register new orders and/or payments.
 
 Use this repository to build upon, use as-is, learn from it, prove a point or whatever 😏
 
@@ -18,8 +18,8 @@ _On Linux-like systems_
 - Yarn
 - Postgresql 9.5+
 - Running versions of
-  - Alpha Amber API
-  - Alpha Amber UI (for logging in)
+  - Alpha AMBER API
+  - Alpha AMBER UI (for logging in)
 
 ## Installation
 
@@ -28,7 +28,7 @@ _On Linux-like systems_
   1. `bundle install` (might take a couple of minutes)
   1. `yarn`
   1. `bundle exec rails db:setup`
-  1. `bundle exec rails s -p 5000` (port specified so it doesn't use the same as Amber API)
+  1. `bundle exec rails s -p 5000` (port specified so it doesn't use the same as AMBER API)
 1. Go to http://localhost:5000 and you should see SOFIA running
 1. Copy `.env.example` to `.env` with `cp .env.example .env` and edit the values where necessary
 1. (When you want to use the invoice module) Follow https://github.com/zakird/wkhtmltopdf_binary_gem#installation-and-usage
@@ -51,7 +51,7 @@ $ EDITOR="code --wait" bundle exec rails credentials:edit
 
 ### OAuth configuration
 
-In OAuth Amber (github.com/csvalpha/amber-api), execute the following command (in `rails console`):
+In OAuth AMBER (github.com/csvalpha/amber-api), execute the following command (in `rails console`):
 
 ```ruby
 app = Doorkeeper::Application.create(name: 'SOFIA - Streepsysteem der C.S.V. Alpha', redirect_uri: 'http://localhost:5000/users/auth/amber_oauth2/callback', scopes: 'public tomato')
@@ -63,7 +63,7 @@ Next, copy the uid and plaintext secret to the `.env` in SOFIA (as `amber_client
 
 ### Configuring roles
 
-Users can have roles in SOFIA, namely Treasurer ("SB-penningmeester") and/or Main Bartender ("Hoofdtapper"). A user can also log in without a role. These roles are derived from the groups the user is in. These groups are saved in the Amber API.
+Users can have roles in SOFIA, namely Treasurer ("SB-penningmeester") and/or Main Bartender ("Hoofdtapper"). A user can also log in without a role. These roles are derived from the groups the user is in. These groups are saved in the AMBER API.
 
 Roles are created in the following way during the seeding:
 
@@ -74,7 +74,7 @@ Role.create(role_type: :main_bartender, group_uid: 2)
 ```
 
 ## Deploying
-Deploying procedure is the same as for the Amber project.
+Deploying procedure is the same as for the AMBER project.
 See [DEPLOY.md](https://github.com/csvalpha/amber-api/blob/master/DEPLOY.md) for that.
 
 
