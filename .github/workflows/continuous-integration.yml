@@ -37,7 +37,10 @@ jobs:
     needs: build
     services:
       db:
-        image: postgres:11.2
+        image: postgres:14.2
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -65,8 +68,8 @@ jobs:
         env:
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
         run: |
-          docker run -e POSTGRES_USER=postgres -e POSTGRES_HOST=localhost -e RAILS_MASTER_KEY --network=host app \
-            bin/ci.sh lint
+          docker run -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_HOST=localhost -e \
+            RAILS_MASTER_KEY --network=host app bin/ci.sh lint
 
   test:
     name: Test
@@ -101,5 +104,5 @@ jobs:
         env:
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
         run: |
-          docker run -e POSTGRES_USER=postgres -e POSTGRES_HOST=localhost -e RAILS_MASTER_KEY --network=host app \
-            bin/ci.sh spec
+          docker run -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_HOST=localhost -e \
+            RAILS_MASTER_KEY --network=host app bin/ci.sh spec
