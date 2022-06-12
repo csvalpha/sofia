@@ -1,0 +1,24 @@
+name: Cleanup Registry
+
+on:
+  schedule:
+    - cron: '0 0 * * 1' # https://crontab.guru/#0_0_*_*_1
+  workflow_dispatch:
+
+env:
+  IMAGE_NAMES: sofia
+
+jobs:
+  cleanup:
+    name: Cleanup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete old versions
+        uses: snok/container-retention-policy@46881d5f6ddd0509d9646f4565ddcdfdca520707 # tag=v1.4.2
+        with:
+          image-names: ${{ env.IMAGE_NAMES }}
+          cut-off: 2 days ago UTC
+          account-type: org
+          org-name: ${{ github.repository_owner }}
+          skip-tags: latest,staging
+          token: ${{ secrets.PAT }}

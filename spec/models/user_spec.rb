@@ -148,7 +148,7 @@ RSpec.describe User, type: :model do
 
   describe '#age' do
     context 'when without birthday' do
-      it { expect(user.age).to eq nil }
+      it { expect(user.age).to be_nil }
     end
 
     context 'when birthday did not pass this year' do
@@ -166,19 +166,19 @@ RSpec.describe User, type: :model do
 
   describe '#minor' do
     context 'when without age' do
-      it { expect(user.minor).to eq false }
+      it { expect(user.minor).to be false }
     end
 
     context 'when 18 or older' do
       let(:user) { build(:user, birthday: 18.years.ago - 1.day) }
 
-      it { expect(user.minor).to eq false }
+      it { expect(user.minor).to be false }
     end
 
     context 'when younger than 18' do
       let(:user) { build(:user, birthday: (18.years.ago + 1.day)) }
 
-      it { expect(user.minor).to eq true }
+      it { expect(user.minor).to be true }
     end
   end
 
@@ -192,13 +192,13 @@ RSpec.describe User, type: :model do
         create(:roles_users, role: role, user: user)
       end
 
-      it { expect(user.treasurer?).to eq true }
+      it { expect(user.treasurer?).to be true }
     end
 
     context 'when without treasurer role' do
       subject(:user) { create(:user) }
 
-      it { expect(user.treasurer?).to eq false }
+      it { expect(user.treasurer?).to be false }
     end
   end
 
@@ -212,13 +212,13 @@ RSpec.describe User, type: :model do
         create(:roles_users, role: role, user: user)
       end
 
-      it { expect(user.main_bartender?).to eq true }
+      it { expect(user.main_bartender?).to be true }
     end
 
     context 'when without main_bartender role' do
       subject(:user) { create(:user) }
 
-      it { expect(user.main_bartender?).to eq false }
+      it { expect(user.main_bartender?).to be false }
     end
   end
 
@@ -313,7 +313,7 @@ RSpec.describe User, type: :model do
     context 'when with wrong date' do
       subject(:spendings_hash) { described_class.calculate_spendings(from: 2.days.from_now, to: 2.days.ago) }
 
-      it { expect(spendings_hash[user.id]).to eq nil }
+      it { expect(spendings_hash[user.id]).to be_nil }
     end
 
     context 'when on specific date' do

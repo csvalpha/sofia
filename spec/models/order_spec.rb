@@ -105,6 +105,6 @@ RSpec.describe Order, type: :model do
   describe '#destroy' do
     let(:order) { create(:order) }
 
-    it { expect(order.destroy).to eq false }
+    it { expect(order.destroy).to be false }
   end
 end

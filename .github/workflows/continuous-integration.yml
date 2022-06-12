@@ -1,0 +1,108 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [staging, master]
+  pull_request:
+  workflow_call:
+    inputs:
+      sha:
+        required: false
+        type: string
+    secrets:
+      rails_master_key:
+        required: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
+        with:
+          ref: ${{ inputs.sha }}
+
+      - name: Build test image
+        uses: guidojw/actions/build-docker-image@92f1fbb6058a84135e953d0d49462bccf3e6336a # tag=v1.2.0
+        with:
+          file: Dockerfile
+          build-args: |
+            RAILS_ENV=test
+          name: app
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    needs: build
+    services:
+      db:
+        image: postgres:14.2
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
+        with:
+          ref: ${{ inputs.sha }}
+
+      - name: Add problem matchers
+        run: |
+          echo '::add-matcher::.github/problem-matchers/rubocop.json'
+          echo '::add-matcher::.github/problem-matchers/eslint-stylish.json'
+
+      - name: Load test image
+        uses: guidojw/actions/load-docker-image@92f1fbb6058a84135e953d0d49462bccf3e6336a # tag=v1.2.0
+        with:
+          name: app
+
+      - name: Lint
+        env:
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+        run: |
+          docker run -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_HOST=localhost -e \
+            RAILS_MASTER_KEY --network=host app bin/ci.sh lint
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: build
+    services:
+      db:
+        image: postgres:11.2
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
+        with:
+          ref: ${{ inputs.sha }}
+
+      - name: Add problem matchers
+        run: |
+          echo '::add-matcher::.github/problem-matchers/rspec.json'
+
+      - name: Load test image
+        uses: guidojw/actions/load-docker-image@92f1fbb6058a84135e953d0d49462bccf3e6336a # tag=v1.2.0
+        with:
+          name: app
+
+      - name: Test
+        env:
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+        run: |
+          docker run -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_HOST=localhost -e \
+            RAILS_MASTER_KEY --network=host app bin/ci.sh spec

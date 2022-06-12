@@ -79,13 +79,13 @@ RSpec.describe Activity, type: :model do
     context 'when after two months' do
       subject(:activity) { build(:activity, :locked) }
 
-      it { expect(activity.destroy).to eq false }
+      it { expect(activity.destroy).to be false }
     end
 
     context 'when manually locked' do
       subject(:activity) { build(:activity, :manually_locked) }
 
-      it { expect(activity.destroy).to eq false }
+      it { expect(activity.destroy).to be false }
     end
   end
 
@@ -108,7 +108,7 @@ RSpec.describe Activity, type: :model do
     context 'when locked' do
       let(:activity) { create(:activity, :locked) }
 
-      it { expect(activity.destroyable?).to eq false }
+      it { expect(activity.destroyable?).to be false }
     end
 
     context 'when with orders' do
@@ -118,7 +118,7 @@ RSpec.describe Activity, type: :model do
         create(:order, activity: activity)
       end
 
-      it { expect(activity.destroyable?).to eq false }
+      it { expect(activity.destroyable?).to be false }
     end
 
     context 'when with credit mutations' do
@@ -128,13 +128,13 @@ RSpec.describe Activity, type: :model do
         create(:credit_mutation, activity: activity)
       end
 
-      it { expect(activity.destroyable?).to eq false }
+      it { expect(activity.destroyable?).to be false }
     end
 
     context 'when empty' do
       let(:activity) { create(:activity) }
 
-      it { expect(activity.destroyable?).to eq true }
+      it { expect(activity.destroyable?).to be true }
     end
   end
 
@@ -351,7 +351,7 @@ RSpec.describe Activity, type: :model do
   describe '#locked?' do
     subject(:activity) { build_stubbed(:activity, :locked) }
 
-    it { expect(activity.locked?).to eq true }
+    it { expect(activity.locked?).to be true }
   end
 
   describe '#manually_added_users_with_orders' do
