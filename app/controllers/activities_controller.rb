@@ -27,7 +27,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
     authorize @activity
 
     if @activity.save
-      flash[:success] = 'Successfully created activity'
+      flash[:success] = 'Activiteit aangemaakt'
     else
       flash[:error] = @activity.errors.full_messages.join(', ')
     end
