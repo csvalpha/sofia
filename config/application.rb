@@ -27,10 +27,10 @@ module Sofia
     config.x.banana_api_host      = credentials.dig(Rails.env.to_sym, :banana_host)
     config.x.banana_api_url       = "#{Rails.env.development? ? 'http' : 'https'}://#{credentials.dig(Rails.env.to_sym, :banana_host)}"
 
-    config.x.banana_client_id     = credentials.dig(Rails.env.to_sym, :banana_client_id) || ENV['BANANA_CLIENT_ID']
+    config.x.banana_client_id     = credentials.dig(Rails.env.to_sym, :banana_client_id) || ENV.fetch('BANANA_CLIENT_ID', nil)
     config.x.banana_client_secret = credentials.dig(
       Rails.env.to_sym, :banana_client_secret
-    ) || ENV['BANANA_CLIENT_SECRET']
+    ) || ENV.fetch('BANANA_CLIENT_SECRET', nil)
 
     config.x.banana_host          = credentials.dig(Rails.env.to_sym, :banana_host)
     config.x.tomato_host          = credentials.dig(Rails.env.to_sym, :tomato_host)
