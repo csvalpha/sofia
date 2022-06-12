@@ -108,6 +108,14 @@ document.addEventListener('turbolinks:load', () => {
           }).length > 0;
         },
 
+        maybeConfirmOrder(e) {
+          if (this.selectedUser && this.selectedUser.insufficient_credit) {
+            this.$root.$emit('bv::show::modal', 'insufficient-credit-modal', e.target)
+          } else {
+            this.confirmOrder();
+          }
+        },
+
         confirmOrder() {
           this.isSubmitting = true;
 
