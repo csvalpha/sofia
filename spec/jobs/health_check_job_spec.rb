@@ -4,7 +4,7 @@ RSpec.describe HealthCheckJob, type: :job do
   describe '#perform' do
     let(:job) { described_class.perform_now(:test) }
     let(:hc_id) { 'test-id' }
-    let(:http) { class_double('HTTP') }
+    let(:http) { class_double(HTTP) }
     let(:fake_http) { instance_double(FakeHTTP) }
 
     before do
