@@ -64,7 +64,7 @@
 
   <b-modal id="insufficient-credit-modal" ref="creditMutationModal" title="Negatief saldo" @ok="confirmOrder">
     <div class="modal-body" v-if="selectedUser">
-      {{selectedUser.name}} staat <b class=\"text-danger\">{{doubleToCurrency(-selectedUser.credit)}}</b> negatief! Vraag de gebruiker om zijn of haar saldo op te waarderen via iDEAL of contante inleg.
+      {{selectedUser.name}} staat <b class="text-danger">{{doubleToCurrency(-selectedUser.credit)}}</b> negatief! Vraag de gebruiker om zijn of haar saldo op te waarderen via iDEAL of contante inleg.
     </div>
     <template #modal-footer="{ ok, cancel }">
       <button aria-label="Close" class="btn btn-secondary mr-1" @click="cancel()" type="button">
