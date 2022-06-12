@@ -1,6 +1,6 @@
 <% content_for :title, "Streepscherm #{@activity.title} - SOFIA" %>
 <%= content_tag :div, id: 'order-screen', class: 'order-screen',
-                data: {users: @users_json, product_prices: @product_prices_json, activity: @activity_json, sumup_callback: sumup_callback_activity_url, sumup_key: @sumup_key} do
+                data: {users: @users_json, product_prices: @product_prices_json, activity: @activity_json, sumup_callback: sumup_callback_activity_url, sumup_key: @sumup_key, flashes: flash} do
 
 %>
   <b-modal id="credit-mutation-modal" ref="creditMutationModal" title="Inleggen">
@@ -61,6 +61,7 @@
       </button>
     </div>
   </b-modal>
+
   <nav class="header">
     <ul class="header-nav">
       <li class="header-nav-item header-nav-home">
@@ -83,21 +84,7 @@
         </small>
       </li>
     </ul>
-    <div class="row col-lg-4">
-      <% flash.each do |key, value| %>
-        <div class="col-12 pt-2 text-center">
-          <div class="alert alert-dismissible fade show <%= flash_class key %>" role="alert">
-            <%= value %>
-            <button aria-label="Close" class="close" data-dismiss="alert" type="button">
-                  <span aria-hidden="true">
-                    <%= fa_icon 'times' %>
-                  </span>
-            </button>
-          </div>
-        </div>
-      <% end %>
-    </div>
-    <div class="row col-lg-4 pull-right no-gutters" style="flex-direction: row-reverse">
+    <div class="row pull-right no-gutters" style="flex-direction: row-reverse">
       <b-btn class="m-3" v-on:click="keepUserSelected = !keepUserSelected" variant="outline-secondary">
         <span v-if="keepUserSelected">
           <%= fa_icon 'check-square lg', class: 'mr-1' %>
