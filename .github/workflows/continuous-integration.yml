@@ -24,7 +24,7 @@ jobs:
           ref: ${{ inputs.sha }}
 
       - name: Build test image
-        uses: guidojw/actions/build-docker-image@92f1fbb6058a84135e953d0d49462bccf3e6336a # tag=v1.2.0
+        uses: guidojw/actions/build-docker-image@5faa9418b42a6a77f81e11ae935287900673f98b # tag=v1.3.2
         with:
           file: Dockerfile
           build-args: |
@@ -60,7 +60,7 @@ jobs:
           echo '::add-matcher::.github/problem-matchers/eslint-stylish.json'
 
       - name: Load test image
-        uses: guidojw/actions/load-docker-image@92f1fbb6058a84135e953d0d49462bccf3e6336a # tag=v1.2.0
+        uses: guidojw/actions/load-docker-image@5faa9418b42a6a77f81e11ae935287900673f98b # tag=v1.3.2
         with:
           name: app
 
@@ -96,7 +96,7 @@ jobs:
           echo '::add-matcher::.github/problem-matchers/rspec.json'
 
       - name: Load test image
-        uses: guidojw/actions/load-docker-image@92f1fbb6058a84135e953d0d49462bccf3e6336a # tag=v1.2.0
+        uses: guidojw/actions/load-docker-image@5faa9418b42a6a77f81e11ae935287900673f98b # tag=v1.3.2
         with:
           name: app
 
