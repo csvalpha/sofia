@@ -21,12 +21,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
         with:
           ref: ${{ inputs.sha }}
 
       - name: Build test image
-        uses: guidojw/actions/build-docker-image@2b1dea8cbd9e44491c269e771b75636026caf8ca # tag=v1.1.0
+        uses: guidojw/actions/build-docker-image@92f1fbb6058a84135e953d0d49462bccf3e6336a # tag=v1.2.0
         with:
           file: Dockerfile
           build-args: |
@@ -39,7 +39,10 @@ jobs:
     needs: build
     services:
       db:
-        image: postgres:11.2
+        image: postgres:14.2
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -49,7 +52,7 @@ jobs:
           - 5432:5432
     steps:
       - name: Checkout code
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
         with:
           ref: ${{ inputs.sha }}
 
@@ -64,7 +67,7 @@ jobs:
           bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
 
       - name: Load test image
-        uses: guidojw/actions/load-docker-image@2b1dea8cbd9e44491c269e771b75636026caf8ca # tag=v1.1.0
+        uses: guidojw/actions/load-docker-image@92f1fbb6058a84135e953d0d49462bccf3e6336a # tag=v1.2.0
         with:
           name: app
 
@@ -74,8 +77,8 @@ jobs:
         run: |
           EXIT_STATUS=0
           ./actionlint -ignore 'property "app_private_key" is not defined' -ignore 'SC2153:' || EXIT_STATUS=$?
-          docker run -e POSTGRES_USER=postgres -e POSTGRES_HOST=localhost -e RAILS_MASTER_KEY --network=host app \
-            bin/ci.sh lint || EXIT_STATUS=$?
+          docker run -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_HOST=localhost -e \
+            RAILS_MASTER_KEY --network=host app bin/ci.sh lint || EXIT_STATUS=$?
           exit $EXIT_STATUS
 
   test:
@@ -94,7 +97,7 @@ jobs:
           - 5432:5432
     steps:
       - name: Checkout code
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
         with:
           ref: ${{ inputs.sha }}
 
@@ -103,7 +106,7 @@ jobs:
           echo '::add-matcher::.github/problem-matchers/rspec.json'
 
       - name: Load test image
-        uses: guidojw/actions/load-docker-image@2b1dea8cbd9e44491c269e771b75636026caf8ca # tag=v1.1.0
+        uses: guidojw/actions/load-docker-image@92f1fbb6058a84135e953d0d49462bccf3e6336a # tag=v1.2.0
         with:
           name: app
 
@@ -111,5 +114,5 @@ jobs:
         env:
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
         run: |
-          docker run -e POSTGRES_USER=postgres -e POSTGRES_HOST=localhost -e RAILS_MASTER_KEY --network=host app \
-            bin/ci.sh spec
+          docker run -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_HOST=localhost -e \
+            RAILS_MASTER_KEY --network=host app bin/ci.sh spec

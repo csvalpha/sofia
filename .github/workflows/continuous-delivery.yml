@@ -37,7 +37,7 @@ jobs:
       stage: ${{ steps.get_metadata.outputs.stage }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
 
       - name: Get metadata
         id: get_metadata
@@ -82,7 +82,7 @@ jobs:
 
       - name: Checkout code
         if: fromJSON(needs.metadata.outputs.has_diff)
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
 
       - name: Run merge
         if: fromJSON(needs.metadata.outputs.has_diff)
@@ -140,16 +140,15 @@ jobs:
           fi
 
       - name: Checkout code
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
         with:
           ref: ${{ needs.merge.outputs.sha }}
 
       - name: Start deployment
-        uses: bobheadxi/deployments@f235d02c2daaaa84c710d013c7d39f7f0f8bf298 # tag=v0.6.2
+        uses: bobheadxi/deployments@11bd6447913c3ffeedb5552bcf6890d1668d9732 # tag=v1.2.0
         id: start_deployment
         with:
           step: start
-          token: ${{ secrets.GITHUB_TOKEN }}
           env: ${{ needs.metadata.outputs.stage }}
 
       - name: Deploy
@@ -178,13 +177,13 @@ jobs:
           set_commits: skip
 
       - name: Finish deployment
-        uses: bobheadxi/deployments@f235d02c2daaaa84c710d013c7d39f7f0f8bf298 # tag=v0.6.2
+        uses: bobheadxi/deployments@11bd6447913c3ffeedb5552bcf6890d1668d9732 # tag=v1.2.0
         if: steps.start_deployment.conclusion == 'success' && always()
         with:
           step: finish
-          token: ${{ secrets.GITHUB_TOKEN }}
           status: ${{ job.status }}
           deployment_id: ${{ steps.start_deployment.outputs.deployment_id }}
+          env: ${{ needs.metadata.outputs.stage }}
           env_url: ${{ steps.get_url.outputs.environment_url }}
 
   update_check_run:
@@ -207,7 +206,7 @@ jobs:
           done
 
       - name: Update Continuous Delivery check run
-        uses: guidojw/actions/update-check-run@2b1dea8cbd9e44491c269e771b75636026caf8ca # tag=v1.1.0
+        uses: guidojw/actions/update-check-run@92f1fbb6058a84135e953d0d49462bccf3e6336a # tag=v1.2.0
         with:
           app_id: ${{ env.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}

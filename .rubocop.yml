@@ -47,6 +47,9 @@ Metrics/MethodLength:
 Rails/HttpPositionalArguments:
   Enabled: false
 
+Rails/I18nLocaleTexts:
+  Enabled: false
+
 Rails/ReversibleMigration:
   Enabled: false
 
