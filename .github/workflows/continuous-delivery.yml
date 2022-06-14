@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Validate branch
         run: |
-          if [ $GITHUB_REF_NAME != 'staging' ] && [ $GITHUB_REF_NAME != 'master' ]; then
+          if [ "$GITHUB_REF_NAME" != 'staging' ] && [ "$GITHUB_REF_NAME" != 'master' ]; then
             echo 'This workflow can only be run on branches staging and master.'
             exit 1
           fi
@@ -44,7 +44,7 @@ jobs:
         env:
           INPUT_MERGE: ${{ github.event.inputs.merge }}
         run: |
-          if [ $GITHUB_REF_NAME = 'master' ]; then
+          if [ "$GITHUB_REF_NAME" = 'master' ]; then
             if [ "${INPUT_MERGE,,}" = 'y' ]; then
               git fetch origin staging
               if ! git diff origin/master origin/staging --exit-code; then
@@ -71,7 +71,7 @@ jobs:
         env:
           HAS_DIFF: ${{ fromJSON(needs.metadata.outputs.has_diff || false) }}
         run: |
-          if [ $GITHUB_REF_NAME != 'master' ]; then
+          if [ "$GITHUB_REF_NAME" != 'master' ]; then
             echo 'Can only merge when the workflow target branch is master.'
             exit 1
           fi
@@ -98,7 +98,7 @@ jobs:
         if: fromJSON(needs.metadata.outputs.has_diff)
         run: |
           git fetch origin master
-          echo '::set-output name=sha::'$(git rev-parse origin/master)
+          echo '::set-output name=sha::'"$(git rev-parse origin/master)"
 
   continuous_integration:
     name: Continuous Integration
@@ -133,7 +133,7 @@ jobs:
       - name: Get environment URL
         id: get_url
         run: |
-          if [ $GITHUB_REF_NAME = 'master' ]; then
+          if [ "$GITHUB_REF_NAME" = 'master' ]; then
             echo '::set-output name=environment_url::https://streep.csvalpha.nl'
           else
             echo '::set-output name=environment_url::https://staging.streep.csvalpha.nl'
@@ -199,8 +199,8 @@ jobs:
         run: |
           echo '::set-output name=conclusion::success'
           for RESULT in $RESULTS; do
-            if [ $RESULT = 'cancelled' ] || [ $RESULT = 'failure' ]; then
-              echo '::set-output name=conclusion::'$RESULT
+            if [ "$RESULT" = 'cancelled' ] || [ "$RESULT" = 'failure' ]; then
+              echo '::set-output name=conclusion::'"$RESULT"
               break
             fi
           done

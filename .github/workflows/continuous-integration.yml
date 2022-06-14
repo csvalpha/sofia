@@ -7,10 +7,12 @@ on:
   workflow_call:
     inputs:
       sha:
+        description: The commit SHA to run the workflow on
         required: false
         type: string
     secrets:
       rails_master_key:
+        description: The Rails master key
         required: true
 
 jobs:
@@ -56,8 +58,13 @@ jobs:
 
       - name: Add problem matchers
         run: |
-          echo '::add-matcher::.github/problem-matchers/rubocop.json'
+          echo '::add-matcher::.github/problem-matchers/actionlint.json'
           echo '::add-matcher::.github/problem-matchers/eslint-stylish.json'
+          echo '::add-matcher::.github/problem-matchers/rubocop.json'
+
+      - name: Download actionlint
+        run: |
+          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
 
       - name: Load test image
         uses: guidojw/actions/load-docker-image@5faa9418b42a6a77f81e11ae935287900673f98b # tag=v1.3.2
@@ -68,8 +75,11 @@ jobs:
         env:
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
         run: |
+          EXIT_STATUS=0
+          ./actionlint -ignore 'property "app_private_key" is not defined' -ignore 'SC2153:' || EXIT_STATUS=$?
           docker run -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_HOST=localhost -e \
-            RAILS_MASTER_KEY --network=host app bin/ci.sh lint
+            RAILS_MASTER_KEY --network=host app bin/ci.sh lint || EXIT_STATUS=$?
+          exit $EXIT_STATUS
 
   test:
     name: Test
