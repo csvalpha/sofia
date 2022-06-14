@@ -86,12 +86,6 @@ document.addEventListener('turbolinks:load', () => {
           this.$delete(this.orderRows, index);
         },
 
-        orderTotal() {
-          return this.orderRows.map(function(row) {
-            return row.productPrice.price * row.amount;
-          }).reduce((total, amount) => total + amount, 0);
-        },
-
         decreaseRowAmount(orderRow) {
           if (orderRow.amount > 0) {
             orderRow.amount--;
@@ -100,12 +94,6 @@ document.addEventListener('turbolinks:load', () => {
 
         increaseRowAmount(orderRow) {
           orderRow.amount++;
-        },
-
-        orderRequiresAge() {
-          return this.orderRows.filter((row) => {
-            return row.productPrice.product.requires_age;
-          }).length > 0;
         },
 
         maybeConfirmOrder(e) {
@@ -177,16 +165,6 @@ document.addEventListener('turbolinks:load', () => {
           });
         },
 
-        orderConfirmButtonDisabled() {
-          return !(this.selectedUser || this.payWithCash || this.payWithPin) || this.totalProductCount() == 0 || this.isSubmitting;
-        },
-
-        totalProductCount() {
-          return this.orderRows.map(function(row) {
-            return row.amount;
-          }).reduce((total, amount) => total + amount, 0);
-        },
-
         saveCreditMutation(event) {
           this.isSubmitting = true;
 
@@ -249,7 +227,7 @@ document.addEventListener('turbolinks:load', () => {
           }
         },
 
-        escapeKeyListener: function(evt) {
+        escapeKeyListener(evt) {
           if (evt.keyCode === 27 && app.selectedUser) {
             app.setUser(null);
           }
@@ -257,10 +235,44 @@ document.addEventListener('turbolinks:load', () => {
       },
 
       computed: {
-        sumupUrl: function() {
+        orderTotal() {
+          return this.orderRows.map(function(row) {
+            return row.productPrice.price * row.amount;
+          }).reduce((total, amount) => total + amount, 0);
+        },
+
+        orderRequiresAge() {
+          return this.orderRows.filter((row) => {
+            return row.productPrice.product.requires_age;
+          }).length > 0;
+        },
+
+        orderConfirmButtonDisabled() {
+          return !(this.selectedUser || this.payWithCash || this.payWithPin) || this.totalProductCount == 0 || this.isSubmitting;
+        },
+
+        showOrderWarning() {
+          return this.showInsufficientCreditWarning || this.showAgeWarning;
+        },
+
+        showInsufficientCreditWarning() {
+          return this.selectedUser && this.selectedUser.insufficient_credit;
+        },
+
+        showAgeWarning() {
+          return this.selectedUser && this.selectedUser.minor && this.orderRequiresAge
+        },
+
+        totalProductCount() {
+          return this.orderRows.map(function(row) {
+            return row.amount;
+          }).reduce((total, amount) => total + amount, 0);
+        },
+
+        sumupUrl() {
           let affilateKey = element.dataset.sumupKey;
           let callback = element.dataset.sumupCallback;
-          return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&total=${this.orderTotal()}&currency=EUR&title=Bestelling SOFIA&callback=${callback}`;
+          return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&total=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&callback=${callback}`;
         },
       },
 

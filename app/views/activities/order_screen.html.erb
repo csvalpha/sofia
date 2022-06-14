@@ -70,7 +70,7 @@
       <button aria-label="Close" class="btn btn-secondary mr-1" @click="cancel()" type="button">
         Annuleren
       </button>
-      <button class="btn btn-warning" :disabled="orderConfirmButtonDisabled()" @click="ok()" type="button">
+      <button class="btn btn-warning" :disabled="orderConfirmButtonDisabled" @click="ok()" type="button">
         Bestelling toch plaatsen
       </button>
     </template>
@@ -177,7 +177,7 @@
             Totaal:
           </h4>
           <h4 class="col-3 px-2">
-            {{doubleToCurrency(orderTotal())}}
+            {{doubleToCurrency(orderTotal)}}
           </h4>
         </div>
       </div>
@@ -185,35 +185,42 @@
         <div class="btn-group btn-group-lg btn-block" role="group" v-if="payWithPin && <%= @sumup_enabled.to_s %>">
           <a role="button" class="btn btn-success col-9"
              @click="confirmOrder"
-             :class="{ 'disabled': orderConfirmButtonDisabled() }"
+             :class="{ 'disabled': orderConfirmButtonDisabled }"
              :href="sumupUrl">
             <span class="text-uppercase">
               Sumup betaling
             </span>
           </a>
-          <button type="button" class="btn btn-dark" :disabled="orderConfirmButtonDisabled()"
+          <button type="button" class="btn btn-dark" :disabled="orderConfirmButtonDisabled"
                   @click="confirmOrder">
             <%= fa_icon 'money' %>
           </button>
         </div>
 
         <button @click="maybeConfirmOrder" class="btn btn-block btn-lg btn-success"
-              :class="{ 'btn-warning' : selectedUser && ((orderRequiresAge() && selectedUser.minor) || selectedUser.insufficient_credit) }"
-              :disabled="orderConfirmButtonDisabled()"
+              :class="{ 'btn-warning' : showOrderWarning }"
+              :disabled="orderConfirmButtonDisabled"
               v-if="!payWithPin || !<%= @sumup_enabled.to_s %>">
         <span class="text-uppercase">
           Bestelling plaatsen
         </span>
         <br/>
-        <small v-if="selectedUser && (selectedUser.insufficient_credit || (orderRequiresAge() && selectedUser.minor))">
-          <span>
-            <%= fa_icon 'exclamation-triangle ' %>
+        <small v-if="showOrderWarning">
+          <span v-if="showInsufficientCreditWarning" class="d-block">
+            <span>
+              <%= fa_icon 'exclamation-triangle ' %>
+            </span>
+            <span>
+              {{selectedUser.name}} staat <b>{{doubleToCurrency(-selectedUser.credit)}}</b> negatief!
+            </span>
           </span>
-          <span v-if="selectedUser.insufficient_credit">
-            {{selectedUser.name}} staat <b>{{doubleToCurrency(-selectedUser.credit)}}</b> negatief!
-          </span>
-          <span v-if="orderRequiresAge() && selectedUser.minor">
-            {{selectedUser.name}} is minderjarig!
+          <span v-if="showAgeWarning" class="d-block">
+            <span>
+              <%= fa_icon 'exclamation-triangle ' %>
+            </span>
+            <span>
+              {{selectedUser.name}} is minderjarig!
+            </span>
           </span>
         </small>
       </button>
