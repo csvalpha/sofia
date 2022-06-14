@@ -6,12 +6,15 @@ on:
   workflow_call:
     inputs:
       sha:
+        description: The commit SHA to run the workflow on
         required: false
         type: string
     secrets:
       rails_master_key:
+        description: The Rails master key
         required: true
       sentry_auth_token:
+        description: The Sentry integration's token
         required: true
   workflow_dispatch:
 
@@ -34,15 +37,15 @@ jobs:
         env:
           INPUT_SHA: ${{ inputs.sha }}
         run: |
-          if [ $GITHUB_REF_NAME = 'master' ]; then
+          if [ "$GITHUB_REF_NAME" = 'master' ]; then
             echo '::set-output name=tag::latest'
           else
-            echo '::set-output name=tag::'$GITHUB_REF_NAME
+            echo '::set-output name=tag::'"$GITHUB_REF_NAME"
           fi
 
-          if [ $GITHUB_REF_NAME = 'staging' ] || [ $GITHUB_REF_NAME = 'master' ]; then
+          if [ "$GITHUB_REF_NAME" = 'staging' ] || [ "$GITHUB_REF_NAME" = 'master' ]; then
             BUILD_ARGS='BUILD_HASH='${INPUT_SHA:-$GITHUB_SHA}
-            echo '::set-output name=build_args::'$BUILD_ARGS
+            echo '::set-output name=build_args::'"$BUILD_ARGS"
           fi
 
   publish:
@@ -86,7 +89,7 @@ jobs:
         env:
           IMAGE_NAME: ${{ fromJSON(steps.build_push_image.outputs.metadata)['image.name'] }}
         run: |
-          docker cp $(docker create $IMAGE_NAME):/app/public/packs/js/. sourcemaps
+          docker cp "$(docker create "$IMAGE_NAME")":/app/public/packs/js/. sourcemaps
 
       - name: Create Sentry release
         if: ${{ !(github.event_name == 'workflow_dispatch' && github.workflow == 'Publish Image') }}
@@ -113,14 +116,14 @@ jobs:
         run: |
           echo '::set-output name=conclusion::success'
           for RESULT in $RESULTS; do
-            if [ $RESULT = 'cancelled' ] || [ $RESULT = 'failure' ]; then
-              echo '::set-output name=conclusion::'$RESULT
+            if [ "$RESULT" = 'cancelled' ] || [ "$RESULT" = 'failure' ]; then
+              echo '::set-output name=conclusion::'"$RESULT"
               break
             fi
           done
 
       - name: Update Publish Image check run
-        uses: guidojw/actions/update-check-run@92f1fbb6058a84135e953d0d49462bccf3e6336a # tag=v1.2.0
+        uses: guidojw/actions/update-check-run@5faa9418b42a6a77f81e11ae935287900673f98b # tag=v1.3.2
         with:
           app_id: ${{ env.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
