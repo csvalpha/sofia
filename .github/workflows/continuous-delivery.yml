@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Validate branch
         run: |
-          if [ $GITHUB_REF_NAME != 'staging' ] && [ $GITHUB_REF_NAME != 'master' ]; then
+          if [ "$GITHUB_REF_NAME" != 'staging' ] && [ "$GITHUB_REF_NAME" != 'master' ]; then
             echo 'This workflow can only be run on branches staging and master.'
             exit 1
           fi
@@ -37,14 +37,14 @@ jobs:
       stage: ${{ steps.get_metadata.outputs.stage }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
 
       - name: Get metadata
         id: get_metadata
         env:
           INPUT_MERGE: ${{ github.event.inputs.merge }}
         run: |
-          if [ $GITHUB_REF_NAME = 'master' ]; then
+          if [ "$GITHUB_REF_NAME" = 'master' ]; then
             if [ "${INPUT_MERGE,,}" = 'y' ]; then
               git fetch origin staging
               if ! git diff origin/master origin/staging --exit-code; then
@@ -71,7 +71,7 @@ jobs:
         env:
           HAS_DIFF: ${{ fromJSON(needs.metadata.outputs.has_diff || false) }}
         run: |
-          if [ $GITHUB_REF_NAME != 'master' ]; then
+          if [ "$GITHUB_REF_NAME" != 'master' ]; then
             echo 'Can only merge when the workflow target branch is master.'
             exit 1
           fi
@@ -82,7 +82,7 @@ jobs:
 
       - name: Checkout code
         if: fromJSON(needs.metadata.outputs.has_diff)
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
 
       - name: Run merge
         if: fromJSON(needs.metadata.outputs.has_diff)
@@ -98,7 +98,7 @@ jobs:
         if: fromJSON(needs.metadata.outputs.has_diff)
         run: |
           git fetch origin master
-          echo '::set-output name=sha::'$(git rev-parse origin/master)
+          echo '::set-output name=sha::'"$(git rev-parse origin/master)"
 
   continuous_integration:
     name: Continuous Integration
@@ -133,23 +133,22 @@ jobs:
       - name: Get environment URL
         id: get_url
         run: |
-          if [ $GITHUB_REF_NAME = 'master' ]; then
+          if [ "$GITHUB_REF_NAME" = 'master' ]; then
             echo '::set-output name=environment_url::https://streep.csvalpha.nl'
           else
             echo '::set-output name=environment_url::https://staging.streep.csvalpha.nl'
           fi
 
       - name: Checkout code
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
         with:
           ref: ${{ needs.merge.outputs.sha }}
 
       - name: Start deployment
-        uses: bobheadxi/deployments@f235d02c2daaaa84c710d013c7d39f7f0f8bf298 # tag=v0.6.2
+        uses: bobheadxi/deployments@11bd6447913c3ffeedb5552bcf6890d1668d9732 # tag=v1.2.0
         id: start_deployment
         with:
           step: start
-          token: ${{ secrets.GITHUB_TOKEN }}
           env: ${{ needs.metadata.outputs.stage }}
 
       - name: Deploy
@@ -178,13 +177,13 @@ jobs:
           set_commits: skip
 
       - name: Finish deployment
-        uses: bobheadxi/deployments@f235d02c2daaaa84c710d013c7d39f7f0f8bf298 # tag=v0.6.2
+        uses: bobheadxi/deployments@11bd6447913c3ffeedb5552bcf6890d1668d9732 # tag=v1.2.0
         if: steps.start_deployment.conclusion == 'success' && always()
         with:
           step: finish
-          token: ${{ secrets.GITHUB_TOKEN }}
           status: ${{ job.status }}
           deployment_id: ${{ steps.start_deployment.outputs.deployment_id }}
+          env: ${{ needs.metadata.outputs.stage }}
           env_url: ${{ steps.get_url.outputs.environment_url }}
 
   update_check_run:
@@ -200,14 +199,14 @@ jobs:
         run: |
           echo '::set-output name=conclusion::success'
           for RESULT in $RESULTS; do
-            if [ $RESULT = 'cancelled' ] || [ $RESULT = 'failure' ]; then
-              echo '::set-output name=conclusion::'$RESULT
+            if [ "$RESULT" = 'cancelled' ] || [ "$RESULT" = 'failure' ]; then
+              echo '::set-output name=conclusion::'"$RESULT"
               break
             fi
           done
 
       - name: Update Continuous Delivery check run
-        uses: guidojw/actions/update-check-run@2b1dea8cbd9e44491c269e771b75636026caf8ca # tag=v1.1.0
+        uses: guidojw/actions/update-check-run@5faa9418b42a6a77f81e11ae935287900673f98b # tag=v1.3.2
         with:
           app_id: ${{ env.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}

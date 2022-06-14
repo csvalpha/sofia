@@ -3,7 +3,6 @@ Alpha SOFIA
 
 [![Continuous Integration](https://github.com/csvalpha/sofia/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/csvalpha/sofia/actions/workflows/continuous-integration.yml)
 [![Continuous Delivery](https://github.com/csvalpha/sofia/actions/workflows/continuous-delivery.yml/badge.svg)](https://github.com/csvalpha/sofia/actions/workflows/continuous-delivery.yml)
-[![Depfu](https://badges.depfu.com/badges/511b8df2e034f68fa0e7b3a4ac476094/overview.svg)](https://depfu.com/github/csvalpha/sofia?project_id=7740)
 
 The source code belonging to Alpha SOFIA. It is a system built with Ruby on Rails with Turbolinks and a little VueJS, used to manage orders in our own bar "Flux". Users authenticate via OAuth API (currently "Alpha Banana") to see how much credit they got left, or to be able to register new orders and/or payments.
 

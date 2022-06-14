@@ -27,7 +27,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
     authorize @activity
 
     if @activity.save
-      flash[:success] = 'Successfully created activity'
+      flash[:success] = 'Activiteit aangemaakt'
     else
       flash[:error] = @activity.errors.full_messages.join(', ')
     end
@@ -158,6 +158,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
     User.active.order(:name).map do |user|
       hash = user.attributes
       hash[:minor] = user.minor
+      hash[:insufficient_credit] = user.insufficient_credit
       hash[:avatar_thumb_or_default_url] = user.avatar_thumb_or_default_url
       hash[:credit] = users_credits.fetch(user.id, 0)
       hash
