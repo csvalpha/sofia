@@ -260,7 +260,7 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         showAgeWarning() {
-          return this.selectedUser && this.selectedUser.minor && this.orderRequiresAge
+          return this.selectedUser && this.selectedUser.minor && this.orderRequiresAge;
         },
 
         totalProductCount() {
