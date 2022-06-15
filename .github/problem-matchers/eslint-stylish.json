@@ -4,7 +4,7 @@
       "owner": "eslint-stylish",
       "pattern": [
         {
-          "regexp": "^/opt/app/([^\\s].*)$",
+          "regexp": "^/app/app/([^\\s].*)$",
           "file": 1
         },
         {
