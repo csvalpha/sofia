@@ -61,6 +61,21 @@
       </button>
     </template>
   </b-modal>
+
+  <b-modal id="insufficient-credit-modal" ref="creditMutationModal" title="Negatief saldo" @ok="confirmOrder">
+    <div class="modal-body" v-if="selectedUser">
+      {{selectedUser.name}} staat <b class="text-danger">{{doubleToCurrency(-selectedUser.credit)}}</b> negatief! Vraag de gebruiker om zijn of haar saldo op te waarderen via iDEAL of contante inleg.
+    </div>
+    <template #modal-footer="{ ok, cancel }">
+      <button aria-label="Close" class="btn btn-secondary mr-1" @click="cancel()" type="button">
+        Annuleren
+      </button>
+      <button class="btn btn-warning" :disabled="orderConfirmButtonDisabled" @click="ok()" type="button">
+        Bestelling toch plaatsen
+      </button>
+    </template>
+  </b-modal>
+
   <nav class="header">
     <ul class="header-nav">
       <li class="header-nav-item header-nav-home">
@@ -162,7 +177,7 @@
             Totaal:
           </h4>
           <h4 class="col-3 px-2">
-            {{doubleToCurrency(orderTotal())}}
+            {{doubleToCurrency(orderTotal)}}
           </h4>
         </div>
       </div>
@@ -170,35 +185,45 @@
         <div class="btn-group btn-group-lg btn-block" role="group" v-if="payWithPin && <%= @sumup_enabled.to_s %>">
           <a role="button" class="btn btn-success col-9"
              @click="confirmOrder"
-             :class="{ 'disabled': orderConfirmButtonDisabled() }"
+             :class="{ 'disabled': orderConfirmButtonDisabled }"
              :href="sumupUrl">
             <span class="text-uppercase">
               Sumup betaling
             </span>
           </a>
-          <button type="button" class="btn btn-dark" v-bind:disabled="orderConfirmButtonDisabled()"
+          <button type="button" class="btn btn-dark" :disabled="orderConfirmButtonDisabled"
                   @click="confirmOrder">
             <%= fa_icon 'money' %>
           </button>
         </div>
 
-        <button @click="confirmOrder" class="btn btn-block btn-lg btn-success"
-                :class="{ 'btn-warning' : (orderRequiresAge() && selectedUser && selectedUser.minor) }"
-                :disabled="orderConfirmButtonDisabled()"
-                v-if="!payWithPin || !<%= @sumup_enabled.to_s %>">
-          <span class="text-uppercase">
-            Bestelling plaatsen
+        <button @click="maybeConfirmOrder" class="btn btn-block btn-lg btn-success"
+              :class="{ 'btn-warning' : showOrderWarning }"
+              :disabled="orderConfirmButtonDisabled"
+              v-if="!payWithPin || !<%= @sumup_enabled.to_s %>">
+        <span class="text-uppercase">
+          Bestelling plaatsen
+        </span>
+        <br/>
+        <small v-if="showOrderWarning">
+          <span v-if="showInsufficientCreditWarning" class="d-block">
+            <span>
+              <%= fa_icon 'exclamation-triangle ' %>
+            </span>
+            <span>
+              {{selectedUser.name}} staat <b>{{doubleToCurrency(-selectedUser.credit)}}</b> negatief!
+            </span>
           </span>
-          <br/>
-          <small v-if="orderRequiresAge() && selectedUser && selectedUser.minor">
+          <span v-if="showAgeWarning" class="d-block">
             <span>
               <%= fa_icon 'exclamation-triangle ' %>
             </span>
             <span>
               {{selectedUser.name}} is minderjarig!
             </span>
-          </small>
-        </button>
+          </span>
+        </small>
+      </button>
       </div>
     </div>
   </div>
@@ -208,7 +233,7 @@
   </div>
   <div class="product-grid" v-if="selectedUser || payWithCash || payWithPin">
     <div @click="selectProduct(productPrice)" class="product-grid-product"
-         v-bind:class="{ 'product-requires-age' : (selectedUser && selectedUser.minor && productPrice.product.requires_age) }"
+         :class="{ 'product-requires-age' : (selectedUser && selectedUser.minor && productPrice.product.requires_age) }"
          v-for="productPrice in productPrices">
       <span class="product-grid-product-requires-age py-1 fa-stack" v-if="selectedUser && selectedUser.minor && productPrice.product.requires_age">
         <i class="fa fa-circle fa-circle-lighter fa-stack-2x">
