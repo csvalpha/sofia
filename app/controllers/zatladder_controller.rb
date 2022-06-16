@@ -24,8 +24,8 @@ class ZatladderController < ApplicationController
   end
 
   def zatladder_spendings(from, to)
-    @users_spendings = User.in_banana.calculate_spendings(from: from, to: to)
-    zatladder = User.in_banana.select(:id, :name).map do |user|
+    @users_spendings = User.in_amber.calculate_spendings(from: from, to: to)
+    zatladder = User.in_amber.select(:id, :name).map do |user|
       {
         id: user.id,
         name: user.name,
