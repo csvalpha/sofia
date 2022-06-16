@@ -43,7 +43,7 @@ class User < ApplicationRecord
   end
 
   def insufficient_credit
-    provider == 'banana_oauth2' and credit < -5
+    provider == 'amber_oauth2' and credit < -5
   end
 
   def treasurer?
