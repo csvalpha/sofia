@@ -1,5 +1,5 @@
 class InvoiceMailer < ApplicationMailer
-  def invoice_mail(invoice)
+  def invoice_mail(invoice) # rubocop:disable Metrics/AbcSize
     @user = Struct.new(:name).new(invoice.name)
     @invoice = invoice
     @cab_link = url_for(controller: 'invoices', action: 'show', id: invoice.token)
@@ -9,7 +9,7 @@ class InvoiceMailer < ApplicationMailer
       render_to_string(pdf: invoice.human_id.to_s, template: 'invoices/show.html.erb', layout: 'pdf.html.erb')
     )
 
-    mail to: @invoice.email, subject: "Factuur #{invoice.human_id} Stichting Sociëteit Flux"
+    mail to: @invoice.email, subject: "Factuur #{invoice.human_id} #{config.x.company_name}"
   end
 
   def invoice_paid(invoice)
@@ -17,6 +17,6 @@ class InvoiceMailer < ApplicationMailer
     @invoice = invoice
     @cab_disabled = true
 
-    mail to: @invoice.email, subject: "Betaalbevesting factuur #{invoice.human_id} Stichting Sociëteit Flux"
+    mail to: @invoice.email, subject: "Betaalbevesting factuur #{invoice.human_id} #{config.x.company_name}"
   end
 end

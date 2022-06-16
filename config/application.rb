@@ -44,5 +44,14 @@ module Sofia
     config.x.sumup_key            = credentials.dig(Rails.env.to_sym, :sumup_affiliate_key)
     config.x.healthcheck_ids      = credentials.dig(Rails.env.to_sym, :healthcheck_ids)
     config.x.mollie_api_key       = credentials.dig(Rails.env.to_sym, :mollie_api_key)
+
+    config.x.from_email           = ENV.fetch('FROM_EMAIL', nil)
+    config.x.ict_email            = ENV.fetch('ICT_EMAIL', nil)
+    config.x.admin_email          = ENV.fetch('ADMIN_EMAIL', nil)
+    config.x.treasurer_email      = ENV.fetch('TREASURER_EMAIL', nil)
+    config.x.treasurer_name       = ENV.fetch('TREASURER_NAME', nil)
+
+    config.x.company_name         = ENV.fetch('COMPANY_NAME', nil)
+    config.x.company_iban         = ENV.fetch('COMPANY_IBAN', nil)
   end
 end

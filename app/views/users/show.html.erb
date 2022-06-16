@@ -108,7 +108,7 @@
                 </h4>
                 <p class="card-text">
                   <%= 'Om je saldo aan te vullen kan je zelf geld overmaken of betalen met iDEAL. ' %>
-                  <%= 'Dat kan naar NL68 INGB 0008 1654 20 t.n.v. Stichting Societeit Flux ' %>
+                  <%= "Dat kan naar #{config.x.company_iban} t.n.v. #{config.x.company_name}" %>
                   <%= 'onder vermelding van je naam en \'Inleg Zatladder\'.' %>
 
                   <%= link_to add_payments_path do %>

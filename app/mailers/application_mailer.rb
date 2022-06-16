@@ -1,5 +1,5 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'no-reply@societeitflux.nl',
-          reply_to: 'penningmeester@societeitflux.nl'
+  default from: config.x.from_email,
+          reply_to: config.x.treasurer_email
   layout 'mailer'
 end

@@ -1,5 +1,5 @@
 <p style="margin: 0; font-size: 16px; line-height: 20px">
-  Uw Flux saldo bedraagt momenteel: <span style="color:#ff0000;"><%= number_to_currency(@user.credit, unit: '€') %></span>
+  Uw saldo bedraagt momenteel: <span style="color:#ff0000;"><%= number_to_currency(@user.credit, unit: '€') %></span>
   <br />
   U wordt verzocht dit aan te vullen tot minstens 5 euro positief zoals
   beschreven in het Huishoudelijk Regelement van onze stichting.
@@ -18,15 +18,15 @@
 <br />
 
 <p style="margin: 0; font-size: 16px; line-height: 20px">
-  Uw saldo aanvullen kan ook door het geld over te maken naar <span style="white-space: nowrap;">NL68 INGB 0008 1654 20</span>
-  ten name van Stichting Sociëteit Flux onder vermelding van je naam en
+  Uw saldo aanvullen kan ook door het geld over te maken naar <span style="white-space: nowrap;"><%= config.x.company_iban %></span>
+  ten name van <%= config.x.company_name %> onder vermelding van je naam en
   'inleg zatladder'. Hiermee kan het echter enkele dagen duren voordat het saldo op uw account staat
 </p>
 
 <p>
   Mocht u meer details willen, of van mening zijn dat uw saldo
   niet klopt kunt u contact opnemen met de penningmeester via
-  <a href="mailto:penningmeester@societeitflux.nl">penningmeester@societeitflux.nl</a>.
+  <a mailto="<%= config.x.treasurere_email %>"><%= config.x.treasurere_email %></a>.
 </p>
 
 <br />
