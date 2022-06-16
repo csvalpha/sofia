@@ -50,8 +50,12 @@ module Sofia
     config.x.admin_email          = ENV.fetch('ADMIN_EMAIL', nil)
     config.x.treasurer_email      = ENV.fetch('TREASURER_EMAIL', nil)
     config.x.treasurer_name       = ENV.fetch('TREASURER_NAME', nil)
+    config.x.treasurer_phone      = ENV.fetch('TREASURER_PHONE', nil)
 
     config.x.company_name         = ENV.fetch('COMPANY_NAME', nil)
     config.x.company_iban         = ENV.fetch('COMPANY_IBAN', nil)
+    config.x.company_address      = ENV.fetch('COMPANY_ADDRESS', nil)
+    config.x.company_website      = ENV.fetch('COMPANY_WEBSITE', nil)
+    config.x.company_kvk          = ENV.fetch('COMPANY_KVK', nil)
   end
 end

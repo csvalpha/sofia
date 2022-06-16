@@ -1,5 +1,5 @@
 Devise.setup do |config|
-  config.mailer_sender = config.x.ict_email
+  config.mailer_sender = Rails.application.config.x.ict_email
 
   # ==> ORM configuration
   require 'devise/orm/active_record'

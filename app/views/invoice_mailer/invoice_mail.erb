@@ -4,12 +4,12 @@
   <br /><br />
 
   Wij verzoeken u dit bedrag binnen <b>14 dagen</b> te voldoen. Dit kan door het over te maken op rekeningnummer
-  <b><%= config.x.company_iban %></b> ten name van <b><%= config.x.company_name %></b>, met vermelding van het
+  <b><%= Rails.application.config.x.company_iban %></b> ten name van <b><%= Rails.application.config.x.company_name %></b>, met vermelding van het
   factuurnummer <%= @invoice.human_id %>. U kunt ook gebruik maken van de blauwe knop om direct te betalen via iDeal.
   <br/><br/>
 
   Mocht u hier vragen over hebben kunt u antwoorden op deze e-mail, of zelf contact opnemen met
-  <a href="mailto:<%= config.x.treasurere_email %>"><%= config.x.treasurere_email %></a>
+  <a href="mailto:<%= Rails.application.config.x.treasurer_email %>"><%= Rails.application.config.x.treasurer_email %></a>
 </p>
 
 <br />

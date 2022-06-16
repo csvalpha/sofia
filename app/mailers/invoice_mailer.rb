@@ -9,7 +9,7 @@ class InvoiceMailer < ApplicationMailer
       render_to_string(pdf: invoice.human_id.to_s, template: 'invoices/show.html.erb', layout: 'pdf.html.erb')
     )
 
-    mail to: @invoice.email, subject: "Factuur #{invoice.human_id} #{config.x.company_name}"
+    mail to: @invoice.email, subject: "Factuur #{invoice.human_id} #{Rails.application.config.x.company_name}"
   end
 
   def invoice_paid(invoice)
@@ -17,6 +17,6 @@ class InvoiceMailer < ApplicationMailer
     @invoice = invoice
     @cab_disabled = true
 
-    mail to: @invoice.email, subject: "Betaalbevesting factuur #{invoice.human_id} #{config.x.company_name}"
+    mail to: @invoice.email, subject: "Betaalbevesting factuur #{invoice.human_id} #{Rails.application.config.x.company_name}"
   end
 end
