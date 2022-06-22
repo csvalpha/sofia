@@ -145,7 +145,7 @@ jobs:
           ref: ${{ needs.merge.outputs.sha }}
 
       - name: Start deployment
-        uses: bobheadxi/deployments@11bd6447913c3ffeedb5552bcf6890d1668d9732 # tag=v1.2.0
+        uses: bobheadxi/deployments@9d4477fdaa4120020cd10ab7e97f68c801422e73 # tag=v1.3.0
         id: start_deployment
         with:
           step: start
@@ -177,7 +177,7 @@ jobs:
           set_commits: skip
 
       - name: Finish deployment
-        uses: bobheadxi/deployments@11bd6447913c3ffeedb5552bcf6890d1668d9732 # tag=v1.2.0
+        uses: bobheadxi/deployments@9d4477fdaa4120020cd10ab7e97f68c801422e73 # tag=v1.3.0
         if: steps.start_deployment.conclusion == 'success' && always()
         with:
           step: finish
