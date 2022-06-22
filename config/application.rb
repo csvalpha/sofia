@@ -24,15 +24,15 @@ module Sofia
     # See https://github.com/kickstarter/rack-attack#getting-started
     config.middleware.use Rack::Attack
 
-    config.x.banana_api_host      = credentials.dig(Rails.env.to_sym, :banana_host)
-    config.x.banana_api_url       = "#{Rails.env.development? ? 'http' : 'https'}://#{credentials.dig(Rails.env.to_sym, :banana_host)}"
+    config.x.amber_api_host      = credentials.dig(Rails.env.to_sym, :amber_host)
+    config.x.amber_api_url       = "#{Rails.env.development? ? 'http' : 'https'}://#{credentials.dig(Rails.env.to_sym, :amber_host)}"
 
-    config.x.banana_client_id     = credentials.dig(Rails.env.to_sym, :banana_client_id) || ENV.fetch('BANANA_CLIENT_ID', nil)
-    config.x.banana_client_secret = credentials.dig(
-      Rails.env.to_sym, :banana_client_secret
-    ) || ENV.fetch('BANANA_CLIENT_SECRET', nil)
+    config.x.amber_client_id     = credentials.dig(Rails.env.to_sym, :amber_client_id) || ENV.fetch('AMBER_CLIENT_ID', nil)
+    config.x.amber_client_secret = credentials.dig(
+      Rails.env.to_sym, :amber_client_secret
+    ) || ENV.fetch('AMBER_CLIENT_SECRET', nil)
 
-    config.x.banana_host          = credentials.dig(Rails.env.to_sym, :banana_host)
+    config.x.amber_host = credentials.dig(Rails.env.to_sym, :amber_host)
     config.x.tomato_host          = credentials.dig(Rails.env.to_sym, :tomato_host)
 
     config.x.slack_webhook        = credentials.dig(Rails.env.to_sym, :slack_webhook) || ''

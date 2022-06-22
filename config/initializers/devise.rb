@@ -9,6 +9,6 @@ Devise.setup do |config|
   # ==> OmniAuth
   require 'omniauth_strategies'
 
-  config.omniauth :banana_oauth2, Rails.application.config.x.banana_client_id,
-                  Rails.application.config.x.banana_client_secret
+  config.omniauth :amber_oauth2, Rails.application.config.x.amber_client_id,
+                  Rails.application.config.x.amber_client_secret
 end

@@ -1,5 +1,5 @@
 class CallbacksController < Devise::OmniauthCallbacksController
-  def banana_oauth2
+  def amber_oauth2
     user = User.from_omniauth(request.env['omniauth.auth'])
 
     if user.persisted?

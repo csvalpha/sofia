@@ -55,8 +55,8 @@
           <th scope="row">
             Accountbron
           </th>
-          <% if @user.provider == 'banana_oauth2' %>
-            <td class="text-right"><%= link_to 'C.S.V. Alpha', "#{Rails.application.config.x.banana_api_url}/users/#{@user.uid}" %>
+          <% if @user.provider == 'amber_oauth2' %>
+            <td class="text-right"><%= link_to 'C.S.V. Alpha', "#{Rails.application.config.x.amber_api_url}/users/#{@user.uid}" %>
             </td>
           <% else %>
             <td class="text-right"><%= @user.provider || 'Handmatig aangemaakt' %>
