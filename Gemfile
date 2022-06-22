@@ -17,7 +17,7 @@ gem 'mollie-api-ruby', '~> 4.7.0'
 gem 'net-imap', require: false
 gem 'net-pop', require: false
 gem 'net-smtp', require: false
-gem 'omniauth', '~> 1.9.0'
+gem 'omniauth', '~> 2.1.0'
 gem 'omniauth-oauth2', '~> 1.7.0'
 gem 'omniauth-rails_csrf_protection'
 gem 'paper_trail', '~> 12.3.0'
