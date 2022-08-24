@@ -274,6 +274,11 @@ document.addEventListener('turbolinks:load', () => {
           let callback = element.dataset.sumupCallback;
           return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&total=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&callback=${callback}`;
         },
+
+        isMobile() {
+          return /Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(navigator.userAgent) || // Android / iOS
+            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS
+        }
       },
 
       // Listen to escape button which are dispatched on the body content_tag
