@@ -84,7 +84,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
     @count_per_product = @activity.count_per_product
   end
 
-  def order_screen # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def order_screen # rubocop:disable Metrics/MethodLength
     authorize Activity
 
     @activity = Activity.includes([:price_list, { price_list: { product_price: :product } }])

@@ -277,7 +277,7 @@ document.addEventListener('turbolinks:load', () => {
 
         isMobile() {
           return /Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(navigator.userAgent) || // Android / iOS
-            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) // iPadOS
+            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS
         }
       },
 
