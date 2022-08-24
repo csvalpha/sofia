@@ -98,9 +98,8 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
 
     @activity_json = @activity.to_json(only: %i[id title start_time end_time])
 
-    is_mobile = Browser.new(request.user_agent).mobile?
     @sumup_key = Rails.application.config.x.sumup_key
-    @sumup_enabled = (is_mobile && @sumup_key.present?) || false
+    @sumup_enabled = @sumup_key.present?
 
     # Set flags for application.html.slim
     @show_navigationbar = false
