@@ -76,8 +76,7 @@ jobs:
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
         run: |
           EXIT_STATUS=0
-          ./actionlint -ignore 'property "app_private_key" is not defined' -ignore 'SC2153:' \
-            -ignore 'property "sha" is not defined in object type {}' || EXIT_STATUS=$?
+          ./actionlint -ignore 'SC2153:' || EXIT_STATUS=$?
           docker run -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_HOST=localhost -e \
             RAILS_MASTER_KEY --network=host app bin/ci.sh lint || EXIT_STATUS=$?
           exit $EXIT_STATUS
