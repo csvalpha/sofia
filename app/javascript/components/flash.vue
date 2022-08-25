@@ -9,7 +9,7 @@
       <div class="flash-text">
         <i :class="activeNotification.iconObject"/>
 
-        <span class="mr-4 font-weight-light">
+        <span class="font-weight-light" :class="{'mr-4': activeNotification.actionText}">
           {{activeNotification.message}}
         </span>
 
@@ -55,13 +55,13 @@ export default {
   },
 
   data: () => ({
-    notificationQue: [],
+    notificationQueue: [],
     activeNotification: null,
     timeoutVar: null
   }),
 
   created() {
-    addEventListener('flash', (flash) => {
+    document.body.addEventListener('flash', (flash) => {
       this.flash(flash.detail.message, flash.detail.actionText, flash.detail.type);
     });
   },
@@ -76,8 +76,8 @@ export default {
         iconObject: this.classes(this.icons, type)
       };
 
-      this.notificationQue.push(flashData);
-      this.notificationQueChanged();
+      this.notificationQueue.push(flashData);
+      this.notificationQueueChanged();
     },
 
     classes(propObject, type) {
@@ -93,12 +93,12 @@ export default {
 
     hideCurrentNotification() {
       this.activeNotification = null;
-      this.notificationQueChanged();
+      this.notificationQueueChanged();
     },
 
-    notificationQueChanged() {
-      if (!this.activeNotification && this.notificationQue.length > 0) {
-        const newNotification = this.notificationQue.shift();
+    notificationQueueChanged() {
+      if (!this.activeNotification && this.notificationQueue.length > 0) {
+        const newNotification = this.notificationQueue.shift();
         this.activeNotification = null;
 
         // Small delay for UX purposes
