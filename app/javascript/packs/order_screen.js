@@ -22,11 +22,18 @@ document.addEventListener('turbolinks:load', () => {
     var users = JSON.parse(element.dataset.users);
     var productPrices = JSON.parse(element.dataset.productPrices);
     var activity = JSON.parse(element.dataset.activity);
+    var flashes = JSON.parse(element.dataset.flashes);
 
     window.flash = function(message, actionText, type) {
       const event = new CustomEvent('flash', { detail: { message: message, actionText: actionText, type: type } } );
-      dispatchEvent(event);
+      document.body.dispatchEvent(event);
     };
+
+    setTimeout(() => {
+      for (let message of flashes) {
+        window.flash(message[1], null, message[0]);
+      }
+    }, 100); // Wait for flash component init
 
     const app = new Vue({
       el: element,
@@ -272,12 +279,20 @@ document.addEventListener('turbolinks:load', () => {
         sumupUrl() {
           let affilateKey = element.dataset.sumupKey;
           let callback = element.dataset.sumupCallback;
-          return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&total=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&callback=${callback}`;
+          if (this.isIos) {
+            return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&amount=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&callbacksuccess=${callback}&callbackfail=${callback}`;
+          } else {
+            return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&total=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&callback=${callback}`;
+          }
+        },
+
+        isIos() {
+          return /iPhone|iPad|iPod/i.test(navigator.userAgent) || // iOS
+            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS
         },
 
         isMobile() {
-          return /Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(navigator.userAgent) || // Android / iOS
-            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS
+          return this.isIos || /Android|webOS|Opera Mini/i.test(navigator.userAgent);
         }
       },
 
