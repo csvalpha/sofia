@@ -1,6 +1,6 @@
 class PaymentsController < ApplicationController
-  before_action :authenticate_user!, only: %i[index create]
-  after_action :verify_authorized, only: %i[index create]
+  before_action :authenticate_user!, only: %i[index create add]
+  after_action :verify_authorized, only: %i[index create add]
 
   def index
     @payments = Payment.all.order(created_at: :desc)
