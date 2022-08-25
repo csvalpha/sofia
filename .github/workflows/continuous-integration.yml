@@ -39,7 +39,7 @@ jobs:
     needs: build
     services:
       db:
-        image: postgres:14.5
+        image: postgres:14.2
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -88,7 +88,10 @@ jobs:
     needs: build
     services:
       db:
-        image: postgres:11.16
+        image: postgres:14.2
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
