@@ -149,14 +149,7 @@ document.addEventListener('turbolinks:load', () => {
           }).then((response) => {
             const user = response.body.user;
             const orderTotal = this.doubleToCurrency(response.body.order_total);
-            let additionalInfo;
-            if (response.body.paid_with_pin) {
-              additionalInfo = `Pin - ${orderTotal}`;
-            } else if (response.body.paid_with_cash) {
-              additionalInfo = `Contant - ${orderTotal}`;
-            } else {
-              additionalInfo = `${user.name} - ${orderTotal}`;
-            }
+            const additionalInfo = `${user ? user.name : 'Contant'} - ${orderTotal}`;
 
             if (user) {
               this.$set(this.users, this.users.indexOf(this.selectedUser), response.body.user);
