@@ -52,14 +52,14 @@
         </div>
       </fieldset>
     </form>
-    <div slot="modal-footer">
-      <button aria-label="Close" class="btn btn-secondary mr-1" data-dismiss="modal" type="button">
+    <template #modal-footer="{ cancel }">
+      <button aria-label="Close" class="btn btn-secondary mr-1" @click="cancel()" type="button">
         Annuleren
       </button>
       <button @click="saveCreditMutation" class="btn btn-primary" type="sumbit" :disabled="isSubmitting">
         Inleg aanmaken
       </button>
-    </div>
+    </template>
   </b-modal>
 
   <b-modal id="insufficient-credit-modal" ref="creditMutationModal" title="Negatief saldo" @ok="confirmOrder">
