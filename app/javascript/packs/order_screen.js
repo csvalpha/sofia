@@ -104,7 +104,7 @@ document.addEventListener('turbolinks:load', () => {
           }
         },
 
-        confirmOrder() {
+        confirmOrder(openWithSumup = false) {
           this.isSubmitting = true;
 
           let order = {};
@@ -158,6 +158,10 @@ document.addEventListener('turbolinks:load', () => {
             }
 
             this.isSubmitting = false;
+
+            if (openWithSumup) {
+              window.location = this.getSumupUrl(response.body.id);
+            }
           }, (response) => {
             this.handleXHRError(response);
 
@@ -231,7 +235,13 @@ document.addEventListener('turbolinks:load', () => {
           if (evt.keyCode === 27 && app.selectedUser) {
             app.setUser(null);
           }
-        }
+        },
+
+        getSumupUrl(orderId) {
+          let affilateKey = element.dataset.sumupKey;
+          let callback = element.dataset.sumupCallback;
+          return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&total=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&callback=${callback}&foreign-tx-id=${orderId}`;
+        },
       },
 
       computed: {
@@ -267,12 +277,6 @@ document.addEventListener('turbolinks:load', () => {
           return this.orderRows.map(function(row) {
             return row.amount;
           }).reduce((total, amount) => total + amount, 0);
-        },
-
-        sumupUrl() {
-          let affilateKey = element.dataset.sumupKey;
-          let callback = element.dataset.sumupCallback;
-          return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&total=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&callback=${callback}`;
         },
 
         isMobile() {
