@@ -272,12 +272,25 @@ document.addEventListener('turbolinks:load', () => {
         sumupUrl() {
           let affilateKey = element.dataset.sumupKey;
           let callback = element.dataset.sumupCallback;
-          return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&total=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&callback=${callback}`;
+          if (this.isMobile == 'android') {
+            return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&total=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&callback=${callback}`;
+          } else if (this.isMobile == 'ios') {
+            return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&amount=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&callbacksuccess=${callback}&callbackfail=${callback}`;
+          }
         },
 
         isMobile() {
-          return /Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(navigator.userAgent) || // Android / iOS
+          let android = /Android|webOS|Opera Mini/i.test(navigator.userAgent)
+          let ios = /iPhone|iPad|iPod/i.test(navigator.userAgent) || // iOS
             (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS
+
+          if (android) {
+            return 'android';
+          } else if (ios) {
+            return 'ios';
+          } else {
+            return false;
+          }
         }
       },
 
