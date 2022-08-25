@@ -64,7 +64,7 @@ jobs:
 
       - name: Download actionlint
         run: |
-          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash) 1.6.15
 
       - name: Load test image
         uses: guidojw/actions/load-docker-image@5faa9418b42a6a77f81e11ae935287900673f98b # tag=v1.3.2
@@ -76,7 +76,8 @@ jobs:
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
         run: |
           EXIT_STATUS=0
-          ./actionlint -ignore 'property "app_private_key" is not defined' -ignore 'SC2153:' || EXIT_STATUS=$?
+          ./actionlint -ignore 'property "app_private_key" is not defined' -ignore 'SC2153:' \
+            -ignore 'property "sha" is not defined in object type {}' || EXIT_STATUS=$?
           docker run -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_HOST=localhost -e \
             RAILS_MASTER_KEY --network=host app bin/ci.sh lint || EXIT_STATUS=$?
           exit $EXIT_STATUS
