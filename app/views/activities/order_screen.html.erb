@@ -182,7 +182,7 @@
         </div>
       </div>
       <div class="orders-confirmation">
-        <div class="btn-group btn-group-lg btn-block" role="group" v-if="payWithPin && <%= @sumup_enabled.to_s %>">
+        <div class="btn-group btn-group-lg btn-block" role="group" v-if="payWithPin && <%= @sumup_enabled.to_s %> && isMobile">
           <a role="button" class="btn btn-success col-9"
              @click="confirmOrder"
              :class="{ 'disabled': orderConfirmButtonDisabled }"
@@ -200,7 +200,7 @@
         <button @click="maybeConfirmOrder" class="btn btn-block btn-lg btn-success"
               :class="{ 'btn-warning' : showOrderWarning }"
               :disabled="orderConfirmButtonDisabled"
-              v-if="!payWithPin || !<%= @sumup_enabled.to_s %>">
+              v-if="!payWithPin || !<%= @sumup_enabled.to_s %> || !isMobile">
         <span class="text-uppercase">
           Bestelling plaatsen
         </span>
