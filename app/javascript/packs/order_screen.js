@@ -22,11 +22,18 @@ document.addEventListener('turbolinks:load', () => {
     var users = JSON.parse(element.dataset.users);
     var productPrices = JSON.parse(element.dataset.productPrices);
     var activity = JSON.parse(element.dataset.activity);
+    var flashes = JSON.parse(element.dataset.flashes);
 
     window.flash = function(message, actionText, type) {
       const event = new CustomEvent('flash', { detail: { message: message, actionText: actionText, type: type } } );
-      dispatchEvent(event);
+      document.body.dispatchEvent(event);
     };
+
+    setTimeout(() => {
+      for (let message of flashes) {
+        window.flash(message[1], null, message[0]);
+      }
+    }, 100); // Wait for flash component init
 
     const app = new Vue({
       el: element,
