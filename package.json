@@ -41,5 +41,6 @@
   },
   "scripts": {
     "lint": "yarn run eslint --ext .js --ext .jsx app/javascript"
-  }
+  },
+  "packageManager": "yarn@3.2.3"
 }
