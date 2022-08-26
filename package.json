@@ -40,6 +40,7 @@
     "webpack-dev-server": "^4.9.2"
   },
   "scripts": {
-    "lint": "yarn run eslint --ext .js --ext .jsx app/javascript"
-  }
+    "lint": "eslint --ext .js --ext .jsx app/javascript"
+  },
+  "packageManager": "yarn@3.2.3"
 }
