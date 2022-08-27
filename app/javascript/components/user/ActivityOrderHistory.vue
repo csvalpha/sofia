@@ -13,7 +13,6 @@
 <script>
 import Spinner from 'vue-simple-spinner';
 import ProductTable from '../ProductTable.vue';
-import ActivityOrderHistory from './ActivityOrderHistory.vue';
 import axios from 'axios';
 import moment from 'moment';
 
