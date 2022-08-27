@@ -35,7 +35,7 @@
 import Spinner from 'vue-simple-spinner';
 import axios from 'axios';
 import moment from 'moment';
-import ProductTable from '../producttable.vue';
+import ProductTable from '../ProductTable.vue';
 
 export default {
   props: {
@@ -91,9 +91,9 @@ export default {
     ordersProvider() {
       let params;
       if (this.activity) {
-        params = { activity_id: this.activity.id }
+        params = { activity_id: this.activity.id };
       } else if (this.user) {
-        params = { user_id: this.user.id }
+        params = { user_id: this.user.id };
       }
 
       let promise = axios.get('/orders', { params });
@@ -102,7 +102,7 @@ export default {
         const orders = response.data;
         orders.map((order, index) => {
           order._showDetails = (this.expand_first && index === orders.length - 1);
-          order.order_rows.map(row => { row.editing = false });
+          order.order_rows.map(row => { row.editing = false; });
         });
 
         return orders;

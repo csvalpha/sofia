@@ -82,10 +82,10 @@ export default {
 
     classes(propObject, type) {
       let classes = {};
-      if(propObject.hasOwnProperty('base')) {
+      if(Object.prototype.hasOwnProperty.call(propObject, 'base')) {
         classes[propObject.base] = true;
       }
-      if (propObject.hasOwnProperty(type)) {
+      if (Object.prototype.hasOwnProperty.call(propObject, type)) {
         classes[propObject[type]] = true;
       }
       return classes;

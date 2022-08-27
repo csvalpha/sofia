@@ -1,5 +1,5 @@
 <template lang="html">
-  <b-container slot="row-details" slot-scope="row">
+  <b-container slot="row-details">
     <b-row class="b-table-details--header px-2 py-1 mb-2">
       <b-col sm="5">product</b-col>
       <b-col sm="2" class="text-right">aantal</b-col>
@@ -42,71 +42,71 @@
 </template>
 
 <script>
-  import axios from 'axios';
+import axios from 'axios';
 
-  export default {
-    props: {
-      activity: {
-        type: Object
-      },
-      order: {
-        type: Object,
-        required: true
-      },
-      editable: {
-        type: Boolean,
-        default: false
-      }
+export default {
+  props: {
+    activity: {
+      type: Object
     },
-    data: function () {
-      return {
-        orderRowErrors: {}
-      }
+    order: {
+      type: Object,
+      required: true
     },
-    methods: {
-      doubleToCurrency(price) {
-        return `€ ${parseFloat(price).toFixed(2)}`;
-      },
+    editable: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data: function () {
+    return {
+      orderRowErrors: {}
+    };
+  },
+  methods: {
+    doubleToCurrency(price) {
+      return `€ ${parseFloat(price).toFixed(2)}`;
+    },
 
-      editOrderRow(orderRow) {
-        orderRow.editing = true;
-      },
+    editOrderRow(orderRow) {
+      orderRow.editing = true;
+    },
 
-      saveOrderRow(orderRow) {
-        const newOrder = {
-          order_rows_attributes: [ {
-            id: orderRow.id,
-            product_count: orderRow.product_count,
-          } ]
+    saveOrderRow(orderRow) {
+      const newOrder = {
+        order_rows_attributes: [ {
+          id: orderRow.id,
+          product_count: orderRow.product_count,
+        } ]
+      };
+
+      if (this.activity.id) newOrder.activity_id = this.activity.id;
+
+      axios.patch(`/orders/${this.order.id}`, newOrder).then((response) => {
+        const updatedOrder = response.data;
+
+        this.order.order_total = updatedOrder.order_total;
+
+        orderRow.editing = false;
+      }, (error) => {
+        let errorMessage = 'Er is iets misgegaan bij het opslaan van deze rij';
+        if (error.response && error.response.data['order_rows.product_count']) {
+          errorMessage = `Aantal ${error.response.data['order_rows.product_count']}`;
         }
 
-        if (this.activity.id) newOrder.activity_id = this.activity.id;
-
-        axios.patch(`/orders/${this.order.id}`, newOrder).then((response) => {
-          const updatedOrder = response.data;
-
-          this.order.order_total = updatedOrder.order_total;
-
-          orderRow.editing = false;
-        }, (error) => {
-          let errorMessage = 'Er is iets misgegaan bij het opslaan van deze rij';
-          if (error.response && error.response.data['order_rows.product_count']) {
-            errorMessage = `Aantal ${error.response.data['order_rows.product_count']}`
-          }
-
-          this.$set(this.orderRowErrors, orderRow.id, errorMessage);
-        })
-      },
-
-      increaseProductCount(orderRow) {
-        orderRow.product_count += 1;
-      },
-
-      decreaseProductCount(orderRow) {
-        if (orderRow.product_count > 0) {
-          orderRow.product_count -= 1;
-        }
-      },
+        this.$set(this.orderRowErrors, orderRow.id, errorMessage);
+      });
     },
+
+    increaseProductCount(orderRow) {
+      orderRow.product_count += 1;
+    },
+
+    decreaseProductCount(orderRow) {
+      if (orderRow.product_count > 0) {
+        orderRow.product_count -= 1;
+      }
+    }
   }
+};
 </script>

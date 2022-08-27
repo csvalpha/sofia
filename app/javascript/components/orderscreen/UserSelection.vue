@@ -101,9 +101,9 @@ import parse from 'autosuggest-highlight/parse';
 
 export default {
   props: {
-    selectedUser: null,
-    payWithCash: false,
-    payWithPin: false,
+    selectedUser: Object,
+    payWithCash: Boolean,
+    payWithPin: Boolean,
     users: {
       type: Array,
       required: true
@@ -130,8 +130,8 @@ export default {
   filters: {
     highlightedName(name, query) {
       if (query === '') {
-        return name
-      };
+        return name;
+      }
 
       let result = '';
       parse(name, match(name, query)).map((string) => {
