@@ -111,6 +111,10 @@ export default {
       });
     },
 
+    updateOrderTotal(order, total) {
+      order.order_total = total;
+    },
+
     doubleToCurrency(price) {
       return `€ ${parseFloat(price).toFixed(2)}`;
     },
