@@ -84,7 +84,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
     @count_per_product = @activity.count_per_product
   end
 
-  def order_screen # rubocop:disable Metrics/MethodLength
+  def order_screen # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     authorize Activity
 
     @activity = Activity.includes([:price_list, { price_list: { product_price: :product } }])
@@ -123,7 +123,6 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
     else
       redirect_to order_screen_activity_path(sumup_error: params['foreign-tx-id'])
     end
-
   end
 
   def lock

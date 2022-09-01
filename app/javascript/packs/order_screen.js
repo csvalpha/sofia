@@ -257,7 +257,7 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         deleteOrder(orderId) {
-          this.$http.delete(`/orders/${orderId}`).then((response) => {
+          this.$http.delete(`/orders/${orderId}`).then(() => {
             this.sendFlash('Pin bestelling verwijderd.', '', 'success');
             this.$refs.activityOrders.refresh();
           }, (response) => {
