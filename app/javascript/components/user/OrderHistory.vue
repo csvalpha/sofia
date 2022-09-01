@@ -18,7 +18,7 @@
         </template>
 
         <template slot="row-details" slot-scope="row">
-          <ActivityOrderHistory :activity="row.item" :user="user" />
+          <activity-order-history :activity="row.item" :user="user" />
         </template>
       </b-table>
 

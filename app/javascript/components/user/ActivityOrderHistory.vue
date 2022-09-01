@@ -4,7 +4,7 @@
   <div v-else>
     <div v-for="order in orders" :key="order.id">
       <b class="mb-1">{{formatTime(order.created_at)}}</b>
-      <ProductTable class="mb-4" :order="order"/>
+      <product-table class="mb-4" :order="order"/>
     </div>
   </div>
 
