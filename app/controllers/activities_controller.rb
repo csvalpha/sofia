@@ -101,6 +101,8 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
     @sumup_key = Rails.application.config.x.sumup_key
     @sumup_enabled = @sumup_key.present?
 
+    @sumup_error = params['sumup_error'] || false
+
     # Set flags for application.html.slim
     @show_navigationbar = false
     @show_extras = false
@@ -116,11 +118,12 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
   def sumup_callback
     if params['smp-status'] == 'success'
       flash[:success] = 'Pinbetaling is gelukt!'
+
+      redirect_to order_screen_activity_path
     else
-      sumup_error = true
+      redirect_to order_screen_activity_path(sumup_error: params['foreign-tx-id'])
     end
 
-    redirect_to order_screen_activity_path
   end
 
   def lock

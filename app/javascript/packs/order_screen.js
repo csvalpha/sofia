@@ -160,7 +160,6 @@ document.addEventListener('turbolinks:load', () => {
 
             if (user) {
               this.$set(this.users, this.users.indexOf(this.selectedUser), response.body.user);
-              this.$emit('updateusers');
             }
 
             this.sendFlash('Bestelling geplaatst.', additionalInfo, 'success');
@@ -174,7 +173,7 @@ document.addEventListener('turbolinks:load', () => {
             this.isSubmitting = false;
 
             if (openWithSumup) {
-              window.location = this.getSumupUrl(response.body.id);
+              this.startSumupPayment(response.body.id);
             }
           }, (response) => {
             this.handleXHRError(response);
@@ -204,7 +203,6 @@ document.addEventListener('turbolinks:load', () => {
             }
           }).then((response) => {
             this.$set(this.users, this.users.indexOf(this.selectedUser), response.body.user);
-            this.$emit('updateusers');
 
             if(!this.keepUserSelected) {
               this.setUser(null);
@@ -251,11 +249,21 @@ document.addEventListener('turbolinks:load', () => {
           }
         },
 
-        getSumupUrl(orderId) {
+        startSumupPayment(orderId) {
           let affilateKey = element.dataset.sumupKey;
           let callback = element.dataset.sumupCallback;
-          return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&total=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&callback=${callback}&foreign-tx-id=${orderId}`;
+          let url = `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&total=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&callback=${callback}&foreign-tx-id=${orderId}`;
+          window.location = url;
         },
+
+        deleteOrder(orderId) {
+          this.$http.delete(`/orders/${orderId}`).then((response) => {
+            this.sendFlash('Pin bestelling verwijderd.', '', 'success');
+            this.$refs.activityOrders.refresh();
+          }, (response) => {
+            this.handleXHRError(response);
+          });
+        }
       },
 
       computed: {
@@ -310,6 +318,12 @@ document.addEventListener('turbolinks:load', () => {
 
         isMobile() {
           return this.isIos || /Android|webOS|Opera Mini/i.test(navigator.userAgent);
+        }
+      },
+
+      mounted() {
+        if (this.$refs.sumupErrorModal) {
+          this.$refs.sumupErrorModal.show();
         }
       },
 

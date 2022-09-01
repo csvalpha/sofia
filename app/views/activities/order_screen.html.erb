@@ -76,6 +76,16 @@
     </template>
   </b-modal>
 
+  <% if @sumup_error %>
+    <b-modal id="sumup-error-modal" ref="sumupErrorModal" title="Sumup betaling mislukt" 
+             ok-title="Nog eens proberen" @ok="startSumupPayment(<%= @sumup_error %>)" 
+             cancel-title="Bestelling verwijderen" @cancel="deleteOrder(<%= @sumup_error %>)">
+      <div class="modal-body">
+        De Sumup betaling is mislukt. Wil je de betaling nogmaals proberen of de bestelling verwijderen?
+      </div>
+    </b-modal>
+  <% end %>
+
   <nav class="header">
     <ul class="header-nav">
       <li class="header-nav-item header-nav-home">
@@ -213,7 +223,7 @@
     </div>
   </div>
   <div class="order-grid" v-if="!selectedUser && !payWithCash && !payWithPin">
-    <activity-orders :activity="activity" editable="" expand_first="">
+    <activity-orders ref="activityOrders" :activity="activity" editable expand_first>
     </activity-orders>
   </div>
   <div class="product-grid" v-if="selectedUser || payWithCash || payWithPin">
