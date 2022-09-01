@@ -287,9 +287,9 @@ document.addEventListener('turbolinks:load', () => {
           let affilateKey = element.dataset.sumupKey;
           let callback = element.dataset.sumupCallback;
           if (this.isIos) {
-            return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&amount=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&callbacksuccess=${callback}&callbackfail=${callback}`;
+            return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&amount=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&skip-screen-success=true&callbacksuccess=${callback}&callbackfail=${callback}`;
           } else {
-            return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&total=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&callback=${callback}`;
+            return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&total=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&skip-screen-success=true&callback=${callback}`;
           }
         },
 
