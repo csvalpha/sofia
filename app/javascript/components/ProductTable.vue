@@ -85,7 +85,7 @@ export default {
       axios.patch(`/orders/${this.order.id}`, newOrder).then((response) => {
         const updatedOrder = response.data;
 
-        this.$emit('updateOrderTotal', this.order, updatedOrder.order_total);
+        this.$emit('updateordertotal', this.order, updatedOrder.order_total);
 
         orderRow.editing = false;
       }, (error) => {

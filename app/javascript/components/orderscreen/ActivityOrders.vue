@@ -23,7 +23,7 @@
           </p>
         </template>
 
-        <product-table slot="row-details" slot-scope="row" editable :order="row.item" :activity="activity" />
+        <product-table @updateordertotal="updateOrderTotal" slot="row-details" slot-scope="row" editable :order="row.item" :activity="activity" />
       </b-table>
 
       <spinner class="pt-2 pb-3 m-auto" size="large" v-if="isLoading" />
