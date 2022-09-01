@@ -22,11 +22,18 @@ document.addEventListener('turbolinks:load', () => {
     var users = JSON.parse(element.dataset.users);
     var productPrices = JSON.parse(element.dataset.productPrices);
     var activity = JSON.parse(element.dataset.activity);
+    var flashes = JSON.parse(element.dataset.flashes);
 
     window.flash = function(message, actionText, type) {
       const event = new CustomEvent('flash', { detail: { message: message, actionText: actionText, type: type } } );
-      dispatchEvent(event);
+      document.body.dispatchEvent(event);
     };
+
+    setTimeout(() => {
+      for (let message of flashes) {
+        window.flash(message[1], null, message[0]);
+      }
+    }, 100); // Wait for flash component init
 
     const app = new Vue({
       el: element,
@@ -142,7 +149,14 @@ document.addEventListener('turbolinks:load', () => {
           }).then((response) => {
             const user = response.body.user;
             const orderTotal = this.doubleToCurrency(response.body.order_total);
-            const additionalInfo = `${user ? user.name : 'Contant'} - ${orderTotal}`;
+            let additionalInfo;
+            if (response.body.paid_with_pin) {
+              additionalInfo = `Pin - ${orderTotal}`;
+            } else if (response.body.paid_with_cash) {
+              additionalInfo = `Contant - ${orderTotal}`;
+            } else {
+              additionalInfo = `${user.name} - ${orderTotal}`;
+            }
 
             if (user) {
               this.$set(this.users, this.users.indexOf(this.selectedUser), response.body.user);
@@ -279,9 +293,23 @@ document.addEventListener('turbolinks:load', () => {
           }).reduce((total, amount) => total + amount, 0);
         },
 
-        isMobile() {
-          return /Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(navigator.userAgent) || // Android / iOS
+        sumupUrl() {
+          let affilateKey = element.dataset.sumupKey;
+          let callback = element.dataset.sumupCallback;
+          if (this.isIos) {
+            return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&amount=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&skip-screen-success=true&callbacksuccess=${callback}&callbackfail=${callback}`;
+          } else {
+            return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&total=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&skip-screen-success=true&callback=${callback}`;
+          }
+        },
+
+        isIos() {
+          return /iPhone|iPad|iPod/i.test(navigator.userAgent) || // iOS
             (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS
+        },
+
+        isMobile() {
+          return this.isIos || /Android|webOS|Opera Mini/i.test(navigator.userAgent);
         }
       },
 

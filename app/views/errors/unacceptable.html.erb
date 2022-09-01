@@ -1,2 +1,2 @@
 <% content_for :title, 'Error - SOFIA' %>
-Er is een error op de server opgetreden. Stuur een <%= link_to 'mailtje', 'mailto:streepsysteem@csvalpha.nl' %> naar de ICT-commissie als dit probleem op blijft treden.
+Er is een error op de server opgetreden. Stuur een <%= link_to 'mailtje', "mailto:#{Rails.application.config.x.admin_email}" %> naar de ICT-commissie als dit probleem op blijft treden.

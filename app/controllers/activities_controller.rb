@@ -117,8 +117,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
     if params['smp-status'] == 'success'
       flash[:success] = 'Pinbetaling is gelukt!'
     else
-      flash[:error] = "Pinbetaling is mislukt! De bestelling is echter ingevoerd.
-                        Zorg dat de betaling (op een andere manier) lukt of verwijderd de bestelling handmatig uit het systeem."
+      sumup_error = true
     end
 
     redirect_to order_screen_activity_path
