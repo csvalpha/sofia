@@ -250,18 +250,17 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         startSumupPayment(orderId, orderTotal) {
-          window.location = this.getSumupUrl(orderId, orderTotal);
-        },
-
-        getSumupUrl(orderId, orderTotal) {
           let affilateKey = element.dataset.sumupKey;
           let callback = element.dataset.sumupCallback;
+          
+          let sumupUrl = `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&currency=EUR&title=Bestelling SOFIA&skip-screen-success=true&foreign-tx-id=${orderId}`;
           if (this.isIos) {
-            
-            return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&amount=${orderTotal}&currency=EUR&title=Bestelling SOFIA&skip-screen-success=true&callbacksuccess=${callback}&callbackfail=${callback}&foreign-tx-id=${orderId}`;
+            sumupUrl += `&amount=${orderTotal}&callbacksuccess=${callback}&callbackfail=${callback}`;
           } else {
-            return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&total=${orderTotal}&currency=EUR&title=Bestelling SOFIA&skip-screen-success=true&callback=${callback}&foreign-tx-id=${orderId}`;
+            sumupUrl += `&total=${orderTotal}&callback=${callback}`;
           }
+
+          window.location = sumupUrl;
         },
 
         deleteOrder(orderId) {
