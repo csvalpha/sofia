@@ -173,7 +173,7 @@ document.addEventListener('turbolinks:load', () => {
             this.isSubmitting = false;
 
             if (openWithSumup) {
-              this.startSumupPayment(response.body.id);
+              this.startSumupPayment(response.body.id, response.body.order_total);
             }
           }, (response) => {
             this.handleXHRError(response);
@@ -249,11 +249,19 @@ document.addEventListener('turbolinks:load', () => {
           }
         },
 
-        startSumupPayment(orderId) {
+        startSumupPayment(orderId, orderTotal) {
+          window.location = this.getSumupUrl(orderId, orderTotal);
+        },
+
+        getSumupUrl(orderId, orderTotal) {
           let affilateKey = element.dataset.sumupKey;
           let callback = element.dataset.sumupCallback;
-          let url = `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&total=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&callback=${callback}&foreign-tx-id=${orderId}`;
-          window.location = url;
+          if (this.isIos) {
+            
+            return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&amount=${orderTotal}&currency=EUR&title=Bestelling SOFIA&skip-screen-success=true&callbacksuccess=${callback}&callbackfail=${callback}&foreign-tx-id=${orderId}`;
+          } else {
+            return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&total=${orderTotal}&currency=EUR&title=Bestelling SOFIA&skip-screen-success=true&callback=${callback}&foreign-tx-id=${orderId}`;
+          }
         },
 
         deleteOrder(orderId) {
@@ -299,16 +307,6 @@ document.addEventListener('turbolinks:load', () => {
           return this.orderRows.map(function(row) {
             return row.amount;
           }).reduce((total, amount) => total + amount, 0);
-        },
-
-        sumupUrl() {
-          let affilateKey = element.dataset.sumupKey;
-          let callback = element.dataset.sumupCallback;
-          if (this.isIos) {
-            return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&amount=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&skip-screen-success=true&callbacksuccess=${callback}&callbackfail=${callback}`;
-          } else {
-            return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&total=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&skip-screen-success=true&callback=${callback}`;
-          }
         },
 
         isIos() {
