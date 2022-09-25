@@ -103,7 +103,6 @@ RSpec.describe Order, type: :model do
   end
 
   describe '#create' do
-    let(:user) { create(:user, provider: 'amber_oauth2') }
     let(:activity) { create(:activity) }
 
     context 'when no user' do
@@ -113,6 +112,7 @@ RSpec.describe Order, type: :model do
     end
 
     context 'when user' do
+      let(:user) { create(:user, provider: 'amber_oauth2') }
       let(:order) { build(:order, user: user, activity: activity) }
 
       context 'with credit' do
