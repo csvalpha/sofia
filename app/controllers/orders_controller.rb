@@ -23,7 +23,7 @@ class OrdersController < ApplicationController
       order_data = Order.includes(
         :order_rows, user: { orders: :order_rows }
       ).find(@order.id)
-      order_data.user.current_activity = order_data.activity
+      order_data.user.current_activity = order_data.activity unless order_data.user.nil?
       render json: order_data.as_json(include: json_includes)
     else
       render json: @order.errors, status: :unprocessable_entity

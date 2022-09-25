@@ -18,7 +18,7 @@ class Order < ApplicationRecord
   scope :orders_for, (->(user) { where(user: user) })
 
   def can_user_create_order?
-    throw(:abort) unless user.can_order(activity)
+    throw(:abort) unless user.nil? || user.can_order(activity)
   end
 
   def order_total
