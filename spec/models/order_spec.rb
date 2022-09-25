@@ -115,12 +115,12 @@ RSpec.describe Order, type: :model do
     context 'when user' do
       let(:order) { build(:order, user: user, activity: activity) }
 
-      context 'has credit' do
+      context 'with credit' do
         # Note that a credit of 0 counts as non-negative credit
         it { expect(order.save).to be true }
       end
 
-      context 'has no credit with activity order' do
+      context 'without credit with activity order' do
         before do
           create(:order, user: user, activity: activity)
           create(:credit_mutation, user: user, amount: -1)
@@ -129,7 +129,7 @@ RSpec.describe Order, type: :model do
         it { expect(order.save).to be true }
       end
 
-      context 'has no credit without activity order' do
+      context 'without credit without activity order' do
         before do
           create(:credit_mutation, user: user, amount: -1)
         end
