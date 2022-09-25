@@ -20,9 +20,11 @@ class OrdersController < ApplicationController
     authorize @order
 
     if @order.save
-      render json: Order.includes(
+      order_data = Order.includes(
         :order_rows, user: { orders: :order_rows }
-      ).find(@order.id).to_json(include: json_includes)
+      ).find(@order.id)
+      order_data.user.current_activity = order_data.activity
+      render json: order_data.to_json(include: json_includes)
     else
       render json: @order.errors, status: :unprocessable_entity
     end
@@ -69,7 +71,7 @@ class OrdersController < ApplicationController
   end
 
   def json_includes
-    { user: { methods: %i[credit avatar_thumb_or_default_url minor insufficient_credit] },
+    { user: { methods: %i[credit avatar_thumb_or_default_url minor insufficient_credit can_order] },
       activity: { only: %i[id title] },
       order_rows: { only: [:id, :product_count, { product: { only: %i[id name credit] } }] } }
   end

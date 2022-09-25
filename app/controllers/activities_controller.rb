@@ -155,12 +155,9 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
   def users_hash
     users_credits = User.calculate_credits
     User.active.order(:name).map do |user|
-      hash = user.attributes
-      hash[:minor] = user.minor
-      hash[:insufficient_credit] = user.insufficient_credit
-      hash[:avatar_thumb_or_default_url] = user.avatar_thumb_or_default_url
-      hash[:credit] = users_credits.fetch(user.id, 0)
-      hash
+      user.current_activity = @activity
+      user.as_json(methods: %i[avatar_thumb_or_default_url minor insufficient_credit can_order])
+            .merge(credit: users_credits.fetch(user.id, 0))
     end
   end
 
