@@ -106,7 +106,7 @@ document.addEventListener('turbolinks:load', () => {
           orderRow.amount++;
         },
 
-        maybeConfirmOrder(e) {
+        maybeConfirmOrder() {
           if (!this.selectedUser || this.selectedUser.can_order) {
             this.confirmOrder();
           } else {

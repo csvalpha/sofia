@@ -45,15 +45,15 @@ class User < ApplicationRecord
   end
 
   def insufficient_credit
-    provider == 'amber_oauth2' and credit < 0
+    provider == 'amber_oauth2' and credit.negative?
   end
 
   def can_order(activity = nil)
     activity ||= current_activity
-    if activity != nil
-      not insufficient_credit or activity.orders.select { |order| order.user_id == id }.any?
+    if activity.nil?
+      !insufficient_credit
     else
-      not insufficient_credit
+      !insufficient_credit or activity.orders.select { |order| order.user_id == id }.any?
     end
   end
 

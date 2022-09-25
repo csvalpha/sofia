@@ -15,7 +15,7 @@ class OrdersController < ApplicationController
     render json: @orders.to_json(proper_json)
   end
 
-  def create
+  def create # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     @order = Order.new(permitted_attributes.merge(created_by: current_user))
     authorize @order
 
@@ -24,7 +24,7 @@ class OrdersController < ApplicationController
         :order_rows, user: { orders: :order_rows }
       ).find(@order.id)
       order_data.user.current_activity = order_data.activity
-      render json: order_data.to_json(include: json_includes)
+      render json: order_data.as_json(include: json_includes)
     else
       render json: @order.errors, status: :unprocessable_entity
     end
