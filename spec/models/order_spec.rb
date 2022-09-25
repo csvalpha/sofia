@@ -116,6 +116,7 @@ RSpec.describe Order, type: :model do
       let(:order) { build(:order, user: user, activity: activity) }
 
       context 'has credit' do
+        # Note that a credit of 0 counts as non-negative credit
         it { expect(order.save).to be true }
       end
 
