@@ -111,7 +111,18 @@ RSpec.describe Order, type: :model do
       it { expect(order.save).to be true }
     end
 
-    context 'when user' do
+    context 'when non-amber user without credit' do
+      let(:user) { create(:user) }
+      let(:order) { build(:order, user: user, activity: activity) }
+
+      before do
+        create(:credit_mutation, user: user, amount: -1)
+      end
+
+      it { expect(order.save).to be true }
+    end
+
+    context 'when amber user' do
       let(:user) { create(:user, provider: 'amber_oauth2') }
       let(:order) { build(:order, user: user, activity: activity) }
 
