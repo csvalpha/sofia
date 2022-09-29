@@ -102,6 +102,54 @@ RSpec.describe Order, type: :model do
     it { expect(count.find { |item| item[:category] == 'wine' }[:amount]).to eq 9 }
   end
 
+  describe '#create' do
+    let(:activity) { create(:activity) }
+
+    context 'when no user' do
+      let(:order) { build(:order, paid_with_cash: true, activity: activity) }
+
+      it { expect(order.save).to be true }
+    end
+
+    context 'when non-amber user without credit' do
+      let(:user) { create(:user) }
+      let(:order) { build(:order, user: user, activity: activity) }
+
+      before do
+        create(:credit_mutation, user: user, amount: -1)
+      end
+
+      it { expect(order.save).to be true }
+    end
+
+    context 'when amber user' do
+      let(:user) { create(:user, provider: 'amber_oauth2') }
+      let(:order) { build(:order, user: user, activity: activity) }
+
+      context 'with credit' do
+        # Note that a credit of 0 counts as non-negative credit
+        it { expect(order.save).to be true }
+      end
+
+      context 'without credit with activity order' do
+        before do
+          create(:order, user: user, activity: activity)
+          create(:credit_mutation, user: user, amount: -1)
+        end
+
+        it { expect(order.save).to be true }
+      end
+
+      context 'without credit without activity order' do
+        before do
+          create(:credit_mutation, user: user, amount: -1)
+        end
+
+        it { expect(order.save).to be false }
+      end
+    end
+  end
+
   describe '#destroy' do
     let(:order) { create(:order) }
 

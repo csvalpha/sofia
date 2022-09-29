@@ -12,9 +12,14 @@ class Order < ApplicationRecord
   validate :user_or_cash_or_pin
   validate :activity_not_locked
 
+  before_create :can_user_create_order?
   before_destroy -> { throw(:abort) }
 
   scope :orders_for, (->(user) { where(user: user) })
+
+  def can_user_create_order?
+    throw(:abort) unless user.nil? || user.can_order(activity)
+  end
 
   def order_total
     @sum ||= order_rows.sum('product_count * price_per_product')
