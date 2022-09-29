@@ -62,16 +62,14 @@
     </template>
   </b-modal>
 
-  <b-modal id="insufficient-credit-modal" ref="creditMutationModal" title="Negatief saldo" @ok="confirmOrder">
+  <b-modal id="cannot-order-modal" ref="cannotOrderModal" title="Negatief saldo" @ok="confirmOrder">
     <div class="modal-body" v-if="selectedUser">
-      {{selectedUser.name}} staat <b class="text-danger">{{doubleToCurrency(-selectedUser.credit)}}</b> negatief! Vraag de gebruiker om zijn of haar saldo op te waarderen via iDEAL of contante inleg.
+      {{selectedUser.name}} staat <b class="text-danger">{{doubleToCurrency(-selectedUser.credit)}}</b> negatief en moet eerst inleggen om te kunnen bestellen!
+      Vraag de gebruiker om zijn of haar saldo op te waarderen via iDEAL of contante inleg.
     </div>
     <template #modal-footer="{ ok, cancel }">
       <button aria-label="Close" class="btn btn-secondary mr-1" @click="cancel()" type="button">
-        Annuleren
-      </button>
-      <button class="btn btn-warning" :disabled="orderConfirmButtonDisabled" @click="ok()" type="button">
-        Bestelling toch plaatsen
+        Oké
       </button>
     </template>
   </b-modal>
@@ -184,7 +182,7 @@
         </div>
 
         <button @click="maybeConfirmOrder" class="btn btn-block btn-lg btn-success"
-              :class="{ 'btn-warning' : showOrderWarning }"
+              :class="{ 'btn-warning' : showOrderWarning && !showCannotOrderWarning, 'btn-danger' : showCannotOrderWarning }"
               :disabled="orderConfirmButtonDisabled"
               v-if="!payWithPin || !<%= @sumup_enabled.to_s %> || !isMobile">
         <span class="text-uppercase">
@@ -192,7 +190,15 @@
         </span>
         <br/>
         <small v-if="showOrderWarning">
-          <span v-if="showInsufficientCreditWarning" class="d-block">
+          <span v-if="showCannotOrderWarning" class="d-block">
+            <span>
+              <%= fa_icon 'exclamation-triangle ' %>
+            </span>
+            <span>
+              {{selectedUser.name}} staat <b>{{doubleToCurrency(-selectedUser.credit)}}</b> negatief en moet eerst inleggen!
+            </span>
+          </span>
+          <span v-else-if="showInsufficientCreditWarning" class="d-block">
             <span>
               <%= fa_icon 'exclamation-triangle ' %>
             </span>

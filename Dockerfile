@@ -36,8 +36,9 @@ RUN if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ]; then \
 RUN bundle install
 
 # Pre-install npm packages, so that they can be cached.
-COPY package.json yarn.lock /app/
-RUN yarn install --frozen-lockfile
+COPY package.json yarn.lock .yarnrc.yml ./
+COPY .yarn .yarn
+RUN yarn install --immutable
 
 COPY . /app/
 

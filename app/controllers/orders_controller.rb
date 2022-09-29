@@ -15,14 +15,16 @@ class OrdersController < ApplicationController
     render json: @orders.to_json(proper_json)
   end
 
-  def create
+  def create # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     @order = Order.new(permitted_attributes.merge(created_by: current_user))
     authorize @order
 
     if @order.save
-      render json: Order.includes(
+      order_data = Order.includes(
         :order_rows, user: { orders: :order_rows }
-      ).find(@order.id).to_json(include: json_includes)
+      ).find(@order.id)
+      order_data.user.current_activity = order_data.activity unless order_data.user.nil?
+      render json: order_data.as_json(include: json_includes)
     else
       render json: @order.errors, status: :unprocessable_entity
     end
@@ -69,7 +71,7 @@ class OrdersController < ApplicationController
   end
 
   def json_includes
-    { user: { methods: %i[credit avatar_thumb_or_default_url minor insufficient_credit] },
+    { user: { methods: %i[credit avatar_thumb_or_default_url minor insufficient_credit can_order] },
       activity: { only: %i[id title] },
       order_rows: { only: [:id, :product_count, { product: { only: %i[id name credit] } }] } }
   end

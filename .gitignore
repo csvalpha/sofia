@@ -24,6 +24,12 @@
 /pkg
 /test/test_app/log
 
+/.yarn/*
+!/.yarn/patches
+!/.yarn/releases
+!/.yarn/plugins
+!/.yarn/sdks
+!/.yarn/versions
 yarn-error\.log
 /public/assets
 /public/packs

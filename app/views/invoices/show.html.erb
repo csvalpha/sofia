@@ -7,10 +7,10 @@
       <%= image_tag '/images/flux_logo.png', class: 'col-12' %>
     </div>
     <div class="col-8 py-2">
-      <h3>Stichting Sociëteit Flux</h3>
+      <h3><%= Rails.application.config.x.company_name %></h3>
       <b>
-        https://societeitflux.nl <br/>
-        Oude Markt 24-3, 7511 GB Enschede
+        <%= Rails.application.config.x.company_website %> <br/>
+        <%= Rails.application.config.x.company_address %>
       </b>
       <table class="table table-sm">
         <tbody>
@@ -19,7 +19,7 @@
             Tel
           </th>
           <td class="text-right">
-            +316 23038845
+            <%= Rails.application.config.x.treasurer_phone %>
           </td>
         </tr>
         <tr>
@@ -27,7 +27,7 @@
             E-mail
           </th>
           <td class="text-right">
-            penningmeester@societeitflux.nl
+            <%= Rails.application.config.x.treasurer_email %>
           </td>
         </tr>
         <tr>
@@ -35,7 +35,7 @@
             IBAN
           </th>
           <td class="text-right">
-            NL68INGB0008165420
+            <%= Rails.application.config.x.company_iban %>
           </td>
         </tr>
         <tr>
@@ -43,7 +43,7 @@
             KvK
           </th>
           <td class="text-right">
-            41 032 169
+            <%= Rails.application.config.x.company_kvk %>
           </td>
         </tr>
         <tr>
@@ -141,16 +141,16 @@
 
     <div class="col-6">
       <p>
-        Wij verzoeken u dit bedrag binnen 14 dagen over te maken op rekeningnummer <b>NL68 INGB
-        0008 1654 20</b> ten name van <b>Stichting Sociëteit Flux</b> te Enschede, met vermelding van het
+        Wij verzoeken u dit bedrag binnen 14 dagen over te maken op rekeningnummer <b><%= Rails.application.config.x.company_iban %></b>
+        ten name van <b><%= Rails.application.config.x.company_name %></b>, met vermelding van het
         factuurnummer dat u hierboven aan de brief kan vinden.<br /><br />
 
 
-        Namens de Stichting Sociëteit Flux verblijf ik,<br/><br/>
+        Namens de <%= Rails.application.config.x.company_name %> verblijf ik,<br/><br/>
 
         Hoogachtend,<br/>
-        Elise van Doorn<br/>
-        h.t. Penningmeester der Stichting Sociëteit Flux<br/>
+        <%= Rails.application.config.x.treasurer_name %><br/>
+        h.t. Penningmeester der <%= Rails.application.config.x.company_name %><br/>
       </p>
     </div>
   </div>
