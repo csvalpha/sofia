@@ -14,7 +14,7 @@
     "@rails/webpacker": "^5.4.3",
     "@sentry/browser": "^6.19.7",
     "autosuggest-highlight": "^3.3.4",
-    "axios": "^0.27.2",
+    "axios": "^1.1.2",
     "babel-loader": "^8.2.5",
     "bootstrap": "^4.6.2",
     "bootstrap-vue": "^2.22.0",
