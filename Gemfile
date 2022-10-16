@@ -19,7 +19,7 @@ gem 'net-pop', require: false
 gem 'net-smtp', require: false
 gem 'omniauth', '~> 2.0.0'
 gem 'omniauth-oauth2', '~> 1.7.0'
-gem 'omniauth-rails_csrf_protection'
+gem 'omniauth-rails_csrf_protection', '~> 1.0'
 gem 'paper_trail', '~> 12.3.0'
 gem 'paranoia', '~> 2.6.0'
 gem 'pg', '~> 1.3.0'
