@@ -67,6 +67,21 @@ document.addEventListener('turbolinks:load', () => {
             this.orderRows = [];
           }
 
+          if (user !== null) {
+            // Reload user to get latest credit balance
+            this.$http.get('/users/'+user.id).then((response) => {
+              const user = response.body;
+              this.$set(this.users, this.users.indexOf(user), user);
+
+              // Selected user might have changed in the meantime
+              if (this.selectedUser && this.selectedUser.id == user.id) {
+                this.selectedUser = user;
+              }
+            }, (response) => {
+              this.handleXHRError(response);
+            });
+          }
+
           this.payWithCash = false;
           this.payWithPin = false;
           this.selectedUser = user;
