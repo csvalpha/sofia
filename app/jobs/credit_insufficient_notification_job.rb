@@ -7,8 +7,10 @@ class CreditInsufficientNotificationJob < ApplicationJob
 
     users_with_insufficient_credit.each do |user|
       if user.email.present?
-        UserCreditMailer.insufficient_credit_mail(user).deliver_later
-        success_count += 1
+        if user.provider != 'amber_oauth2' # Amber users are notified immediately
+          UserCreditMailer.insufficient_credit_mail(user).deliver_later
+          success_count += 1
+        end
       else
         unnotifyable_users.append user.name
       end
