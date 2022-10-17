@@ -2721,46 +2721,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/browser@npm:^7.15.0":
-  version: 7.15.0
-  resolution: "@sentry/browser@npm:7.15.0"
-  dependencies:
-    "@sentry/core": 7.15.0
-    "@sentry/types": 7.15.0
-    "@sentry/utils": 7.15.0
-    tslib: ^1.9.3
-  checksum: 7adc551a12ab792ebd3a20a82cdbb2751db9ef873fd7a96b4fb5357526b04f4a7b371594163c77fcf096a99c5d537cb7aade0e3df012a96645bcc623077b8912
-  languageName: node
-  linkType: hard
-
-"@sentry/core@npm:7.15.0":
-  version: 7.15.0
-  resolution: "@sentry/core@npm:7.15.0"
-  dependencies:
-    "@sentry/types": 7.15.0
-    "@sentry/utils": 7.15.0
-    tslib: ^1.9.3
-  checksum: 3a0c410a186f062ba026c85729e35ee78d99e8d124036742fb52e8064f95c32a5d9516514bfb0e52fcd3bfd8ff96678eb586f351e2ed270d8c7733c98cc77548
-  languageName: node
-  linkType: hard
-
-"@sentry/types@npm:7.15.0":
-  version: 7.15.0
-  resolution: "@sentry/types@npm:7.15.0"
-  checksum: 114fb1eeacce6a92fc50e9b8ecf35ccef6993cb43c7b428c06394177d8ed0e42ee84ec64e801356c6a0190d4aa71d032cf82ee9e34a976b634dac6a0c284361a
-  languageName: node
-  linkType: hard
-
-"@sentry/utils@npm:7.15.0":
-  version: 7.15.0
-  resolution: "@sentry/utils@npm:7.15.0"
-  dependencies:
-    "@sentry/types": 7.15.0
-    tslib: ^1.9.3
-  checksum: 9445a78c23b230a39d05c4ff44fb02f66bbb4dd4638216419b99ab53fa403bf613ea175c642b0bc015038370d229af76046689a08efe5a030d64b5cb0e02cfa1
-  languageName: node
-  linkType: hard
-
 "@sindresorhus/is@npm:^4.0.0":
   version: 4.2.0
   resolution: "@sindresorhus/is@npm:4.2.0"
@@ -12769,7 +12729,6 @@ __metadata:
     "@babel/plugin-transform-runtime": ^7.19.1
     "@babel/preset-env": ^7.19.4
     "@rails/webpacker": ^5.4.3
-    "@sentry/browser": ^7.15.0
     autosuggest-highlight: ^3.3.4
     axios: ^1.1.3
     babel-loader: ^8.2.5
@@ -13455,13 +13414,6 @@ __metadata:
     typescript:
       optional: true
   checksum: c2a698b85d521298fe6f2435fbf2d3dc5834b423ea25abd321805ead3f399dbeedce7ca09492d7eb005b9d2c009c6b9587055bc3ab273dc6b9e40eefd7edb5b2
-  languageName: node
-  linkType: hard
-
-"tslib@npm:^1.9.3":
-  version: 1.14.1
-  resolution: "tslib@npm:1.14.1"
-  checksum: dbe628ef87f66691d5d2959b3e41b9ca0045c3ee3c7c7b906cc1e328b39f199bb1ad9e671c39025bd56122ac57dfbf7385a94843b1cc07c60a4db74795829acd
   languageName: node
   linkType: hard
 
