@@ -22,7 +22,7 @@ class OrdersController < ApplicationController
     current_credit = @order.user.credit
 
     if @order.save
-      if @order.user.provider == 'amber_oauth2' and @order.user.credit.negative? && current_credit.positive?
+      if (@order.user.provider == 'amber_oauth2') && @order.user.credit.negative? && current_credit.positive?
         # User's credit went from positive to negative
         UserCreditMailer.insufficient_credit_mail(current_user).deliver_later
       end
