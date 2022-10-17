@@ -1,4 +1,4 @@
-class UsersController < ApplicationController
+class UsersController < ApplicationController # rubocop:disable Metrics/ClassLength
   before_action :authenticate_user!
 
   after_action :verify_authorized
