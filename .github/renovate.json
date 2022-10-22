@@ -1,10 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>csvalpha/.github"],
-  "packageRules": [
-    {
-      "matchManagers": ["html"],
-      "fileMatch": "\\.html\\.erb$"
-    }
-  ]
+  "html": {
+    "fileMatch": ["\\.html\\.erb$"]
+  }
 }
