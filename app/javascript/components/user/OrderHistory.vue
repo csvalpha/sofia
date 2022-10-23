@@ -4,20 +4,20 @@
       <b-table show-empty :busy.sync="isLoading" :items="activityProvider" :fields="fields"
                no-provider-sorting sort-by="start_time" sort-desc>
 
-        <template v-slot:cell(order_total)="row">
+        <template #cell(order_total)="row">
           {{doubleToCurrency(row.item.order_total)}}
           <span class="pull-right">
             <i @click.stop="row.toggleDetails" :class="['order-history--details-expand', 'fa', 'fa-lg', 'pl-2', row.detailsShowing ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down']"></i>
           </span>
         </template>
 
-        <template v-slot:empty>
+        <template #empty>
           <p class="my-1 text-center">
             <em>Er zijn geen bestellingen om weer te geven</em>
           </p>
         </template>
 
-        <template slot="row-details" slot-scope="row">
+        <template #row-details="row">
           <activity-order-history :activity="row.item" :user="user" />
         </template>
       </b-table>

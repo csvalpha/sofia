@@ -1,16 +1,16 @@
 <template lang="html">
   <b-table class="users-table" :fields="fields" :items="users" responsive="" show-empty="" sort-by="name" striped="">
-    <template v-slot:cell(name)="data">
+    <template #cell(name)="data">
       <a :href="`/users/${data.item.id}`">
         {{data.value}}
       </a></template>
-    <template v-slot:empty>
+    <template #empty>
       <p class="my-1 text-center">
         <em>Er zijn geen gebruikers om weer te geven
         </em>
       </p>
     </template>
-    <template v-slot:custom-foot>
+    <template #custom-foot>
       <b-tr>
         <b-th></b-th>
         <b-th>Totaal</b-th>
