@@ -1,5 +1,5 @@
 <template lang="html">
-  <b-container slot="row-details">
+  <b-container>
     <b-row class="b-table-details--header px-2 py-1 mb-2">
       <b-col sm="5">product</b-col>
       <b-col sm="2" class="text-right">aantal</b-col>
