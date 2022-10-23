@@ -63,7 +63,25 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         setUser(user = null) {
-          this.orderRows = [];
+          if (this.selectedUser === null || user === null || this.selectedUser.id != user.id) {
+            this.orderRows = [];
+          }
+
+          if (user !== null) {
+            // Reload user to get latest credit balance
+            this.$http.get('/users/'+user.id).then((response) => {
+              const user = response.body;
+              this.$set(this.users, this.users.indexOf(user), user);
+
+              // Selected user might have changed in the meantime
+              if (this.selectedUser && this.selectedUser.id == user.id) {
+                this.selectedUser = user;
+              }
+            }, (response) => {
+              this.handleXHRError(response);
+            });
+          }
+
           this.payWithCash = false;
           this.payWithPin = false;
           this.selectedUser = user;
@@ -103,11 +121,11 @@ document.addEventListener('turbolinks:load', () => {
           orderRow.amount++;
         },
 
-        maybeConfirmOrder(e) {
-          if (this.selectedUser && this.selectedUser.insufficient_credit) {
-            this.$root.$emit('bv::show::modal', 'insufficient-credit-modal', e.target);
-          } else {
+        maybeConfirmOrder() {
+          if (!this.selectedUser || this.selectedUser.can_order) {
             this.confirmOrder();
+          } else {
+            this.$refs.cannotOrderModal.show();
           }
         },
 
@@ -160,7 +178,6 @@ document.addEventListener('turbolinks:load', () => {
 
             if (user) {
               this.$set(this.users, this.users.indexOf(this.selectedUser), response.body.user);
-              this.$emit('updateusers');
             }
 
             this.sendFlash('Bestelling geplaatst.', additionalInfo, 'success');
@@ -200,9 +217,8 @@ document.addEventListener('turbolinks:load', () => {
             }
           }).then((response) => {
             this.$set(this.users, this.users.indexOf(this.selectedUser), response.body.user);
-            this.$emit('updateusers');
 
-            if(!this.keepUserSelected) {
+            if(!this.keepUserSelected && this.orderRows.length === 0){
               this.setUser(null);
             } else {
               // re-set user to update credit
@@ -266,7 +282,11 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         showOrderWarning() {
-          return this.showInsufficientCreditWarning || this.showAgeWarning;
+          return this.showCannotOrderWarning || this.showInsufficientCreditWarning || this.showAgeWarning;
+        },
+
+        showCannotOrderWarning() {
+          return this.selectedUser && !this.selectedUser.can_order;
         },
 
         showInsufficientCreditWarning() {
