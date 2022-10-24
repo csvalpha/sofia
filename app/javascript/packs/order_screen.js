@@ -186,6 +186,7 @@ document.addEventListener('turbolinks:load', () => {
             } else {
               // re-set user to update credit
               this.setUser(response.body.user);
+              this.orderRows = [];
             }
 
             this.isSubmitting = false;

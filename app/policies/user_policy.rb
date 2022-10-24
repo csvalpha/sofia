@@ -12,7 +12,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def show?
-    user&.treasurer? || record == user
+    user&.treasurer? || user&.main_bartender? || record == user
   end
 
   def activities?
