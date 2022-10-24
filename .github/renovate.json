@@ -2,6 +2,7 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>csvalpha/.github"],
   "cdnurl": {
-    "fileMatch": ["\\.html\\.erb$"]
+    "fileMatch": ["\\.html\\.erb$"],
+    "prBodyNotes": "Note: make sure to update the integrity hashes before merging this PR."
   }
 }
