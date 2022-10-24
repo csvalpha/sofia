@@ -38,14 +38,14 @@ jobs:
           INPUT_SHA: ${{ inputs.sha }}
         run: |
           if [ "$GITHUB_REF_NAME" = 'master' ]; then
-            echo '::set-output name=tag::latest'
+            echo 'tag=latest' >> "$GITHUB_OUTPUT"
           else
-            echo '::set-output name=tag::'"$GITHUB_REF_NAME"
+            echo 'tag='"$GITHUB_REF_NAME" >> "$GITHUB_OUTPUT"
           fi
 
           if [ "$GITHUB_REF_NAME" = 'staging' ] || [ "$GITHUB_REF_NAME" = 'master' ]; then
             BUILD_ARGS='BUILD_HASH='${INPUT_SHA:-$GITHUB_SHA}
-            echo '::set-output name=build_args::'"$BUILD_ARGS"
+            echo 'build_args='"$BUILD_ARGS" >> "$GITHUB_OUTPUT"
           fi
 
   publish:
@@ -114,10 +114,10 @@ jobs:
         env:
           RESULTS: ${{ join(needs.*.result, ' ') }}
         run: |
-          echo '::set-output name=conclusion::success'
+          echo 'conclusion=success' >> "$GITHUB_OUTPUT"
           for RESULT in $RESULTS; do
             if [ "$RESULT" = 'cancelled' ] || [ "$RESULT" = 'failure' ]; then
-              echo '::set-output name=conclusion::'"$RESULT"
+              echo 'conclusion='"$RESULT" >> "$GITHUB_OUTPUT"
               break
             fi
           done
