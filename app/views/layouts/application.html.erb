@@ -20,6 +20,12 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport"/>
 
     <% if Rails.application.config.x.sentry_dsn %>
+      <script
+        src="https://browser.sentry-cdn.com/7.15.0/bundle.min.js"
+        integrity="sha384-PqiX8ahlE6YeAoIVKdKCVIrGFo9vlS8nYD9v+/5Len/XiUpZkii7ehjsDMsNnXKo"
+        crossorigin="anonymous"
+      ></script>
+
       <script>
         Sentry.init({
           dsn: '<%= Rails.application.config.x.sentry_dsn %>',
