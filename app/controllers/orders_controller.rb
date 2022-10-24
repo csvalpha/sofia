@@ -19,10 +19,18 @@ class OrdersController < ApplicationController
     @order = Order.new(permitted_attributes.merge(created_by: current_user))
     authorize @order
 
+    current_credit = @order.user.credit
+
     if @order.save
+      if (@order.user.provider == 'amber_oauth2') && @order.user.credit.negative? && current_credit.positive?
+        # User's credit went from positive to negative
+        UserCreditMailer.insufficient_credit_mail(current_user).deliver_later
+      end
+
       order_data = Order.includes(
         :order_rows, user: { orders: :order_rows }
       ).find(@order.id)
+
       order_data.user.current_activity = order_data.activity unless order_data.user.nil?
       render json: order_data.as_json(include: json_includes)
     else
