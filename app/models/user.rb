@@ -111,6 +111,10 @@ class User < ApplicationRecord
         .group(:id).sum('product_count * price_per_product')
   end
 
+  def self.orderscreen_json_includes
+    %i[credit avatar_thumb_or_default_url minor insufficient_credit can_order]
+  end
+
   private
 
   def no_deactivation_when_nonzero_credit
