@@ -241,7 +241,7 @@ document.addEventListener('turbolinks:load', () => {
 
         handleXHRError(error) {
           if (error.status == 500) {
-            this.sendFlash('Server error!', 'Herlaadt de pagina', 'error');
+            this.sendFlash('Server error!', 'Herlaad de pagina', 'error');
 
             try {
               throw new Error(error.body.text);
@@ -253,7 +253,7 @@ document.addEventListener('turbolinks:load', () => {
           } else if (error.status == 422) {
             this.sendFlash('Error bij het opslaan!', 'Probeer het opnieuw', 'warning');
           } else {
-            this.sendFlash(`Error ${error.status}?!🤔`, 'Herlaadt de pagina', 'info');
+            this.sendFlash(`Error ${error.status}?!🤔`, 'Herlaad de pagina', 'info');
           }
         },
 
