@@ -15,7 +15,7 @@
         "src=\"https:\\/\\/browser\\.sentry-cdn\\.com\\/(?<currentValue>[^/]+)\\/bundle\\.min\\.js\""
       ],
       "datasourceTemplate": "npm",
-      "depNameTemplate": "@sentry\\/browser"
+      "depNameTemplate": "@sentry/browser"
     }
   ],
   "html": {
