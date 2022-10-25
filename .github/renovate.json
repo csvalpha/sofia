@@ -1,12 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>csvalpha/.github"],
-  "packageRules": [
-    {
-      "matchPackagePatterns": ["^animate\\.css"],
-      "customChangelogUrl": "https://github.com/animate-css/animate.css"
-    }
-  ],
   "regexManagers": [
     {
       "description": "Update Sentry SDK bundle",
