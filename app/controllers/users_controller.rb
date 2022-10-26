@@ -27,14 +27,17 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     @user = User.includes(:credit_mutations, roles_users: :role).find(params[:id])
     authorize @user
 
-    if request.format.json?
-      render json: @user.as_json(methods: User.orderscreen_json_includes)
-    else
-      @user_json = @user.to_json(only: %i[id name deactivated])
-      @new_mutation = CreditMutation.new(user: @user)
+    @user_json = @user.to_json(only: %i[id name deactivated])
+    @new_mutation = CreditMutation.new(user: @user)
 
-      @new_user = @user
-    end
+    @new_user = @user
+  end
+
+  def json
+    @user = User.find(params[:id])
+    authorize @user
+
+    render json: @user.as_json(methods: User.orderscreen_json_includes)
   end
 
   def create
