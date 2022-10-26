@@ -1,6 +1,17 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>csvalpha/.github"],
+  "regexManagers": [
+    {
+      "description": "Update Sentry SDK bundle",
+      "fileMatch": ["\\.html?$", "\\.html\\.erb$"],
+      "matchStrings": [
+        "src=\"https:\\/\\/browser\\.sentry-cdn\\.com\\/(?<currentValue>[^/]+)\\/bundle\\.min\\.js\""
+      ],
+      "datasourceTemplate": "npm",
+      "depNameTemplate": "@sentry/browser"
+    }
+  ],
   "html": {
     "fileMatch": ["\\.html\\.erb$"]
   }
