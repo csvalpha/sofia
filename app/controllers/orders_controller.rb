@@ -45,11 +45,15 @@ class OrdersController < ApplicationController
 
     authorize @order
 
-    @order.order_rows.each do |order_row|
-      order_row.update(product_count: 0)
-    end
+    if @order.activity.locked?
+      render json: {}, status: :forbidden
+    else
+      @order.order_rows.each do |order_row|
+        order_row.update(product_count: 0)
+      end
 
-    render json: {}
+      render json: {}
+    end
   end
 
   private
