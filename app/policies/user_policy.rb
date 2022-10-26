@@ -15,6 +15,10 @@ class UserPolicy < ApplicationPolicy
     user&.treasurer? || record == user
   end
 
+  def json?
+    user&.main_bartender? || show?
+  end
+
   def activities?
     user&.treasurer? || record == user
   end

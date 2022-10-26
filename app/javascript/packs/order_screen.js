@@ -69,7 +69,7 @@ document.addEventListener('turbolinks:load', () => {
 
           if (user !== null) {
             // Reload user to get latest credit balance
-            this.$http.get('/users/'+user.id).then((response) => {
+            this.$http.get('/users/'+user.id+'/json').then((response) => {
               const user = response.body;
               this.$set(this.users, this.users.indexOf(user), user);
 
@@ -186,6 +186,7 @@ document.addEventListener('turbolinks:load', () => {
             } else {
               // re-set user to update credit
               this.setUser(response.body.user);
+              this.orderRows = [];
             }
 
             this.isSubmitting = false;
@@ -241,7 +242,7 @@ document.addEventListener('turbolinks:load', () => {
 
         handleXHRError(error) {
           if (error.status == 500) {
-            this.sendFlash('Server error!', 'Herlaadt de pagina', 'error');
+            this.sendFlash('Server error!', 'Herlaad de pagina', 'error');
 
             try {
               throw new Error(error.body.text);
@@ -253,7 +254,7 @@ document.addEventListener('turbolinks:load', () => {
           } else if (error.status == 422) {
             this.sendFlash('Error bij het opslaan!', 'Probeer het opnieuw', 'warning');
           } else {
-            this.sendFlash(`Error ${error.status}?!🤔`, 'Herlaadt de pagina', 'info');
+            this.sendFlash(`Error ${error.status}?!🤔`, 'Herlaad de pagina', 'info');
           }
         },
 
