@@ -9,7 +9,8 @@
         "src=\"https:\\/\\/browser\\.sentry-cdn\\.com\\/(?<currentValue>[^/]+)\\/bundle\\.min\\.js\""
       ],
       "datasourceTemplate": "npm",
-      "depNameTemplate": "@sentry/browser"
+      "depNameTemplate": "@sentry/browser",
+      "prBodyNotes": "Note: make sure to update the integrity hashes before merging this PR."
     }
   ],
   "html": {
