@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     end
     member do
       get :activities
+      get :json
     end
   end
 

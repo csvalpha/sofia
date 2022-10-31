@@ -4,7 +4,7 @@
 require 'mina/rails'
 import 'lib/mina/tasks/rails.rake'
 
-set :domain, 'csvalpha.nl'
+set :domain, 'ssh.csvalpha.nl'
 
 task :staging do
   set :deploy_to, '/opt/docker/sofia/staging'

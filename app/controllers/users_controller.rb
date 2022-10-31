@@ -1,4 +1,4 @@
-class UsersController < ApplicationController
+class UsersController < ApplicationController # rubocop:disable Metrics/ClassLength
   before_action :authenticate_user!
 
   after_action :verify_authorized
@@ -31,6 +31,13 @@ class UsersController < ApplicationController
     @new_mutation = CreditMutation.new(user: @user)
 
     @new_user = @user
+  end
+
+  def json
+    @user = User.find(params[:id])
+    authorize @user
+
+    render json: @user.as_json(methods: User.orderscreen_json_includes)
   end
 
   def create

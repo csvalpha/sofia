@@ -18,6 +18,8 @@ class User < ApplicationRecord
   scope :inactive, (-> { where(deactivated: true) })
   scope :treasurer, (-> { joins(:roles).merge(Role.treasurer) })
 
+  attr_accessor :current_activity
+
   def credit
     credit_mutations.sum('amount') - order_rows.sum('product_count * price_per_product')
   end
@@ -43,7 +45,16 @@ class User < ApplicationRecord
   end
 
   def insufficient_credit
-    provider == 'amber_oauth2' and credit < -5
+    provider == 'amber_oauth2' and credit.negative?
+  end
+
+  def can_order(activity = nil)
+    activity ||= current_activity
+    if activity.nil?
+      !insufficient_credit
+    else
+      !insufficient_credit or activity.orders.select { |order| order.user_id == id }.any?
+    end
   end
 
   def treasurer?
@@ -98,6 +109,10 @@ class User < ApplicationRecord
     User.all.joins(:order_rows)
         .where('orders.created_at >= ? AND orders.created_at < ?', from, to)
         .group(:id).sum('product_count * price_per_product')
+  end
+
+  def self.orderscreen_json_includes
+    %i[credit avatar_thumb_or_default_url minor insufficient_credit can_order]
   end
 
   private

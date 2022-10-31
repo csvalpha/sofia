@@ -14,8 +14,6 @@
 //= require turbolinks
 //= require jquery3
 //= require bootstrap.bundle.min.js
-// bundle.min.js is sentry browser
-//= require bundle.min.js
 //= require webfontloader.js
 //= require turbolinks-animate/src/index.js
 //= require_tree .

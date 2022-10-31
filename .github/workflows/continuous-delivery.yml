@@ -37,7 +37,7 @@ jobs:
       stage: ${{ steps.get_metadata.outputs.stage }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
 
       - name: Get metadata
         id: get_metadata
@@ -48,15 +48,15 @@ jobs:
             if [ "${INPUT_MERGE,,}" = 'y' ]; then
               git fetch origin staging
               if ! git diff origin/master origin/staging --exit-code; then
-                echo '::set-output name=has_diff::true'
+                echo 'has_diff=true' >> "$GITHUB_OUTPUT"
               else
-                echo '::set-output name=has_diff::false'
+                echo 'has_diff=false' >> "$GITHUB_OUTPUT"
               fi
             fi
 
-            echo '::set-output name=stage::production'
+            echo 'stage=production' >> "$GITHUB_OUTPUT"
           else
-            echo '::set-output name=stage::staging'
+            echo 'stage=staging' >> "$GITHUB_OUTPUT"
           fi
 
   merge:
@@ -82,7 +82,7 @@ jobs:
 
       - name: Checkout code
         if: fromJSON(needs.metadata.outputs.has_diff)
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
 
       - name: Run merge
         if: fromJSON(needs.metadata.outputs.has_diff)
@@ -98,7 +98,7 @@ jobs:
         if: fromJSON(needs.metadata.outputs.has_diff)
         run: |
           git fetch origin master
-          echo '::set-output name=sha::'"$(git rev-parse origin/master)"
+          echo 'sha='"$(git rev-parse origin/master)" >> "$GITHUB_OUTPUT"
 
   continuous_integration:
     name: Continuous Integration
@@ -134,13 +134,13 @@ jobs:
         id: get_url
         run: |
           if [ "$GITHUB_REF_NAME" = 'master' ]; then
-            echo '::set-output name=environment_url::https://streep.csvalpha.nl'
+            echo 'environment_url=https://streep.csvalpha.nl' >> "$GITHUB_OUTPUT"
           else
-            echo '::set-output name=environment_url::https://stagingstreep.csvalpha.nl'
+            echo 'environment_url=https://stagingstreep.csvalpha.nl' >> "$GITHUB_OUTPUT"
           fi
 
       - name: Checkout code
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
         with:
           ref: ${{ needs.merge.outputs.sha }}
 
@@ -197,10 +197,10 @@ jobs:
         env:
           RESULTS: ${{ join(needs.*.result, ' ') }}
         run: |
-          echo '::set-output name=conclusion::success'
+          echo 'conclusion=success' >> "$GITHUB_OUTPUT"
           for RESULT in $RESULTS; do
             if [ "$RESULT" = 'cancelled' ] || [ "$RESULT" = 'failure' ]; then
-              echo '::set-output name=conclusion::'"$RESULT"
+              echo 'conclusion='"$RESULT" >> "$GITHUB_OUTPUT"
               break
             fi
           done
