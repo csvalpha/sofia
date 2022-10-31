@@ -63,7 +63,25 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         setUser(user = null) {
-          this.orderRows = [];
+          if (this.selectedUser === null || user === null || this.selectedUser.id != user.id) {
+            this.orderRows = [];
+          }
+
+          if (user !== null) {
+            // Reload user to get latest credit balance
+            this.$http.get('/users/'+user.id+'/json').then((response) => {
+              const user = response.body;
+              this.$set(this.users, this.users.indexOf(user), user);
+
+              // Selected user might have changed in the meantime
+              if (this.selectedUser && this.selectedUser.id == user.id) {
+                this.selectedUser = user;
+              }
+            }, (response) => {
+              this.handleXHRError(response);
+            });
+          }
+
           this.payWithCash = false;
           this.payWithPin = false;
           this.selectedUser = user;
@@ -103,11 +121,11 @@ document.addEventListener('turbolinks:load', () => {
           orderRow.amount++;
         },
 
-        maybeConfirmOrder(e) {
-          if (this.selectedUser && this.selectedUser.insufficient_credit) {
-            this.$root.$emit('bv::show::modal', 'insufficient-credit-modal', e.target);
-          } else {
+        maybeConfirmOrder() {
+          if (!this.selectedUser || this.selectedUser.can_order) {
             this.confirmOrder();
+          } else {
+            this.$refs.cannotOrderModal.show();
           }
         },
 
@@ -160,7 +178,6 @@ document.addEventListener('turbolinks:load', () => {
 
             if (user) {
               this.$set(this.users, this.users.indexOf(this.selectedUser), response.body.user);
-              this.$emit('updateusers');
             }
 
             this.sendFlash('Bestelling geplaatst.', additionalInfo, 'success');
@@ -169,6 +186,7 @@ document.addEventListener('turbolinks:load', () => {
             } else {
               // re-set user to update credit
               this.setUser(response.body.user);
+              this.orderRows = [];
             }
 
             this.isSubmitting = false;
@@ -200,9 +218,8 @@ document.addEventListener('turbolinks:load', () => {
             }
           }).then((response) => {
             this.$set(this.users, this.users.indexOf(this.selectedUser), response.body.user);
-            this.$emit('updateusers');
 
-            if(!this.keepUserSelected) {
+            if(!this.keepUserSelected && this.orderRows.length === 0){
               this.setUser(null);
             } else {
               // re-set user to update credit
@@ -225,7 +242,7 @@ document.addEventListener('turbolinks:load', () => {
 
         handleXHRError(error) {
           if (error.status == 500) {
-            this.sendFlash('Server error!', 'Herlaadt de pagina', 'error');
+            this.sendFlash('Server error!', 'Herlaad de pagina', 'error');
 
             try {
               throw new Error(error.body.text);
@@ -237,7 +254,7 @@ document.addEventListener('turbolinks:load', () => {
           } else if (error.status == 422) {
             this.sendFlash('Error bij het opslaan!', 'Probeer het opnieuw', 'warning');
           } else {
-            this.sendFlash(`Error ${error.status}?!🤔`, 'Herlaadt de pagina', 'info');
+            this.sendFlash(`Error ${error.status}?!🤔`, 'Herlaad de pagina', 'info');
           }
         },
 
@@ -266,7 +283,11 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         showOrderWarning() {
-          return this.showInsufficientCreditWarning || this.showAgeWarning;
+          return this.showCannotOrderWarning || this.showInsufficientCreditWarning || this.showAgeWarning;
+        },
+
+        showCannotOrderWarning() {
+          return this.selectedUser && !this.selectedUser.can_order;
         },
 
         showInsufficientCreditWarning() {
