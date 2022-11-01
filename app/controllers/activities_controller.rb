@@ -84,7 +84,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
     @count_per_product = @activity.count_per_product
   end
 
-  def order_screen # rubocop:disable Metrics/MethodLength
+  def order_screen # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     authorize Activity
 
     @activity = Activity.includes([:price_list, { price_list: { product_price: :product } }])
@@ -101,6 +101,12 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
     @sumup_key = Rails.application.config.x.sumup_key
     @sumup_enabled = @sumup_key.present?
 
+    @sumup_error_order = if params['sumup_error']
+                           Order.find(params['sumup_error'])
+                         else
+                           false
+                         end
+
     # Set flags for application.html.slim
     @show_navigationbar = false
     @show_extras = false
@@ -116,12 +122,11 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
   def sumup_callback
     if params['smp-status'] == 'success'
       flash[:success] = 'Pinbetaling is gelukt!'
-    else
-      flash[:error] = "Pinbetaling is mislukt! De bestelling is echter ingevoerd.
-                        Zorg dat de betaling (op een andere manier) lukt of verwijderd de bestelling handmatig uit het systeem."
-    end
 
-    redirect_to order_screen_activity_path
+      redirect_to order_screen_activity_path
+    else
+      redirect_to order_screen_activity_path(sumup_error: params['foreign-tx-id'])
+    end
   end
 
   def lock
