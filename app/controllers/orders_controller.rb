@@ -50,6 +50,22 @@ class OrdersController < ApplicationController
     end
   end
 
+  def destroy
+    @order = Order.find(params[:id])
+
+    authorize @order
+
+    if @order.activity.locked?
+      render json: {}, status: :forbidden
+    else
+      @order.order_rows.each do |order_row|
+        order_row.update(product_count: 0)
+      end
+
+      render json: {}
+    end
+  end
+
   private
 
   def allowed_filters

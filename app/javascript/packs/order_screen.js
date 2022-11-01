@@ -129,7 +129,7 @@ document.addEventListener('turbolinks:load', () => {
           }
         },
 
-        confirmOrder() {
+        confirmOrder(openWithSumup = false) {
           this.isSubmitting = true;
 
           let order = {};
@@ -190,6 +190,10 @@ document.addEventListener('turbolinks:load', () => {
             }
 
             this.isSubmitting = false;
+
+            if (openWithSumup) {
+              this.startSumupPayment(response.body.id, response.body.order_total);
+            }
           }, (response) => {
             this.handleXHRError(response);
 
@@ -262,6 +266,29 @@ document.addEventListener('turbolinks:load', () => {
           if (evt.keyCode === 27 && app.selectedUser) {
             app.setUser(null);
           }
+        },
+
+        startSumupPayment(orderId, orderTotal) {
+          let affilateKey = element.dataset.sumupKey;
+          let callback = element.dataset.sumupCallback;
+          
+          let sumupUrl = `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&currency=EUR&title=Bestelling SOFIA&skip-screen-success=true&foreign-tx-id=${orderId}`;
+          if (this.isIos) {
+            sumupUrl += `&amount=${orderTotal}&callbacksuccess=${callback}&callbackfail=${callback}`;
+          } else {
+            sumupUrl += `&total=${orderTotal}&callback=${callback}`;
+          }
+
+          window.location = sumupUrl;
+        },
+
+        deleteOrder(orderId) {
+          this.$http.delete(`/orders/${orderId}`).then(() => {
+            this.sendFlash('Pin bestelling verwijderd.', '', 'success');
+            this.$refs.activityOrders.refresh();
+          }, (response) => {
+            this.handleXHRError(response);
+          });
         }
       },
 
@@ -304,16 +331,6 @@ document.addEventListener('turbolinks:load', () => {
           }).reduce((total, amount) => total + amount, 0);
         },
 
-        sumupUrl() {
-          let affilateKey = element.dataset.sumupKey;
-          let callback = element.dataset.sumupCallback;
-          if (this.isIos) {
-            return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&amount=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&skip-screen-success=true&callbacksuccess=${callback}&callbackfail=${callback}`;
-          } else {
-            return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&total=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&skip-screen-success=true&callback=${callback}`;
-          }
-        },
-
         isIos() {
           return /iPhone|iPad|iPod/i.test(navigator.userAgent) || // iOS
             (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS
@@ -321,6 +338,12 @@ document.addEventListener('turbolinks:load', () => {
 
         isMobile() {
           return this.isIos || /Android|webOS|Opera Mini/i.test(navigator.userAgent);
+        }
+      },
+
+      mounted() {
+        if (this.$refs.sumupErrorModal) {
+          this.$refs.sumupErrorModal.show();
         }
       },
 
