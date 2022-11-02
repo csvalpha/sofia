@@ -63,7 +63,25 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         setUser(user = null) {
-          this.orderRows = [];
+          if (this.selectedUser === null || user === null || this.selectedUser.id != user.id) {
+            this.orderRows = [];
+          }
+
+          if (user !== null) {
+            // Reload user to get latest credit balance
+            this.$http.get('/users/'+user.id+'/json').then((response) => {
+              const user = response.body;
+              this.$set(this.users, this.users.indexOf(user), user);
+
+              // Selected user might have changed in the meantime
+              if (this.selectedUser && this.selectedUser.id == user.id) {
+                this.selectedUser = user;
+              }
+            }, (response) => {
+              this.handleXHRError(response);
+            });
+          }
+
           this.payWithCash = false;
           this.payWithPin = false;
           this.selectedUser = user;
@@ -103,15 +121,15 @@ document.addEventListener('turbolinks:load', () => {
           orderRow.amount++;
         },
 
-        maybeConfirmOrder(e) {
-          if (this.selectedUser && this.selectedUser.insufficient_credit) {
-            this.$root.$emit('bv::show::modal', 'insufficient-credit-modal', e.target);
-          } else {
+        maybeConfirmOrder() {
+          if (!this.selectedUser || this.selectedUser.can_order) {
             this.confirmOrder();
+          } else {
+            this.$refs.cannotOrderModal.show();
           }
         },
 
-        confirmOrder() {
+        confirmOrder(openWithSumup = false) {
           this.isSubmitting = true;
 
           let order = {};
@@ -160,7 +178,6 @@ document.addEventListener('turbolinks:load', () => {
 
             if (user) {
               this.$set(this.users, this.users.indexOf(this.selectedUser), response.body.user);
-              this.$emit('updateusers');
             }
 
             this.sendFlash('Bestelling geplaatst.', additionalInfo, 'success');
@@ -169,9 +186,14 @@ document.addEventListener('turbolinks:load', () => {
             } else {
               // re-set user to update credit
               this.setUser(response.body.user);
+              this.orderRows = [];
             }
 
             this.isSubmitting = false;
+
+            if (openWithSumup) {
+              this.startSumupPayment(response.body.id, response.body.order_total);
+            }
           }, (response) => {
             this.handleXHRError(response);
 
@@ -200,9 +222,8 @@ document.addEventListener('turbolinks:load', () => {
             }
           }).then((response) => {
             this.$set(this.users, this.users.indexOf(this.selectedUser), response.body.user);
-            this.$emit('updateusers');
 
-            if(!this.keepUserSelected) {
+            if(!this.keepUserSelected && this.orderRows.length === 0){
               this.setUser(null);
             } else {
               // re-set user to update credit
@@ -225,7 +246,7 @@ document.addEventListener('turbolinks:load', () => {
 
         handleXHRError(error) {
           if (error.status == 500) {
-            this.sendFlash('Server error!', 'Herlaadt de pagina', 'error');
+            this.sendFlash('Server error!', 'Herlaad de pagina', 'error');
 
             try {
               throw new Error(error.body.text);
@@ -237,7 +258,7 @@ document.addEventListener('turbolinks:load', () => {
           } else if (error.status == 422) {
             this.sendFlash('Error bij het opslaan!', 'Probeer het opnieuw', 'warning');
           } else {
-            this.sendFlash(`Error ${error.status}?!🤔`, 'Herlaadt de pagina', 'info');
+            this.sendFlash(`Error ${error.status}?!🤔`, 'Herlaad de pagina', 'info');
           }
         },
 
@@ -245,6 +266,29 @@ document.addEventListener('turbolinks:load', () => {
           if (evt.keyCode === 27 && app.selectedUser) {
             app.setUser(null);
           }
+        },
+
+        startSumupPayment(orderId, orderTotal) {
+          let affilateKey = element.dataset.sumupKey;
+          let callback = element.dataset.sumupCallback;
+          
+          let sumupUrl = `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&currency=EUR&title=Bestelling SOFIA&skip-screen-success=true&foreign-tx-id=${orderId}`;
+          if (this.isIos) {
+            sumupUrl += `&amount=${orderTotal}&callbacksuccess=${callback}&callbackfail=${callback}`;
+          } else {
+            sumupUrl += `&total=${orderTotal}&callback=${callback}`;
+          }
+
+          window.location = sumupUrl;
+        },
+
+        deleteOrder(orderId) {
+          this.$http.delete(`/orders/${orderId}`).then(() => {
+            this.sendFlash('Pin bestelling verwijderd.', '', 'success');
+            this.$refs.activityOrders.refresh();
+          }, (response) => {
+            this.handleXHRError(response);
+          });
         }
       },
 
@@ -266,7 +310,11 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         showOrderWarning() {
-          return this.showInsufficientCreditWarning || this.showAgeWarning;
+          return this.showCannotOrderWarning || this.showInsufficientCreditWarning || this.showAgeWarning;
+        },
+
+        showCannotOrderWarning() {
+          return this.selectedUser && !this.selectedUser.can_order;
         },
 
         showInsufficientCreditWarning() {
@@ -283,16 +331,6 @@ document.addEventListener('turbolinks:load', () => {
           }).reduce((total, amount) => total + amount, 0);
         },
 
-        sumupUrl() {
-          let affilateKey = element.dataset.sumupKey;
-          let callback = element.dataset.sumupCallback;
-          if (this.isIos) {
-            return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&amount=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&skip-screen-success=true&callbacksuccess=${callback}&callbackfail=${callback}`;
-          } else {
-            return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&total=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&skip-screen-success=true&callback=${callback}`;
-          }
-        },
-
         isIos() {
           return /iPhone|iPad|iPod/i.test(navigator.userAgent) || // iOS
             (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS
@@ -300,6 +338,12 @@ document.addEventListener('turbolinks:load', () => {
 
         isMobile() {
           return this.isIos || /Android|webOS|Opera Mini/i.test(navigator.userAgent);
+        }
+      },
+
+      mounted() {
+        if (this.$refs.sumupErrorModal) {
+          this.$refs.sumupErrorModal.show();
         }
       },
 
