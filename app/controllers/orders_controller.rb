@@ -19,10 +19,10 @@ class OrdersController < ApplicationController
     @order = Order.new(permitted_attributes.merge(created_by: current_user))
     authorize @order
 
-    current_credit = @order.user.credit
+    current_credit = @order.user&.credit
 
     if @order.save
-      if (@order.user.provider == 'amber_oauth2') && @order.user.credit.negative? && current_credit.positive?
+      if (@order.user&.provider == 'amber_oauth2') && @order.user&.credit&.negative? && current_credit&.positive?
         # User's credit went from positive to negative
         UserCreditMailer.insufficient_credit_mail(current_user).deliver_later
       end
