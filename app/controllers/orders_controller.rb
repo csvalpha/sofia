@@ -15,7 +15,7 @@ class OrdersController < ApplicationController
     render json: @orders.to_json(proper_json)
   end
 
-  def create # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+  def create # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     @order = Order.new(permitted_attributes.merge(created_by: current_user))
     authorize @order
 
