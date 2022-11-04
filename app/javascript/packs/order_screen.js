@@ -253,7 +253,7 @@ document.addEventListener('turbolinks:load', () => {
             } catch(e) {
               /* eslint-disable no-undef */
               Sentry.captureException(e);
-              /* eslint-enable */
+              /* eslint-enable no-undef */
             }
           } else if (error.status == 422) {
             this.sendFlash('Error bij het opslaan!', 'Probeer het opnieuw', 'warning');
