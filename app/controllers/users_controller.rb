@@ -37,6 +37,8 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     @user = User.find(params[:id])
     authorize @user
 
+    @user.current_activity = Activity.find(params[:activity_id])
+
     render json: @user.as_json(methods: User.orderscreen_json_includes)
   end
 

@@ -69,7 +69,7 @@ document.addEventListener('turbolinks:load', () => {
 
           if (user !== null) {
             // Reload user to get latest credit balance
-            this.$http.get('/users/'+user.id+'/json').then((response) => {
+            this.$http.get(`/users/${user.id}/json?activity_id=${this.activity.id}`).then((response) => {
               const user = response.body;
               this.$set(this.users, this.users.indexOf(user), user);
 
