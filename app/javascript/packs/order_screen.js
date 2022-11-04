@@ -69,7 +69,7 @@ document.addEventListener('turbolinks:load', () => {
 
           if (user !== null) {
             // Reload user to get latest credit balance
-            this.$http.get('/users/'+user.id+'/json').then((response) => {
+            this.$http.get(`/users/${user.id}/json?activity_id=${this.activity.id}`).then((response) => {
               const user = response.body;
               this.$set(this.users, this.users.indexOf(user), user);
 
@@ -252,8 +252,8 @@ document.addEventListener('turbolinks:load', () => {
               throw new Error(error.body.text);
             } catch(e) {
               /* eslint-disable no-undef */
-              Raven.captureException(e);
-              /* eslint-enable */
+              Sentry.captureException(e);
+              /* eslint-enable no-undef */
             }
           } else if (error.status == 422) {
             this.sendFlash('Error bij het opslaan!', 'Probeer het opnieuw', 'warning');
