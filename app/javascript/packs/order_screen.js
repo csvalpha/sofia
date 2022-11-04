@@ -252,7 +252,7 @@ document.addEventListener('turbolinks:load', () => {
               throw new Error(error.body.text);
             } catch(e) {
               /* eslint-disable no-undef */
-              Raven.captureException(e);
+              Sentry.captureException(e);
               /* eslint-enable */
             }
           } else if (error.status == 422) {
