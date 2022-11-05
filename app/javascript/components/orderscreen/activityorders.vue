@@ -1,5 +1,5 @@
 <template lang="html">
-  <b-row class="order-history no-gutters">
+  <b-row class="order-history g-0">
     <b-col>
       <b-table ref="orderTable" show-empty :busy.sync="isLoading" :items="ordersProvider" :fields="fields"
         no-provider-sorting sort-by="created_at" sort-desc>
