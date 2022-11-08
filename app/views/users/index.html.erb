@@ -9,7 +9,7 @@
   <%= content_tag :div, id: 'users-index', data: {manual_users: @manual_users_json, amber_users: @amber_users_json, inactive_users: @inactive_users_json} do %>
     <div class="d-flex justify-content-between align-items-center">
       <h3>Handmatig aangemaakte gebruikers</h3>
-      <button class="btn btn-sm btn-primary" data-target="#edit_user_modal" data-toggle="modal" role="button">
+      <button class="btn btn-sm btn-primary" data-bs-target="#edit_user_modal" data-bs-toggle="modal" role="button">
         <%= fa_icon 'plus' %>
         <span class="d-none d-md-inline ml-1">
           Nieuwe gebruiker

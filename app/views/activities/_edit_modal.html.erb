@@ -6,7 +6,7 @@
           Activiteit hernoemen
         </h5>
 
-        <button class="close" data-dismiss="modal" aria-label="close">
+        <button class="close" data-bs-dismiss="modal" aria-label="close">
           <span aria-hidden="true"> <%= fa_icon 'times' %></span>
         </button>
       </div>
@@ -15,7 +15,7 @@
           <%= f.input :title, label: 'Titel', placeholder: 'Titel', required: true %>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-dismiss="modal">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">
             Annuleren
           </button>
           <%= f.button :submit, 'Naam wijzigen', :data => {:disable_with => 'Bezig...'}, class: 'btn btn-primary', method: :patch %>
