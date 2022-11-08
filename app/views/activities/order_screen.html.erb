@@ -13,12 +13,9 @@
         </div>
         <div class="col-8">
           <div class="input-group">
-            <div class="input-group-prepend">
-              <div class="input-group-text">
-                <%= fa_icon 'euro' %>
-              </div>
+            <div class="input-group-text">
+              <%= fa_icon 'euro' %>
             </div>
-
             <input class="form-control" id="creditMutationAmountInput" placeholder="10.00" required="" type="text" v-model="creditMutationAmount"/>
             <div class="invalid-feedback">
               Bedrag is verplicht
