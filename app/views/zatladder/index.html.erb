@@ -7,7 +7,7 @@
       </h1>
 
       <form method="GET">
-        <select name="year" class="custom-select" onchange="this.form.submit()">
+        <select name="year" class="form-select" onchange="this.form.submit()">
           <%= options_for_select(@year_range, @year) %>
         </select>
       </form>
