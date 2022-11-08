@@ -13,7 +13,7 @@
         <span>
           Hier worden de vijf nieuwste prijslijsten en alle producten getoond.
         </span>
-        <button class="btn btn-sm btn-primary" data-bs-target="#editPriceListModal" data-bs-toggle="modal" role="button">
+        <button class="btn btn-sm btn-primary" data-target="#editPriceListModal" data-toggle="modal" role="button">
           <%= fa_icon 'plus', class: 'mr-1' %>
           Nieuwe prijslijst
         </button>
@@ -49,13 +49,13 @@
               </span>
             </td>
             <td class="products-new">
-              <div class="input-group">
-                <input class="form-control" placeholder="Productnaam" type="text" v-model="product.name" :disabled="product.id"/>
+              <div class="d-flex">
+                <input class="form-control flex-grow-1" placeholder="Productnaam" type="text" v-model="product.name" :disabled="product.id"/>
               </div>
             </td>
             <td class="products-new">
-              <div class="input-group">
-                <select class="form-control" v-model="product.category">
+              <div class="d-flex">
+                <select class="form-control flex-grow-1" v-model="product.category">
                   <% Product.categories.each do |category| %>
                     <%= content_tag :option, value: category.first do %>
                       <%= t category.first %>
@@ -65,8 +65,8 @@
               </div>
             </td>
             <td class="products-new-price" v-for="priceList in priceLists">
-              <div class="input-group">
-                <input class="form-control" placeholder="2.18" type="text" v-model="findPrice(product, priceList).price"/>
+              <div class="d-flex">
+                <input class="form-control flex-grow-1" placeholder="2.18" type="text" v-model="findPrice(product, priceList).price"/>
               </div>
             </td>
             <td class="products-save-new" v-on:click="saveProduct(product)">
