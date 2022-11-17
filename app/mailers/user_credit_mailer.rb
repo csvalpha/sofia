@@ -23,6 +23,7 @@ class UserCreditMailer < ApplicationMailer
     @title = 'Je saldo is bijgewerkt'
     @credit_mutation_amount = credit_mutation.amount
     @credit_mutation_description = credit_mutation.description
+    @credit_mutation_time = credit_mutation.created_at
 
     mail to: credit_mutation.user.email, subject: 'Je saldo is bijgewerkt'
   end
