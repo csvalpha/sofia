@@ -12,10 +12,9 @@
     "@babel/plugin-transform-runtime": "^7.19.1",
     "@babel/preset-env": "^7.19.4",
     "@rails/webpacker": "^5.4.3",
-    "@sentry/browser": "^6.19.7",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.1.3",
-    "babel-loader": "^8.2.5",
+    "babel-loader": "^9.1.0",
     "bootstrap": "^4.6.2",
     "bootstrap-vue": "^2.22.0",
     "css-loader": "^6.7.1",
@@ -42,5 +41,5 @@
     "sass-lint": "^1.13.1",
     "webpack-dev-server": "^4.11.1"
   },
-  "packageManager": "yarn@3.2.4"
+  "packageManager": "yarn@3.3.0"
 }

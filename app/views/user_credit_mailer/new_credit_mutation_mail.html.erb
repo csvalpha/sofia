@@ -1,5 +1,5 @@
 <p style="margin: 0;font-size: 16px;line-height: 20px">
-  Op <%= l Time.zone.now, format: :long %> is uw saldo bijgewerkt met
+  Op <%= l @credit_mutation_time, format: :long %> is uw saldo bijgewerkt met
   <%= number_to_currency(@credit_mutation_amount, unit: '€') %>.
   De reden hiervoor is: <%= @credit_mutation_description%>.
   <br />

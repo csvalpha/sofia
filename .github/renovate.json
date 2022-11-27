@@ -1,6 +1,24 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>csvalpha/.github"],
+  "packageRules": [
+    {
+      "matchManagers": ["regex"],
+      "matchPackageNames": ["@sentry/browser"],
+      "prBodyNotes": ":warning: **Note**: Make sure to update the integrity hashes before merging this PR. You should be able to find the full HTML tag here: https://docs.sentry.io/platforms/javascript/install/cdn/"
+    }
+  ],
+  "regexManagers": [
+    {
+      "description": "Update Sentry SDK bundle",
+      "fileMatch": ["\\.html?$", "\\.html\\.erb$"],
+      "matchStrings": [
+        "src=\"https:\\/\\/browser\\.sentry-cdn\\.com\\/(?<currentValue>[^/]+)\\/bundle\\.min\\.js\""
+      ],
+      "datasourceTemplate": "npm",
+      "depNameTemplate": "@sentry/browser"
+    }
+  ],
   "html": {
     "fileMatch": ["\\.html\\.erb$"]
   }

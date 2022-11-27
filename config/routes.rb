@@ -11,7 +11,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :orders, only: %i[index create update]
+  resources :orders, only: %i[index create update destroy]
   resources :price_lists, only: %i[index create update]
 
   resources :users, only: %i[index show create update] do
@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     end
     member do
       get :activities
+      get :json
     end
   end
 

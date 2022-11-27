@@ -62,17 +62,27 @@
     </template>
   </b-modal>
 
-  <b-modal id="cannot-order-modal" ref="cannotOrderModal" title="Negatief saldo" @ok="confirmOrder">
+  <b-modal id="cannot-order-modal" ref="cannotOrderModal" title="Negatief saldo">
     <div class="modal-body" v-if="selectedUser">
       {{selectedUser.name}} staat <b class="text-danger">{{doubleToCurrency(-selectedUser.credit)}}</b> negatief en moet eerst inleggen om te kunnen bestellen!
       Vraag de gebruiker om zijn of haar saldo op te waarderen via iDEAL of contante inleg.
     </div>
-    <template #modal-footer="{ ok, cancel }">
+    <template #modal-footer="{ cancel }">
       <button aria-label="Close" class="btn btn-secondary mr-1" @click="cancel()" type="button">
         Oké
       </button>
     </template>
   </b-modal>
+
+  <% if @sumup_error_order %>
+    <b-modal id="sumup-error-modal" ref="sumupErrorModal" title="Sumup betaling mislukt" 
+             ok-title="Nog eens proberen" @ok="startSumupPayment(<%= @sumup_error_order.id %>, <%= @sumup_error_order.order_total %>)" 
+             cancel-title="Bestelling verwijderen" @cancel="deleteOrder(<%= @sumup_error_order.id %>)">
+      <div class="modal-body">
+        De Sumup betaling is mislukt. Wil je de betaling nogmaals proberen of de bestelling verwijderen?
+      </div>
+    </b-modal>
+  <% end %>
 
   <nav class="header">
     <ul class="header-nav">
@@ -167,16 +177,15 @@
       </div>
       <div class="orders-confirmation">
         <div class="btn-group btn-group-lg btn-block" role="group" v-if="payWithPin && <%= @sumup_enabled.to_s %> && isMobile">
-          <a role="button" class="btn btn-success col-9"
-             @click="confirmOrder"
-             :class="{ 'disabled': orderConfirmButtonDisabled }"
-             :href="sumupUrl">
+          <button type="button" class="btn btn-success col-9"
+             @click="confirmOrder(true)"
+             :class="{ 'disabled': orderConfirmButtonDisabled }">
             <span class="text-uppercase">
               Sumup betaling
             </span>
-          </a>
+          </button>
           <button type="button" class="btn btn-dark" :disabled="orderConfirmButtonDisabled"
-                  @click="confirmOrder">
+                  @click="confirmOrder(false)">
             <%= fa_icon 'money' %>
           </button>
         </div>
@@ -220,7 +229,7 @@
     </div>
   </div>
   <div class="order-grid" v-if="!selectedUser && !payWithCash && !payWithPin">
-    <activity-orders :activity="activity" editable="" expand_first="">
+    <activity-orders ref="activityOrders" :activity="activity" editable expand_first>
     </activity-orders>
   </div>
   <div class="product-grid" v-if="selectedUser || payWithCash || payWithPin">

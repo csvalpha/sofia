@@ -48,15 +48,15 @@ jobs:
             if [ "${INPUT_MERGE,,}" = 'y' ]; then
               git fetch origin staging
               if ! git diff origin/master origin/staging --exit-code; then
-                echo '::set-output name=has_diff::true'
+                echo 'has_diff=true' >> "$GITHUB_OUTPUT"
               else
-                echo '::set-output name=has_diff::false'
+                echo 'has_diff=false' >> "$GITHUB_OUTPUT"
               fi
             fi
 
-            echo '::set-output name=stage::production'
+            echo 'stage=production' >> "$GITHUB_OUTPUT"
           else
-            echo '::set-output name=stage::staging'
+            echo 'stage=staging' >> "$GITHUB_OUTPUT"
           fi
 
   merge:
@@ -98,7 +98,7 @@ jobs:
         if: fromJSON(needs.metadata.outputs.has_diff)
         run: |
           git fetch origin master
-          echo '::set-output name=sha::'"$(git rev-parse origin/master)"
+          echo 'sha='"$(git rev-parse origin/master)" >> "$GITHUB_OUTPUT"
 
   continuous_integration:
     name: Continuous Integration
@@ -134,9 +134,9 @@ jobs:
         id: get_url
         run: |
           if [ "$GITHUB_REF_NAME" = 'master' ]; then
-            echo '::set-output name=environment_url::https://streep.csvalpha.nl'
+            echo 'environment_url=https://streep.csvalpha.nl' >> "$GITHUB_OUTPUT"
           else
-            echo '::set-output name=environment_url::https://stagingstreep.csvalpha.nl'
+            echo 'environment_url=https://stagingstreep.csvalpha.nl' >> "$GITHUB_OUTPUT"
           fi
 
       - name: Checkout code
@@ -167,7 +167,7 @@ jobs:
             docker-compose up -d
 
       - name: Finalize Sentry release
-        uses: getsentry/action-release@426b54786363ee2ecb27129f04b99cf714a36d38 # tag=v1.2.0
+        uses: getsentry/action-release@bd5f874fcda966ba48139b0140fb3ec0cb3aabdd # v1.2.1
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_PROJECT: ${{ env.PROJECT_NAME }}
@@ -197,16 +197,16 @@ jobs:
         env:
           RESULTS: ${{ join(needs.*.result, ' ') }}
         run: |
-          echo '::set-output name=conclusion::success'
+          echo 'conclusion=success' >> "$GITHUB_OUTPUT"
           for RESULT in $RESULTS; do
             if [ "$RESULT" = 'cancelled' ] || [ "$RESULT" = 'failure' ]; then
-              echo '::set-output name=conclusion::'"$RESULT"
+              echo 'conclusion='"$RESULT" >> "$GITHUB_OUTPUT"
               break
             fi
           done
 
       - name: Update Continuous Delivery check run
-        uses: guidojw/actions/update-check-run@5faa9418b42a6a77f81e11ae935287900673f98b # tag=v1.3.2
+        uses: guidojw/actions/update-check-run@abb0ee8d1336edf73383f2e5a09abd3a22f25b13 # v1.3.3
         with:
           app_id: ${{ env.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}

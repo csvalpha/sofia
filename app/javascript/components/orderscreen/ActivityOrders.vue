@@ -1,7 +1,7 @@
 <template lang="html">
   <b-row class="order-history no-gutters">
     <b-col>
-      <b-table show-empty :busy.sync="isLoading" :items="ordersProvider" :fields="fields"
+      <b-table ref="orderTable" show-empty :busy.sync="isLoading" :items="ordersProvider" :fields="fields"
         no-provider-sorting sort-by="created_at" sort-desc>
 
         <template #cell(user)="row">
@@ -115,6 +115,10 @@ export default {
 
     updateOrderTotal(order, total) {
       order.order_total = total;
+    },
+
+    refresh() {
+      this.$refs.orderTable.refresh();
     },
 
     doubleToCurrency(price) {

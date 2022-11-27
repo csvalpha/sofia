@@ -38,14 +38,14 @@ jobs:
           INPUT_SHA: ${{ inputs.sha }}
         run: |
           if [ "$GITHUB_REF_NAME" = 'master' ]; then
-            echo '::set-output name=tag::latest'
+            echo 'tag=latest' >> "$GITHUB_OUTPUT"
           else
-            echo '::set-output name=tag::'"$GITHUB_REF_NAME"
+            echo 'tag='"$GITHUB_REF_NAME" >> "$GITHUB_OUTPUT"
           fi
 
           if [ "$GITHUB_REF_NAME" = 'staging' ] || [ "$GITHUB_REF_NAME" = 'master' ]; then
             BUILD_ARGS='BUILD_HASH='${INPUT_SHA:-$GITHUB_SHA}
-            echo '::set-output name=build_args::'"$BUILD_ARGS"
+            echo 'build_args='"$BUILD_ARGS" >> "$GITHUB_OUTPUT"
           fi
 
   publish:
@@ -60,7 +60,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@95cb08cb2672c73d4ffd2f422e6d11953d2a9c70 # tag=v2.1.0
+        uses: docker/setup-buildx-action@8c0edbc76e98fa90f69d9a2c020dcb50019dc325 # tag=v2.2.1
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # tag=v2.1.0
@@ -93,7 +93,7 @@ jobs:
 
       - name: Create Sentry release
         if: ${{ !(github.event_name == 'workflow_dispatch' && github.workflow == 'Publish Image') }}
-        uses: getsentry/action-release@426b54786363ee2ecb27129f04b99cf714a36d38 # tag=v1.2.0
+        uses: getsentry/action-release@bd5f874fcda966ba48139b0140fb3ec0cb3aabdd # v1.2.1
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_PROJECT: ${{ env.PROJECT_NAME }}
@@ -114,16 +114,16 @@ jobs:
         env:
           RESULTS: ${{ join(needs.*.result, ' ') }}
         run: |
-          echo '::set-output name=conclusion::success'
+          echo 'conclusion=success' >> "$GITHUB_OUTPUT"
           for RESULT in $RESULTS; do
             if [ "$RESULT" = 'cancelled' ] || [ "$RESULT" = 'failure' ]; then
-              echo '::set-output name=conclusion::'"$RESULT"
+              echo 'conclusion='"$RESULT" >> "$GITHUB_OUTPUT"
               break
             fi
           done
 
       - name: Update Publish Image check run
-        uses: guidojw/actions/update-check-run@5faa9418b42a6a77f81e11ae935287900673f98b # tag=v1.3.2
+        uses: guidojw/actions/update-check-run@abb0ee8d1336edf73383f2e5a09abd3a22f25b13 # v1.3.3
         with:
           app_id: ${{ env.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}

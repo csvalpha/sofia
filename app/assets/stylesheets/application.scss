@@ -60,13 +60,7 @@ body {
 
 .b-table-details--item {
   .order-history--item-edit {
-    color: $gray-100;
-  }
-
-  &:hover {
-    .order-history--item-edit {
-      color: $gray-700;
-    }
+    color: $gray-700;
   }
 }
 
@@ -81,4 +75,8 @@ body {
 
 .footer-padding {
   padding-bottom: 58px;
+}
+
+.modal-backdrop {
+  background: $transparent-800;
 }

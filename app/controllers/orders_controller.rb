@@ -19,10 +19,18 @@ class OrdersController < ApplicationController
     @order = Order.new(permitted_attributes.merge(created_by: current_user))
     authorize @order
 
+    current_credit = @order.user&.credit
+
     if @order.save
+      if send_insufficient_credit_mail?(@order.user, current_credit)
+        # User's credit went from positive to negative
+        UserCreditMailer.insufficient_credit_mail(@order.user).deliver_later
+      end
+
       order_data = Order.includes(
         :order_rows, user: { orders: :order_rows }
       ).find(@order.id)
+
       order_data.user.current_activity = order_data.activity unless order_data.user.nil?
       render json: order_data.as_json(include: json_includes)
     else
@@ -42,6 +50,22 @@ class OrdersController < ApplicationController
     end
   end
 
+  def destroy
+    @order = Order.find(params[:id])
+
+    authorize @order
+
+    if @order.activity.locked?
+      render json: {}, status: :forbidden
+    else
+      @order.order_rows.each do |order_row|
+        order_row.update(product_count: 0)
+      end
+
+      render json: {}
+    end
+  end
+
   private
 
   def allowed_filters
@@ -51,6 +75,12 @@ class OrdersController < ApplicationController
       @allowed_filters[:user] = params[:user_id] if params[:user_id]
       @allowed_filters
     end
+  end
+
+  def send_insufficient_credit_mail?(user, old_credit)
+    return if user.nil?
+
+    user.provider == 'amber_oauth2' && user.credit.negative? && old_credit.positive?
   end
 
   def permitted_attributes

@@ -69,7 +69,7 @@ document.addEventListener('turbolinks:load', () => {
 
           if (user !== null) {
             // Reload user to get latest credit balance
-            this.$http.get('/users/'+user.id).then((response) => {
+            this.$http.get(`/users/${user.id}/json?activity_id=${this.activity.id}`).then((response) => {
               const user = response.body;
               this.$set(this.users, this.users.indexOf(user), user);
 
@@ -129,7 +129,7 @@ document.addEventListener('turbolinks:load', () => {
           }
         },
 
-        confirmOrder() {
+        confirmOrder(openWithSumup = false) {
           this.isSubmitting = true;
 
           let order = {};
@@ -186,9 +186,14 @@ document.addEventListener('turbolinks:load', () => {
             } else {
               // re-set user to update credit
               this.setUser(response.body.user);
+              this.orderRows = [];
             }
 
             this.isSubmitting = false;
+
+            if (openWithSumup) {
+              this.startSumupPayment(response.body.id, response.body.order_total);
+            }
           }, (response) => {
             this.handleXHRError(response);
 
@@ -241,19 +246,19 @@ document.addEventListener('turbolinks:load', () => {
 
         handleXHRError(error) {
           if (error.status == 500) {
-            this.sendFlash('Server error!', 'Herlaadt de pagina', 'error');
+            this.sendFlash('Server error!', 'Herlaad de pagina', 'error');
 
             try {
               throw new Error(error.body.text);
             } catch(e) {
               /* eslint-disable no-undef */
-              Raven.captureException(e);
-              /* eslint-enable */
+              Sentry.captureException(e);
+              /* eslint-enable no-undef */
             }
           } else if (error.status == 422) {
             this.sendFlash('Error bij het opslaan!', 'Probeer het opnieuw', 'warning');
           } else {
-            this.sendFlash(`Error ${error.status}?!🤔`, 'Herlaadt de pagina', 'info');
+            this.sendFlash(`Error ${error.status}?!🤔`, 'Herlaad de pagina', 'info');
           }
         },
 
@@ -261,6 +266,29 @@ document.addEventListener('turbolinks:load', () => {
           if (evt.keyCode === 27 && app.selectedUser) {
             app.setUser(null);
           }
+        },
+
+        startSumupPayment(orderId, orderTotal) {
+          let affilateKey = element.dataset.sumupKey;
+          let callback = element.dataset.sumupCallback;
+          
+          let sumupUrl = `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&currency=EUR&title=Bestelling SOFIA&skip-screen-success=true&foreign-tx-id=${orderId}`;
+          if (this.isIos) {
+            sumupUrl += `&amount=${orderTotal}&callbacksuccess=${callback}&callbackfail=${callback}`;
+          } else {
+            sumupUrl += `&total=${orderTotal}&callback=${callback}`;
+          }
+
+          window.location = sumupUrl;
+        },
+
+        deleteOrder(orderId) {
+          this.$http.delete(`/orders/${orderId}`).then(() => {
+            this.sendFlash('Pin bestelling verwijderd.', '', 'success');
+            this.$refs.activityOrders.refresh();
+          }, (response) => {
+            this.handleXHRError(response);
+          });
         }
       },
 
@@ -303,16 +331,6 @@ document.addEventListener('turbolinks:load', () => {
           }).reduce((total, amount) => total + amount, 0);
         },
 
-        sumupUrl() {
-          let affilateKey = element.dataset.sumupKey;
-          let callback = element.dataset.sumupCallback;
-          if (this.isIos) {
-            return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&amount=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&skip-screen-success=true&callbacksuccess=${callback}&callbackfail=${callback}`;
-          } else {
-            return `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&total=${this.orderTotal}&currency=EUR&title=Bestelling SOFIA&skip-screen-success=true&callback=${callback}`;
-          }
-        },
-
         isIos() {
           return /iPhone|iPad|iPod/i.test(navigator.userAgent) || // iOS
             (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS
@@ -320,6 +338,12 @@ document.addEventListener('turbolinks:load', () => {
 
         isMobile() {
           return this.isIos || /Android|webOS|Opera Mini/i.test(navigator.userAgent);
+        }
+      },
+
+      mounted() {
+        if (this.$refs.sumupErrorModal) {
+          this.$refs.sumupErrorModal.show();
         }
       },
 
