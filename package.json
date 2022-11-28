@@ -2,7 +2,7 @@
   "name": "sofia",
   "private": true,
   "scripts": {
-    "lint": "eslint --ext .js app/javascript"
+    "lint": "eslint 'app/javascript/**/*.{js,vue}'"
   },
   "dependencies": {
     "@babel/core": "^7.20.5",

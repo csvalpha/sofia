@@ -2,7 +2,7 @@ import Vue from 'vue/dist/vue.esm';
 import TurbolinksAdapter from 'vue-turbolinks';
 import VueResource from 'vue-resource';
 
-import UserInput from '../components/userinput.vue';
+import UserInput from '../components/UserInput.vue';
 import moment from 'moment';
 
 Vue.use(TurbolinksAdapter);

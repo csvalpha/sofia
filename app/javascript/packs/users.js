@@ -2,7 +2,7 @@ import Vue from 'vue/dist/vue.esm';
 import TurbolinksAdapter from 'vue-turbolinks';
 import axios from 'axios';
 import BootstrapVue from 'bootstrap-vue';
-import UsersTable from '../components/user/userstable.vue';
+import UsersTable from '../components/user/UsersTable.vue';
 
 Vue.use(TurbolinksAdapter);
 Vue.use(BootstrapVue);
