@@ -1,5 +1,5 @@
 class Product < ApplicationRecord
-  enum category: { beer: 0, non_alcoholic: 1, distilled: 2, wine: 3, food: 4, tobacco: 5 }
+  enum category: { beer: 0, craft_beer: 6, non_alcoholic: 1, distilled: 2, wine: 3, food: 4, tobacco: 5 }
 
   has_many :product_prices, dependent: :destroy
   has_many :price_lists, through: :product_prices, dependent: :restrict_with_error
@@ -10,7 +10,7 @@ class Product < ApplicationRecord
   accepts_nested_attributes_for :product_prices, allow_destroy: true
 
   def requires_age
-    %w[beer distilled wine tobacco].include? category
+    %w[beer craft_beer distilled wine tobacco].include? category
   end
 
   def t_category
