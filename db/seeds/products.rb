@@ -1,4 +1,4 @@
-def seed_products # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+def seed_products # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity
   products = []
 
   # rubocop:disable Style/WordArray
