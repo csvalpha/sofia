@@ -41,7 +41,8 @@ module OmniAuth
       def full_name(raw_info)
         User.full_name_from_attributes(raw_info['attributes']['first_name'],
                                        raw_info['attributes']['last_name_prefix'],
-                                       raw_info['attributes']['last_name'])
+                                       raw_info['attributes']['last_name'],
+                                       raw_info['attributes']['nickname'])
       end
 
       def groups_from_json(json)
