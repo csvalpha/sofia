@@ -94,8 +94,12 @@ class User < ApplicationRecord
 
   # :nocov:
 
-  def self.full_name_from_attributes(first_name, last_name_prefix, last_name)
-    [first_name, last_name_prefix, last_name].reject(&:blank?).join(' ')
+  def self.full_name_from_attributes(first_name, last_name_prefix, last_name, nickname)
+    full_name = first_name
+    full_name += " (#{nickname})" if nickname.present?
+    full_name += " #{last_name_prefix}" if last_name_prefix.present?
+    full_name += " #{last_name}" if last_name.present?
+    full_name
   end
 
   def self.calculate_credits
