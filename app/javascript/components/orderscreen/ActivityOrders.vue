@@ -4,26 +4,28 @@
       <b-table ref="orderTable" show-empty :busy.sync="isLoading" :items="ordersProvider" :fields="fields"
         no-provider-sorting sort-by="created_at" sort-desc>
 
-        <template v-slot:cell(user)="row">
+        <template #cell(user)="row">
           <span v-if="row.item.user">{{row.item.user.name}}</span>
           <span v-else-if="row.item.paid_with_pin">Gepind</span>
           <span v-else-if="row.item.paid_with_cash">Contant betaald</span>
         </template>
 
-        <template v-slot:cell(order_total)="row">
+        <template #cell(order_total)="row">
           <span class="pull-right">
             {{doubleToCurrency(row.item.order_total)}}
             <i @click.stop="row.toggleDetails" :class="['order-history--details-expand', 'fa', 'fa-lg', 'pl-2', row.detailsShowing ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down']"></i>
           </span>
         </template>
 
-        <template v-slot:empty>
+        <template #empty>
           <p class="my-1 text-center">
             <em>Er zijn geen bestellingen om weer te geven</em>
           </p>
         </template>
 
-        <ProductTable slot="row-details" slot-scope="row" editable :order="row.item" :activity="activity" />
+        <template #row-details="row">
+          <product-table @updateordertotal="updateOrderTotal" editable :order="row.item" :activity="activity" />
+        </template>
       </b-table>
 
       <spinner class="pt-2 pb-3 m-auto" size="large" v-if="isLoading" />
@@ -35,7 +37,7 @@
 import Spinner from 'vue-simple-spinner';
 import axios from 'axios';
 import moment from 'moment';
-import ProductTable from '../producttable.vue';
+import ProductTable from '../ProductTable.vue';
 
 export default {
   props: {
@@ -91,9 +93,9 @@ export default {
     ordersProvider() {
       let params;
       if (this.activity) {
-        params = { activity_id: this.activity.id }
+        params = { activity_id: this.activity.id };
       } else if (this.user) {
-        params = { user_id: this.user.id }
+        params = { user_id: this.user.id };
       }
 
       let promise = axios.get('/orders', { params });
@@ -102,13 +104,17 @@ export default {
         const orders = response.data;
         orders.map((order, index) => {
           order._showDetails = (this.expand_first && index === orders.length - 1);
-          order.order_rows.map(row => { row.editing = false });
+          order.order_rows.map(row => { row.editing = false; });
         });
 
         return orders;
       }, () => {
         return [];
       });
+    },
+
+    updateOrderTotal(order, total) {
+      order.order_total = total;
     },
 
     refresh() {

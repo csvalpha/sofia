@@ -4,9 +4,9 @@ import VueResource from 'vue-resource';
 import axios from 'axios';
 import BootstrapVue from 'bootstrap-vue';
 
-import Flash from '../components/flash.vue';
-import UserSelection from '../components/orderscreen/userselection.vue';
-import ActivityOrders from '../components/orderscreen/activityorders.vue';
+import FlashNotification from '../components/FlashNotification.vue';
+import UserSelection from '../components/orderscreen/UserSelection.vue';
+import ActivityOrders from '../components/orderscreen/ActivityOrders.vue';
 
 Vue.use(TurbolinksAdapter);
 Vue.use(VueResource);
@@ -357,7 +357,7 @@ document.addEventListener('turbolinks:load', () => {
       },
 
       components: {
-        Flash,
+        FlashNotification,
         UserSelection,
         ActivityOrders
       },
