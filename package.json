@@ -14,7 +14,7 @@
     "@rails/webpacker": "^5.4.3",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.2.0",
-    "babel-loader": "^8.3.0",
+    "babel-loader": "^9.1.0",
     "bootstrap": "^4.6.2",
     "bootstrap-vue": "^2.23.1",
     "css-loader": "^6.7.2",
