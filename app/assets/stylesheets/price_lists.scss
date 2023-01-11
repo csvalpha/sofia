@@ -16,6 +16,10 @@ th {
   }
 }
 
+#price_lists_table tr:last-child > td {
+  border-bottom-width: 0;
+}
+
 td {
   &.products-new-edit-button {
     padding: .5rem 1rem;
