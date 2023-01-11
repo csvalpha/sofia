@@ -10,14 +10,16 @@
 
   <div class="row">
     <div class="col-12">
-      <form class="form-inline" method="GET">
-        <div class="form-group mb-2">
+      <form class="row row-cols-auto" method="GET">
+        <div class="col mb-2">
           <input type="date" class="form-control" id="staticEmail2" name="from_date" value="<%= @from_date %>">
         </div>
-        <div class="form-group mx-sm-3 mb-2">
+        <div class="col mb-2">
           <input type="date" class="form-control" name="to_date" value="<%= @to_date %>">
         </div>
-        <button type="submit" class="btn btn-primary mb-2">Periode wijzigen</button>
+        <div class="col">
+          <button type="submit" class="btn btn-primary mb-2">Periode wijzigen</button>
+        </div>
       </form>
     </div>
   </div>

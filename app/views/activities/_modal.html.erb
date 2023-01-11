@@ -16,11 +16,10 @@
           <%= f.input :start_time, as: :string, label: 'Begintijd', order: %i[hour minute day month year] %>
           <%= f.input :end_time, as: :string, label: 'Eindtijd', order: %i[hour minute day month year] %>
 
-          <div class="form-group row">
+          <div class="mb-3 row">
             <label class="col-3 col-form-label" for="activity_price_list">
-              <abbr class="mr-1" title="required">*</abbr>
               Prijslijst
-
+              <abbr title="required">*</abbr>
             </label>
             <template>
               <div class="col-9" style="position:relative">
