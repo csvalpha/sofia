@@ -11,6 +11,16 @@ body {
   min-height: 100vh;
 }
 
+// Only underline links on hover
+a:hover {
+  text-decoration: underline;
+}
+
+a {
+  text-decoration: none;
+}
+
+
 // ANIMATIONS
 .slide-fade-enter-active,
 .slide-fade-leave-active {
