@@ -1,4 +1,4 @@
-<% content_for :title, "Gebruiker #{@user.name}- SOFIA" %>
+<% content_for :title, "Gebruiker #{@user.name} - SOFIA" %>
 <% content_for :modal do %>
   <%= render 'mutation_modal' %>
   <%= render 'modal' %>
@@ -120,18 +120,17 @@
 
               <% end %></div>
             <div aria-labelledby="roleInfo-tab" class="tab-pane p-2" id="roleInfo" role="tabpanel">
-              <b-button class="pull-right" size="sm" v-b-toggle.role-sync-description="">
+              <button class="pull-right btn btn-sm btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#role-sync-description" aria-expanded="false" aria-controls="role-sync-description">
                 <%= fa_icon 'question-circle' %>
-
-              </b-button>
+              </button>
               <h2 class="card-title">
                 Rollen
               </h2>
-              <b-collapse class="mt-2" id="role-sync-description">
+              <div class="collapse mt-2" id="role-sync-description">
                 <p class="alert alert-light card-text">
                   Rollen worden gesynchroniseerd als de gebruiker zelf inlogt
                 </p>
-              </b-collapse>
+              </div>
               <p class="card-text d-none d-md-block">
                 <%= 'Rechten zijn afhankelijk van de rollen die een gebruiker in het streepsysteem heeft. ' %>
                 <%= 'Rollen worden bepaald aan de hand van de groepen waar een gebruiker lid van is in de Alpha website.' %>

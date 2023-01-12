@@ -2,7 +2,12 @@
   <div class="product-totals">
     <user-input class="mb-3" v-model="user" :include-pin="true" :include-cash="true"></user-input>
 
-    <spinner class="pb-3 m-auto" size="large" v-if="isLoading" />
+    <div class="pb-3" v-if="isLoading">
+      <div class="spinner-border text-primary d-block m-auto" style="width: 2.5rem; height: 2.5rem;" role="status">
+        <span class="visually-hidden">Laden...</span>
+      </div>
+    </div>
+
     <div class="table-responsive" v-else>
       <table class="table table-sm" v-if="orderTotals.length > 0">
         <thead>
@@ -29,7 +34,6 @@
 
 <script>
   import UserInput from '../userinput.vue';
-  import Spinner from 'vue-simple-spinner';
 
   export default {
     props: {
@@ -72,7 +76,6 @@
     },
 
     components: {
-      Spinner,
       UserInput
     }
   }

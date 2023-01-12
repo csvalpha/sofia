@@ -45,7 +45,7 @@ a {
   }
 }
 
-.order-history--details-expand {
+.order-history-details-expand {
   color: $gray-500;
 
   &:hover {
@@ -63,13 +63,12 @@ a {
   width: 150px;
 }
 
-.b-table-details--header {
+.table-details-header {
   background-color: $gray-200;
-  text-transform: uppercase;
 }
 
-.b-table-details--item {
-  .order-history--item-edit {
+.table-details-item {
+  .order-history-item-edit {
     color: $gray-700;
   }
 }

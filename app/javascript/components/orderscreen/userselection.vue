@@ -23,10 +23,10 @@
             {{doubleToCurrency(selectedUser.credit)}}
           </h3>
 
-          <b-btn variant="secondary" v-b-modal.credit-mutation-modal>
+          <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#credit-mutation-modal">
             <i class="fa fa-money mr-1"></i>
             Geld inleggen
-          </b-btn>
+          </button>
         </div>
       </div>
     </div>

@@ -1,38 +1,58 @@
 <template lang="html">
-  <b-row class="order-history g-0">
-    <b-col>
-      <b-table ref="orderTable" show-empty :busy.sync="isLoading" :items="ordersProvider" :fields="fields"
-        no-provider-sorting sort-by="created_at" sort-desc>
+  <div class="row order-history g-0">
+    <div class="col">
+      <table class="table">
+        <thead>
+          <tr>
+            <th id="id" class="ps-4">#</th>
+            <th id="created_at">Tijdstip</th>
+            <th id="user">Gebruiker</th>
+            <th id="order_total" class="text-end pe-4">Bedrag</th>
+          </tr> 
+        </thead>
+        <tbody>
+          <template v-for="order in orders" class="row table-details-item px-2">
+            <tr :key="order.id">
+              <th class="ps-4">{{ order.id }}</th>
+              <td>{{ formatDate(order.created_at) }}</td>
+              <td :class="order.user ? '' : 'fst-italic'">
+                <span v-if="order.user">{{order.user.name}}</span>
+                <span v-else-if="order.paid_with_pin">Gepind</span>
+                <span v-else-if="order.paid_with_cash">Contant betaald</span>
+              </td>
+              <td class="text-end">
+                <span>
+                  {{ doubleToCurrency(order.order_total) }}
+                  <i @click.stop="order.toggleDetails()" :class="['order-history-details-expand', 'fa', 'fa-lg', 'ps-2', 'pe-1', order.detailsShowing ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down']"></i>
+                </span>
+              </td>
+            </tr>
+            <tr v-if="order.detailsShowing">
+              <td colspan="4" role="cell">
+                <product-table @updateordertotal="updateOrderTotal" editable :order="order" :activity="activity" />
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
 
-        <template v-slot:cell(user)="row">
-          <span v-if="row.item.user">{{row.item.user.name}}</span>
-          <span v-else-if="row.item.paid_with_pin">Gepind</span>
-          <span v-else-if="row.item.paid_with_cash">Contant betaald</span>
-        </template>
+      <div v-if="orders.length === 0" class="text-center">
+        <div class="">
+          <em>Er zijn geen bestellingen om weer te geven</em>
+        </div>
+      </div>
 
-        <template v-slot:cell(order_total)="row">
-          <span class="pull-right">
-            {{doubleToCurrency(row.item.order_total)}}
-            <i @click.stop="row.toggleDetails" :class="['order-history--details-expand', 'fa', 'fa-lg', 'pl-2', row.detailsShowing ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down']"></i>
-          </span>
-        </template>
+      <div class="pb-3 pt-2" v-if="isLoading">
+        <div class="spinner-border text-primary d-block m-auto" style="width: 2.5rem; height: 2.5rem;" role="status">
+          <span class="visually-hidden">Laden...</span>
+        </div>
+      </div>
 
-        <template v-slot:empty>
-          <p class="my-1 text-center">
-            <em>Er zijn geen bestellingen om weer te geven</em>
-          </p>
-        </template>
-
-        <ProductTable slot="row-details" slot-scope="row" editable :order="row.item" :activity="activity" />
-      </b-table>
-
-      <spinner class="pt-2 pb-3 m-auto" size="large" v-if="isLoading" />
-    </b-col>
-  </b-row>
+    </div>
+  </div>
 </template>
 
 <script>
-import Spinner from 'vue-simple-spinner';
 import axios from 'axios';
 import moment from 'moment';
 import ProductTable from '../producttable.vue';
@@ -56,34 +76,7 @@ export default {
   data: function () {
     return {
       isLoading: false,
-      fields: [
-        {
-          key: 'id',
-          label: '#',
-          sortable: true,
-          thClass: 'text-center',
-          tdClass: 'text-center',
-          isRowHeader: true
-        },
-        {
-          key: 'created_at',
-          label: 'Tijdstip',
-          sortable: true,
-          formatter: this.formatDate
-        },
-        {
-          key: 'user',
-          label: 'Gebruiker',
-          sortable: true,
-          tdClass: (user) => user ? '' : 'font-italic'
-        },
-        {
-          key: 'order_total',
-          label : 'Bedrag',
-          sortable: false,
-          thClass: 'text-right pr-4'
-        }
-      ]
+      orders: []
     };
   },
 
@@ -100,19 +93,20 @@ export default {
 
       return promise.then((response) => {
         const orders = response.data;
+        orders.sort((order1, order2) => order2.id - order1.id);
         orders.map((order, index) => {
-          order._showDetails = (this.expand_first && index === orders.length - 1);
           order.order_rows.map(row => { row.editing = false });
+          order.detailsShowing = (this.expand_first && index === 0);
+          order.toggleDetails = (() => order.detailsShowing = !order.detailsShowing);
         });
-
-        return orders;
+        this.orders = orders;
       }, () => {
-        return [];
+        this.orders = [];
       });
     },
 
-    refresh() {
-      this.$refs.orderTable.refresh();
+    updateOrderTotal(order, total) {
+      order.order_total = total;
     },
 
     doubleToCurrency(price) {
@@ -124,8 +118,11 @@ export default {
     }
   },
 
+  mounted() {
+    this.ordersProvider();
+  },
+
   components: {
-    Spinner,
     ProductTable
   }
 };

@@ -1,34 +1,51 @@
 <template lang="html">
-  <b-row class="order-history g-0">
-    <b-col>
-      <b-table show-empty :busy.sync="isLoading" :items="activityProvider" :fields="fields"
-               no-provider-sorting sort-by="start_time" sort-desc>
+  <div class="row order-history g-0">
+    <div class="col">
+      <table class="table">
+        <thead>
+          <tr>
+            <th id="start_time" class="ps-4">Datum</th>
+            <th id="title">Titel</th>
+            <th id="order_total" class="text-end pe-4">Totaal</th>
+          </tr> 
+        </thead>
+        <tbody>
+          <template v-for="activity in activities" class="row table-details-item px-2">
+            <tr :key="activity.start_time">
+              <td class="ps-4">{{ formatDate(activity.start_time) }}</td>
+              <td>{{ activity.title }}</td>
+              <td class="text-end">
+                <span>
+                  {{ doubleToCurrency(activity.order_total) }}
+                  <i @click.stop="activity.toggleDetails()" :class="['order-history-details-expand', 'fa', 'fa-lg', 'ps-2', 'pe-1', activity.detailsShowing ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down']"></i>
+                </span>
+              </td>
+            </tr>
+            <tr v-if="activity.detailsShowing">
+              <td colspan="4" role="cell">
+                <ActivityOrderHistory :activity="activity" :user="user" />
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
 
-        <template v-slot:cell(order_total)="row">
-          {{doubleToCurrency(row.item.order_total)}}
-          <span class="pull-right">
-            <i @click.stop="row.toggleDetails" :class="['order-history--details-expand', 'fa', 'fa-lg', 'pl-2', row.detailsShowing ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down']"></i>
-          </span>
-        </template>
+      <div v-if="activities.length === 0" class="text-center">
+        <div class="">
+          <em>Er zijn geen bestellingen om weer te geven</em>
+        </div>
+      </div>
 
-        <template v-slot:empty>
-          <p class="my-1 text-center">
-            <em>Er zijn geen bestellingen om weer te geven</em>
-          </p>
-        </template>
-
-        <template slot="row-details" slot-scope="row">
-          <ActivityOrderHistory :activity="row.item" :user="user" />
-        </template>
-      </b-table>
-
-      <spinner class="pt-2 pb-3 m-auto" size="large" v-if="isLoading" />
-    </b-col>
-  </b-row>
+      <div class="pb-3 pt-2" v-if="isLoading">
+        <div class="spinner-border text-primary d-block m-auto" style="width: 2.5rem; height: 2.5rem;" role="status">
+          <span class="visually-hidden">Laden...</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-  import Spinner from 'vue-simple-spinner';
   import ActivityOrderHistory from './activityorderhistory.vue';
   import axios from 'axios';
   import moment from 'moment';
@@ -44,24 +61,7 @@
     data: function () {
       return {
         isLoading: false,
-        fields: [
-          {
-            key: 'start_time',
-            label: 'Datum',
-            sortable: true,
-            formatter: this.formatDate
-          },
-          {
-            key: 'title',
-            label: 'Titel',
-            sortable: false
-          },
-          {
-            key: 'order_total',
-            label: 'Totaal',
-            sortable: false
-          }
-        ]
+        activities: []
       };
     },
 
@@ -69,10 +69,16 @@
       activityProvider() {
         let promise = axios.get('/users/'+this.user.id+'/activities');
 
-        return promise.then((response) => {
-          return response.data;
+        promise.then((response) => {
+          const activities = response.data;
+          activities.sort((activity1, activity2) => activity2.start_time - activity1.start_time);
+          activities.forEach(activity => {
+            activity.detailsShowing = false;
+            activity.toggleDetails = (() => activity.detailsShowing = !activity.detailsShowing);
+          });
+          this.activities = activities;
         }, () => {
-          return [];
+          this.activities = [];
         });
       },
 
@@ -85,8 +91,11 @@
       }
     },
 
+    mounted() {
+      this.activityProvider();
+    },
+
     components: {
-      Spinner,
       ActivityOrderHistory
     }
   };

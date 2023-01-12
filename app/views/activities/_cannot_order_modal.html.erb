@@ -1,0 +1,19 @@
+<div class="modal fade" id="cannot-order-modal" aria-labelledby="cannot-order-modal-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cannot-order-modal-label">Negatief saldo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" v-if="this.selectedUser">
+        {{this.selectedUser.name}} staat <b class="text-danger">{{this.doubleToCurrency(-this.selectedUser.credit)}}</b> negatief en moet eerst inleggen om te kunnen bestellen!
+        Vraag de gebruiker om zijn of haar saldo op te waarderen via iDEAL of contante inleg.
+      </div>
+      <div class="modal-footer">
+        <button aria-label="Close" class="btn btn-secondary mr-1" data-bs-dismiss="modal" type="button">
+          Oké
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

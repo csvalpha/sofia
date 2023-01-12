@@ -6,11 +6,7 @@
         <h5 class="modal-title">
           <%= @new_mutation.persisted? ? 'Inleg wijzigen' : 'Nieuwe inleg' %>
         </h5>
-        <button aria-label="close" class="close" data-bs-dismiss="modal" type="button">
-          <span aria-hidden="true">
-            <%= fa_icon 'times' %>
-          </span>
-        </button>
+        <button aria-label="close" class="btn-close" data-bs-dismiss="modal" type="button"/>
       </div><%= simple_form_for @new_mutation, wrapper: :horizontal_form do |f| %>
         <div class="modal-body" id="mutations_modal">
           <%= f.input :description, label: 'Beschrijving', placeholder: 'Beschrijving' %>

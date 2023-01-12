@@ -2,7 +2,6 @@ import Vue from 'vue/dist/vue.esm';
 import TurbolinksAdapter from 'vue-turbolinks';
 import VueResource from 'vue-resource';
 import axios from 'axios';
-import BootstrapVue from 'bootstrap-vue';
 
 import Flash from '../components/flash.vue';
 import UserSelection from '../components/orderscreen/userselection.vue';
@@ -10,7 +9,6 @@ import ActivityOrders from '../components/orderscreen/activityorders.vue';
 
 Vue.use(TurbolinksAdapter);
 Vue.use(VueResource);
-Vue.use(BootstrapVue);
 
 document.addEventListener('turbolinks:load', () => {
   const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -47,9 +45,6 @@ document.addEventListener('turbolinks:load', () => {
           payWithPin: false,
           keepUserSelected: false,
           orderRows: [],
-          creditMutationAmount: null,
-          creditMutationDescription: 'Inleg contant',
-          creditMutationFormInvalid: false,
           isSubmitting: false
         };
       },
@@ -125,7 +120,7 @@ document.addEventListener('turbolinks:load', () => {
           if (!this.selectedUser || this.selectedUser.can_order) {
             this.confirmOrder();
           } else {
-            this.$refs.cannotOrderModal.show();
+            new bootstrap.Modal('#cannot-order-modal').show();
           }
         },
 
@@ -201,49 +196,6 @@ document.addEventListener('turbolinks:load', () => {
           });
         },
 
-        saveCreditMutation(event) {
-          this.isSubmitting = true;
-
-          this.creditMutationFormInvalid = (!this.selectedUser
-            || !this.creditMutationAmount || !this.creditMutationDescription);
-
-          if (this.creditMutationFormInvalid) {
-            // Prevent event propagation so modal stays visible
-            this.isSubmitting = false;
-            return event.stopPropagation();
-          }
-
-          this.$http.post('/credit_mutations', {
-            credit_mutation: {
-              user_id: this.selectedUser.id,
-              activity_id: this.activity.id,
-              description: this.creditMutationDescription,
-              amount: this.creditMutationAmount
-            }
-          }).then((response) => {
-            this.$set(this.users, this.users.indexOf(this.selectedUser), response.body.user);
-
-            if(!this.keepUserSelected && this.orderRows.length === 0){
-              this.setUser(null);
-            } else {
-              // re-set user to update credit
-              this.setUser(response.body.user);
-            }
-            this.$refs.creditMutationModal.hide();
-
-            this.creditMutationAmount = null;
-            this.creditMutationDescription = 'Inleg contant';
-            const additionalInfo = `${response.body.user.name} - ${this.doubleToCurrency(response.body.amount)}`;
-            this.sendFlash('Inleg opgeslagen.', additionalInfo, 'success');
-
-            this.isSubmitting = false;
-          }, (response) => {
-            this.handleXHRError(response);
-
-            this.isSubmitting = false;
-          });
-        },
-
         handleXHRError(error) {
           if (error.status == 500) {
             this.sendFlash('Server error!', 'Herlaad de pagina', 'error');
@@ -283,13 +235,14 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         deleteOrder(orderId) {
+          bootstrap.Modal.getInstance('#sumup-error-order-modal').hide();
           this.$http.delete(`/orders/${orderId}`).then(() => {
             this.sendFlash('Pin bestelling verwijderd.', '', 'success');
             this.$refs.activityOrders.refresh();
           }, (response) => {
             this.handleXHRError(response);
           });
-        }
+        },
       },
 
       computed: {
@@ -341,12 +294,6 @@ document.addEventListener('turbolinks:load', () => {
         }
       },
 
-      mounted() {
-        if (this.$refs.sumupErrorModal) {
-          this.$refs.sumupErrorModal.show();
-        }
-      },
-
       // Listen to escape button which are dispatched on the body content_tag
       // https://vuejsdevelopers.com/2017/05/01/vue-js-cant-help-head-body/
       created: function() {
@@ -361,6 +308,101 @@ document.addEventListener('turbolinks:load', () => {
         UserSelection,
         ActivityOrders
       },
+    });
+
+    const creditMutationModalApp = new Vue({
+      el: document.getElementById('credit-mutation-modal'),
+      data: () => {
+        return {
+          activityTitle: activity.title,
+          creditMutationAmount: null,
+          creditMutationDescription: 'Inleg contant',
+          creditMutationFormInvalid: false,
+          isSubmitting: false
+        };
+      },
+      methods: {
+        saveCreditMutation() {
+          this.isSubmitting = true;
+
+          this.creditMutationFormInvalid = (!app.selectedUser
+            || !this.creditMutationAmount || !this.creditMutationDescription);
+
+          if (this.creditMutationFormInvalid) {
+            this.isSubmitting = false;
+          }
+
+          app.$http.post('/credit_mutations', {
+            credit_mutation: {
+              user_id: app.selectedUser.id,
+              activity_id: app.activity.id,
+              description: this.creditMutationDescription,
+              amount: this.creditMutationAmount
+            }
+          }).then((response) => {
+            app.$set(app.users, app.users.indexOf(app.selectedUser), response.body.user);
+
+            if(!app.keepUserSelected && app.orderRows.length === 0){
+              app.setUser(null);
+            } else {
+              // re-set user to update credit
+              app.setUser(response.body.user);
+            }
+            
+            bootstrap.Modal.getInstance('#credit-mutation-modal').hide();
+            this.creditMutationAmount = null;
+            this.creditMutationDescription = 'Inleg contant';
+
+            const additionalInfo = `${response.body.user.name} - ${app.doubleToCurrency(response.body.amount)}`;
+            app.sendFlash('Inleg opgeslagen.', additionalInfo, 'success');
+            this.isSubmitting = false;
+
+          }, (response) => {
+            app.handleXHRError(response);
+            this.isSubmitting = false;
+          });
+        },
+      }
+    });
+
+    const cannotOrderModalApp = new Vue({
+      el: document.getElementById('cannot-order-modal'),
+      methods: {
+        doubleToCurrency(price) {
+          return app.doubleToCurrency(price);
+        },
+      },
+      computed: {
+        selectedUser() {
+          return app.selectedUser;
+        }
+      }
+    });
+
+    const sumupErrorOrderModalApp = new Vue({
+      el: document.getElementById('sumup-error-order-modal'),
+      methods: {
+        deleteOrder(orderId) {
+          bootstrap.Modal.getInstance('#sumup-error-order-modal').hide();
+          app.deleteOrder(orderId)
+        },
+
+        startSumupPayment(orderId, orderTotal) {
+          bootstrap.Modal.getInstance('#sumup-error-order-modal').hide();
+          console.log("order redo", orderId, orderTotal)
+          app.startSumupPayment(orderId, orderTotal);
+        },
+      },
+      mounted() {
+        if (document.getElementById('sumup-error-order-modal')) {
+          new bootstrap.Modal('#sumup-error-order-modal').show();
+        }
+      },
+      computed: {
+        isSubmitting() {
+          return app.isSubmitting;
+        }
+      }
     });
   }
 });
