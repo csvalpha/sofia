@@ -325,11 +325,12 @@ document.addEventListener('turbolinks:load', () => {
         saveCreditMutation() {
           this.isSubmitting = true;
 
-          this.creditMutationFormInvalid = (!app.selectedUser
-            || !this.creditMutationAmount || !this.creditMutationDescription);
+          this.creditMutationFormInvalid = (!document.getElementById('credit-mutation-modal-form').checkValidity() 
+            || !app.selectedUser || !this.creditMutationAmount || !this.creditMutationDescription);
 
           if (this.creditMutationFormInvalid) {
             this.isSubmitting = false;
+            return;
           }
 
           app.$http.post('/credit_mutations', {

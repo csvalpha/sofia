@@ -6,7 +6,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form :class="{ 'was-validated': this.creditMutationFormInvalid }" class="col-12 mt-2" novalidate="">
+        <form id="credit-mutation-modal-form" :class="{ 'was-validated': this.creditMutationFormInvalid }" class="col-12 mt-2" novalidate="">
           <div class="mb-3 row">
             <div class="col-4">
               <label class="col-form-label" for="creditMutationAmountInput">
@@ -19,9 +19,9 @@
                   <%= fa_icon 'euro' %>
                 </div>
                 <input class="form-control" id="creditMutationAmountInput" placeholder="10.00" required=""
-                  type="text" v-model="creditMutationAmount" />
+                  type="number" step="0.01" v-model="creditMutationAmount" />
                 <div class="invalid-feedback">
-                  Bedrag is verplicht
+                  Bedrag is verplicht en moet een getal zijn
                 </div>
               </div>
             </div>
