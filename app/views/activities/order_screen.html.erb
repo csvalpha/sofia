@@ -76,7 +76,7 @@
 
   <% if @sumup_error_order %>
     <b-modal id="sumup-error-modal" ref="sumupErrorModal" title="Sumup betaling mislukt" 
-             ok-title="Nog eens proberen" @ok="startSumupPayment(<%= @sumup_error_order.id %>, <%= @sumup_error_order.order_total %>)" 
+             ok-title="Nog eens proberen" @ok="startSumupPayment('<%= @sumup_tx_id %>', <%= @sumup_error_order.order_total %>)" 
              cancel-title="Bestelling verwijderen" @cancel="deleteOrder(<%= @sumup_error_order.id %>)">
       <div class="modal-body">
         De Sumup betaling is mislukt. Wil je de betaling nogmaals proberen of de bestelling verwijderen?
