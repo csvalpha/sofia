@@ -101,11 +101,18 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
     @sumup_key = Rails.application.config.x.sumup_key
     @sumup_enabled = @sumup_key.present?
 
-    @sumup_error_order = if params['sumup_error']
-                           Order.find(params['sumup_error'])
-                         else
-                           false
-                         end
+    if params['sumup_error']
+      sumup_order_id = params['sumup_error'].split('-').first
+      sumup_attempt = if params['sumup_error'].include? '-'
+                        params['sumup_error'].split('-').last.to_i
+                      else
+                        0
+                      end
+      @sumup_error_order = Order.find(sumup_order_id)
+      @sumup_tx_id = "#{sumup_order_id}-#{sumup_attempt + 1}"
+    else
+      @sumup_error_order = false
+    end
 
     # Set flags for application.html.slim
     @show_navigationbar = false
