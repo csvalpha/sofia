@@ -72,10 +72,12 @@
           <p class="card-text">
             Je kan bestellingen plaatsen in het streepscherm.
           </p>
-          <%= link_to order_screen_activity_url(@activity), class: 'btn btn-primary btn-block' do %>
-            Naar het streepscherm
-            <%= fa_icon 'calculator', class: 'ms-1' %>
-          <% end %>
+          <div class="d-grid">
+            <%= link_to order_screen_activity_url(@activity), class: 'btn btn-primary' do %>
+              Naar het streepscherm
+              <%= fa_icon 'calculator', class: 'ms-1' %>
+            <% end %>
+          </div>
         <% end %>
       </div>
     </div>

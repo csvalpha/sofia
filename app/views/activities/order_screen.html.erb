@@ -103,8 +103,8 @@
           </h4>
         </div>
       </div>
-      <div class="orders-confirmation">
-        <div class="btn-group btn-group-lg btn-block" role="group" v-if="payWithPin && <%= @sumup_enabled.to_s %> && isMobile">
+      <div class="orders-confirmation d-grid gap-3">
+        <div class="btn-group btn-group-lg" role="group" v-if="payWithPin && <%= @sumup_enabled.to_s %> && isMobile">
           <button type="button" class="btn btn-success col-9"
              @click="confirmOrder(true)"
              :class="{ 'disabled': orderConfirmButtonDisabled }">
@@ -112,47 +112,46 @@
               Sumup betaling
             </span>
           </button>
-          <button type="button" class="btn btn-dark" :disabled="orderConfirmButtonDisabled"
-                  @click="confirmOrder">
+          <button type="button" class="btn btn-dark" :disabled="orderConfirmButtonDisabled" @click="confirmOrder">
             <%= fa_icon 'money' %>
           </button>
         </div>
 
-        <button @click="maybeConfirmOrder" class="btn btn-block btn-lg btn-success"
+        <button @click="maybeConfirmOrder" class="btn btn-lg btn-success"
               :class="{ 'btn-warning' : showOrderWarning && !showCannotOrderWarning, 'btn-danger' : showCannotOrderWarning }"
               :disabled="orderConfirmButtonDisabled"
               v-if="!payWithPin || !<%= @sumup_enabled.to_s %> || !isMobile">
-        <span class="text-uppercase">
-          Bestelling plaatsen
-        </span>
-        <br/>
-        <small v-if="showOrderWarning">
-          <span v-if="showCannotOrderWarning" class="d-block">
-            <span>
-              <%= fa_icon 'exclamation-triangle ' %>
-            </span>
-            <span>
-              {{selectedUser.name}} staat <b>{{doubleToCurrency(-selectedUser.credit)}}</b> negatief en moet eerst inleggen!
-            </span>
+          <span class="text-uppercase">
+            Bestelling plaatsen
           </span>
-          <span v-else-if="showInsufficientCreditWarning" class="d-block">
-            <span>
-              <%= fa_icon 'exclamation-triangle ' %>
+          <br/>
+          <small v-if="showOrderWarning">
+            <span v-if="showCannotOrderWarning" class="d-block">
+              <span>
+                <%= fa_icon 'exclamation-triangle ' %>
+              </span>
+              <span>
+                {{selectedUser.name}} staat <b>{{doubleToCurrency(-selectedUser.credit)}}</b> negatief en moet eerst inleggen!
+              </span>
             </span>
-            <span>
-              {{selectedUser.name}} staat <b>{{doubleToCurrency(-selectedUser.credit)}}</b> negatief!
+            <span v-else-if="showInsufficientCreditWarning" class="d-block">
+              <span>
+                <%= fa_icon 'exclamation-triangle ' %>
+              </span>
+              <span>
+                {{selectedUser.name}} staat <b>{{doubleToCurrency(-selectedUser.credit)}}</b> negatief!
+              </span>
             </span>
-          </span>
-          <span v-if="showAgeWarning" class="d-block">
-            <span>
-              <%= fa_icon 'exclamation-triangle ' %>
+            <span v-if="showAgeWarning" class="d-block">
+              <span>
+                <%= fa_icon 'exclamation-triangle ' %>
+              </span>
+              <span>
+                {{selectedUser.name}} is minderjarig!
+              </span>
             </span>
-            <span>
-              {{selectedUser.name}} is minderjarig!
-            </span>
-          </span>
-        </small>
-      </button>
+          </small>
+        </button>
       </div>
     </div>
   </div>

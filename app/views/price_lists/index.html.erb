@@ -92,10 +92,12 @@
         </tr>
         <tr>
           <td colspan="3">
-            <button class="btn btn-secondary btn-sm btn-block products-button-new" v-on:click.prevent="newProduct">
-              Voeg een nieuw product toe
-              <%= fa_icon 'plus-square', class: 'ps-2' %>
-            </button>
+            <div class="d-grid">
+              <button class="btn btn-secondary btn-sm products-button-new" v-on:click.prevent="newProduct">
+                Voeg een nieuw product toe
+                <%= fa_icon 'plus-square', class: 'ps-2' %>
+              </button>
+            </div>
           </td>
           <td colspan="7"></td>
         </tr>
