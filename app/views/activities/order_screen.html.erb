@@ -26,7 +26,7 @@
         </span>
       </li>
       <li class="header-nav-item">
-        <span class="mr-3">
+        <span class="me-3">
           <%= @activity.title %>
         </span>
         <small class="font-weight-light d-inline-block">
@@ -76,7 +76,7 @@
               <span :title="doubleToCurrency(orderRow.productPrice.price) + ' p.s.'">
                 {{doubleToCurrency(orderRow.productPrice.price * orderRow.amount)}}
               </span>
-              <span @click="dropOrderRow(index)" class="order-rows-row-remove ml-1">
+              <span @click="dropOrderRow(index)" class="order-rows-row-remove ms-1">
                 <%= fa_icon 'times-circle lg' %>
               </span>
             </div>

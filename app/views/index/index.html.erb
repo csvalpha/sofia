@@ -27,7 +27,7 @@
       <div class="col-12 col-md-6 mb-2">
         <div class="card">
           <h4 class="card-header">
-            <%= fa_icon 'calendar', class: 'mr-1' %>
+            <%= fa_icon 'calendar', class: 'me-1' %>
             Komende activiteiten
           </h4>
           <div class="card-body">
@@ -55,7 +55,7 @@
                 <% @current_activities.each do |activity| %>
                   <%= link_to order_screen_activity_url(activity), class: 'btn btn-primary btn-block' do %>
                     <span>
-                      <%= fa_icon 'calculator', class: 'mr-1' %>
+                      <%= fa_icon 'calculator', class: 'me-1' %>
                       <%= activity.title %>
                       <br/>
                       <small>
@@ -81,7 +81,7 @@
               je kan hier wel je saldo en bestelgeschiedenis zien
             </p>
             <%= link_to current_user, class: 'btn btn-primary btn-block' do %>
-              <%= fa_icon 'user', class: 'mr-1' %>
+              <%= fa_icon 'user', class: 'me-1' %>
               Naar mijn account
             <% end %>
           </div>
@@ -92,7 +92,7 @@
     <% end %>
     </div>
 
-    <div class="d-flex flex-column mt-4 py-4 align-items-center">
+    <!-- <div class="d-flex flex-column mt-4 py-4 align-items-center">
       <blockquote class="blockquote text-center">
         <p class="mb-0">Vakmanschap is meesterschap
         </p>
@@ -100,6 +100,14 @@
           Gerard Brummer, Grolsch
         </footer>
       </blockquote>
-    </div>
+    </div> -->
+    <figure class="text-center mt-4 pt-4">
+      <blockquote class="blockquote">
+        <p>Vakmanschap is meesterschap</p>
+      </blockquote>
+      <figcaption class="blockquote-footer fs-6">
+        Gerard Brummer, Grolsch
+      </figcaption>    
+    </figure>
   </div>
 </div>

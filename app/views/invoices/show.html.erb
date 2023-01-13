@@ -18,7 +18,7 @@
           <th scope="row">
             Tel
           </th>
-          <td class="text-right">
+          <td class="text-end">
             <%= Rails.application.config.x.treasurer_phone %>
           </td>
         </tr>
@@ -26,7 +26,7 @@
           <th scope="row">
             E-mail
           </th>
-          <td class="text-right">
+          <td class="text-end">
             <%= Rails.application.config.x.treasurer_email %>
           </td>
         </tr>
@@ -34,7 +34,7 @@
           <th scope="row">
             IBAN
           </th>
-          <td class="text-right">
+          <td class="text-end">
             <%= Rails.application.config.x.company_iban %>
           </td>
         </tr>
@@ -42,7 +42,7 @@
           <th scope="row">
             KvK
           </th>
-          <td class="text-right">
+          <td class="text-end">
             <%= Rails.application.config.x.company_kvk %>
           </td>
         </tr>
@@ -50,7 +50,7 @@
           <th scope="row">
             Status
           </th>
-          <td class="text-right">
+          <td class="text-end">
             <% if @invoice.paid? %>
             Betaald
             <% else %>

@@ -25,7 +25,7 @@
                        class="form-control" placeholder="Begin met typen..." required="true" type="text"
                        v-bind:aria-expanded="dropdownOpened" v-model="query"/>
                 <div class="row">
-                  <ul class="dropdown-menu ml-3" v-bind:class="{'show':dropdownOpened}">
+                  <ul class="dropdown-menu ms-3" v-bind:class="{'show':dropdownOpened}">
 
                     <li class="dropdown-item" v-for="(suggestion, index) in suggestions" v-on:click.prevent="suggestionClicked(index)">
                       <a href="#">
