@@ -7,7 +7,7 @@
            aria-haspopup="true" v-bind:aria-expanded="dropdownOpened"
            required="true" autocomplete="off">
 
-    <div class="row">
+    <div class="row g-0">
       <ul class="dropdown-menu" v-bind:class="{'show':dropdownOpened}">
         <li class="dropdown-item" v-for="(suggestion, index) in suggestions"
             v-on:click.prevent="suggestionClicked(index)">
