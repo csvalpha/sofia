@@ -20,7 +20,7 @@
           <%= fa_icon 'chevron-left' %>
           </span>
         <span v-else="">
-          <%= link_to @activity, class: 'nav-link' do %>
+          <%= link_to @activity do %>
           <%= fa_icon 'home' %>
           <% end %>
         </span>
@@ -163,7 +163,7 @@
     <div @click="selectProduct(productPrice)" class="product-grid-product"
          :class="{ 'product-requires-age' : (selectedUser && selectedUser.minor && productPrice.product.requires_age) }"
          v-for="productPrice in productPrices">
-      <span class="product-grid-product-requires-age py-1 fa-stack" v-if="selectedUser && selectedUser.minor && productPrice.product.requires_age">
+      <span class="product-grid-product-requires-age mb-2 fa-stack" v-if="selectedUser && selectedUser.minor && productPrice.product.requires_age">
         <i class="fa fa-circle fa-circle-lighter fa-stack-2x">
         </i>
         <span class="fa fa-stack-1x fa-inverse fa-plus18">

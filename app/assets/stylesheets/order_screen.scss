@@ -1,4 +1,4 @@
-@import 'theme_tomato';
+@import 'theme_sofia';
 @import 'bootstrap';
 
 .order-screen {
@@ -51,9 +51,10 @@
 
   .header-nav-home {
     a {
-      nav-link {
+      i {
         padding: 0;
-        color: $font-color-dark;
+        padding-left: 1rem;
+        color: $gray-600;
       }
     }
   }
@@ -121,7 +122,7 @@
 
     z-index: 4;
 
-    border-end: 1px solid $gray-600;
+    border-right: 2px solid $gray-400;
     box-shadow: 2px 0 4px -2px $transparent-200;
     background-color: $gray-200;
     color: $font-color-dark;
@@ -290,12 +291,6 @@
     &:hover {
       background-color: $gray-400;
     }
-  }
-
-  .product-grid-product-requires-age {
-    top: -50px;
-    flex-basis: 0;
-    align-self: right;
   }
 
   .product-grid-product-name {

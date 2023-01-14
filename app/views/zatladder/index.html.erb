@@ -1,6 +1,6 @@
 <%= content_for :title, 'Zatladder - SOFIA' %>
 <div class="container footer-padding">
-  <div class="row p-3 d-flex justify-content-around">
+  <div class="row mt-4 d-flex justify-content-around">
     <div class="card col-12 col-md-6 pt-3 mx-2">
       <h1 class="card-title text-center">
         Zatladder
@@ -29,7 +29,7 @@
           <th scope="col">Bedrag</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody class="table-group-divider">
         <% @zatladder.each_with_index do |entry, index| %>
           <tr>
             <th scope="row"> <%= index + 1 %></th>

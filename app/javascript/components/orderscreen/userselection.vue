@@ -67,7 +67,7 @@
              placeholder="Gebruiker zoeken" @input="queryChange" @keyup.enter.prevent="selectHighlightedUser"
              @keyup.up="decreaseHighlightedUserIndex" @keyup.down="increaseHighlightedUserIndex" autofocus>
 
-      <button class="btn btn-secondary mt-3" @click="selectCash">
+      <button class="btn btn-secondary mt-3 me-1" @click="selectCash">
         <i class="fa fa-money me-1"></i>
         Betaal contant
       </button>

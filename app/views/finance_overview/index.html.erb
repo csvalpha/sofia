@@ -25,7 +25,7 @@
   </div>
 
 
-  <div class="row">
+  <div class="row mt-3">
     <div class="col-6">
       <h3>Product totalen</h3>
       <table class="table table-striped mt-2">
@@ -36,10 +36,10 @@
           <th scope="col">Omzet</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody class="table-group-divider">
         <% @count_per_product.each do |entry| %>
           <tr>
-            <th scope="row"> <%= entry[:name] %></th>
+            <td scope="row"> <%= entry[:name] %></td>
             <td> <%= entry[:amount] %></td>
             <td> <%= number_to_currency(entry[:price], unit: '€') %> </td>
           </tr>
@@ -58,10 +58,10 @@
           <th scope="col">Omzet</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody class="table-group-divider">
         <% @count_per_category.each do |entry| %>
           <tr>
-            <th scope="row"> <%= t(entry[:category]).capitalize %> </th>
+            <td scope="row"> <%= t(entry[:category]).capitalize %> </td>
             <td> <%= entry[:amount] %></td>
             <td> <%= number_to_currency(entry[:price], unit: '€') %> </td>
           </tr>

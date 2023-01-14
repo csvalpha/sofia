@@ -6,7 +6,7 @@
 
 
 
-<%= content_tag :div, id: 'user-container', class: 'container footer-padding', data: {user: @user_json} do %>
+<%= content_tag :div, id: 'user-container', class: 'container footer-padding mt-3', data: {user: @user_json} do %>
   <div class="row justify-content-between">
     <div class="col-sm-12 col-md-6 py-2">
 
@@ -186,7 +186,7 @@
                   <th class="text-end" scope="col">Bedrag</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody class="table-group-divider">
                 <% if @user.credit_mutations.empty? %>
                   <tr>
                     <td class="text-center" colspan="4">

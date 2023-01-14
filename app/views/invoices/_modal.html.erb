@@ -56,11 +56,13 @@
           <hr>
           <h5>Extra factuur regels <i class="fa fa-plus ms-4" @click="addRow()"></i> </h5>
           <div id="invoice_rows">
-            <div id="invoice_row" class="row m-2">
-              <%= f.simple_fields_for :rows do |p| %>
-                <%= p.input :name, label: false, placeholder: 'Naam', wrapper_html: { class: 'col-4' } %>
-                <%= p.input :amount,  label: false, placeholder: 'Aantal', wrapper_html: { class: 'col-4' } %>
-                <%= p.input :price, label: false, placeholder: 'Prijs', wrapper_html: { class: 'col-4' } %>
+            <div id="invoice_row" class="">
+              <%= f.simple_fields_for :rows, wrapper: :vertical_form do |p| %>
+                  <div class="row">
+                    <%= p.input :name, label: false, placeholder: 'Naam', wrapper_html: { class: 'col-4' } %>
+                    <%= p.input :amount,  label: false, placeholder: 'Aantal', wrapper_html: { class: 'col-4' } %>
+                    <%= p.input :price, label: false, placeholder: 'Prijs', wrapper_html: { class: 'col-4' } %>
+                  </div>
               <% end %>
             </div>
           </div>

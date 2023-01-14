@@ -9,7 +9,7 @@
             <th id="order_total" class="text-end pe-4">Totaal</th>
           </tr> 
         </thead>
-        <tbody>
+        <tbody class="table-group-divider">
           <template v-for="activity in activities" class="row table-details-item px-2">
             <tr :key="activity.start_time">
               <td class="ps-4">{{ formatDate(activity.start_time) }}</td>

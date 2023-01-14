@@ -52,7 +52,19 @@ document.addEventListener('turbolinks:load', () => {
           return moment(time).format('DD-MM-YY HH:mm');
         },
         addRow() {
-          document.getElementById('invoice_rows').appendChild(document.getElementById('invoice_row').cloneNode(true));
+          document.getElementById('invoice_row').appendChild(document.getElementById('invoice_row').lastChild.cloneNode(true));
+          var newRow = document.getElementById('invoice_row').lastChild;
+          newRow.childNodes.forEach((fieldWrapper) => {
+            let newIndex = -1
+            if (fieldWrapper.nodeType === Node.ELEMENT_NODE) {
+              console.log(fieldWrapper.firstChild.name)
+              if (newIndex === -1) {
+                newIndex = Number(fieldWrapper.firstChild.name.match(/invoice\[rows_attributes\]\[(\d+)\]/)[1]) + 1;
+              }
+              console.log(newIndex)
+              fieldWrapper.firstChild.name = fieldWrapper.firstChild.name.replace(/\[\d+\]/g, '[' +  newIndex + ']');
+            }
+          })
         }
       }
     });

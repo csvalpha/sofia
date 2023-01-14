@@ -1,4 +1,4 @@
-@import 'theme_tomato';
+@import 'theme_sofia';
 @import 'bootstrap';
 @import 'font-awesome';
 
@@ -12,12 +12,12 @@ body {
 }
 
 // Only underline links on hover
-a:hover {
-  text-decoration: underline;
-}
-
 a {
   text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 
@@ -61,6 +61,10 @@ a {
 .users-table [aria-colindex='3'] {
   // Saldo column
   width: 150px;
+}
+
+.table-group-divider {
+  border-top-color: $gray-300;
 }
 
 .table-details-header {

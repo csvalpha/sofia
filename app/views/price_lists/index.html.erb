@@ -3,9 +3,9 @@
   <%= render 'modal' %>
 <% end %>
 
-<div class="container pt-2 footer-padding">
+<div class="container footer-padding">
   <div class="row">
-    <div class="col-sm-12">
+    <div class="col-sm-12 mt-4">
       <h1>
         Prijslijsten
       </h1>
@@ -55,7 +55,7 @@
             </td>
             <td class="products-new">
               <div class="d-flex">
-                <select class="form-control flex-grow-1" v-model="product.category">
+                <select class="form-select flex-grow-1" v-model="product.category">
                   <% Product.categories.each do |category| %>
                     <%= content_tag :option, value: category.first do %>
                       <%= t category.first %>
@@ -91,7 +91,7 @@
           </template>
         </tr>
         <tr>
-          <td colspan="3">
+          <td colspan="2">
             <div class="d-grid">
               <button class="btn btn-secondary btn-sm products-button-new" v-on:click.prevent="newProduct">
                 Voeg een nieuw product toe
@@ -99,7 +99,7 @@
               </button>
             </div>
           </td>
-          <td colspan="7"></td>
+          <td colspan="8"></td>
         </tr>
         </tbody>
       <% end %>

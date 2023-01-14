@@ -17,7 +17,7 @@
             <th class="text-end" scope="col">Totaalbedrag</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="table-group-divider">
           <tr v-for="row in orderTotals">
             <td>{{row.name}}</td>
             <td>{{row.amount}} x</td>

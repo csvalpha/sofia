@@ -23,18 +23,20 @@
           </th>
         </tr> 
       </thead>
-      <tbody>
+      <tbody class="table-group-divider">
         <tr v-for="user in users" :key="user.id">
           <th class="ps-4" aria-colindex="1">{{ user.id }}</th>
           <td><a :href="`/users/${user.id}`" aria-colindex="2">{{ user.name }}</a></td>
           <td :class="user.credit < 0 ? 'text-danger' : ''" aria-colindex="3">€ {{parseFloat(user.credit).toFixed(2)}}</td>
         </tr>
+      </tbody>
+      <tfoot class="table-group-divider">
         <tr>
           <th/>
           <th>Totaal</th>
           <th :class="total < 0 ? 'text-danger' : ''">€ {{parseFloat(total).toFixed(2)}}</th>
         </tr>
-      </tbody>
+      </tfoot>
     </table>
 
     <div v-if="users.length === 0" class="text-center">

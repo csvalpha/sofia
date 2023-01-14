@@ -139,7 +139,7 @@
                     <th class="text-end" scope="col">Credit</th>
                   </tr>
                   </thead>
-                  <tbody>
+                  <tbody class="table-group-divider">
                   <% Product.categories.each do |category| %>
                     <tr>
                       <td><%= t(category.first).capitalize %>
@@ -172,7 +172,7 @@
                     <th class="text-end" scope="col">Credit</th>
                   </tr>
                   </thead>
-                  <tbody>
+                  <tbody class="table-group-divider">
                   <tr>
                     <td>Inleg Zatladder Inlegsysteem</td>
                     <td><%= t('codes.credit_mutation') %>                    </td>
@@ -236,7 +236,7 @@
                   <th scope="col">Bedrag</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody class="table-group-divider">
                 <% @credit_mutations.each do |mutation| %>
                   <tr>
                     <th scope="row"><%= mutation.id %></th>
@@ -274,7 +274,7 @@
                     <th scope="col">Producten</th>
                   </tr>
                   </thead>
-                  <tbody>
+                  <tbody class="table-group-divider">
                   <% @orders.each do |order| %>
                     <tr>
                       <th scope="row"><%= order.id %>

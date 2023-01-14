@@ -4,10 +4,10 @@
       <table class="table">
         <thead>
           <tr>
-            <th id="id" class="ps-4">#</th>
-            <th id="created_at">Tijdstip</th>
-            <th id="user">Gebruiker</th>
-            <th id="order_total" class="text-end pe-4">Bedrag</th>
+            <th id="id" class="py-3 ps-4">#</th>
+            <th id="created_at" class="py-3">Tijdstip</th>
+            <th id="user" class="py-3">Gebruiker</th>
+            <th id="order_total" class="text-end py-3 pe-4">Bedrag</th>
           </tr> 
         </thead>
         <tbody>
