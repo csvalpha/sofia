@@ -2,7 +2,7 @@ import Vue from 'vue/dist/vue.esm';
 import TurbolinksAdapter from 'vue-turbolinks';
 import VueResource from 'vue-resource';
 
-import UserInput from '../components/userinput.vue';
+import UserInput from '../components/UserInput.vue';
 import moment from 'moment';
 
 Vue.use(TurbolinksAdapter);
@@ -55,16 +55,15 @@ document.addEventListener('turbolinks:load', () => {
           document.getElementById('invoice_row').appendChild(document.getElementById('invoice_row').lastChild.cloneNode(true));
           var newRow = document.getElementById('invoice_row').lastChild;
           newRow.childNodes.forEach((fieldWrapper) => {
-            let newIndex = -1
+            let newIndex = -1;
             if (fieldWrapper.nodeType === Node.ELEMENT_NODE) {
-              console.log(fieldWrapper.firstChild.name)
+              console.log(fieldWrapper.firstChild.name);
               if (newIndex === -1) {
                 newIndex = Number(fieldWrapper.firstChild.name.match(/invoice\[rows_attributes\]\[(\d+)\]/)[1]) + 1;
               }
-              console.log(newIndex)
               fieldWrapper.firstChild.name = fieldWrapper.firstChild.name.replace(/\[\d+\]/g, '[' +  newIndex + ']');
             }
-          })
+          });
         }
       }
     });

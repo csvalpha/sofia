@@ -48,49 +48,54 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      users: {
-        type: Array,
-        required: true
+export default {
+  props: {
+    users: {
+      type: Array,
+      required: true
+    }
+  },
+
+  data() {
+    return { 
+      sortBy: '',
+      sortAsc: true
+    };
+  },
+
+  methods: {
+    sortUsers: function(newSortBy) {
+      if (newSortBy !== this.sortBy) {
+        // different category clicked, so sort ascending
+        this.sortAsc = true;
+      } else {
+        // same category clicked, so reverse sorting order
+        this.sortAsc = !this.sortAsc;
       }
+      this.sortBy = newSortBy;
+    }
+  },
+
+  computed: {
+    total: function() {
+      return this.users.map(user => user.credit)
+        .reduce((current, credit) => parseFloat(current) + parseFloat(credit));
     },
 
-    data() {
-      return { 
-        sortBy: '',
-        sortAsc: true
+    sortedUsers: function() {
+      let multiplier = this.sortAsc ? 1 : -1;
+      let usersCopy = [...this.users];
+      if (this.sortBy === 'name') {
+        usersCopy.sort((user1, user2) => (user1.name.toUpperCase() > user2.name.toUpperCase() ? 1 : -1) * multiplier);
+      } else {
+        usersCopy.sort((user1, user2) => (user1[this.sortBy] - user2[this.sortBy]) * multiplier);
       }
-    },
+      return usersCopy;
+    }
+  },
 
-    methods: {
-      sortUsers: function(newSortBy) {
-        if (newSortBy !== this.sortBy) {
-          // different category clicked, so sort ascending
-          if (newSortBy === 'name') {
-            this.users.sort((user1, user2) => (user1.name.toUpperCase() > user2.name.toUpperCase() ? 1 : -1));
-          } else {
-            this.users.sort((user1, user2) => user1[newSortBy] - user2[newSortBy]);
-          }
-          this.sortAsc = true;
-        } else {
-          // same category clicked, so reverse sorting order
-          this.users.reverse();
-          this.sortAsc = !this.sortAsc;
-        }
-        this.sortBy = newSortBy;
-      }
-    },
-
-    computed: {
-      total: function() {
-        return this.users.map(user => user.credit)
-          .reduce((current, credit) => parseFloat(current) + parseFloat(credit));
-      },
-    },
-
-    mounted() {
-      this.sortUsers('name');
-    },
-  };
+  mounted() {
+    this.sortUsers('name');
+  }
+};
 </script>

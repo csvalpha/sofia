@@ -10,6 +10,7 @@ nl:
       time_only: '%H:%M'
 
   beer: 'bier'
+  craft_beer: 'speciaalbier'
   non_alcoholic: 'niet-alcoholisch'
   distilled: 'gedestilleerd'
   wine: 'wijn'
@@ -26,6 +27,7 @@ nl:
 
   codes:
     beer: 8010
+    craft_beer: 8015
     non_alcoholic: 8020
     distilled: 8030
     wine: 8040

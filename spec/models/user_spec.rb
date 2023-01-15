@@ -251,11 +251,11 @@ RSpec.describe User, type: :model do
 
   describe 'full_name_from_attributes' do
     context 'when with all attributes' do
-      it { expect(described_class.full_name_from_attributes('first', 'middle', 'last')).to eq 'first middle last' }
+      it { expect(described_class.full_name_from_attributes('first', 'middle', 'last', 'nick')).to eq 'first (nick) middle last' }
     end
 
-    context 'when without middle name' do
-      it { expect(described_class.full_name_from_attributes('first', '', 'last')).to eq 'first last' }
+    context 'when without middle name and nickname' do
+      it { expect(described_class.full_name_from_attributes('first', '', 'last', '')).to eq 'first last' }
     end
   end
 

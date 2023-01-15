@@ -48,8 +48,8 @@
       </button>
     </div>
 
-    <flash>
-    </flash>
+    <flash-notification>
+    </flash-notification>
   </nav>
   <div class="side-panel">
     <user-selection :pay-with-cash="payWithCash" :pay-with-pin="payWithPin" :selected-user="selectedUser"
@@ -112,7 +112,8 @@
               Sumup betaling
             </span>
           </button>
-          <button type="button" class="btn btn-dark" :disabled="orderConfirmButtonDisabled" @click="confirmOrder">
+          <button type="button" class="btn btn-dark" :disabled="orderConfirmButtonDisabled"
+                  @click="confirmOrder(false)">
             <%= fa_icon 'money' %>
           </button>
         </div>

@@ -2,7 +2,7 @@ import Vue from 'vue/dist/vue.esm';
 import TurbolinksAdapter from 'vue-turbolinks';
 import VueResource from 'vue-resource';
 
-import ProductTotals from '../components/activity/producttotals.vue';
+import ProductTotals from '../components/activity/ProductTotals.vue';
 
 Vue.use(TurbolinksAdapter);
 Vue.use(VueResource);

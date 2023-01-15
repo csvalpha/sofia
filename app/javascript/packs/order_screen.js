@@ -3,9 +3,9 @@ import TurbolinksAdapter from 'vue-turbolinks';
 import VueResource from 'vue-resource';
 import axios from 'axios';
 
-import Flash from '../components/flash.vue';
-import UserSelection from '../components/orderscreen/userselection.vue';
-import ActivityOrders from '../components/orderscreen/activityorders.vue';
+import FlashNotification from '../components/FlashNotification.vue';
+import UserSelection from '../components/orderscreen/UserSelection.vue';
+import ActivityOrders from '../components/orderscreen/ActivityOrders.vue';
 
 Vue.use(TurbolinksAdapter);
 Vue.use(VueResource);
@@ -64,7 +64,7 @@ document.addEventListener('turbolinks:load', () => {
 
           if (user !== null) {
             // Reload user to get latest credit balance
-            this.$http.get('/users/'+user.id+'/json').then((response) => {
+            this.$http.get(`/users/${user.id}/json?activity_id=${this.activity.id}`).then((response) => {
               const user = response.body;
               this.$set(this.users, this.users.indexOf(user), user);
 
@@ -120,7 +120,8 @@ document.addEventListener('turbolinks:load', () => {
           if (!this.selectedUser || this.selectedUser.can_order) {
             this.confirmOrder();
           } else {
-            new bootstrap.Modal('#cannot-order-modal').show();
+            /* eslint-disable no-undef */
+            bootstrap.Modal.getOrCreateInstance('#cannot-order-modal').show();
           }
         },
 
@@ -204,8 +205,8 @@ document.addEventListener('turbolinks:load', () => {
               throw new Error(error.body.text);
             } catch(e) {
               /* eslint-disable no-undef */
-              Raven.captureException(e);
-              /* eslint-enable */
+              Sentry.captureException(e);
+              /* eslint-enable no-undef */
             }
           } else if (error.status == 422) {
             this.sendFlash('Error bij het opslaan!', 'Probeer het opnieuw', 'warning');
@@ -235,7 +236,9 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         deleteOrder(orderId) {
-          bootstrap.Modal.getInstance('#sumup-error-order-modal').hide();
+          /* eslint-disable no-undef */
+          bootstrap.Modal.getOrCreateInstance('#sumup-error-order-modal').hide();
+
           this.$http.delete(`/orders/${orderId}`).then(() => {
             this.sendFlash('Pin bestelling verwijderd.', '', 'success');
             this.$refs.activityOrders.refresh();
@@ -304,13 +307,13 @@ document.addEventListener('turbolinks:load', () => {
       },
 
       components: {
-        Flash,
+        FlashNotification,
         UserSelection,
         ActivityOrders
       },
     });
 
-    const creditMutationModalApp = new Vue({
+    new Vue({
       el: document.getElementById('credit-mutation-modal'),
       data: () => {
         return {
@@ -349,8 +352,10 @@ document.addEventListener('turbolinks:load', () => {
               // re-set user to update credit
               app.setUser(response.body.user);
             }
-            
-            bootstrap.Modal.getInstance('#credit-mutation-modal').hide();
+
+            /* eslint-disable no-undef */
+            bootstrap.Modal.getOrCreateInstance('#credit-mutation-modal').hide();
+
             this.creditMutationAmount = null;
             this.creditMutationDescription = 'Inleg contant';
 
@@ -366,7 +371,7 @@ document.addEventListener('turbolinks:load', () => {
       }
     });
 
-    const cannotOrderModalApp = new Vue({
+    new Vue({
       el: document.getElementById('cannot-order-modal'),
       methods: {
         doubleToCurrency(price) {
@@ -380,23 +385,27 @@ document.addEventListener('turbolinks:load', () => {
       }
     });
 
-    const sumupErrorOrderModalApp = new Vue({
+    new Vue({
       el: document.getElementById('sumup-error-order-modal'),
       methods: {
         deleteOrder(orderId) {
-          bootstrap.Modal.getInstance('#sumup-error-order-modal').hide();
-          app.deleteOrder(orderId)
+          /* eslint-disable no-undef */
+          bootstrap.Modal.getOrCreateInstance('#sumup-error-order-modal').hide();
+
+          app.deleteOrder(orderId);
         },
 
         startSumupPayment(orderId, orderTotal) {
-          bootstrap.Modal.getInstance('#sumup-error-order-modal').hide();
-          console.log("order redo", orderId, orderTotal)
+          /* eslint-disable no-undef */
+          bootstrap.Modal.getOrCreateInstance('#sumup-error-order-modal').hide();
+
           app.startSumupPayment(orderId, orderTotal);
         },
       },
       mounted() {
         if (document.getElementById('sumup-error-order-modal')) {
-          new bootstrap.Modal('#sumup-error-order-modal').show();
+          /* eslint-disable no-undef */
+          bootstrap.Modal.getOrCreateInstance('#sumup-error-order-modal').show();
         }
       },
       computed: {

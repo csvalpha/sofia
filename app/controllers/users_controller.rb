@@ -37,6 +37,8 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     @user = User.find(params[:id])
     authorize @user
 
+    @user.current_activity = Activity.find(params[:activity_id])
+
     render json: @user.as_json(methods: User.orderscreen_json_includes)
   end
 
@@ -128,12 +130,13 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
                               'Authorization' => "Bearer #{api_token}"))['data']
   end
 
-  def find_or_create_user(user_json) # rubocop:disable Metrics/AbcSize
+  def find_or_create_user(user_json) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     fields = user_json['attributes']
     u = User.find_or_initialize_by(uid: user_json['id'])
     u.name = User.full_name_from_attributes(fields['first_name'],
                                             fields['last_name_prefix'],
-                                            fields['last_name'])
+                                            fields['last_name'],
+                                            fields['nickname'])
     u.provider = 'amber_oauth2'
     u.avatar_thumb_url = fields['avatar_thumb_url']
     u.email = fields['email']

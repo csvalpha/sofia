@@ -11,7 +11,7 @@
         <button aria-label="Close" class="btn btn-secondary me-1" @click="deleteOrder(<%= @sumup_error_order.id %>)" type="button">
           Bestelling verwijderen
         </button>
-        <button @click="startSumupPayment(<%= @sumup_error_order.id %>, <%= @sumup_error_order.order_total %>)" class="btn btn-primary" type="submit" :disabled="isSubmitting">
+        <button @click="startSumupPayment(<%= @sumup_tx_id %>, <%= @sumup_error_order.order_total %>)" class="btn btn-primary" type="submit" :disabled="isSubmitting">
           Nog eens proberen
         </button>
       </div>

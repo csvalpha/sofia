@@ -2,7 +2,7 @@ import Vue from 'vue/dist/vue.esm';
 import TurbolinksAdapter from 'vue-turbolinks';
 import axios from 'axios';
 
-import OrderHistory from '../components/user/orderhistory.vue';
+import OrderHistory from '../components/user/OrderHistory.vue';
 
 Vue.use(TurbolinksAdapter);
 

@@ -11,7 +11,7 @@
           </tr> 
         </thead>
         <tbody>
-          <template v-for="order in orders" class="row table-details-item px-2">
+          <template v-for="order in orders">
             <tr :key="order.id">
               <th class="ps-4">{{ order.id }}</th>
               <td>{{ formatDate(order.created_at) }}</td>
@@ -27,7 +27,7 @@
                 </span>
               </td>
             </tr>
-            <tr v-if="order.detailsShowing">
+            <tr v-if="order.detailsShowing" :key="order.id + '-details'">
               <td colspan="4" role="cell">
                 <product-table @updateordertotal="updateOrderTotal" editable :order="order" :activity="activity" />
               </td>
@@ -37,7 +37,7 @@
       </table>
 
       <div v-if="orders.length === 0" class="text-center">
-        <div class="">
+        <div>
           <em>Er zijn geen bestellingen om weer te geven</em>
         </div>
       </div>
@@ -55,7 +55,7 @@
 <script>
 import axios from 'axios';
 import moment from 'moment';
-import ProductTable from '../producttable.vue';
+import ProductTable from '../ProductTable.vue';
 
 export default {
   props: {
@@ -84,9 +84,9 @@ export default {
     ordersProvider() {
       let params;
       if (this.activity) {
-        params = { activity_id: this.activity.id }
+        params = { activity_id: this.activity.id };
       } else if (this.user) {
-        params = { user_id: this.user.id }
+        params = { user_id: this.user.id };
       }
 
       let promise = axios.get('/orders', { params });
@@ -95,7 +95,7 @@ export default {
         const orders = response.data;
         orders.sort((order1, order2) => order2.id - order1.id);
         orders.map((order, index) => {
-          order.order_rows.map(row => { row.editing = false });
+          order.order_rows.map(row => row.editing = false );
           order.detailsShowing = (this.expand_first && index === 0);
           order.toggleDetails = (() => order.detailsShowing = !order.detailsShowing);
         });

@@ -22,9 +22,9 @@ class OrdersController < ApplicationController
     current_credit = @order.user&.credit
 
     if @order.save
-      if @order.user && (@order.user&.provider == 'amber_oauth2') && @order.user&.credit.negative? && current_credit&.positive?
+      if send_insufficient_credit_mail?(@order.user, current_credit)
         # User's credit went from positive to negative
-        UserCreditMailer.insufficient_credit_mail(current_user).deliver_later
+        UserCreditMailer.insufficient_credit_mail(@order.user).deliver_later
       end
 
       order_data = Order.includes(
@@ -75,6 +75,12 @@ class OrdersController < ApplicationController
       @allowed_filters[:user] = params[:user_id] if params[:user_id]
       @allowed_filters
     end
+  end
+
+  def send_insufficient_credit_mail?(user, old_credit)
+    return if user.nil?
+
+    user.provider == 'amber_oauth2' && user.credit.negative? && old_credit.positive?
   end
 
   def permitted_attributes

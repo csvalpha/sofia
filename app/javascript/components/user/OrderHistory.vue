@@ -10,8 +10,8 @@
           </tr> 
         </thead>
         <tbody class="table-group-divider">
-          <template v-for="activity in activities" class="row table-details-item px-2">
-            <tr :key="activity.start_time">
+          <template v-for="activity in activities">
+            <tr :key="activity.id">
               <td class="ps-4">{{ formatDate(activity.start_time) }}</td>
               <td>{{ activity.title }}</td>
               <td class="text-end">
@@ -21,7 +21,7 @@
                 </span>
               </td>
             </tr>
-            <tr v-if="activity.detailsShowing">
+            <tr v-if="activity.detailsShowing" :key="activity.id + '-details'">
               <td colspan="4" role="cell">
                 <ActivityOrderHistory :activity="activity" :user="user" />
               </td>
@@ -46,57 +46,57 @@
 </template>
 
 <script>
-  import ActivityOrderHistory from './activityorderhistory.vue';
-  import axios from 'axios';
-  import moment from 'moment';
+import ActivityOrderHistory from './ActivityOrderHistory.vue';
+import axios from 'axios';
+import moment from 'moment';
 
-  export default {
-    props: {
-      user: {
-        type: Object,
-        required: true
-      },
+export default {
+  props: {
+    user: {
+      type: Object,
+      required: true
     },
+  },
 
-    data: function () {
-      return {
-        isLoading: false,
-        activities: []
-      };
-    },
+  data: function () {
+    return {
+      isLoading: false,
+      activities: []
+    };
+  },
 
-    methods: {
-      activityProvider() {
-        let promise = axios.get('/users/'+this.user.id+'/activities');
+  methods: {
+    activityProvider() {
+      let promise = axios.get('/users/'+this.user.id+'/activities');
 
-        promise.then((response) => {
-          const activities = response.data;
-          activities.sort((activity1, activity2) => activity2.start_time - activity1.start_time);
-          activities.forEach(activity => {
-            activity.detailsShowing = false;
-            activity.toggleDetails = (() => activity.detailsShowing = !activity.detailsShowing);
-          });
-          this.activities = activities;
-        }, () => {
-          this.activities = [];
+      promise.then((response) => {
+        const activities = response.data;
+        activities.sort((activity1, activity2) => activity2.start_time - activity1.start_time);
+        activities.forEach(activity => {
+          activity.detailsShowing = false;
+          activity.toggleDetails = (() => activity.detailsShowing = !activity.detailsShowing);
         });
-      },
-
-      doubleToCurrency(price) {
-        return `€ ${parseFloat(price).toFixed(2)}`;
-      },
-
-      formatDate(time) {
-        return moment(time).format('DD-MM-YY HH:mm');
-      }
+        this.activities = activities;
+      }, () => {
+        this.activities = [];
+      });
     },
 
-    mounted() {
-      this.activityProvider();
+    doubleToCurrency(price) {
+      return `€ ${parseFloat(price).toFixed(2)}`;
     },
 
-    components: {
-      ActivityOrderHistory
+    formatDate(time) {
+      return moment(time).format('DD-MM-YY HH:mm');
     }
-  };
+  },
+
+  mounted() {
+    this.activityProvider();
+  },
+
+  components: {
+    ActivityOrderHistory
+  }
+};
 </script>

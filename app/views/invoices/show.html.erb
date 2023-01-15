@@ -87,40 +87,42 @@
       </p>
     </div>
 
-    <div class="col-12">
-      <table class="table table-striped">
-        <thead>
-        <tr>
-          <td scope="col" class="col-8">Consumpties</td>
-          <td scope="col" class="col-2">Aantal</td>
-          <td scope="col" class="col-2">Totaalbedrag</td>
-        </tr>
-        </thead>
-        <tbody class="table-group-divider">
-        <% @invoice.activity.count_per_product(user: @invoice.user).each do |item| %>
+    <% if @invoice.activity.count_per_product(user: @invoice.user).any? %>
+      <div class="col-12">
+        <table class="table table-striped">
+          <thead>
           <tr>
-            <td><%= item[:name] %></td>
-            <td><%= item[:amount] %></td>
-            <td><%= number_to_currency(item[:price], unit: '€') %></td>
+            <td scope="col" class="col-8">Consumpties</td>
+            <td scope="col" class="col-2">Aantal</td>
+            <td scope="col" class="col-2">Totaalbedrag</td>
           </tr>
-        <% end %>
-        </tbody>
-        <tfoot class="table-group-divider">
-          <tr>
-            <td class="border-bottom-0">Totaal</td>
-            <td class="border-bottom-0" />
-            <td class="border-bottom-0"><%= number_to_currency(@invoice.activity.revenue_by_user(@invoice.user), unit: '€') %></td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
+          </thead>
+          <tbody class="table-group-divider">
+          <% @invoice.activity.count_per_product(user: @invoice.user).each do |item| %>
+            <tr>
+              <td><%= item[:name] %></td>
+              <td><%= item[:amount] %></td>
+              <td><%= number_to_currency(item[:price], unit: '€') %></td>
+            </tr>
+          <% end %>
+          </tbody>
+          <tfoot class="table-group-divider">
+            <tr>
+              <td class="border-bottom-0">Totaal</td>
+              <td class="border-bottom-0" />
+              <td class="border-bottom-0"><%= number_to_currency(@invoice.activity.revenue_by_user(@invoice.user), unit: '€') %></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    <% end %>
 
     <% if @invoice.rows.any? %>
       <div class="col-12">
         <table class="table table-striped">
           <thead>
           <tr>
-            <td scope="col" class="col-8">Overige kosten</td>
+            <td scope="col" class="col-8"><% if @invoice.activity.count_per_product(user: @invoice.user).any? %>Overige kosten<% else %>Kosten<% end %></td>
             <td scope="col" class="col-2">Aantal</td>
             <td scope="col" class="col-2">Totaalbedrag</td>
           </tr>
@@ -144,16 +146,19 @@
         </table>
       </div>
     <% end %>
-
+    
+    
     <div class="col-12">
-      <table class="table table-borderless">
-        <thead class="table-group-divider">
-          <tr>
-            <th scope="col" class="col-10">Totaal</th>
-            <th scope="col" class="col-2"><%= number_to_currency(@invoice.amount, unit: '€') %></th>
-          </tr>
-        </thead>
-      </table>
+      <% if @invoice.rows.any? && @invoice.activity.count_per_product(user: @invoice.user).any? %>
+        <table class="table table-borderless">
+          <thead class="table-group-divider">
+            <tr>
+              <th scope="col" class="col-10">Totaal</th>
+              <th scope="col" class="col-2"><%= number_to_currency(@invoice.amount, unit: '€') %></th>
+            </tr>
+          </thead>
+        </table>
+        <% end %>
     </div>
 
     <div class="col-6">
