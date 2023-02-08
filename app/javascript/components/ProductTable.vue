@@ -1,44 +1,44 @@
 <template lang="html">
-  <b-container>
-    <b-row class="b-table-details--header px-2 py-1 mb-2">
-      <b-col sm="5">product</b-col>
-      <b-col sm="2" class="text-right">aantal</b-col>
-      <b-col sm="3" class="text-right">prijs per stuk</b-col>
-      <b-col sm="2" class="text-right pr-3">
-        <span :class="editable ? 'pr-3' : ''">totaal</span>
-      </b-col>
-    </b-row>
-    <b-row v-for="orderRow in order.order_rows" class="b-table-details--item px-2" :key="orderRow.id">
-      <b-col sm="5" >
+  <div class="container">
+    <div class="row table-details-header text-uppercase px-2 py-1 mb-2">
+      <div class="col-sm-5 fw-normal">product</div>
+      <div class="col-sm-2 fw-normal text-end">aantal</div>
+      <div class="col-sm-3 fw-normal text-end">prijs per stuk</div>
+      <div class="col-sm-2 fw-normal text-end">
+        <span :class="editable ? 'pe-3' : ''">totaal</span>
+      </div>
+    </div>
+    <div v-for="orderRow in order.order_rows" class="row table-details-item px-2" :key="orderRow.id">
+      <div class="col-sm-5 ps-3" >
         {{orderRow.product.name}}
         <div v-if="orderRowErrors[orderRow.id]">
           <small class="text-danger"><em>{{orderRowErrors[orderRow.id]}}</em></small>
         </div>
-      </b-col>
-      <b-col sm="2" class="text-right">
+      </div>
+      <div class="col-sm-2 text-end">
         <template v-if="editable && orderRow.editing">
           <i @click="increaseProductCount(orderRow)"
-             class="fa fa-plus-square-o order-history--item-count"></i>
+            class="fa fa-plus-square-o order-history-item-count"></i>
           <span class="px-2">{{orderRow.product_count}}</span>
           <i @click="decreaseProductCount(orderRow)"
-             class="fa fa-minus-square-o order-history--item-count"></i>
+            class="fa fa-minus-square-o order-history-item-count"></i>
         </template>
         <template v-else>
           {{orderRow.product_count}}
         </template>
-      </b-col>
-      <b-col sm="3" class="text-right">
+      </div>
+      <div class="col-sm-3 text-end">
         {{doubleToCurrency(orderRow.price_per_product)}}
-      </b-col>
-      <b-col sm="2" :class="['text-right', editable ? 'pr-1' : 'pr-3']">
+      </div>
+      <div :class="['col-sm-2 text-end', editable ? 'pe-1' : 'pe-3']">
         {{doubleToCurrency(orderRow.product_count * orderRow.price_per_product)}}
         <template v-if="editable">
-          <i v-if="orderRow.editing" @click="saveOrderRow(orderRow)" class="order-history--item-save fa fa-save pl-3"></i>
-          <i v-else @click="editOrderRow(orderRow)" class="order-history--item-edit fa fa-pencil pl-3"></i>
+          <i v-if="orderRow.editing" @click="saveOrderRow(orderRow)" class="fa fa-save ps-3"></i>
+          <i v-else @click="editOrderRow(orderRow)" class="order-history-item-edit fa fa-pencil ps-3"></i>
         </template>
-      </b-col>
-    </b-row>
-  </b-container>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>

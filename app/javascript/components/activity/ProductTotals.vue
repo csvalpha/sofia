@@ -2,34 +2,48 @@
   <div class="product-totals">
     <user-input class="mb-3" v-model="user" :include-pin="true" :include-cash="true"></user-input>
 
-    <spinner class="pb-3 m-auto" size="large" v-if="isLoading" />
+    <div class="pb-3" v-if="isLoading">
+      <div class="spinner-border text-primary d-block m-auto" style="width: 2.5rem; height: 2.5rem;" role="status">
+        <span class="visually-hidden">Laden...</span>
+      </div>
+    </div>
+
     <div class="table-responsive" v-else>
       <table class="table table-sm" v-if="orderTotals.length > 0">
         <thead>
           <tr>
             <th scope="col">Product</th>
             <th scope="col">Aantal keer besteld</th>
-            <th class="text-right" scope="col">Totaalbedrag</th>
+            <th class="text-end" scope="col">Totaalbedrag</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="table-group-divider">
           <tr v-for="orderTotal in orderTotals" :key="orderTotal.name">
             <td>{{orderTotal.name}}</td>
             <td>{{orderTotal.amount}} x</td>
-            <td class="text-right">{{doubleToCurrency(orderTotal.price)}}</td>
+            <td class="text-end">{{doubleToCurrency(orderTotal.price)}}</td>
           </tr>
         </tbody>
       </table>
-      <div v-else>
-        Er zijn geen producten verkocht
-      </div>
+      <table v-else class="table table-striped">
+        <tbody>
+          <tr>
+            <td class="text-center" colspan="4">
+              <p class="my-1">
+                <em>
+                  Er zijn nog geen producten verkocht
+                </em>
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
 
 <script>
 import UserInput from '../UserInput.vue';
-import Spinner from 'vue-simple-spinner';
 
 export default {
   props: {
@@ -72,7 +86,6 @@ export default {
   },
 
   components: {
-    Spinner,
     UserInput
   }
 };
