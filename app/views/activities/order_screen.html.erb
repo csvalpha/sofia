@@ -3,86 +3,14 @@
                 data: {users: @users_json, product_prices: @product_prices_json, activity: @activity_json, sumup_callback: sumup_callback_activity_url, sumup_key: @sumup_key, flashes: flash} do
 
 %>
-  <b-modal id="credit-mutation-modal" ref="creditMutationModal" title="Inleggen">
-    <form :class="{ 'was-validated': creditMutationFormInvalid }" class="col-12 mt-2" novalidate="">
-      <div class="form-group row">
-        <div class="col-4">
-          <label class="col-form-label" for="creditMutationAmountInput">
-            Inleg *
-          </label>
-        </div>
-        <div class="col-8">
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <div class="input-group-text">
-                <%= fa_icon 'euro' %>
-              </div>
-            </div>
 
-            <input class="form-control" id="creditMutationAmountInput" placeholder="10.00" required="" type="text" v-model="creditMutationAmount"/>
-            <div class="invalid-feedback">
-              Bedrag is verplicht
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-4">
-          <label class="col-form-label" for="creditMutationDescriptionInput">
-            Beschrijving *
-          </label></div>
-        <div class="col-8">
-          <input class="form-control" id="creditMutationDescriptionInput" placeholder="Inleg contant" required="" type="text" v-model="creditMutationDescription"/>
-          <div class="invalid-feedback">
-            Beschrijving is verplicht
-          </div>
-        </div>
-      </div>
-      <fieldset disabled="true">
-        <div class="form-group row">
-          <label class="col-4 col-form-label">
-            Activiteit *
-          </label>
-          <div class="col-8">
-            <input :value="activity.title" class="form-control" type="text"/>
-            <small class="form-text text-muted">
-              Omdat deze inleg aangemaakt wordt tijdens een activiteit kan je dit niet aanpassen
-            </small>
-          </div>
-        </div>
-      </fieldset>
-    </form>
-    <template #modal-footer="{ cancel }">
-      <button aria-label="Close" class="btn btn-secondary mr-1" @click="cancel()" type="button">
-        Annuleren
-      </button>
-      <button @click="saveCreditMutation" class="btn btn-primary" type="sumbit" :disabled="isSubmitting">
-        Inleg aanmaken
-      </button>
-    </template>
-  </b-modal>
-
-  <b-modal id="cannot-order-modal" ref="cannotOrderModal" title="Negatief saldo">
-    <div class="modal-body" v-if="selectedUser">
-      {{selectedUser.name}} staat <b class="text-danger">{{doubleToCurrency(-selectedUser.credit)}}</b> negatief en moet eerst inleggen om te kunnen bestellen!
-      Vraag de gebruiker om zijn of haar saldo op te waarderen via iDEAL of contante inleg.
-    </div>
-    <template #modal-footer="{ cancel }">
-      <button aria-label="Close" class="btn btn-secondary mr-1" @click="cancel()" type="button">
-        Oké
-      </button>
-    </template>
-  </b-modal>
-
+<% content_for :modal do %>
+  <%= render 'credit_mutation_modal' %>
+  <%= render 'cannot_order_modal' %>
   <% if @sumup_error_order %>
-    <b-modal id="sumup-error-modal" ref="sumupErrorModal" title="Sumup betaling mislukt" 
-             ok-title="Nog eens proberen" @ok="startSumupPayment('<%= @sumup_tx_id %>', <%= @sumup_error_order.order_total %>)" 
-             cancel-title="Bestelling verwijderen" @cancel="deleteOrder(<%= @sumup_error_order.id %>)">
-      <div class="modal-body">
-        De Sumup betaling is mislukt. Wil je de betaling nogmaals proberen of de bestelling verwijderen?
-      </div>
-    </b-modal>
+    <%= render 'sumup_error_order_modal', :locals => {sumup_error_order: @sumup_error_order} %>
   <% end %>
+<% end %>
 
   <nav class="header">
     <ul class="header-nav">
@@ -92,32 +20,32 @@
           <%= fa_icon 'chevron-left' %>
           </span>
         <span v-else="">
-          <%= link_to @activity, class: 'nav-link' do %>
+          <%= link_to @activity do %>
           <%= fa_icon 'home' %>
           <% end %>
         </span>
       </li>
       <li class="header-nav-item">
-        <span class="mr-3">
+        <span class="me-3">
           <%= @activity.title %>
         </span>
-        <small class="font-weight-light d-inline-block">
+        <small class="fw-light d-inline-block">
           <%= l @activity.start_time, format: :date_only %>
         </small>
       </li>
     </ul>
-    <div class="row pull-right no-gutters" style="flex-direction: row-reverse">
-      <b-btn class="m-3" v-on:click="keepUserSelected = !keepUserSelected" variant="outline-secondary">
+    <div class="row pull-right g-0" style="flex-direction: row-reverse">
+      <button type="button" class="btn btn-outline-secondary m-3 w-auto" @click="keepUserSelected = !keepUserSelected" >
         <span v-if="keepUserSelected">
-          <%= fa_icon 'check-square lg', class: 'mr-1' %>
+          <%= fa_icon 'check-square lg', class: 'me-1' %>
         </span>
         <span v-if="!keepUserSelected">
-          <%= fa_icon 'square lg', class: 'mr-1' %>
+          <%= fa_icon 'square lg', class: 'me-1' %>
         </span>
         <span>
           Persoon onthouden
         </span>
-      </b-btn>
+      </button>
     </div>
 
     <flash-notification>
@@ -148,7 +76,7 @@
               <span :title="doubleToCurrency(orderRow.productPrice.price) + ' p.s.'">
                 {{doubleToCurrency(orderRow.productPrice.price * orderRow.amount)}}
               </span>
-              <span @click="dropOrderRow(index)" class="order-rows-row-remove ml-1">
+              <span @click="dropOrderRow(index)" class="order-rows-row-remove ms-1">
                 <%= fa_icon 'times-circle lg' %>
               </span>
             </div>
@@ -156,7 +84,7 @@
         </template>
 
         <template v-if="!orderRows.length">
-          <p class="text-center font-weight-light pt-3">
+          <p class="text-center fw-light pt-3">
             <em>
               Geen producten geselecteerd
             </em>
@@ -175,8 +103,8 @@
           </h4>
         </div>
       </div>
-      <div class="orders-confirmation">
-        <div class="btn-group btn-group-lg btn-block" role="group" v-if="payWithPin && <%= @sumup_enabled.to_s %> && isMobile">
+      <div class="orders-confirmation d-grid gap-3">
+        <div class="btn-group btn-group-lg" role="group" v-if="payWithPin && <%= @sumup_enabled.to_s %> && isMobile">
           <button type="button" class="btn btn-success col-9"
              @click="confirmOrder(true)"
              :class="{ 'disabled': orderConfirmButtonDisabled }">
@@ -190,41 +118,41 @@
           </button>
         </div>
 
-        <button @click="maybeConfirmOrder" class="btn btn-block btn-lg btn-success"
+        <button @click="maybeConfirmOrder" class="btn btn-lg btn-success"
               :class="{ 'btn-warning' : showOrderWarning && !showCannotOrderWarning, 'btn-danger' : showCannotOrderWarning }"
               :disabled="orderConfirmButtonDisabled"
               v-if="!payWithPin || !<%= @sumup_enabled.to_s %> || !isMobile">
-        <span class="text-uppercase">
-          Bestelling plaatsen
-        </span>
-        <br/>
-        <small v-if="showOrderWarning">
-          <span v-if="showCannotOrderWarning" class="d-block">
-            <span>
-              <%= fa_icon 'exclamation-triangle ' %>
-            </span>
-            <span>
-              {{selectedUser.name}} staat <b>{{doubleToCurrency(-selectedUser.credit)}}</b> negatief en moet eerst inleggen!
-            </span>
+          <span class="text-uppercase">
+            Bestelling plaatsen
           </span>
-          <span v-else-if="showInsufficientCreditWarning" class="d-block">
-            <span>
-              <%= fa_icon 'exclamation-triangle ' %>
+          <br/>
+          <small v-if="showOrderWarning">
+            <span v-if="showCannotOrderWarning" class="d-block">
+              <span>
+                <%= fa_icon 'exclamation-triangle ' %>
+              </span>
+              <span>
+                {{selectedUser.name}} staat <b>{{doubleToCurrency(-selectedUser.credit)}}</b> negatief en moet eerst inleggen!
+              </span>
             </span>
-            <span>
-              {{selectedUser.name}} staat <b>{{doubleToCurrency(-selectedUser.credit)}}</b> negatief!
+            <span v-else-if="showInsufficientCreditWarning" class="d-block">
+              <span>
+                <%= fa_icon 'exclamation-triangle ' %>
+              </span>
+              <span>
+                {{selectedUser.name}} staat <b>{{doubleToCurrency(-selectedUser.credit)}}</b> negatief!
+              </span>
             </span>
-          </span>
-          <span v-if="showAgeWarning" class="d-block">
-            <span>
-              <%= fa_icon 'exclamation-triangle ' %>
+            <span v-if="showAgeWarning" class="d-block">
+              <span>
+                <%= fa_icon 'exclamation-triangle ' %>
+              </span>
+              <span>
+                {{selectedUser.name}} is minderjarig!
+              </span>
             </span>
-            <span>
-              {{selectedUser.name}} is minderjarig!
-            </span>
-          </span>
-        </small>
-      </button>
+          </small>
+        </button>
       </div>
     </div>
   </div>
@@ -236,7 +164,7 @@
     <div @click="selectProduct(productPrice)" class="product-grid-product"
          :class="{ 'product-requires-age' : (selectedUser && selectedUser.minor && productPrice.product.requires_age) }"
          v-for="productPrice in productPrices">
-      <span class="product-grid-product-requires-age py-1 fa-stack" v-if="selectedUser && selectedUser.minor && productPrice.product.requires_age">
+      <span class="product-grid-product-requires-age mb-2 fa-stack" v-if="selectedUser && selectedUser.minor && productPrice.product.requires_age">
         <i class="fa fa-circle fa-circle-lighter fa-stack-2x">
         </i>
         <span class="fa fa-stack-1x fa-inverse fa-plus18">

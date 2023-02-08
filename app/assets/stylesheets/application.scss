@@ -1,4 +1,4 @@
-@import 'theme_tomato';
+@import 'theme_sofia';
 @import 'bootstrap';
 @import 'font-awesome';
 
@@ -10,6 +10,16 @@ body {
   position: relative;
   min-height: 100vh;
 }
+
+// Only underline links on hover
+a {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 
 // ANIMATIONS
 .slide-fade-enter-active,
@@ -35,7 +45,7 @@ body {
   }
 }
 
-.order-history--details-expand {
+.order-history-details-expand {
   color: $gray-500;
 
   &:hover {
@@ -53,13 +63,16 @@ body {
   width: 150px;
 }
 
-.b-table-details--header {
-  background-color: $gray-200;
-  text-transform: uppercase;
+.table-group-divider {
+  border-top-color: $gray-300;
 }
 
-.b-table-details--item {
-  .order-history--item-edit {
+.table-details-header {
+  background-color: $gray-200;
+}
+
+.table-details-item {
+  .order-history-item-edit {
     color: $gray-700;
   }
 }

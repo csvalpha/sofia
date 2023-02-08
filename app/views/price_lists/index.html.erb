@@ -3,9 +3,9 @@
   <%= render 'modal' %>
 <% end %>
 
-<div class="container py-2 footer-padding">
+<div class="container footer-padding">
   <div class="row">
-    <div class="col-sm-12">
+    <div class="col-sm-12 mt-4">
       <h1>
         Prijslijsten
       </h1>
@@ -13,13 +13,13 @@
         <span>
           Hier worden de vijf nieuwste prijslijsten en alle producten getoond.
         </span>
-        <button class="btn btn-sm btn-primary" data-target="#editPriceListModal" data-toggle="modal" role="button">
-          <%= fa_icon 'plus', class: 'mr-1' %>
+        <button class="btn btn-sm btn-primary" data-bs-target="#editPriceListModal" data-bs-toggle="modal" role="button">
+          <%= fa_icon 'plus', class: 'me-1' %>
           Nieuwe prijslijst
         </button>
       </div>
 
-      <%= content_tag :table, id: 'price_lists_table', class: 'table table-striped table-responsive-md',
+      <%= content_tag :table, id: 'price_lists_table', class: 'price_lists_table table table-striped table-responsive-md',
                       data: {price_lists: @recent_price_lists_json, products: @products_json} do %>
         <thead class="table-header-rotated products">
         <tr>
@@ -49,13 +49,13 @@
               </span>
             </td>
             <td class="products-new">
-              <div class="input-group">
-                <input class="form-control" placeholder="Productnaam" type="text" v-model="product.name" :disabled="product.id"/>
+              <div class="d-flex">
+                <input class="form-control flex-grow-1" placeholder="Productnaam" type="text" v-model="product.name" :disabled="product.id"/>
               </div>
             </td>
             <td class="products-new">
-              <div class="input-group">
-                <select class="form-control" v-model="product.category">
+              <div class="d-flex">
+                <select class="form-select flex-grow-1" v-model="product.category">
                   <% Product.categories.each do |category| %>
                     <%= content_tag :option, value: category.first do %>
                       <%= t category.first %>
@@ -65,8 +65,8 @@
               </div>
             </td>
             <td class="products-new-price" v-for="priceList in priceLists">
-              <div class="input-group">
-                <input class="form-control" placeholder="2.18" type="text" v-model="findPrice(product, priceList).price"/>
+              <div class="d-flex">
+                <input class="form-control flex-grow-1" placeholder="2.18" type="text" v-model="findPrice(product, priceList).price"/>
               </div>
             </td>
             <td class="products-save-new" v-on:click="saveProduct(product)">
@@ -91,17 +91,18 @@
           </template>
         </tr>
         <tr>
-          <td colspan="3">
-            <button class="btn btn-secondary btn-sm btn-block products-button-new" v-on:click.prevent="newProduct">
-              Voeg een nieuw product toe
-              <%= fa_icon 'plus-square', class: 'pl-2' %>
-            </button>
+          <td colspan="2">
+            <div class="d-grid">
+              <button class="btn btn-secondary btn-sm products-button-new" v-on:click.prevent="newProduct">
+                Voeg een nieuw product toe
+                <%= fa_icon 'plus-square', class: 'ps-2' %>
+              </button>
+            </div>
           </td>
-          <td colspan="6"></td>
+          <td colspan="8"></td>
         </tr>
         </tbody>
       <% end %>
     </div>
   </div>
-  <hr class="mb-3"/>
 </div>

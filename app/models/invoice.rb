@@ -24,6 +24,10 @@ class Invoice < ApplicationRecord
     activity.revenue_by_user(user) + rows.sum(&:total)
   end
 
+  def row_amount
+    rows.sum(&:total)
+  end
+
   private
 
   def set_human_id

@@ -32,4 +32,5 @@ document.addEventListener( 'turbolinks:load', function() {
     duration: '0.15s',
   });
 });
+
 /* eslint-enable no-undef */
