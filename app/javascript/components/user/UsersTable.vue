@@ -24,7 +24,7 @@
         </tr> 
       </thead>
       <tbody class="table-group-divider">
-        <tr v-for="user in users" :key="user.id">
+        <tr v-for="user in sortedUsers" :key="user.id">
           <th class="ps-4" aria-colindex="1">{{ user.id }}</th>
           <td><a :href="`/users/${user.id}`" aria-colindex="2">{{ user.name }}</a></td>
           <td :class="user.credit < 0 ? 'text-danger' : ''" aria-colindex="3">€ {{parseFloat(user.credit).toFixed(2)}}</td>
