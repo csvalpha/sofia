@@ -15,8 +15,14 @@ th {
   }
 }
 
-#price_lists_table tr:last-child > td {
-  border-bottom-width: 0;
+.price_lists_table {
+  tr {
+    &:last-child {
+      td {
+        border-bottom-width: 0;
+      }
+    }
+  }
 }
 
 td {
