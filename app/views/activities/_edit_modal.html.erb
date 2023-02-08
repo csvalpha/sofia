@@ -13,7 +13,7 @@
           <%= f.input :title, label: 'Titel', placeholder: 'Titel', required: true %>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">
+          <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">
             Annuleren
           </button>
           <%= f.button :submit, 'Naam wijzigen', :data => {:disable_with => 'Bezig...'}, class: 'btn btn-primary', method: :patch %>

@@ -11,7 +11,7 @@
           <%= f.input :name, label: 'Naam', placeholder: 'Naam', required: true %>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">
+          <button aria-label="Close" class="btn btn-secondary" data-bs-dismiss="modal" type="button">
             Annuleren
           </button>
           <%= f.button :submit, 'Prijslijst opslaan', :data => {:disable_with => 'Bezig...'}, class: 'btn btn-primary' %>
