@@ -8,7 +8,7 @@ $gray-200: #e9ecef;
 $gray-300: #dee2e6;
 $gray-400: #ced4da;
 $gray-500: #adb5bd;
-$gray-600: #868e96;
+$gray-600: #6c757d;
 $gray-700: #495057;
 $gray-800: #343a40;
 $gray-900: #212529;
@@ -19,10 +19,6 @@ $transparent-800: rgba(0, 0, 0, .8);
 
 // Typography
 $font-family-sans-serif: Roboto, 'Helvetica Neue', Arial, sans-serif;
-
-$font-weight-light:    300;
-$font-weight-normal:   400;
-$font-weight-bold:     500;
 
 $font-size-base:       .93rem;
 $font-size-xl:         ($font-size-base * 2);
@@ -36,7 +32,6 @@ $alpha-primary: #ff0;
 // Basic layout
 $body-bg:              $gray-100;
 $body-color:           $font-color-dark;
-$enable-print-styles:  false;
 
 // Custom stuff
 .table-header-rotated {
@@ -54,7 +49,7 @@ $enable-print-styles:  false;
     }
   }
 
-  .tomato-header {
+  .sofia-header {
     margin-bottom: .5rem;
     line-height: 1.2;
     color: inherit;

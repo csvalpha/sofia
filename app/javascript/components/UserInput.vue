@@ -1,13 +1,13 @@
 <template lang="html">
   <div class="user-input position-relative">
     <input type="text" class="d-none" :name="name" :value="selectedSuggestion.id">
-    <input type="text" class="form-control" v-model="query" placeholder="Begin met typen..."
+    <input type="text" class="form-control bg-white" v-model="query" placeholder="Begin met typen..."
            @input="updateValue"
            @keydown.enter="selectFirstSuggestion"
            aria-haspopup="true" v-bind:aria-expanded="dropdownOpened"
            required="true" autocomplete="off">
 
-    <div class="row">
+    <div class="row g-0">
       <ul class="dropdown-menu" v-bind:class="{'show':dropdownOpened}">
         <li class="dropdown-item" v-for="(suggestion, index) in suggestions" :key="suggestion.id"
             v-on:click.prevent="suggestionClicked(index)">

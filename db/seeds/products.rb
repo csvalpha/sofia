@@ -1,4 +1,4 @@
-def seed_products # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity
+def seed_products # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   products = []
 
   # rubocop:disable Style/WordArray
@@ -9,6 +9,7 @@ def seed_products # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metri
   products_wine = ['Wijn (glas)', 'Wijn (fles)']
   products_food = ['Tosti', 'Nootjes', 'Chips']
   products_tobacco = ['Sigaar', 'Sigaar (duur)']
+  products_donation = ['Donatie']
   # rubocop:enable Style/WordArray
 
   products_beer.each do |name|
@@ -37,6 +38,10 @@ def seed_products # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metri
 
   products_tobacco.each do |name|
     products << Product.create(name: name, category: :tobacco)
+  end
+
+  products_donation.each do |name|
+    products << Product.create(name: name, category: :donation)
   end
 
   products

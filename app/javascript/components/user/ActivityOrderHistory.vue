@@ -1,5 +1,10 @@
 <template lang="html">
-  <spinner class="pt-2 pb-3 m-auto" size="large" v-if="isLoading"/>
+  <div class="pb-3 pt-2" v-if="isLoading">
+    <div class="spinner-border text-primary d-block m-auto" style="width: 2.5rem; height: 2.5rem;" role="status">
+      <span class="visually-hidden">Laden...</span>
+    </div>
+  </div>
+  
 
   <div v-else>
     <div v-for="order in orders" :key="order.id">
@@ -11,7 +16,6 @@
 </template>
 
 <script>
-import Spinner from 'vue-simple-spinner';
 import ProductTable from '../ProductTable.vue';
 import axios from 'axios';
 import moment from 'moment';
@@ -55,7 +59,6 @@ export default {
   },
 
   components: {
-    Spinner,
     ProductTable
   }
 };
