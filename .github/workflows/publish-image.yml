@@ -20,9 +20,6 @@ on:
 
 env:
   PROJECT_NAME: sofia
-  REGISTRY_URL: ghcr.io
-  SENTRY_ORG: csvalpha
-  APP_ID: 152333
 
 jobs:
   metadata:
@@ -65,7 +62,7 @@ jobs:
       - name: Login to GitHub Container Registry
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # tag=v2.1.0
         with:
-          registry: ${{ env.REGISTRY_URL }}
+          registry: ${{ vars.DOCKER_REGISTRY_URL }}
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -81,7 +78,7 @@ jobs:
           cache-from: type=gha,scope=main
           cache-to: type=gha,scope=main
           tags: |
-            ${{ env.REGISTRY_URL }}/${{ github.repository_owner }}/${{ env.PROJECT_NAME }}:${{
+            ${{ vars.DOCKER_REGISTRY_URL }}/${{ github.repository_owner }}/${{ env.PROJECT_NAME }}:${{
             needs.metadata.outputs.tag }}
 
       - name: Get sourcemaps from image
@@ -96,6 +93,7 @@ jobs:
         uses: getsentry/action-release@bd5f874fcda966ba48139b0140fb3ec0cb3aabdd # v1.2.1
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG_NAME }}
           SENTRY_PROJECT: ${{ env.PROJECT_NAME }}
         with:
           finalize: false
@@ -125,8 +123,8 @@ jobs:
       - name: Update Publish Image check run
         uses: guidojw/actions/update-check-run@abb0ee8d1336edf73383f2e5a09abd3a22f25b13 # v1.3.3
         with:
-          app_id: ${{ env.APP_ID }}
-          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+          app_id: ${{ vars.GH_APP_ID }}
+          private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           name: Publish Image
           conclusion: ${{ steps.get_conclusion.outputs.conclusion }}
           details_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

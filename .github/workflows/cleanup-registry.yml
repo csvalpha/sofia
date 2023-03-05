@@ -21,4 +21,4 @@ jobs:
           account-type: org
           org-name: ${{ github.repository_owner }}
           skip-tags: latest,staging
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GH_PAT }}

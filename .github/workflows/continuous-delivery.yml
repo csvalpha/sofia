@@ -13,8 +13,6 @@ concurrency:
 
 env:
   PROJECT_NAME: sofia
-  SENTRY_ORG: csvalpha
-  APP_ID: 152333
 
 jobs:
   branch_check:
@@ -170,6 +168,7 @@ jobs:
         uses: getsentry/action-release@bd5f874fcda966ba48139b0140fb3ec0cb3aabdd # v1.2.1
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG_NAME }}
           SENTRY_PROJECT: ${{ env.PROJECT_NAME }}
         with:
           environment: ${{ needs.metadata.outputs.stage }}
@@ -208,8 +207,8 @@ jobs:
       - name: Update Continuous Delivery check run
         uses: guidojw/actions/update-check-run@abb0ee8d1336edf73383f2e5a09abd3a22f25b13 # v1.3.3
         with:
-          app_id: ${{ env.APP_ID }}
-          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+          app_id: ${{ vars.GH_APP_ID }}
+          private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           sha: ${{ needs.merge.outputs.sha }}
           name: Continuous Delivery
           conclusion: ${{ steps.get_conclusion.outputs.conclusion }}
