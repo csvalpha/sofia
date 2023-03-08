@@ -40,7 +40,7 @@ jobs:
     needs: build
     services:
       db:
-        image: postgres:14.2
+        image: postgres:14.7
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -89,7 +89,7 @@ jobs:
     needs: build
     services:
       db:
-        image: postgres:14.2
+        image: postgres:14.7
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
