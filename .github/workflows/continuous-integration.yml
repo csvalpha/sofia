@@ -4,6 +4,7 @@ on:
   push:
     branches: [staging, master]
   pull_request:
+  merge_group:
   workflow_call:
     inputs:
       sha:
