@@ -5,19 +5,14 @@
         <h5 class="modal-title">
           Factuur aanmaken
         </h5>
-        <button aria-label="close" class="close" data-dismiss="modal" type="button">
-          <span aria-hidden="true">
-            <%= fa_icon 'times' %>
-          </span>
-        </button>
+        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"/>
       </div>
       <%= simple_form_for @invoice, wrapper: :horizontal_form do |f| %>
         <div class="modal-body" id="invoices_modal">
-          <div class="form-group row">
+          <div class="mb-3 row">
             <label class="col-3 col-form-label" for="activity_price_list">
-              <abbr class="mr-1" title="required">*</abbr>
               Activiteit
-
+              <abbr title="required">*</abbr>
             </label>
             <template>
               <div class="col-9" style="position:relative">
@@ -26,8 +21,8 @@
                 <input @focus="openSuggestions" @input="openSuggestions" aria-haspopup="true" autocomplete="off"
                        class="form-control" placeholder="Begin met typen..." required="true" type="text"
                        v-bind:aria-expanded="dropdownOpened" v-model="query"/>
-                <div class="row">
-                  <ul class="dropdown-menu ml-3" v-bind:class="{'show':dropdownOpened}">
+                <div class="row g-0 w-100 position-relative">
+                  <ul class="dropdown-menu" v-bind:class="{'show':dropdownOpened}">
 
                     <li class="dropdown-item" v-for="(suggestion, index) in suggestions" v-on:click.prevent="suggestionClicked(index)">
                       <a href="#">
@@ -40,10 +35,10 @@
             </template>
           </div>
 
-          <div class="form-group row">
+          <div class="mb-3 row">
             <label class="col-3 col-form-label" for="invoices_users">
-              <abbr class="mr-1" title="required">*</abbr>
               Gebruiker
+              <abbr title="required">*</abbr>
             </label>
             <template>
               <div class="col-9" style="position:relative">
@@ -59,20 +54,22 @@
           <%= f.input :email_override, label: 'Email' %>
 
           <hr>
-          <h5>Extra factuur regels <i class="fa fa-plus ml-4" @click="addRow()"></i> </h5>
+          <h5>Extra factuur regels <i class="fa fa-plus ms-4" @click="addRow()"></i> </h5>
           <div id="invoice_rows">
-            <div id="invoice_row" class="form-inline row m-2">
-              <%= f.simple_fields_for :rows do |p| %>
-                <%= p.input :name, label: false, placeholder: 'Naam', wrapper_html: { class: 'col-4' } %>
-                <%= p.input :amount,  label: false, placeholder: 'Aantal', wrapper_html: { class: 'col-4' } %>
-                <%= p.input :price, label: false, placeholder: 'Prijs', wrapper_html: { class: 'col-4' } %>
+            <div id="invoice_row" class="">
+              <%= f.simple_fields_for :rows, wrapper: :vertical_form do |p| %>
+                  <div class="row">
+                    <%= p.input :name, label: false, placeholder: 'Naam', wrapper_html: { class: 'col-4' } %>
+                    <%= p.input :amount,  label: false, placeholder: 'Aantal', wrapper_html: { class: 'col-4' } %>
+                    <%= p.input :price, label: false, placeholder: 'Prijs', wrapper_html: { class: 'col-4' } %>
+                  </div>
               <% end %>
             </div>
           </div>
 
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-dismiss="modal" type="button">
+          <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">
             Annuleren
           </button>
           <%= f.button :submit, 'Factuur opslaan', class: 'btn btn-primary' %>

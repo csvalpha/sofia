@@ -1,24 +1,24 @@
 <%= content_for :title, 'Zatladder - SOFIA' %>
 <div class="container footer-padding">
-  <div class="row p-3 d-flex justify-content-around">
+  <div class="row mt-4 d-flex justify-content-around">
     <div class="card col-12 col-md-6 pt-3 mx-2">
       <h1 class="card-title text-center">
         Zatladder
       </h1>
 
       <form method="GET">
-        <select name="year" class="custom-select" onchange="this.form.submit()">
+        <select name="year" class="form-select" onchange="this.form.submit()">
           <%= options_for_select(@year_range, @year) %>
         </select>
       </form>
 
       <div class="row d-flex justify-content-center mt-4">
         <small class="col-4 col-md-2">Van</small>
-        <small class="col-8 col-md-4 text-right"><%= l @from_date, format: '%d %B %Y' %></small>
+        <small class="col-8 col-md-4 text-end"><%= l @from_date, format: '%d %B %Y' %></small>
       </div>
       <div class="row d-flex justify-content-center">
         <small class="col-4 col-md-2">Tot</small>
-        <small class="col-8 col-md-4 text-right"><%= l @to_date, format: '%d %B %Y' %></small>
+        <small class="col-8 col-md-4 text-end"><%= l @to_date, format: '%d %B %Y' %></small>
       </div>
 
       <table class="table table-striped mt-2">
@@ -29,7 +29,7 @@
           <th scope="col">Bedrag</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody class="table-group-divider">
         <% @zatladder.each_with_index do |entry, index| %>
           <tr>
             <th scope="row"> <%= index + 1 %></th>

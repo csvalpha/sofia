@@ -1,4 +1,4 @@
-@import 'theme_tomato';
+@import 'theme_sofia';
 
 .center-text {
   margin: 0 auto;
@@ -6,13 +6,22 @@
 }
 
 th {
-  &.products-id,
-  &.products-alcohol {
+  &.products-id {
     width: 1.75rem;
   }
 
   &.products-actions {
     width: 4rem;
+  }
+}
+
+.price_lists_table {
+  tr {
+    &:last-child {
+      td {
+        border-bottom-width: 0;
+      }
+    }
   }
 }
 
@@ -47,13 +56,5 @@ td {
   &.products-cancel-edit,
   &.products-save-new {
     vertical-align: middle;
-  }
-}
-
-.products-product {
-  &:hover { // sass-lint:disable-line force-element-nesting
-    .edit-product-row i { // sass-lint:disable-line force-element-nesting
-      color: $font-color-dark;
-    }
   }
 }
