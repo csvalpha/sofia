@@ -13,8 +13,6 @@ concurrency:
 
 env:
   PROJECT_NAME: sofia
-  SENTRY_ORG: csvalpha
-  APP_ID: 152333
 
 jobs:
   branch_check:
@@ -37,7 +35,7 @@ jobs:
       stage: ${{ steps.get_metadata.outputs.stage }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
       - name: Get metadata
         id: get_metadata
@@ -82,7 +80,7 @@ jobs:
 
       - name: Checkout code
         if: fromJSON(needs.metadata.outputs.has_diff)
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
       - name: Run merge
         if: fromJSON(needs.metadata.outputs.has_diff)
@@ -140,19 +138,19 @@ jobs:
           fi
 
       - name: Checkout code
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
         with:
           ref: ${{ needs.merge.outputs.sha }}
 
       - name: Start deployment
-        uses: bobheadxi/deployments@9d4477fdaa4120020cd10ab7e97f68c801422e73 # tag=v1.3.0
+        uses: bobheadxi/deployments@88ce5600046c82542f8246ac287d0a53c461bca3 # v1.4.0
         id: start_deployment
         with:
           step: start
           env: ${{ needs.metadata.outputs.stage }}
 
       - name: Deploy
-        uses: appleboy/ssh-action@f9010ff7f1bbd7db1a0b4bab661437550cea20c0 # tag=v0.1.5
+        uses: appleboy/ssh-action@b60142998894e495c513803efc6d5d72a72c968a # v0.1.8
         env:
           STAGE: ${{ needs.metadata.outputs.stage }}
         with:
@@ -167,9 +165,10 @@ jobs:
             docker-compose up -d
 
       - name: Finalize Sentry release
-        uses: getsentry/action-release@bd5f874fcda966ba48139b0140fb3ec0cb3aabdd # v1.2.1
+        uses: getsentry/action-release@586b62368d564f25d694ce05fcb9cf53de65ac4f # v1.3.1
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG_NAME }}
           SENTRY_PROJECT: ${{ env.PROJECT_NAME }}
         with:
           environment: ${{ needs.metadata.outputs.stage }}
@@ -177,7 +176,7 @@ jobs:
           set_commits: skip
 
       - name: Finish deployment
-        uses: bobheadxi/deployments@9d4477fdaa4120020cd10ab7e97f68c801422e73 # tag=v1.3.0
+        uses: bobheadxi/deployments@88ce5600046c82542f8246ac287d0a53c461bca3 # v1.4.0
         if: steps.start_deployment.conclusion == 'success' && always()
         with:
           step: finish
@@ -208,8 +207,8 @@ jobs:
       - name: Update Continuous Delivery check run
         uses: guidojw/actions/update-check-run@abb0ee8d1336edf73383f2e5a09abd3a22f25b13 # v1.3.3
         with:
-          app_id: ${{ env.APP_ID }}
-          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+          app_id: ${{ vars.GH_APP_ID }}
+          private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           sha: ${{ needs.merge.outputs.sha }}
           name: Continuous Delivery
           conclusion: ${{ steps.get_conclusion.outputs.conclusion }}

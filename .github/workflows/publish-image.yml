@@ -20,9 +20,6 @@ on:
 
 env:
   PROJECT_NAME: sofia
-  REGISTRY_URL: ghcr.io
-  SENTRY_ORG: csvalpha
-  APP_ID: 152333
 
 jobs:
   metadata:
@@ -54,24 +51,24 @@ jobs:
     needs: metadata
     steps:
       - name: Checkout code
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
         with:
           ref: ${{ inputs.sha }}
           fetch-depth: 0
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@8c0edbc76e98fa90f69d9a2c020dcb50019dc325 # tag=v2.2.1
+        uses: docker/setup-buildx-action@f03ac48505955848960e80bbb68046aa35c7b9e7 # v2.4.1
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # tag=v2.1.0
         with:
-          registry: ${{ env.REGISTRY_URL }}
+          registry: ${{ vars.DOCKER_REGISTRY_URL }}
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push image
         id: build_push_image
-        uses: docker/build-push-action@c56af957549030174b10d6867f20e78cfd7debc5 # tag=v3.2.0
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671 # v4.0.0
         with:
           push: true
           context: .
@@ -81,7 +78,7 @@ jobs:
           cache-from: type=gha,scope=main
           cache-to: type=gha,scope=main
           tags: |
-            ${{ env.REGISTRY_URL }}/${{ github.repository_owner }}/${{ env.PROJECT_NAME }}:${{
+            ${{ vars.DOCKER_REGISTRY_URL }}/${{ github.repository_owner }}/${{ env.PROJECT_NAME }}:${{
             needs.metadata.outputs.tag }}
 
       - name: Get sourcemaps from image
@@ -93,9 +90,10 @@ jobs:
 
       - name: Create Sentry release
         if: ${{ !(github.event_name == 'workflow_dispatch' && github.workflow == 'Publish Image') }}
-        uses: getsentry/action-release@bd5f874fcda966ba48139b0140fb3ec0cb3aabdd # v1.2.1
+        uses: getsentry/action-release@586b62368d564f25d694ce05fcb9cf53de65ac4f # v1.3.1
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG_NAME }}
           SENTRY_PROJECT: ${{ env.PROJECT_NAME }}
         with:
           finalize: false
@@ -125,8 +123,8 @@ jobs:
       - name: Update Publish Image check run
         uses: guidojw/actions/update-check-run@abb0ee8d1336edf73383f2e5a09abd3a22f25b13 # v1.3.3
         with:
-          app_id: ${{ env.APP_ID }}
-          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+          app_id: ${{ vars.GH_APP_ID }}
+          private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           name: Publish Image
           conclusion: ${{ steps.get_conclusion.outputs.conclusion }}
           details_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

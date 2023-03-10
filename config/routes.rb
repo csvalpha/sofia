@@ -52,9 +52,6 @@ Rails.application.routes.draw do
   require 'sidekiq/web'
   require 'sidekiq-scheduler/web'
 
-  # See https://github.com/mperham/sidekiq/wiki/Monitoring#forbidden
-  Sidekiq::Web.set :session_secret, Rails.application.credentials[:secret_key_base]
-
   authenticate :user, ->(u) { u.treasurer? } do
     mount Sidekiq::Web => '/sidekiq'
   end
