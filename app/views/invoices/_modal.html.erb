@@ -10,12 +10,12 @@
       <%= simple_form_for @invoice, wrapper: :horizontal_form do |f| %>
         <div class="modal-body" id="invoices_modal">
           <div class="mb-3 row">
-            <label class="col-3 col-form-label" for="activity_price_list">
+            <label class="col-sm-3 col-form-label" for="activity_price_list">
               Activiteit
               <abbr title="required">*</abbr>
             </label>
             <template>
-              <div class="col-9" style="position:relative">
+              <div class="col-sm-9" style="position:relative">
                 <input class="d-none" name="invoice[activity_id]" v-bind:value="selectedSuggestion.id"/>
 
                 <input @focus="openSuggestions" @input="openSuggestions" aria-haspopup="true" autocomplete="off"
@@ -36,12 +36,12 @@
           </div>
 
           <div class="mb-3 row">
-            <label class="col-3 col-form-label" for="invoices_users">
+            <label class="col-sm-3 col-form-label" for="invoices_users">
               Gebruiker
               <abbr title="required">*</abbr>
             </label>
             <template>
-              <div class="col-9" style="position:relative">
+              <div class="col-sm-9" style="position:relative">
                 <user-input name="invoice[user_id]"></user-input>
               </div>
             </template>

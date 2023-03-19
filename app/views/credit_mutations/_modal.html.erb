@@ -13,12 +13,12 @@
           <%= f.input :amount, as: :float, label: 'Bedrag', placeholder: '2.00' %>
 
           <div class="mb-3 row">
-            <label class="col-3 col-form-label" for="mutations_users">
+            <label class="col-sm-3 col-form-label" for="mutations_users">
               Gebruiker
               <abbr title="required">*</abbr>
             </label>
             <template>
-              <div class="col-9" style="position:relative">
+              <div class="col-sm-9" style="position:relative">
                 <user-input name="credit_mutation[user_id]"></user-input>
               </div>
             </template>
