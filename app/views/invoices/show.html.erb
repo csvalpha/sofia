@@ -3,10 +3,10 @@
 
 <div id="activity" class="container footer-padding">
   <div class="row justify-content-between">
-    <div class="col-4">
-      <%= image_tag '/images/flux_logo.png', class: 'col-12' %>
+    <div class="col-sm-4">
+      <%= image_tag '/images/flux_logo.png', class: 'col-4 offset-4 col-sm-12 offset-sm-0 col-lg-8 offset-lg-2' %>
     </div>
-    <div class="col-8 py-2">
+    <div class="col-sm-8 py-2">
       <h3><%= Rails.application.config.x.company_name %></h3>
       <b>
         <%= Rails.application.config.x.company_website %> <br/>
@@ -63,7 +63,7 @@
 
       <% unless @invoice.paid? %>
         <%= link_to pay_invoice_url @invoice.token do %>
-          <button class="col-3 offset-9 btn btn-primary">Betalen</button>
+          <button class="col-sm-3 offset-sm-9 btn btn-primary">Betalen</button>
         <% end %>
       <% end %>
 
