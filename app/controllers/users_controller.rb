@@ -59,7 +59,7 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     @user = User.find(params[:id])
     authorize @user
 
-    if @user.update(params.require(:user).permit(%i[username email deactivated]))
+    if @user.update(params.require(:user).permit(%i[name email deactivated]))
       flash[:success] = 'Gebruiker geupdate'
     else
       flash[:error] = "Gebruiker updaten mislukt; #{@user.errors.full_messages.join(', ')}"
