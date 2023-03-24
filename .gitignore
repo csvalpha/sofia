@@ -50,4 +50,3 @@ yarn-debug.log*
 
 # Ignore Jetbrains IDE files
 /.idea
-/.vscode
