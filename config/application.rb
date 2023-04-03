@@ -57,5 +57,21 @@ module Sofia
     config.x.company_address      = ENV.fetch('COMPANY_ADDRESS', nil)
     config.x.company_website      = ENV.fetch('COMPANY_WEBSITE', nil)
     config.x.company_kvk          = ENV.fetch('COMPANY_KVK', nil)
+
+    config.x.site_name            = ENV.fetch('SITE_NAME', 'S.O.F.I.A.')
+    config.x.site_short_name      = ENV.fetch('SITE_SHORT_NAME', 'SOFIA')
+    config.x.site_association     = ENV.fetch('SITE_ASSOCIATION', 'C.S.V. Alpha')
+
+    config.x.code_beer            = ENV.fetch('CODE_BEER', nil)
+    config.x.code_craft_beer      = ENV.fetch('CODE_CRAFT_BEER', nil)
+    config.x.code_non_alcoholic   = ENV.fetch('CODE_NON_ALCOHOLIC', nil)
+    config.x.code_distilled       = ENV.fetch('CODE_DISTILLED', nil)
+    config.x.code_wine            = ENV.fetch('CODE_WINE', nil)
+    config.x.code_food            = ENV.fetch('CODE_FOOD', nil)
+    config.x.code_tobacco         = ENV.fetch('CODE_TOBACCO', nil)
+    config.x.code_donation        = ENV.fetch('CODE_DONATION', nil)
+    config.x.code_credit_mutation = ENV.fetch('CODE_CREDIT_MUTATION', nil)
+    config.x.code_cash            = ENV.fetch('CODE_CASH', nil)
+    config.x.code_pin             = ENV.fetch('CODE_PIN', nil)
   end
 end

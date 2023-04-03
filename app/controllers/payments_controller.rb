@@ -10,7 +10,7 @@ class PaymentsController < ApplicationController
   def create # rubocop:disable Metrics/AbcSize
     authorize :payment
 
-    payment = Payment.create_with_mollie('Sofia zatladder saldo inleg',
+    payment = Payment.create_with_mollie("#{Rails.application.config.x.site_short_name} zatladder saldo inleg",
                                          user: current_user, amount: params[:payment][:amount])
 
     if payment.valid?

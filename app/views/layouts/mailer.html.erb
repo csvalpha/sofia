@@ -312,7 +312,7 @@ a[x-apple-data-detectors=true] {
                       <div style="color:#fff;line-height:120%;font-family:'Roboto', Tahoma, Verdana, Segoe, sans-serif; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px;">
                         <div style="font-size:12px;line-height:14px;color:#fff;font-weight:400;font-family:'Roboto', Tahoma, Verdana, Segoe, sans-serif;text-align:left;">
                           <p style="margin: 0;font-size: 14px;line-height: 20px;text-align: right">
-                            S.O.F.I.A. - Streepsysteem der C.S.V. Alpha
+                            <%= "#{Rails.application.config.x.site_name} – Streepsysteem der #{Rails.application.config.x.site_association}" %>
                             <br>
                           </p>
                         </div>
@@ -370,7 +370,7 @@ a[x-apple-data-detectors=true] {
                           <p style="margin: 0;font-size: 16px;line-height: 20px">
                             Met vriendelijke groet,
                             <br />
-                            S.O.F.I.A.
+                            <%= Rails.application.config.x.site_name %>
                           </p>
                         </div>
                       </div>
