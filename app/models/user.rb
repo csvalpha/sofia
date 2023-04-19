@@ -87,8 +87,17 @@ class User < ApplicationRecord
   def self.from_omniauth(auth)
     user = where(provider: auth.provider, uid: auth.uid).first_or_create do |u|
       u.name = auth[:info][:name]
+      u.email = auth[:info][:email]
+      u.avatar_thumb_url = auth[:info][:avatar_thumb_url]
+      u.birthday = auth[:info][:birthday]
     end
     user.update_role(auth[:info][:groups])
+    user.update(
+      name: auth[:info][:name],
+      email: auth[:info][:email],
+      avatar_thumb_url: auth[:info][:avatar_thumb_url],
+      birthday: auth[:info][:birthday]
+    )
     user
   end
 

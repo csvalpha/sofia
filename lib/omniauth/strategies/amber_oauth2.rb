@@ -21,10 +21,10 @@ module OmniAuth
       info do
         {
           uid: raw_info['id'],
-          username: raw_info['attributes']['username'],
           name: full_name(raw_info),
-          avatar_url: raw_info['attributes']['avatar_url'],
+          email: raw_info['attributes']['email'],
           avatar_thumb_url: raw_info['attributes']['avatar_thumb_url'],
+          birthday: raw_info['attributes']['birthday'],
           groups: groups_from_json(raw_info['relationships']['active_groups']['data'])
         }
       end
