@@ -1,4 +1,4 @@
-class User < ApplicationRecord
+class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   devise :omniauthable, omniauth_providers: [:amber_oauth2]
   has_many :orders, dependent: :destroy
   has_many :order_rows, through: :orders, dependent: :destroy
@@ -84,12 +84,9 @@ class User < ApplicationRecord
 
   # TODO: Spec this method
   # :nocov:
-  def self.from_omniauth(auth)
+  def self.from_omniauth(auth) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     user = where(provider: auth.provider, uid: auth.uid).first_or_create do |u|
       u.name = auth[:info][:name]
-      u.email = auth[:info][:email]
-      u.avatar_thumb_url = auth[:info][:avatar_thumb_url]
-      u.birthday = auth[:info][:birthday]
     end
     user.update_role(auth[:info][:groups])
     user.update(
