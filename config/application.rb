@@ -45,6 +45,10 @@ module Sofia
     config.x.healthcheck_ids      = credentials.dig(Rails.env.to_sym, :healthcheck_ids)
     config.x.mollie_api_key       = credentials.dig(Rails.env.to_sym, :mollie_api_key)
 
+    config.x.authorize_url        = ENV.fetch('AUTHORIZE_URL', '/oauth/authorize')
+    config.x.token_url            = ENV.fetch('TOKEN_URL', '/api/v1/oauth/token')
+    config.x.me_url               = ENV.fetch('ME_URL', '/api/v1/users?filter[me]&include="active_groups"')
+
     config.x.from_email           = ENV.fetch('FROM_EMAIL', 'noreply@example.com')
     config.x.ict_email            = ENV.fetch('ICT_EMAIL', 'ict@example.com')
     config.x.admin_email          = ENV.fetch('ADMIN_EMAIL', 'admin@example.com')
