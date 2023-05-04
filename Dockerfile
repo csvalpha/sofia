@@ -1,4 +1,4 @@
-FROM ruby:3.1.3-slim@sha256:b21168a9ac265529da49d69cdedb99144ca170fb7332cdf111664eb498eaa4ec
+FROM ruby:3.2.2-slim@sha256:70370316b02901d7db3f6e453d6259ed4d0d52326d6ac57e3a579f7e3b616e41
 
 # Add build-essential tools.
 RUN apt-get update -qq && \
