@@ -225,7 +225,7 @@ document.addEventListener('turbolinks:load', () => {
           let affilateKey = element.dataset.sumupKey;
           let callback = element.dataset.sumupCallback;
           
-          let sumupUrl = `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&currency=EUR&title=Bestelling SOFIA&skip-screen-success=true&foreign-tx-id=${orderId}`;
+          let sumupUrl = `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&currency=EUR&title=Bestelling ${element.dataset.siteName}&skip-screen-success=true&foreign-tx-id=${orderId}`;
           if (this.isIos) {
             sumupUrl += `&amount=${orderTotal}&callbacksuccess=${callback}&callbackfail=${callback}`;
           } else {

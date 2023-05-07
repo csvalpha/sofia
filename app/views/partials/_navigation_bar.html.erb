@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
     <span class="navbar-brand">
-      <%= image_tag '/images/sofia.svg', alt: 'SOFIA icon', title: 'SOFIA', height: '25px' %>
+      <%= image_tag '/images/sofia.svg', alt: "#{Rails.application.config.x.site_name} icon", title: Rails.application.config.x.site_name, height: '25px' %>
     </span>
     <button aria-controls="mainNavigation" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#mainNavigation" data-bs-toggle="collapse" type="button">
       <span class="navbar-toggler-icon"></span>
