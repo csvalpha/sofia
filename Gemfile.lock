@@ -451,7 +451,7 @@ GEM
       sentry-ruby (~> 5.5.0)
       sidekiq (>= 3.0)
     shellany (0.0.1)
-    sidekiq (7.0.6)
+    sidekiq (7.0.9)
       concurrent-ruby (< 2)
       connection_pool (>= 2.3.0)
       rack (>= 2.2.4)

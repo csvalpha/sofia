@@ -70,8 +70,7 @@ export default {
       let promise = axios.get('/users/'+this.user.id+'/activities');
 
       promise.then((response) => {
-        const activities = response.data;
-        activities.sort((activity1, activity2) => activity2.start_time - activity1.start_time);
+        let activities = response.data;
         activities.forEach(activity => {
           activity.detailsShowing = false;
           activity.toggleDetails = (() => activity.detailsShowing = !activity.detailsShowing);

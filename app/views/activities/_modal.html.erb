@@ -13,12 +13,12 @@
           <%= f.input :end_time, as: :string, label: 'Eindtijd', order: %i[hour minute day month year] %>
 
           <div class="mb-3 row">
-            <label class="col-3 col-form-label" for="activity_price_list">
+            <label class="col-sm-3 col-form-label" for="activity_price_list">
               Prijslijst
               <abbr title="required">*</abbr>
             </label>
             <template>
-              <div class="col-9" style="position:relative">
+              <div class="col-sm-9" style="position:relative">
                 <input class="d-none" name="activity[price_list_id]" v-bind:value="selectedSuggestion.id"/>
 
                 <input @focus="openSuggestions" @input="openSuggestions" aria-haspopup="true" autocomplete="off"
