@@ -1,6 +1,6 @@
-<% content_for :title, "Streepscherm #{@activity.title} - SOFIA" %>
+<% content_for :title, "Streepscherm #{@activity.title} - #{Rails.application.config.x.site_name}" %>
 <%= content_tag :div, id: 'order-screen', class: 'order-screen',
-                data: {users: @users_json, product_prices: @product_prices_json, activity: @activity_json, sumup_callback: sumup_callback_activity_url, sumup_key: @sumup_key, flashes: flash} do
+                data: {users: @users_json, product_prices: @product_prices_json, activity: @activity_json, sumup_callback: sumup_callback_activity_url, sumup_key: @sumup_key, flashes: flash, site_name: Rails.application.config.x.site_short_name} do
 
 %>
 

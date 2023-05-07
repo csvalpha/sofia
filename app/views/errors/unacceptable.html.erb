@@ -1,2 +1,2 @@
-<% content_for :title, 'Error - SOFIA' %>
+<% content_for :title, "Error - #{Rails.application.config.x.site_name}" %>
 Er is een error op de server opgetreden. Stuur een <%= link_to 'mailtje', "mailto:#{Rails.application.config.x.admin_email}" %> naar de ICT-commissie als dit probleem op blijft treden.

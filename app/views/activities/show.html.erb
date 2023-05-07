@@ -1,4 +1,4 @@
-<% content_for :title, "Activiteit #{@activity.title} - SOFIA" %>
+<% content_for :title, "Activiteit #{@activity.title} - #{Rails.application.config.x.site_name}" %>
 <% content_for :modal do %>
   <%= render 'edit_modal' %>
 <% end %>
