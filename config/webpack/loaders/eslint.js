@@ -6,6 +6,6 @@ module.exports = {
   exclude: /node_modules/,
   loader: 'eslint-loader',
   options: {
-    failOnError: env.NODE_ENV !== 'production'
+    failOnError: env.NODE_ENV !== 'production' && env.NODE_ENV !== 'luxproduction',
   }
 };

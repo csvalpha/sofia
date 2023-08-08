@@ -7,6 +7,13 @@ on:
         description: Merge staging into master first? (y/N)
         required: false
         default: 'n'
+      targetenv:
+        type: choice
+        description: Target environment
+        options:
+        - csvalpha
+        - luxadmosam
+        default: 'csvalpha'
 
 concurrency:
   group: cd-${{ github.ref_name }}
@@ -20,9 +27,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Validate branch
+        env:
+          TARGET_ENV: ${{ github.event.inputs.targetenv }}
         run: |
           if [ "$GITHUB_REF_NAME" != 'staging' ] && [ "$GITHUB_REF_NAME" != 'master' ]; then
             echo 'This workflow can only be run on branches staging and master.'
+            exit 1
+          fi
+          if [ "$GITHUB_REF_NAME" != 'master' ] && [ "$TARGET_ENV" == 'luxadmosam' ]; then
+            echo 'Only the master branch can be deployed to Lux ad Mosam.'
             exit 1
           fi
 
@@ -52,7 +65,11 @@ jobs:
               fi
             fi
 
-            echo 'stage=production' >> "$GITHUB_OUTPUT"
+            if [ "$TARGET_ENV" == 'luxadmosam' ]; then
+              echo 'stage=luxproduction' >> "$GITHUB_OUTPUT"
+            else
+              echo 'stage=production' >> "$GITHUB_OUTPUT"
+            fi
           else
             echo 'stage=staging' >> "$GITHUB_OUTPUT"
           fi
@@ -131,7 +148,9 @@ jobs:
       - name: Get environment URL
         id: get_url
         run: |
-          if [ "$GITHUB_REF_NAME" = 'master' ]; then
+          if [ "$GITHUB_REF_NAME" = 'master' ] && [ "$TARGET_ENV" == 'luxadmosam' ]; then
+            echo 'environment_url=https://luxstreep.csvalpha.nl' >> "$GITHUB_OUTPUT"
+          elif [ "$GITHUB_REF_NAME" = 'master' ]; then
             echo 'environment_url=https://streep.csvalpha.nl' >> "$GITHUB_OUTPUT"
           else
             echo 'environment_url=https://stagingstreep.csvalpha.nl' >> "$GITHUB_OUTPUT"

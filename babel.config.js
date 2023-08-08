@@ -1,8 +1,8 @@
 module.exports = function(api) {
-  var validEnv = ['development', 'test', 'production']
+  var validEnv = ['development', 'test', 'production', 'luxproduction']
   var currentEnv = api.env()
   var isDevelopmentEnv = api.env('development')
-  var isProductionEnv = api.env('production')
+  var isProductionEnv = api.env('production') || api.env('luxproduction')
   var isTestEnv = api.env('test')
 
   if (!validEnv.includes(currentEnv)) {

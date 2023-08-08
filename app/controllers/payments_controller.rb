@@ -22,8 +22,14 @@ class PaymentsController < ApplicationController
     end
   end
 
-  def add
+  def add # rubocop:disable Metrics/AbcSize
     authorize :payment
+
+    if Rails.application.config.x.mollie_api_key.blank?
+      flash[:error] = 'iDEAL is niet beschikbaar'
+      redirect_to users_path
+      return
+    end
 
     @user = current_user
     @payment = Payment.new

@@ -46,11 +46,13 @@
               <%= fa_icon 'shopping-cart', class: 'me-2', text: 'Facturen' %>
             <% end %>
           </li>
-          <li class="nav-item">
-            <%= nav_link payments_path, class: 'nav-link' do %>
-              <%= fa_icon 'credit-card', class: 'me-2', text: 'Betalingen' %>
-            <% end %>
-          </li>
+          <% if policy(Payment).index? %>
+            <li class="nav-item">
+              <%= nav_link payments_path, class: 'nav-link' do %>
+                <%= fa_icon 'credit-card', class: 'me-2', text: 'Betalingen' %>
+              <% end %>
+            </li>
+          <% end %>
           <li class="nav-item">
             <%= nav_link finance_overview_index_path, class: 'nav-link' do %>
               <%= fa_icon 'money', class: 'me-2', text: 'Financien' %>

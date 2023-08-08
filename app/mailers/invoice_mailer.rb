@@ -1,9 +1,13 @@
 class InvoiceMailer < ApplicationMailer
-  def invoice_mail(invoice) # rubocop:disable Metrics/AbcSize
+  def invoice_mail(invoice) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @user = Struct.new(:name).new(invoice.name)
     @invoice = invoice
-    @cab_link = url_for(controller: 'invoices', action: 'show', id: invoice.token)
-    @cab_text = 'iDeal betaling'
+    if Rails.application.config.x.mollie_api_key.present?
+      @cab_link = url_for(controller: 'invoices', action: 'show', id: invoice.token)
+      @cab_text = 'iDeal betaling'
+    else
+      @cab_disabled = true
+    end
 
     attachments["#{invoice.human_id}.pdf"] = WickedPdf.new.pdf_from_string(
       render_to_string(pdf: invoice.human_id.to_s, template: 'invoices/show.html.erb', layout: 'pdf.html.erb')

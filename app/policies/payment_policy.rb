@@ -1,17 +1,21 @@
 class PaymentPolicy < ApplicationPolicy
   def index?
-    user.treasurer?
+    mollie_enabled? && user.treasurer?
   end
 
   def create?
-    user
+    mollie_enabled? && user
   end
 
   def add?
-    user
+    mollie_enabled? && user
   end
 
   def invoice_callback?
-    record && !record.completed?
+    mollie_enabled? && record && !record.completed?
+  end
+
+  def mollie_enabled?
+    Rails.application.config.x.mollie_api_key.present?
   end
 end
