@@ -64,6 +64,7 @@ module Sofia
 
     config.x.site_name            = ENV.fetch('SITE_NAME', 'S.O.F.I.A.')
     config.x.site_short_name      = ENV.fetch('SITE_SHORT_NAME', 'SOFIA')
+    config.x.site_long_name       = ENV.fetch('SITE_LONG_NAME', 'Streepsysteem voor de Ordentelijke Festiviteiten van Inleggend Alpha')
     config.x.site_association     = ENV.fetch('SITE_ASSOCIATION', 'C.S.V. Alpha')
 
     config.x.code_beer            = ENV.fetch('CODE_BEER', nil)
