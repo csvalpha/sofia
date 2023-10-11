@@ -42,7 +42,7 @@ RUN yarn install --immutable
 COPY . /app/
 
 # Precompile assets after copying app because whole Rails pipeline is needed.
-RUN if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ]; then \
+RUN if [ "$RAILS_ENV" = 'test' ] || [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ]; then \
     SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile; \
   else \
     echo "Skipping assets:precompile"; \
