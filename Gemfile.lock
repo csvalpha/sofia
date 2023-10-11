@@ -221,7 +221,7 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
-libv8-node (16.10.0.0)
+    libv8-node (16.10.0.0)
     libv8-node (16.10.0.0-x86_64-linux)
     listen (3.7.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
@@ -585,8 +585,8 @@ DEPENDENCIES
   kaminari (~> 1.2.0)
   listen
   mina (~> 1.2.0)
-  mollie-api-ruby (~> 4.7.0)
   mini_racer (~> 0.6.0)
+  mollie-api-ruby (~> 4.7.0)
   net-imap
   net-pop
   net-smtp
