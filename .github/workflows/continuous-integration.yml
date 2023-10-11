@@ -119,7 +119,7 @@ jobs:
       - name: Test
         run: |
           docker run \
-            -e POSTGRES_USER=postgres \
-            -e POSTGRES_PASSWORD=postgres \
-            --network=host \
-            app bin/ci.sh spec
+          -e POSTGRES_USER=postgres \
+          -e POSTGRES_PASSWORD=postgres \
+          --network=host \
+          app bin/ci.sh spec
