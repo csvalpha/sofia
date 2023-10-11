@@ -71,19 +71,19 @@ jobs:
 
       - name: Lint
         run: |
-            EXIT_STATUS=0
-            ./actionlint \
-              -ignore 'property "gh_app_private_key" is not defined' \
-              -ignore 'SC2153:' \
-              -ignore 'property "sha" is not defined in object type {}' || \
-              EXIT_STATUS=$?
-            docker run \
-              -e POSTGRES_USER \
-              -e POSTGRES_PASSWORD \
-              --network=host \
-              app bin/ci.sh lint || \
-              EXIT_STATUS=$?
-            exit $EXIT_STATUS
+          EXIT_STATUS=0
+          ./actionlint
+            -ignore 'property "gh_app_private_key" is not defined'
+            -ignore 'SC2153:'
+            -ignore 'property "sha" is not defined in object type {}' ||
+            EXIT_STATUS=$?
+          docker run
+            -e POSTGRES_USER
+            -e POSTGRES_PASSWORD
+            --network=host
+            app bin/ci.sh lint ||
+            EXIT_STATUS=$?
+          exit $EXIT_STATUS
 
   test:
     name: Test
@@ -116,8 +116,8 @@ jobs:
 
       - name: Test
         run: |
-            docker run \
-              -e POSTGRES_USER \
-              -e POSTGRES_PASSWORD \
-              --network=host \
-              app bin/ci.sh spec
+          docker run
+            -e POSTGRES_USER
+            -e POSTGRES_PASSWORD
+            --network=host
+            app bin/ci.sh spec
