@@ -27,11 +27,11 @@ ARG NODE_ENV='production'
 
 # Pre-install gems, so that they can be cached.
 COPY Gemfile* /app/
-RUN if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ]; then \
-    bundle config set --local without 'development test'; \
-  else \
-    bundle config set --local without 'development'; \
-  fi
+# RUN if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ]; then \
+#     bundle config set --local without 'development test'; \
+#   else \
+#     bundle config set --local without 'development'; \
+#   fi
 RUN bundle install
 
 # Pre-install npm packages, so that they can be cached.
