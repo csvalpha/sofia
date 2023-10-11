@@ -12,10 +12,6 @@ on:
         required: false
         type: string
 
-env:
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: postgres
-
 jobs:
   build:
     name: Build
@@ -41,6 +37,9 @@ jobs:
     services:
       db:
         image: postgres:14.7
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -78,8 +77,8 @@ jobs:
             -ignore 'property "sha" is not defined in object type {}' ||
             EXIT_STATUS=$?
           docker run
-            -e POSTGRES_USER
-            -e POSTGRES_PASSWORD
+            -e POSTGRES_USER=postgres
+            -e POSTGRES_PASSWORD=postgres
             --network=host
             app bin/ci.sh lint ||
             EXIT_STATUS=$?
@@ -92,6 +91,9 @@ jobs:
     services:
       db:
         image: postgres:14.7
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -117,7 +119,7 @@ jobs:
       - name: Test
         run: |
           docker run
-            -e POSTGRES_USER
-            -e POSTGRES_PASSWORD
+            -e POSTGRES_USER=postgres
+            -e POSTGRES_PASSWORD=postgres
             --network=host
             app bin/ci.sh spec
