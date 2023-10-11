@@ -248,7 +248,7 @@ libv8-node (16.10.0.0)
       rake
     mini_mime (1.1.5)
     mini_portile2 (2.8.4)
-mini_racer (0.6.2)
+    mini_racer (0.6.2)
       libv8-node (~> 16.10.0.0)
     minitest (5.20.0)
     mollie-api-ruby (4.7.1)
@@ -586,6 +586,7 @@ DEPENDENCIES
   listen
   mina (~> 1.2.0)
   mollie-api-ruby (~> 4.7.0)
+  mini_racer (~> 0.6.0)
   net-imap
   net-pop
   net-smtp
