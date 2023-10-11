@@ -11,10 +11,6 @@ on:
         description: The commit SHA to run the workflow on
         required: false
         type: string
-    secrets:
-      rails_master_key:
-        description: The Rails master key
-        required: true
 
 jobs:
   build:
@@ -73,14 +69,19 @@ jobs:
           name: app
 
       - name: Lint
-        env:
-          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
         run: |
           EXIT_STATUS=0
-          ./actionlint -ignore 'property "gh_app_private_key" is not defined' -ignore 'SC2153:' \
-            -ignore 'property "sha" is not defined in object type {}' || EXIT_STATUS=$?
-          docker run -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_HOST=localhost -e \
-            RAILS_MASTER_KEY --network=host app bin/ci.sh lint || EXIT_STATUS=$?
+          ./actionlint \
+            -ignore 'property "gh_app_private_key" is not defined' \
+            -ignore 'SC2153:' \
+            -ignore 'property "sha" is not defined in object type {}' \
+            || EXIT_STATUS=$?
+          docker run \
+            -e POSTGRES_USER=postgres \
+            -e POSTGRES_PASSWORD=postgres \
+            -e POSTGRES_HOST=localhost \
+            --network=host \
+            app bin/ci.sh lint || EXIT_STATUS=$?
           exit $EXIT_STATUS
 
   test:
@@ -116,8 +117,10 @@ jobs:
           name: app
 
       - name: Test
-        env:
-          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
         run: |
-          docker run -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_HOST=localhost -e \
-            RAILS_MASTER_KEY --network=host app bin/ci.sh spec
+          docker run \
+            -e POSTGRES_USER=postgres \
+            -e POSTGRES_PASSWORD=postgres \
+            -e POSTGRES_HOST=localhost
+            --network=host \
+            app bin/ci.sh spec
