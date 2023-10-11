@@ -79,6 +79,7 @@ jobs:
           docker run \
           -e POSTGRES_USER=postgres \
           -e POSTGRES_PASSWORD=postgres \
+          -e POSTGRES_HOST=localhost \
           --network=host \
           app bin/ci.sh lint || \
           EXIT_STATUS=$?
@@ -121,5 +122,6 @@ jobs:
           docker run \
           -e POSTGRES_USER=postgres \
           -e POSTGRES_PASSWORD=postgres \
+          -e POSTGRES_HOST=localhost \
           --network=host \
           app bin/ci.sh spec
