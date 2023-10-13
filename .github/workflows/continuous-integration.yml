@@ -15,6 +15,9 @@ on:
       rails_master_key:
         description: The Rails master key
         required: true
+      codecov_token:
+        description: Token for uploading Codecov reports
+        required: true
 
 jobs:
   build:
