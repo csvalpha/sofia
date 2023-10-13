@@ -121,7 +121,7 @@ jobs:
         run: |
           mkdir coverage
           docker run -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_HOST=localhost -e \
-            RAILS_MASTER_KEY --network=host -v "$(pwd)"'/coverage:/opt/app/coverage' app bin/ci.sh spec
+            RAILS_MASTER_KEY --network=host -v "$(pwd)"'/coverage:/app/coverage' app bin/ci.sh spec
 
       - name: Upload coverage report to Codecov
         if: ${{ !cancelled() }}
@@ -136,3 +136,4 @@ jobs:
         with:
           name: coverage
           path: coverage/
+          if-no-files-found: error
