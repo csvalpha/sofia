@@ -5,20 +5,14 @@ on:
     - cron: '0 0 * * 1' # https://crontab.guru/#0_0_*_*_1
   workflow_dispatch:
 
-env:
-  IMAGE_NAMES: sofia
-
 jobs:
   cleanup:
     name: Cleanup
     runs-on: ubuntu-latest
     steps:
-      - name: Delete old versions
-        uses: snok/container-retention-policy@f617f1ca161a52bce48417eedd76924e71d0b4d9 # v2.1.0
+      - name: Delete untagged images
+        uses: actions/delete-package-versions@0d39a63126868f5eefaa47169615edd3c0f61e20 # v4.1.1
         with:
-          image-names: ${{ env.IMAGE_NAMES }}
-          cut-off: 2 days ago UTC
-          account-type: org
-          org-name: ${{ github.repository_owner }}
-          skip-tags: latest,staging
-          token: ${{ secrets.GH_PAT }}
+          package-name: ${{ github.event.repository.name }}
+          package-type: container
+          delete-only-untagged-versions: true
