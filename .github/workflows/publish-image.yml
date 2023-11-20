@@ -10,9 +10,6 @@ on:
         required: false
         type: string
     secrets:
-      rails_master_key:
-        description: The Rails master key
-        required: true
       sentry_auth_token:
         description: The Sentry integration's token
         required: true
@@ -73,8 +70,6 @@ jobs:
           push: true
           context: .
           build-args: ${{ needs.metadata.outputs.build_args }}
-          secrets: |
-            rails_master_key=${{ secrets.RAILS_MASTER_KEY }}
           cache-from: type=gha,scope=main
           cache-to: type=gha,scope=main
           tags: |
