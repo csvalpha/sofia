@@ -11,8 +11,8 @@ on:
         type: choice
         description: Target environment
         options:
-        - csvalpha
-        - luxadmosam
+          - csvalpha
+          - luxadmosam
         default: 'csvalpha'
 
 concurrency:
