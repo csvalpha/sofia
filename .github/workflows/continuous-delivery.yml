@@ -7,7 +7,7 @@ on:
         description: Merge staging into master first? (y/N)
         required: false
         default: 'n'
-      targetenv:
+      target_env:
         type: choice
         description: Target environment
         options:
@@ -28,7 +28,7 @@ jobs:
     steps:
       - name: Validate branch
         env:
-          TARGET_ENV: ${{ github.event.inputs.targetenv }}
+          TARGET_ENV: ${{ github.event.inputs.target_env }}
         run: |
           if [ "$GITHUB_REF_NAME" != 'staging' ] && [ "$GITHUB_REF_NAME" != 'master' ]; then
             echo 'This workflow can only be run on branches staging and master.'
@@ -54,6 +54,7 @@ jobs:
         id: get_metadata
         env:
           INPUT_MERGE: ${{ github.event.inputs.merge }}
+          TARGET_ENV: ${{ github.event.inputs.target_env }}
         run: |
           if [ "$GITHUB_REF_NAME" = 'master' ]; then
             if [ "${INPUT_MERGE,,}" = 'y' ]; then
@@ -147,8 +148,10 @@ jobs:
     steps:
       - name: Get environment URL
         id: get_url
+        env:
+          TARGET_ENV: ${{ github.event.inputs.target_env }}
         run: |
-          if [ "$GITHUB_REF_NAME" = 'master' ] && [ "$TARGET_ENV" == 'luxadmosam' ]; then
+          if [ "$TARGET_ENV" == 'luxadmosam' ] && [ "$GITHUB_REF_NAME" = 'master' ]; then
             echo 'environment_url=https://luxstreep.csvalpha.nl' >> "$GITHUB_OUTPUT"
           elif [ "$GITHUB_REF_NAME" = 'master' ]; then
             echo 'environment_url=https://streep.csvalpha.nl' >> "$GITHUB_OUTPUT"

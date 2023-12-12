@@ -1,12 +1,14 @@
 <% content_for :title, "Factuur #{@invoice.human_id} - #{Rails.application.config.x.site_name}" %>
-
+<% show_flux_image = Rails.application.config.x.company_name == "Stichting Sociëteit Flux" %>
 
 <div id="activity" class="container footer-padding">
   <div class="row justify-content-between">
-    <div class="col-sm-4">
-      <%= image_tag '/images/flux_logo.png', class: 'col-4 offset-4 col-sm-12 offset-sm-0 col-lg-8 offset-lg-2' %>
-    </div>
-    <div class="col-sm-8 py-2">
+    <% if show_flux_image %>
+      <div class="col-sm-4">
+          <%= image_tag '/images/flux_logo.png', class: 'col-4 offset-4 col-sm-12 offset-sm-0 col-lg-8 offset-lg-2' %>
+      </div>
+    <% end %>
+    <div class="<%= if show_flux_image then 'col-sm-8' else 'col-12' end %> flex-grow-1 py-2">
       <h3><%= Rails.application.config.x.company_name %></h3>
       <b>
         <%= Rails.application.config.x.company_website %> <br/>
