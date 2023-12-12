@@ -34,7 +34,7 @@ jobs:
             echo 'This workflow can only be run on branches staging and master.'
             exit 1
           fi
-          if [ "$GITHUB_REF_NAME" != 'master' ] && [ "$TARGET_ENV" == 'luxadmosam' ]; then
+          if [ "$TARGET_ENV" == 'luxadmosam' ] && [ "$GITHUB_REF_NAME" != 'master' ]; then
             echo 'Only the master branch can be deployed to Lux ad Mosam.'
             exit 1
           fi
