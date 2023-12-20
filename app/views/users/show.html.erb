@@ -1,4 +1,4 @@
-<% content_for :title, "Gebruiker #{@user.name} - SOFIA" %>
+<% content_for :title, "Gebruiker #{@user.name} - #{Rails.application.config.x.site_name}" %>
 <% content_for :modal do %>
   <%= render 'mutation_modal' %>
   <%= render 'modal' %>

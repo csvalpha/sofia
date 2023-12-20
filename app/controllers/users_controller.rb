@@ -75,7 +75,7 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
       find_or_create_user(user_json)
     end
 
-    users_not_in_json = User.active.in_amber.where.not(uid: users_json.pluck('id'))
+    users_not_in_json = User.active.in_amber.where.not(uid: users_json.pluck('id')).where.not(name: 'Streepsysteem Flux')
     users_not_in_json.each(&:archive!)
 
     send_slack_users_refresh_notification

@@ -45,6 +45,10 @@ module Sofia
     config.x.healthcheck_ids      = credentials.dig(Rails.env.to_sym, :healthcheck_ids)
     config.x.mollie_api_key       = credentials.dig(Rails.env.to_sym, :mollie_api_key)
 
+    config.x.authorize_url        = ENV.fetch('AUTHORIZE_URL', '/oauth/authorize')
+    config.x.token_url            = ENV.fetch('TOKEN_URL', '/api/v1/oauth/token')
+    config.x.me_url               = ENV.fetch('ME_URL', '/api/v1/users?filter[me]&include="active_groups"')
+
     config.x.from_email           = ENV.fetch('FROM_EMAIL', 'noreply@example.com')
     config.x.ict_email            = ENV.fetch('ICT_EMAIL', 'ict@example.com')
     config.x.admin_email          = ENV.fetch('ADMIN_EMAIL', 'admin@example.com')
@@ -57,5 +61,21 @@ module Sofia
     config.x.company_address      = ENV.fetch('COMPANY_ADDRESS', nil)
     config.x.company_website      = ENV.fetch('COMPANY_WEBSITE', nil)
     config.x.company_kvk          = ENV.fetch('COMPANY_KVK', nil)
+
+    config.x.site_name            = ENV.fetch('SITE_NAME', 'S.O.F.I.A.')
+    config.x.site_short_name      = ENV.fetch('SITE_SHORT_NAME', 'SOFIA')
+    config.x.site_association     = ENV.fetch('SITE_ASSOCIATION', 'C.S.V. Alpha')
+
+    config.x.code_beer            = ENV.fetch('CODE_BEER', nil)
+    config.x.code_craft_beer      = ENV.fetch('CODE_CRAFT_BEER', nil)
+    config.x.code_non_alcoholic   = ENV.fetch('CODE_NON_ALCOHOLIC', nil)
+    config.x.code_distilled       = ENV.fetch('CODE_DISTILLED', nil)
+    config.x.code_wine            = ENV.fetch('CODE_WINE', nil)
+    config.x.code_food            = ENV.fetch('CODE_FOOD', nil)
+    config.x.code_tobacco         = ENV.fetch('CODE_TOBACCO', nil)
+    config.x.code_donation        = ENV.fetch('CODE_DONATION', nil)
+    config.x.code_credit_mutation = ENV.fetch('CODE_CREDIT_MUTATION', nil)
+    config.x.code_cash            = ENV.fetch('CODE_CASH', nil)
+    config.x.code_pin             = ENV.fetch('CODE_PIN', nil)
   end
 end
