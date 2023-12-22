@@ -10,7 +10,7 @@ class InvoiceMailer < ApplicationMailer
     end
 
     attachments["#{invoice.human_id}.pdf"] = WickedPdf.new.pdf_from_string(
-      render_to_string(pdf: invoice.human_id.to_s, template: 'invoices/show.html.erb', layout: 'pdf.html.erb')
+      render_to_string(pdf: invoice.human_id.to_s, template: 'invoices/show', layout: 'pdf')
     )
 
     mail to: @invoice.email, subject: "Factuur #{invoice.human_id} #{Rails.application.config.x.company_name}"
