@@ -52,6 +52,7 @@ module Sofia
     config.x.from_email           = ENV.fetch('FROM_EMAIL', 'noreply@example.com')
     config.x.ict_email            = ENV.fetch('ICT_EMAIL', 'ict@example.com')
     config.x.admin_email          = ENV.fetch('ADMIN_EMAIL', 'admin@example.com')
+    config.x.treasurer_title      = ENV.fetch('TREASURER_TITLE', 'penningmeester')
     config.x.treasurer_email      = ENV.fetch('TREASURER_EMAIL', 'treasurer@example.com')
     config.x.treasurer_name       = ENV.fetch('TREASURER_NAME', nil)
     config.x.treasurer_phone      = ENV.fetch('TREASURER_PHONE', nil)
