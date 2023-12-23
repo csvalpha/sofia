@@ -5,7 +5,8 @@ def seed_products # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metri
   products_beer = ['Bier (glas)', 'Bier (pul)', 'Bier (pitcher)', '12+1']
   products_craft_beer = ['Speciaalbier', 'Speciaalbier (pul)']
   products_non_alcoholic = ['Fris', 'Fris (klein)', 'Red Bull']
-  products_distilled = ['Sterke drank', 'Dure Whisky', 'Weduwe Joustra Beerenburg']
+  products_distilled = ['Sterke drank', 'Weduwe Joustra Beerenburg']
+  products_whiskey = ['Whiskey', 'Dure Whisky']
   products_wine = ['Wijn (glas)', 'Wijn (fles)']
   products_food = ['Tosti', 'Nootjes', 'Chips']
   products_tobacco = ['Sigaar', 'Sigaar (duur)']
@@ -26,6 +27,10 @@ def seed_products # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metri
 
   products_distilled.each do |name|
     products << Product.create(name: name, category: :distilled)
+  end
+
+  products_whiskey.each do |name|
+    products << Product.create(name: name, category: :whiskey)
   end
 
   products_wine.each do |name|

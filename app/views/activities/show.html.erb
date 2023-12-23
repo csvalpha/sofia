@@ -141,15 +141,17 @@
                   </thead>
                   <tbody class="table-group-divider">
                   <% Product.categories.each do |category| %>
-                    <tr>
-                      <td><%= t(category.first).capitalize %>
-                      </td>
-                      <td><%= t("codes.#{category.first}") %>
-                      </td>
-                      <td class="text-end">
-                        <%= number_to_currency(@revenue_by_category[category[0]] || 0, unit: '€') %>
-                      </td>
-                    </tr>
+                    <% if Rails.application.config.x.codes[category.first.to_sym] != nil %>
+                      <tr>
+                        <td><%= t(category.first).capitalize %>
+                        </td>
+                        <td><%= Rails.application.config.x.codes[category.first.to_sym] %>
+                        </td>
+                        <td class="text-end">
+                          <%= number_to_currency(@revenue_by_category[category[0]] || 0, unit: '€') %>
+                        </td>
+                      </tr>
+                    <% end %>
                   <% end %>
                   <tr>
                     <th class="ps-4" scope="row">Totaal opbrengsten</th>
@@ -175,7 +177,7 @@
                   <tbody class="table-group-divider">
                   <tr>
                     <td>Inleg Zatladder Inlegsysteem</td>
-                    <td><%= t('codes.credit_mutation') %>                    </td>
+                    <td><%= Rails.application.config.x.codes[:credit_mutation] %></td>
                     <td></td>
                     <td class="text-end">
                       <%= number_to_currency(@credit_mutations_total, unit: '€') %>
@@ -193,19 +195,19 @@
                         Totaal kas
                       </strong>
                     </td>
-                    <td><%= t('codes.cash') %></td>
+                    <td><%= Rails.application.config.x.codes[:cash] %></td>
                     <td class="text-end"><%= number_to_currency(@cash_total, unit: '€') %></td>
                     <td></td>
                   </tr>
                   <tr>
                     <td>Omzet Pin</td>
-                    <td><%= t('codes.pin') %></td>
+                    <td><%= Rails.application.config.x.codes[:pin] %></td>
                     <td class="text-end"><%= number_to_currency(@revenue_with_pin, unit: '€') %></td>
                     <td></td>
                   </tr>
                   <tr>
                     <td>Omzet Zatladder Inlegsysteem</td>
-                    <td><%= t('codes.credit_mutation') %></td>
+                    <td><%= Rails.application.config.x.codes[:credit_mutation] %></td>
                     <td class="text-end"><%= number_to_currency(@revenue_with_credit, unit: '€') %></td>
                     <td></td>
                   </tr>
