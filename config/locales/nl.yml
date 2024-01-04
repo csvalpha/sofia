@@ -10,9 +10,11 @@ nl:
       time_only: '%H:%M'
 
   beer: 'bier'
+  low_alcohol_beer: 'alcoholarm bier'
   craft_beer: 'speciaalbier'
   non_alcoholic: 'niet-alcoholisch'
   distilled: 'gedestilleerd'
+  whiskey: 'whiskey'
   wine: 'wijn'
   food: 'etenswaren'
   tobacco: 'rookwaren'
@@ -25,19 +27,6 @@ nl:
   canceled: 'geanuleerd'
   expired: 'verlopen'
   sent: 'verstuurd'
-
-  codes:
-    beer: 8010
-    craft_beer: 8015
-    non_alcoholic: 8020
-    distilled: 8030
-    wine: 8040
-    food: 8050
-    tobacco: 8060
-    donation: 2095
-    credit_mutation: '0610'
-    cash: 1000
-    pin: 2060
 
   views:
     pagination:

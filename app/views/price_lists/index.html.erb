@@ -57,8 +57,10 @@
               <div class="d-flex">
                 <select class="form-select flex-grow-1" v-model="product.category">
                   <% Product.categories.each do |category| %>
-                    <%= content_tag :option, value: category.first do %>
-                      <%= t category.first %>
+                    <% if Rails.application.config.x.codes[category.first.to_sym] != nil %>
+                      <%= content_tag :option, value: category.first do %>
+                        <%= t category.first %>
+                      <% end %>
                     <% end %>
                   <% end %>
                 </select>
