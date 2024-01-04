@@ -11,3 +11,6 @@ production: &production
 
 staging:
   <<: *production
+
+luxproduction:
+  <<: *production

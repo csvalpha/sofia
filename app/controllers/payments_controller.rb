@@ -22,8 +22,14 @@ class PaymentsController < ApplicationController
     end
   end
 
-  def add
+  def add # rubocop:disable Metrics/AbcSize
     authorize :payment
+
+    if Rails.application.config.x.mollie_api_key.blank?
+      flash[:error] = 'iDEAL is niet beschikbaar'
+      redirect_to users_path
+      return
+    end
 
     @user = current_user
     @payment = Payment.new
@@ -39,7 +45,9 @@ class PaymentsController < ApplicationController
     end
 
     if payment.completed?
-      flash[:error] = 'Deze betaling is al gesloten. Mocht het bedrag niet bij uw inleg staan neem dan contact op met de penningmeester.'
+      flash[:error] =
+        "Deze betaling is al gesloten. Mocht het bedrag niet bij uw inleg staan
+          neem dan contact op met de #{Rails.application.config.x.treasurer_title}"
     else
       tries = 3
       begin
@@ -47,8 +55,8 @@ class PaymentsController < ApplicationController
         if payment.mollie_payment.paid?
           flash[:success] = 'iDEAL betaling geslaagd'
         else
-          flash[:error] = 'Uw iDEAL betaling is mislukt.
-                            Mocht het bedrag wel van uw rekening zijn gegaan neem dan contact op met de penningmeester'
+          flash[:error] = "Uw iDEAL betaling is mislukt. Mocht het bedrag wel van uw rekening zijn gegaan
+                            neem dan contact op met de #{Rails.application.config.x.treasurer_title}"
         end
       rescue ActiveRecord::StaleObjectError => e
         raise e unless (tries -= 1).positive?

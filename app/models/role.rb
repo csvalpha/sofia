@@ -7,7 +7,7 @@ class Role < ApplicationRecord
 
   def name
     if treasurer?
-      'Penningmeester'
+      Rails.application.config.x.treasurer_title
     elsif main_bartender?
       'Hoofdtapper'
     end
