@@ -7,7 +7,7 @@ class Role < ApplicationRecord
 
   def name
     if treasurer?
-      Rails.application.config.x.treasurer_title
+      Rails.application.config.x.treasurer_title.capitalize
     elsif main_bartender?
       'Hoofdtapper'
     end
