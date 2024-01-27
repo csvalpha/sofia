@@ -97,7 +97,7 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     options = { grant_type: 'client_credentials',
                 client_id: Rails.application.config.x.amber_client_id,
                 client_secret: Rails.application.config.x.amber_client_secret }
-    token_response = RestClient.post "#{Rails.application.config.x.amber_api_url}/api/v1/oauth/token", options
+    token_response = RestClient.post "#{Rails.application.config.x.amber_api_url}#{Rails.application.config.x.token_url}", options
 
     @token = JSON.parse(token_response)['access_token']
   end
