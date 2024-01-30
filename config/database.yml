@@ -9,6 +9,7 @@ default: &default
 development:
   <<: *default
   database: sofia_development
+  port: <%= ENV.fetch('POSTGRES_PORT', '5432') %>
 
 test:
   <<: *default
