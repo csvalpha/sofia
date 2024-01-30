@@ -32,7 +32,7 @@ Otherwise, you need the following prerequisites installed:
 ### With Docker
 *Note that on Windows `docker compose` in each command needs to be replaced with `docker-compose`*
 
-1. Copy `.env.example` to `.env` with `cp .env.example .env` and edit the values where necessary
+1. Copy `.env.example` to `.env` and edit the values where necessary
 1. Build the project using `docker compose -f docker-compose.development.yml build --build-arg RAILS_ENV=development --build-arg NODE_ENV=development`. This will install the dependencies and set up the image. If dependencies are updated/added, you need to run this command again.
 1. Create databases and tables and run seeds with `bundle exec rails db:setup` (see tip on how to run commands in the container).
 
@@ -48,7 +48,7 @@ docker compose -f docker-compose.development.yml run sofia bundle exec rspec
 ```
 
 ### Without Docker
-1. Copy `.env.example` to `.env` with `cp .env.example .env` and edit the values where necessary
+1. Copy `.env.example` to `.env` and edit the values where necessary
 1. Build the project using:
     1. `bundle install` (might take a couple of minutes)
     1. `yarn`
@@ -56,18 +56,18 @@ docker compose -f docker-compose.development.yml run sofia bundle exec rspec
 1. (When you want to use the invoice module) Follow https://github.com/zakird/wkhtmltopdf_binary_gem#installation-and-usage
 
 ### Building updated frontend
-Webpacker automatically detects changes and rebuilds any changes made to the frontend of SOFIA when SOFIA is refresed in the browser. If it does not detect your changes, delete the `tmp/cache/webpacker/last-compilation-digest-development` file and refresh SOFIA in your browser to force it to rebuild.
+Webpacker automatically detects changes and rebuilds any changes made to the frontend when SOFIA is refresed in the browser. If it does not detect your changes, delete the `tmp/cache/webpacker/last-compilation-digest-development` file and refresh SOFIA in your browser to force it to rebuild.
 
 ### Credentials
 
-Before you can start the application you will need the `master.key`. Ask a fellow developer for it, or pull it from the server via ssh.
+Before you can start the application you will need to put the `master.key` in the `config` folder. Ask a fellow developer for it, or pull it from the server via ssh.
 
 When the `master.key` is present, you can use `bundle exec rails credentials:edit` to open the default editor on your machine to read and edit the credentials. Be informed: these are production credentials so be careful.
 
 [Read more about Rails credentials on EngineYard.com.](https://www.engineyard.com/blog/rails-encrypted-credentials-on-rails-5.2)
 
 #### With Docker
-The docker container does not contain any editor so do the following instead:
+The docker container does not contain any editor so you need to temporarily install one in the container to edit the credentials:
 1. Run `docker compose -f docker-compose.development.yml run sofia sh` to connect to the container
 2. In there, run `apt install nano` (or any other editor of your choice, it will deleted again when you close the connection to the container)
 3. Then run `EDITOR="nano" bundle exec rails credentials:edit`
@@ -109,7 +109,7 @@ Role.create(role_type: :main_bartender, group_uid: 2)
 ```
 
 Tip:
-users with the `treasurer` role can see all pages on SOFIA. Since this one is linked to `group_uid: 3` in the development and staging versions of SOFIA, which corresponds to the group *Bestuur* on amber-ui, you can add yourself to that group on amber-ui to see all pages on SOFIA. In production the roles are linked to different groups and you would have to ask the actual treasurer for permission as the production version contains sensitive data.
+users with the `treasurer` role can see all pages on SOFIA. Since this role is linked to `group_uid: 3` in the development and staging versions of SOFIA, which corresponds to the group *Bestuur* on amber-ui, you can add yourself to that group to see all pages on SOFIA. Do not do this in the production version of SOFIA, as that one contains sensitive (for the treasurer's eyes only) data.
 
 ## Usage
 If you're using Docker, you can run the project by using `docker compose -f docker-compose.development.yml up`, otherwise run `bundle exec rails server -p 5000` (port specified so it doesn't use the same as AMBER API).
