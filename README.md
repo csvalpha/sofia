@@ -9,8 +9,6 @@ The source code belonging to Alpha SOFIA. It is a system built with Ruby on Rail
 Use this repository to build upon, use as-is, learn from it, prove a point or whatever 😏
 
 ## Prerequisites
-
-## Prerequisites
 If you're going to run the project with Docker, you only need to install the following prerequisites:
 * [Docker Engine](https://docs.docker.com/get-docker/) 
 * [Docker Compose](https://docs.docker.com/compose/install/)
@@ -51,11 +49,14 @@ docker compose -f docker-compose.development.yml run sofia bundle exec rspec
 
 ### Without Docker
 1. Copy `.env.example` to `.env` with `cp .env.example .env` and edit the values where necessary
-1. Run the following commands:
+1. Build the project using:
     1. `bundle install` (might take a couple of minutes)
     1. `yarn`
-    1. `bundle exec rails db:setup`
+1. Create databases and tables and run seeds with `bundle exec rails db:setup`
 1. (When you want to use the invoice module) Follow https://github.com/zakird/wkhtmltopdf_binary_gem#installation-and-usage
+
+### Building updated frontend
+Webpacker automatically detects changes and rebuilds any changes made to the frontend of SOFIA when SOFIA is refresed in the browser. If it does not detect your changes, delete the `tmp/cache/webpacker/last-compilation-digest-development` file and refresh SOFIA in your browser to force it to rebuild.
 
 ### Credentials
 
@@ -68,9 +69,9 @@ When the `master.key` is present, you can use `bundle exec rails credentials:edi
 #### With Docker
 The docker container does not contain any editor so do the following instead:
 1. Run `docker compose -f docker-compose.development.yml run sofia sh` to connect to the container
-2. In there, run `apt install nano`
+2. In there, run `apt install nano` (or any other editor of your choice, it will deleted again when you close the connection to the container)
 3. Then run `EDITOR="nano" bundle exec rails credentials:edit`
-4. When done, press `ctrl+x` to save the credentials
+4. When done, save the file and close the editor
 5. Type `exit` to close the connection to the container
 
 #### Without Docker
@@ -83,7 +84,7 @@ $ EDITOR="code --wait" bundle exec rails credentials:edit
 ```
 
 ### OAuth configuration
-To be able to login into sofia
+To be able to login into SOFIA it needs to be registered as an application in AMBER API.
 
 In the AMBER API ([github.com/csvalpha/amber-api](https://github.com/csvalpha/amber-api)), execute the following command (in `rails console`):
 
@@ -93,7 +94,7 @@ app.uid
 app.plaintext_secret
 ```
 
-Next, copy the uid and plaintext secret to the `.env` in SOFIA (as `amber_client_id` and `amber_client_secret`).
+Next, copy the uid and plaintext secret to the `.env` in SOFIA (as `AMBER_CLIENT_ID` and `AMBER_CLIENT_SECRET` respectively).
 
 ### Configuring roles
 
@@ -108,7 +109,7 @@ Role.create(role_type: :main_bartender, group_uid: 2)
 ```
 
 Tip:
-users with the `treasurer` role can see all pages on SOFIA. Since this one is linked to `group_uid: 3` in the development and staging versions of SOFIA, which corresponds to the group *Bestuur* on amber-ui, you can add yourself to that group on amber-ui to see all pages on SOFIA.
+users with the `treasurer` role can see all pages on SOFIA. Since this one is linked to `group_uid: 3` in the development and staging versions of SOFIA, which corresponds to the group *Bestuur* on amber-ui, you can add yourself to that group on amber-ui to see all pages on SOFIA. In production the roles are linked to different groups and you would have to ask the actual treasurer for permission as the production version contains sensitive data.
 
 ## Usage
 If you're using Docker, you can run the project by using `docker compose -f docker-compose.development.yml up`, otherwise run `bundle exec rails server -p 5000` (port specified so it doesn't use the same as AMBER API).
