@@ -32,7 +32,7 @@ Otherwise, you need the following prerequisites installed:
 ### With Docker
 *Note that on Windows `docker compose` in each command needs to be replaced with `docker-compose`*
 
-1. Copy `.env.example` to `.env` and edit the values where necessary
+1. Copy `.env.example` to `.env` and edit the values where necessary.
 1. Build the project using `docker compose -f docker-compose.development.yml build --build-arg RAILS_ENV=development --build-arg NODE_ENV=development`. This will install the dependencies and set up the image. If dependencies are updated/added, you need to run this command again.
 1. Create databases and tables and run seeds with `bundle exec rails db:setup` (see tip on how to run commands in the container).
 
@@ -48,11 +48,11 @@ docker compose -f docker-compose.development.yml run sofia bundle exec rspec
 ```
 
 ### Without Docker
-1. Copy `.env.example` to `.env` and edit the values where necessary
+1. Copy `.env.example` to `.env` and edit the values where necessary.
 1. Build the project using:
     1. `bundle install` (might take a couple of minutes)
     1. `yarn`
-1. Create databases and tables and run seeds with `bundle exec rails db:setup`
+1. Create databases and tables and run seeds with `bundle exec rails db:setup`.
 1. (When you want to use the invoice module) Follow https://github.com/zakird/wkhtmltopdf_binary_gem#installation-and-usage
 
 ### Building updated frontend
@@ -68,11 +68,11 @@ When the `master.key` is present, you can use `bundle exec rails credentials:edi
 
 #### With Docker
 The docker container does not contain any editor so you need to temporarily install one in the container to edit the credentials:
-1. Run `docker compose -f docker-compose.development.yml run sofia sh` to connect to the container
-2. In there, run `apt install nano` (or any other editor of your choice, it will deleted again when you close the connection to the container)
-3. Then run `EDITOR="nano" bundle exec rails credentials:edit`
-4. When done, save the file and close the editor
-5. Type `exit` to close the connection to the container
+1. Run `docker compose -f docker-compose.development.yml run sofia sh` to connect to the container.
+2. Run `apt install nano` (or any other editor of your choice, it will deleted again when you close the connection to the container).
+3. Then run `EDITOR="nano" bundle exec rails credentials:edit` to edit the credentials.
+4. When done, save the file and close the editor.
+5. Type `exit` to close the connection to the container.
 
 #### Without Docker
 Tip: you can also use one of the following commands to use an editor of your choice:
