@@ -1,35 +1,35 @@
 @import 'theme_sofia';
 
-.price_lists_table {
-  max-height: calc(100vh - 18rem);
+.price-lists-table {
   width: fit-content;
+  max-height: calc(100vh - 18rem);
 
   .center-text {
     margin: 0 auto;
     text-align: center;
   }
 
-  .products-id, 
+  .products-id,
   .products-cancel-edit {
-    width: 1.75rem;
     left: 0;
+    width: 1.75rem;
   }
 
   .products-name {
-    width: 6rem; 
     left: 2.1rem;
+    width: 6rem;
   }
 
-  .products-actions, 
-  .products-new-edit-button, 
+  .products-actions,
+  .products-new-edit-button,
   .products-save-new {
     right: 0;
   }
 
-  .products-id, 
-  .products-cancel-edit, 
-  .products-name, 
-  .products-new-edit-button, 
+  .products-id,
+  .products-cancel-edit,
+  .products-name,
+  .products-new-edit-button,
   .products-save-new {
     position: sticky;
     z-index: 1;
@@ -42,10 +42,10 @@
   }
 
   thead  {
-    background-color: $body-bg;
     position: sticky;
     top: 0;
     z-index: 2;
+    background-color: $body-bg;
   }
 
   th {
