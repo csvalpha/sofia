@@ -63,7 +63,7 @@ class PriceListsController < ApplicationController
     authorize @price_list
 
     @price_list.archived_at = nil
-    
+
     respond_to do |format|
       if @price_list.save
         format.json { render json: @price_list.archived_at }
