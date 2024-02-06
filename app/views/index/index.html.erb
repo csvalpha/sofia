@@ -3,7 +3,7 @@
 
 <div class="container py-sm-3">
   <div class="row">
-    <% if current_user&.treasurer? || current_user&.main_bartender? %>
+    <% if current_user&.treasurer? || current_user&.main_bartender? || current_user&.secretary? %>
       <div class="col-12 col-md-6 mb-2">
         <div class="card">
           <h5 class="card-header">Welkom,  <%= current_user.name %>
@@ -49,7 +49,7 @@
                   </li>
                 <% end %>
               </ol>
-              <% if @current_activities&.any? %>
+              <% if policy(Activity).order_screen? && @current_activities&.any? %>
                 <hr/>
                 <h4 class="card-title text-center">
                   Direct naar het streepscherm

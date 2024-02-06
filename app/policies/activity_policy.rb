@@ -1,7 +1,7 @@
 class ActivityPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      if user&.treasurer?
+      if user&.treasurer? || user&.secretary?
         scope
       elsif user&.main_bartender?
         scope.not_locked
@@ -10,11 +10,11 @@ class ActivityPolicy < ApplicationPolicy
   end
 
   def create?
-    user&.treasurer? || user&.main_bartender?
+    user&.treasurer? || user&.main_bartender? || user&.secretary?
   end
 
   def update?
-    user&.treasurer? || user&.main_bartender?
+    user&.treasurer? || user&.main_bartender? || user&.secretary?
   end
 
   def lock?
@@ -26,7 +26,7 @@ class ActivityPolicy < ApplicationPolicy
   end
 
   def destroy?
-    user&.treasurer? || user&.main_bartender?
+    user&.treasurer? || user&.main_bartender? || user&.secretary?
   end
 
   def activity_report?
@@ -38,6 +38,6 @@ class ActivityPolicy < ApplicationPolicy
   end
 
   def product_totals?
-    user&.treasurer? || user&.main_bartender?
+    user&.treasurer? || user&.main_bartender? || user&.secretary?
   end
 end

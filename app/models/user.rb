@@ -65,6 +65,10 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
     @main_bartender ||= roles.where(role_type: :main_bartender).any?
   end
 
+  def secretary?
+    @secretary ||= roles.where(role_type: :secretary).any?
+  end
+
   def update_role(groups)
     roles_to_have = Role.where(group_uid: groups)
     roles_users_to_have = roles_to_have.map { |role| RolesUsers.find_or_create_by(role: role, user: self) }

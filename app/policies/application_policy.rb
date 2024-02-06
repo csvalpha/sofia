@@ -7,7 +7,7 @@ class ApplicationPolicy
   end
 
   def index?
-    user&.treasurer? || user&.main_bartender?
+    user&.treasurer? || user&.main_bartender? || user&.secretary?
   end
 
   def show?
@@ -31,7 +31,7 @@ class ApplicationPolicy
   end
 
   def destroy?
-    user&.treasurer? || user&.main_bartender?
+    user&.treasurer? || user&.main_bartender? || user&.secretary?
   end
 
   def scope

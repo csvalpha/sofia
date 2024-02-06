@@ -1,10 +1,10 @@
 class PriceListPolicy < ApplicationPolicy
   def index?
-    user&.treasurer? || user&.main_bartender?
+    user&.treasurer? || user&.main_bartender? || user&.secretary?
   end
 
   def show?
-    user&.treasurer? || user&.main_bartender?
+    user&.treasurer? || user&.main_bartender? || user&.secretary?
   end
 
   def create?

@@ -68,7 +68,7 @@
               </div>
             </div>
           <% end %>
-        <% else %>
+        <% elsif policy(Activity).order_screen? %>
           <p class="card-text">
             Je kan bestellingen plaatsen in het streepscherm.
           </p>
@@ -77,6 +77,12 @@
               Naar het streepscherm
               <%= fa_icon 'calculator', class: 'ms-1' %>
             <% end %>
+          </div>
+        <% else %>
+          <div class="card-text">
+            <div class="alert alert-success">
+              Op deze activiteit kan nog gestreept worden.
+            </div>
           </div>
         <% end %>
       </div>
@@ -243,7 +249,13 @@
                   <tr>
                     <th scope="row"><%= mutation.id %></th>
                     <td><%= l mutation.created_at, format: :time_only %></td>
-                    <td><%= link_to mutation.user.name, mutation.user %></td>
+                    <td>
+                      <% if policy(User).show? %>
+                      <%= link_to mutation.user.name, mutation.user %>
+                      <% else %>
+                        <a><%= mutation.user.name %><a>
+                      <% end %>
+                    </td>
                     <td><%= number_to_currency(mutation.amount, unit: '€') %></td>
                   </tr>
                 <% end %>

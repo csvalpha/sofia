@@ -1,6 +1,6 @@
 class UserPolicy < ApplicationPolicy
   def index?
-    user&.treasurer?
+    user&.treasurer? || user&.main_bartender? || user&.secretary?
   end
 
   def refresh_user_list?

@@ -10,6 +10,7 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     @amber_users = User.in_amber.active.order(:name)
     @inactive_users = User.inactive.order(:name)
     @users_credits = User.calculate_credits
+    @show_links = policy(User).show?
 
     @manual_users_json = @manual_users.as_json(only: %w[id name])
                                       .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }

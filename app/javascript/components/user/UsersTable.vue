@@ -26,7 +26,10 @@
       <tbody class="table-group-divider">
         <tr v-for="user in sortedUsers" :key="user.id">
           <th class="ps-4" aria-colindex="1">{{ user.id }}</th>
-          <td><a :href="`/users/${user.id}`" aria-colindex="2">{{ user.name }}</a></td>
+          <td>
+            <a v-if="showLinks" :href="`/users/${user.id}`" aria-colindex="2">{{ user.name }}</a>
+            <a v-else aria-colindex="2">{{ user.name }}</a>
+          </td>
           <td :class="user.credit < 0 ? 'text-danger' : ''" aria-colindex="3">€ {{parseFloat(user.credit).toFixed(2)}}</td>
         </tr>
       </tbody>
@@ -52,6 +55,10 @@ export default {
   props: {
     users: {
       type: Array,
+      required: true
+    },
+    showLinks: {
+      type: Boolean,
       required: true
     }
   },

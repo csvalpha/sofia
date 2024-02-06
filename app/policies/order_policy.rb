@@ -1,7 +1,7 @@
 class OrderPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      if user&.treasurer? || user&.main_bartender?
+      if user&.treasurer? || user&.main_bartender? || user&.secretary?
         scope
       elsif user
         scope.orders_for(user)
@@ -14,6 +14,6 @@ class OrderPolicy < ApplicationPolicy
   end
 
   def create?
-    user&.treasurer? || user&.main_bartender?
+    user&.treasurer? || user&.main_bartender? || user&.secretary?
   end
 end
