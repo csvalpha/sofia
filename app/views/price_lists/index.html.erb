@@ -3,7 +3,8 @@
   <%= render 'modal' %>
 <% end %>
 
-<div class="container footer-padding">
+<%= content_tag :div, id: "pricelists-container", class: "container footer-padding",
+  data: {price_lists: @price_lists_json, products: @products_json} do %>
   <div class="row">
     <div class="col-sm-12 mt-4">
       <h1>
@@ -11,29 +12,34 @@
       </h1>
       <div class="d-flex justify-content-between mb-3 align-items-center flex-wrap">
         <span class="my-1">
-          Hier worden de vijf nieuwste prijslijsten en alle producten getoond.
+          Hier worden alle prijslijsten en alle producten getoond.
         </span>
         <button class="btn btn-sm btn-primary" data-bs-target="#editPriceListModal" data-bs-toggle="modal" role="button">
           <%= fa_icon 'plus', class: 'me-1' %>
           Nieuwe prijslijst
         </button>
       </div>
-
-      <%= content_tag :table, id: 'price_lists_table', class: 'price_lists_table table table-striped table-responsive-md',
-                      data: {price_lists: @recent_price_lists_json, products: @products_json} do %>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="show-archived-check" v-model="showArchived">
+        <label class="form-check-label" for="show-archived-check">
+          Laat gearchieveerde prijslijsten zien 
+        </label>
+      </div>
+      
+      <table id='price-lists-table' class='price-lists-table table table-striped overflow-scroll mw-100 mx-auto d-block'>
         <thead class="table-header-rotated products">
         <tr>
           <th class="products-id" scope="col">ID</th>
           <th class="products-name" scope="col">Product</th>
           <th class="products-category" scope="col">Categorie</th>
-          <th class="products-pricelist rotate" scope="col" v-for="priceList in priceLists">
+          <th class="products-pricelist rotate" scope="col" v-for="priceList in filteredPriceLists">
             <div class="center-text" v-bind:title="priceList.name">
               <span>
                 {{ priceList.name }}
               </span>
             </div>
           </th>
-          <th class="products-actions" v-if="priceLists.length > 0">
+          <th class="products-actions" v-if="filteredPriceLists.length > 0">
           </th>
         </tr>
         </thead>
@@ -48,12 +54,12 @@
                 <%= fa_icon 'times lg' %>
               </span>
             </td>
-            <td class="products-new">
+            <td class="products-new products-name">
               <div class="d-flex">
                 <input class="form-control flex-grow-1" placeholder="Productnaam" type="text" v-model="product.name" :disabled="product.id"/>
               </div>
             </td>
-            <td class="products-new">
+            <td class="products-new products-category">
               <div class="d-flex">
                 <select class="form-select flex-grow-1" v-model="product.category">
                   <% Product.categories.each do |category| %>
@@ -66,7 +72,7 @@
                 </select>
               </div>
             </td>
-            <td class="products-new-price" v-for="priceList in priceLists">
+            <td class="products-new-price" v-for="priceList in filteredPriceLists">
               <div class="d-flex">
                 <input class="form-control flex-grow-1" placeholder="2.18" type="text" v-model="findPrice(product, priceList).price"/>
               </div>
@@ -77,15 +83,15 @@
             </span></td>
           </template>
           <template v-else="">
-            <th scope="row">{{ product.id }}</th>
-            <td>{{ product.name }}</td>
-            <td>{{ product.t_category }}</td>
-            <td class="product-price center-text" v-for="priceList in priceLists">
-              <span v-bind:title="product.name + ' in lijst ' + priceList.name">
+            <th class="products-id" scope="row">{{ product.id }}</th>
+            <td class="products-name">{{ product.name }}</td>
+            <td class="products-category">{{ product.t_category }}</td>
+            <td class="product-price center-text" v-for="priceList in filteredPriceLists">
+              <span class="text-nowrap" v-bind:title="product.name + ' in lijst ' + priceList.name">
                 {{ productPriceToCurrency(findPrice(product, priceList)) }}
               </span>
             </td>
-            <td class="products-new-edit-button" v-if="priceLists.length > 0">
+            <td class="products-new-edit-button" v-if="filteredPriceLists.length > 0">
               <button class="btn btn-sm btn-outline-secondary" v-on:click="editProduct(product)">
                 <%= fa_icon 'pencil' %>
               </button>
@@ -93,7 +99,7 @@
           </template>
         </tr>
         <tr>
-          <td colspan="2">
+          <td colspan="3">
             <div class="d-grid">
               <button class="btn btn-secondary btn-sm products-button-new" v-on:click.prevent="newProduct">
                 Voeg een nieuw product toe
@@ -101,10 +107,18 @@
               </button>
             </div>
           </td>
-          <td colspan="8"></td>
+          <td class="products-archive-button center-text" v-for="priceList in filteredPriceLists">
+          <button class="btn btn-sm btn-outline-secondary" v-if="priceList.archived_at" v-on:click="unarchivePriceList(priceList)">
+            <%= fa_icon 'repeat' %>
+          </button>
+          <button class="btn btn-sm btn-outline-secondary" v-else="" v-on:click="archivePriceList(priceList)">
+            <%= fa_icon 'archive' %>
+          </button>
+          </td>
         </tr>
         </tbody>
-      <% end %>
+      </table>
     </div>
   </div>
 </div>
+<% end %>
