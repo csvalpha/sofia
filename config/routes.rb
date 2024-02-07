@@ -12,7 +12,12 @@ Rails.application.routes.draw do
   end
 
   resources :orders, only: %i[index create update destroy]
-  resources :price_lists, only: %i[index create update]
+  resources :price_lists, only: %i[index create update] do
+    member do
+      post :archive
+      post :unarchive
+    end
+  end
 
   resources :users, only: %i[index show create update] do
     collection do

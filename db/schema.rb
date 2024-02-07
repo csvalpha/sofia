@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_12_161008) do
-
+ActiveRecord::Schema[7.0].define(version: 2024_02_02_124405) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -50,8 +49,8 @@ ActiveRecord::Schema.define(version: 2022_10_12_161008) do
     t.integer "amount", null: false
     t.decimal "price", precision: 8, scale: 2, null: false
     t.datetime "deleted_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["invoice_id"], name: "index_invoice_rows_on_invoice_id"
   end
 
@@ -115,6 +114,7 @@ ActiveRecord::Schema.define(version: 2022_10_12_161008) do
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "archived_at"
   end
 
   create_table "product_prices", force: :cascade do |t|
