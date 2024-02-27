@@ -65,8 +65,8 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
     @main_bartender ||= roles.where(role_type: :main_bartender).any?
   end
 
-  def secretary?
-    @secretary ||= roles.where(role_type: :secretary).any?
+  def renting_manager?
+    @renting_manager ||= roles.where(role_type: :renting_manager).any?
   end
 
   def update_role(groups)

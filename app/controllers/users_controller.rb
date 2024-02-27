@@ -6,11 +6,10 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
   def index # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     authorize User
 
-    @manual_users = User.manual.active.order(:name)
-    @amber_users = User.in_amber.active.order(:name)
-    @inactive_users = User.inactive.order(:name)
+    @manual_users = User.manual.active.order(:name).select { |u| policy(u).show? }
+    @amber_users = User.in_amber.active.order(:name).select { |u| policy(u).show? }
+    @inactive_users = User.inactive.order(:name).select { |u| policy(u).show? }
     @users_credits = User.calculate_credits
-    @show_links = policy(User).show?
 
     @manual_users_json = @manual_users.as_json(only: %w[id name])
                                       .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }

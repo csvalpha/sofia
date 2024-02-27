@@ -6,6 +6,12 @@ Vue.use(TurbolinksAdapter);
 Vue.use(VueResource);
 
 document.addEventListener('turbolinks:load', () => {
+  // Selects the first visible tab in the activity detail tabs
+  var firstTabEl = document.querySelector('#activityTabs li:first-child a')
+  var firstTab = new bootstrap.Tab(firstTabEl)
+  firstTab.show()
+
+  // Create Vue instance on the new activty modal
   Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
   var element = document.getElementById('new_activity_modal');

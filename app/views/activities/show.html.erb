@@ -3,7 +3,7 @@
   <%= render 'edit_modal' %>
 <% end %>
 
-<div id="activity" class="container footer-padding">
+<div id="activity" class="container footer-padding mt-4">
   <div class="row justify-content-between">
     <div class="col-sm-12 col-md-6 py-2">
       <h1>
@@ -93,178 +93,188 @@
   <div class="row">
     <div class="col-sm-12">
       <ul class="nav nav-tabs" id="activityTabs" role="tablist">
-        <li class="nav-item">
-          <a aria-controls="summary" aria-selected="true" class="nav-link active" data-bs-toggle="tab" href="#summary" id="summary-tab" role="tab">
-            Samenvatting
-          </a>
-        </li>
+        <% if policy(Activity).summary? %>
+          <li class="nav-item">
+            <a aria-controls="summary" aria-selected="true" class="nav-link active" data-bs-toggle="tab" href="#summary" id="summary-tab" role="tab">
+              Samenvatting
+            </a>
+          </li>
+        <% end %>
+        <% if policy(CreditMutation).index? %>
         <li class="nav-item">
           <a aria-controls="credit_mutations" aria-selected="false" class="nav-link" data-bs-toggle="tab" href="#credit_mutations" id="credit_mutations-tab" role="tab">
             Inleg en correcties
           </a>
         </li>
-        <% if current_user.treasurer? %>
+        <% end %>
+        <% if policy(Activity).orders? %>
           <li class="nav-item">
             <a aria-controls="orders" aria-selected="false" class="nav-link" data-bs-toggle="tab" href="#orders" id="orders-tab" role="tab">
               Bestellingen
             </a>
           </li>
         <% end %>
-        <li class="nav-item">
-          <a aria-controls="product_totals-tab" aria-selected="false" class="nav-link" data-bs-toggle="tab" href="#product_totals" id="product_totals-tab" role="tab">
-            Producttotalen
-          </a>
-        </li>
+        <% if policy(Activity).product_totals? %>
+          <li class="nav-item">
+            <a aria-controls="product_totals-tab" aria-selected="false" class="nav-link" data-bs-toggle="tab" href="#product_totals" id="product_totals-tab" role="tab">
+              Producttotalen
+            </a>
+          </li>
+        <% end %>
       </ul>
       <div class="tab-content p-2" id="activityTabsContent">
-        <div aria-labelledby="summary-tab" class="tab-pane show active" id="summary" role="tabpanel">
-          <div class="row justify-content-between">
-            <% if @credit_mutations.empty? && @orders.empty? %>
-              <div class="table-responsive">
-                <table class="table table-striped">
-                  <tbody>
+        <% if policy(Activity).summary? %>
+          <div aria-labelledby="summary-tab" class="tab-pane show active" id="summary" role="tabpanel">
+            <div class="row justify-content-between">
+              <% if @credit_mutations.empty? && @orders.empty? %>
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <tbody>
+                    <tr>
+                      <td class="text-center" colspan="4">
+                        <p class="my-1">
+                          <em>
+                            Er zijn nog geen bestellingen en er is nog niet ingelegd
+                          </em>
+                        </p>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              <% else %>
+                <div class="col-12 col-md-6">
+                  <table class="table table-sm">
+                    <thead>
+                    <tr>
+                      <th scope="col">Resultaat</th>
+                      <th scope="col">Code</th>
+                      <th class="text-end" scope="col">Credit</th>
+                    </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                    <% Product.categories.each do |category| %>
+                      <% if Rails.application.config.x.codes[category.first.to_sym] != nil %>
+                        <tr>
+                          <td><%= t(category.first).capitalize %>
+                          </td>
+                          <td><%= Rails.application.config.x.codes[category.first.to_sym] %>
+                          </td>
+                          <td class="text-end">
+                            <%= number_to_currency(@revenue_by_category[category[0]] || 0, unit: '€') %>
+                          </td>
+                        </tr>
+                      <% end %>
+                    <% end %>
+                    <tr>
+                      <th class="ps-4" scope="row">Totaal opbrengsten</th>
+                      <td></td>
+                      <td class="text-end">
+                        <strong><%= number_to_currency(@revenue_total, unit: '€') %>
+                        </strong>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="col-12 col-md-5">
+                  <table class="table table-sm">
+                    <thead>
+                    <tr>
+                      <th scope="col">Balans</th>
+                      <th scope="col">Code</th>
+                      <th class="text-end" scope="col">Debit</th>
+                      <th class="text-end" scope="col">Credit</th>
+                    </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                    <tr>
+                      <td>Inleg Zatladder Inlegsysteem</td>
+                      <td><%= Rails.application.config.x.codes[:credit_mutation] %></td>
+                      <td></td>
+                      <td class="text-end">
+                        <%= number_to_currency(@credit_mutations_total, unit: '€') %>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Contante bestellingen</td>
+                      <td></td>
+                      <td></td>
+                      <td class="text-end"><%= number_to_currency(@revenue_with_cash, unit: '€') %></td>
+                    </tr>
+                    <tr>
+                      <td title="Contante inleg plus contante betalingen">
+                        <strong>
+                          Totaal kas
+                        </strong>
+                      </td>
+                      <td><%= Rails.application.config.x.codes[:cash] %></td>
+                      <td class="text-end"><%= number_to_currency(@cash_total, unit: '€') %></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Omzet Pin</td>
+                      <td><%= Rails.application.config.x.codes[:pin] %></td>
+                      <td class="text-end"><%= number_to_currency(@revenue_with_pin, unit: '€') %></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Omzet Zatladder Inlegsysteem</td>
+                      <td><%= Rails.application.config.x.codes[:credit_mutation] %></td>
+                      <td class="text-end"><%= number_to_currency(@revenue_with_credit, unit: '€') %></td>
+                      <td></td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              <% end %></div>
+          </div>
+        <% end %>
+        <% if policy(CreditMutation).index? %>
+          <div aria-labelledby="credit_mutations-tab" class="tab-pane" id="credit_mutations" role="tabpanel">
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <% if @credit_mutations.empty? %>
                   <tr>
                     <td class="text-center" colspan="4">
                       <p class="my-1">
                         <em>
-                          Er zijn nog geen bestellingen en er is nog niet ingelegd
+                          Er zijn nog geen correcties en er is nog niet ingelegd
                         </em>
                       </p>
                     </td>
                   </tr>
-                  </tbody>
-                </table>
-              </div>
-            <% else %>
-              <div class="col-12 col-md-6">
-                <table class="table table-sm">
+                <% else %>
                   <thead>
                   <tr>
-                    <th scope="col">Resultaat</th>
-                    <th scope="col">Code</th>
-                    <th class="text-end" scope="col">Credit</th>
+                    <th scope="col">#</th>
+                    <th scope="col">Tijd</th>
+                    <th scope="col">Gebruiker</th>
+                    <th scope="col">Bedrag</th>
                   </tr>
                   </thead>
                   <tbody class="table-group-divider">
-                  <% Product.categories.each do |category| %>
-                    <% if Rails.application.config.x.codes[category.first.to_sym] != nil %>
-                      <tr>
-                        <td><%= t(category.first).capitalize %>
-                        </td>
-                        <td><%= Rails.application.config.x.codes[category.first.to_sym] %>
-                        </td>
-                        <td class="text-end">
-                          <%= number_to_currency(@revenue_by_category[category[0]] || 0, unit: '€') %>
-                        </td>
-                      </tr>
-                    <% end %>
+                  <% @credit_mutations.each do |mutation| %>
+                    <tr>
+                      <th scope="row"><%= mutation.id %></th>
+                      <td><%= l mutation.created_at, format: :time_only %></td>
+                      <td>
+                        <% if policy(User).show? %>
+                        <%= link_to mutation.user.name, mutation.user %>
+                        <% else %>
+                          <a><%= mutation.user.name %><a>
+                        <% end %>
+                      </td>
+                      <td><%= number_to_currency(mutation.amount, unit: '€') %></td>
+                    </tr>
                   <% end %>
-                  <tr>
-                    <th class="ps-4" scope="row">Totaal opbrengsten</th>
-                    <td></td>
-                    <td class="text-end">
-                      <strong><%= number_to_currency(@revenue_total, unit: '€') %>
-                      </strong>
-                    </td>
-                  </tr>
                   </tbody>
-                </table>
-              </div>
-              <div class="col-12 col-md-5">
-                <table class="table table-sm">
-                  <thead>
-                  <tr>
-                    <th scope="col">Balans</th>
-                    <th scope="col">Code</th>
-                    <th class="text-end" scope="col">Debit</th>
-                    <th class="text-end" scope="col">Credit</th>
-                  </tr>
-                  </thead>
-                  <tbody class="table-group-divider">
-                  <tr>
-                    <td>Inleg Zatladder Inlegsysteem</td>
-                    <td><%= Rails.application.config.x.codes[:credit_mutation] %></td>
-                    <td></td>
-                    <td class="text-end">
-                      <%= number_to_currency(@credit_mutations_total, unit: '€') %>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Contante bestellingen</td>
-                    <td></td>
-                    <td></td>
-                    <td class="text-end"><%= number_to_currency(@revenue_with_cash, unit: '€') %></td>
-                  </tr>
-                  <tr>
-                    <td title="Contante inleg plus contante betalingen">
-                      <strong>
-                        Totaal kas
-                      </strong>
-                    </td>
-                    <td><%= Rails.application.config.x.codes[:cash] %></td>
-                    <td class="text-end"><%= number_to_currency(@cash_total, unit: '€') %></td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td>Omzet Pin</td>
-                    <td><%= Rails.application.config.x.codes[:pin] %></td>
-                    <td class="text-end"><%= number_to_currency(@revenue_with_pin, unit: '€') %></td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td>Omzet Zatladder Inlegsysteem</td>
-                    <td><%= Rails.application.config.x.codes[:credit_mutation] %></td>
-                    <td class="text-end"><%= number_to_currency(@revenue_with_credit, unit: '€') %></td>
-                    <td></td>
-                  </tr>
-                  </tbody>
-                </table>
-              </div>
-            <% end %></div>
-        </div>
-        <div aria-labelledby="credit_mutations-tab" class="tab-pane" id="credit_mutations" role="tabpanel">
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <% if @credit_mutations.empty? %>
-                <tr>
-                  <td class="text-center" colspan="4">
-                    <p class="my-1">
-                      <em>
-                        Er zijn nog geen correcties en er is nog niet ingelegd
-                      </em>
-                    </p>
-                  </td>
-                </tr>
-              <% else %>
-                <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Tijd</th>
-                  <th scope="col">Gebruiker</th>
-                  <th scope="col">Bedrag</th>
-                </tr>
-                </thead>
-                <tbody class="table-group-divider">
-                <% @credit_mutations.each do |mutation| %>
-                  <tr>
-                    <th scope="row"><%= mutation.id %></th>
-                    <td><%= l mutation.created_at, format: :time_only %></td>
-                    <td>
-                      <% if policy(User).show? %>
-                      <%= link_to mutation.user.name, mutation.user %>
-                      <% else %>
-                        <a><%= mutation.user.name %><a>
-                      <% end %>
-                    </td>
-                    <td><%= number_to_currency(mutation.amount, unit: '€') %></td>
-                  </tr>
                 <% end %>
-                </tbody>
-              <% end %>
-            </table>
+              </table>
+            </div>
           </div>
-        </div>
-        <% if current_user.treasurer? %>
+        <% end %>
+        <% if policy(Activity).orders? %>
           <div aria-labelledby="orders-tab" class="tab-pane" id="orders" role="tabpanel">
             <div class="table-responsive">
               <table class="table table-striped">
@@ -313,7 +323,7 @@
                         <% order.order_rows.each_with_index do |order_row, i| %>
                           <%= order_row.product.name %>
                           <% if order_row.product_count > 1 %>
-                            ( <%= order_row.product_count %> x)
+                            (<u><%= order_row.product_count %>x</u>)
                           <% end %>
                           <% if i < order.order_rows.size - 1 %>
                             ,
@@ -328,13 +338,15 @@
             </div>
           </div>
         <% end %>
-        <div aria-labelledby="product_totals-tab" class="tab-pane" id="product_totals" role="tabpanel">
-          <div class="row">
-            <div class="col-6 mx-auto">
-              <product-totals activity="<%= @activity.id %>"></product-totals>
+        <% if policy(Activity).product_totals? %>
+          <div aria-labelledby="product_totals-tab" class="tab-pane" id="product_totals" role="tabpanel">
+            <div class="row">
+              <div class="col-6 mx-auto">
+                <product-totals activity="<%= @activity.id %>"></product-totals>
+              </div>
             </div>
           </div>
-        </div>
+        <% end %>
       </div>
     </div>
   </div>

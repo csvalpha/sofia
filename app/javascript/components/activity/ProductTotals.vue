@@ -23,6 +23,13 @@
             <td>{{orderTotal.amount}} x</td>
             <td class="text-end">{{doubleToCurrency(orderTotal.price)}}</td>
           </tr>
+          <tr>
+            <th scope="col">Totaal</th>
+            <td></td>
+            <td class="text-end">
+              <strong>{{doubleToCurrency(totalAmount)}}</strong>
+            </td>
+          </tr>
         </tbody>
       </table>
       <table v-else class="table table-striped">
@@ -56,6 +63,7 @@ export default {
     return {
       user: {},
       orderTotals: [],
+      totalAmount: 0.0,
       isLoading: true
     };
   },
@@ -71,6 +79,7 @@ export default {
       let params = {user: this.user.id, paid_with_cash: this.user.paid_with_cash, paid_with_pin: this.user.paid_with_pin};
       this.$http.get('/activities/'+this.activity+'/product_totals', { params }).then((response) => {
         this.orderTotals = response.body;
+        this.totalAmount = this.orderTotals.reduce((a, b) => a + parseFloat(b.price), 0.0)
         this.isLoading = false;
       });
     },

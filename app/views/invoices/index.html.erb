@@ -44,7 +44,7 @@
                 <%= link_to invoice.human_id, invoice %>
               </td>
               <td>
-                <% if policy(User).show? %>
+                <% if policy(invoice.user).show? %>
                   <%= link_to invoice.user.name, invoice.user %>
                 <% else %>
                   <%= invoice.user.name %>

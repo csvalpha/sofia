@@ -20,7 +20,7 @@
             <% end %>
           </li>
         <% end %>
-        <% if current_user&.treasurer? || current_user&.secretary? %>
+        <% if current_user&.treasurer? || current_user&.renting_manager? %>
           <li class="nav-item">
             <%= nav_link users_path, class: 'nav-link' do %>
               <%= fa_icon 'users', class: 'me-2', text: 'Gebruikers' %>

@@ -63,8 +63,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
 
   def show # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @activity = Activity.includes(:price_list,
-                                  { orders: [{ order_rows: :product }, :user, :created_by] },
-                                  credit_mutations: [:user]).find(params[:id])
+                                  { orders: [{ order_rows: :product }, :user, :created_by] }).find(params[:id])
     authorize @activity
 
     @price_list = @activity.price_list
