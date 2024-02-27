@@ -10,7 +10,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
 
   def index
     authorize Activity
-    @activities = policy_scope(Activity.includes(%i[price_list created_by])
+    @activities = policy_scope(Activity.includes(%i[price_list created_by locked_by])
                                    .order(start_time: :desc)
                                    .page(params[:page]))
 
@@ -19,7 +19,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
       end_time: 6.hours.from_now.beginning_of_hour
     )
 
-    @price_lists_json = PriceList.all.to_json(only: %i[id name])
+    @price_lists_json = PriceList.unarchived.to_json(only: %i[id name])
   end
 
   def create
