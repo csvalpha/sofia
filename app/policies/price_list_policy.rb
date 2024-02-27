@@ -15,6 +15,14 @@ class PriceListPolicy < ApplicationPolicy
     create?
   end
 
+  def archive?
+    create?
+  end
+
+  def unarchive?
+    create?
+  end
+
   def search?
     index?
   end
