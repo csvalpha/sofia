@@ -1,0 +1,25 @@
+version: '3'
+
+# RAILS_MASTER_KEY must be provided in .env file or ENV
+services:
+  db:
+    env_file: .env # must include POSTGRES_PASSWORD, POSTGRES_USER, POSTGRES_HOST
+    image: postgres:14.7
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      # Expose port to the host such that the 'web' service (which runs on the host) can connect to it
+      - "${POSTGRES_PORT:-5432}:5432"
+  sofia:
+    env_file: .env
+    build: .
+    # Run service on same network as the host, otherwise OmniAuth cannot connect to amber-ui
+    network_mode: "host"
+    depends_on:
+      - db
+    command: bundle exec rails server -p 5000
+    volumes:
+      - .:/app
+
+volumes:
+  postgres_data:
