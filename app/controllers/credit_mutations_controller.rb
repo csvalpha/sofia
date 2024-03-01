@@ -4,10 +4,11 @@ class CreditMutationsController < ApplicationController
   after_action :verify_policy_scoped, only: :index
 
   def index
+    authorize CreditMutation
+    
     @credit_mutations = policy_scope(CreditMutation.includes(model_includes)
                                       .order(created_at: :desc)
                                       .page(params[:page]))
-    authorize @credit_mutations
 
     @new_mutation = CreditMutation.new
   end

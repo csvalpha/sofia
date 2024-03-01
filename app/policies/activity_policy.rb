@@ -38,7 +38,7 @@ class ActivityPolicy < ApplicationPolicy
   end
 
   def product_totals?
-    user&.treasurer? || user&.main_bartender? || user&.renting_manager?
+    user&.treasurer? || user&.renting_manager? || user&.main_bartender?
   end
 
   def orders?

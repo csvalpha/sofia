@@ -16,6 +16,10 @@ FactoryBot.define do
       with_specific_products { true }
     end
 
+    trait :archived do
+      archived_at { 1.day.ago }
+    end
+
     after(:create) do |price_list, evaluator|
       if evaluator.with_all_products
         Product.all.each do |product|
