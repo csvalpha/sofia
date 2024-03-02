@@ -79,6 +79,7 @@ group :test do
   gem 'rubocop-rails'
   gem 'rubocop-rspec'
   gem 'simplecov', require: false
+  gem 'simplecov-lcov', '~> 0.8.0', require: false
   gem 'terminal-notifier-guard'
   gem 'timecop'
 end

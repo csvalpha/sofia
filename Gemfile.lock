@@ -468,6 +468,7 @@ GEM
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
+    simplecov-lcov (0.8.0)
     simplecov_json_formatter (0.1.4)
     slack-notifier (2.4.0)
     spring (2.1.1)
@@ -593,6 +594,7 @@ DEPENDENCIES
   sidekiq-scheduler (~> 5.0.2)
   simple_form (~> 5.1.0)
   simplecov
+  simplecov-lcov (~> 0.8.0)
   slack-notifier (~> 2.4.0)
   spring
   spring-commands-rspec
@@ -609,4 +611,4 @@ DEPENDENCIES
   wkhtmltopdf-binary
 
 BUNDLED WITH
-   2.2.15
+   2.4.14
