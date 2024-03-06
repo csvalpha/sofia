@@ -26,15 +26,15 @@ class ActivityPolicy < ApplicationPolicy
   end
 
   def destroy?
-    user&.treasurer? || user&.main_bartender? || user&.renting_manager?
+    user&.treasurer? || user&.renting_manager? || user&.main_bartender?
   end
 
   def order_screen?
-    user&.treasurer? || user&.main_bartender?
+    user&.treasurer? || user&.renting_manager? || user&.main_bartender?
   end
 
   def summary?
-    user&.treasurer?
+    user&.treasurer? || user&.renting_manager? || user&.main_bartender?
   end
 
   def product_totals?
@@ -42,6 +42,10 @@ class ActivityPolicy < ApplicationPolicy
   end
 
   def orders?
-    user&.treasurer? || user&.renting_manager? || user&.main_bartender?
+    user&.treasurer? || user&.renting_manager?
+  end
+
+  def credit_mutations?
+    user&.treasurer?
   end
 end

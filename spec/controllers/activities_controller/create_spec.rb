@@ -24,6 +24,11 @@ describe ActivitiesController, type: :controller do
       expect { request }.to(change(Activity, :count).by(1))
     end
 
+    it 'user cannot create a new activity' do
+      sign_in create(:user)
+      expect { request }.not_to change(Activity, :count)
+    end
+
     it 'redirects after create' do
       sign_in create(:user, :treasurer)
       request

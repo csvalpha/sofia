@@ -100,7 +100,7 @@
             </a>
           </li>
         <% end %>
-        <% if policy(CreditMutation).index? %>
+        <% if policy(Activity).credit_mutations? %>
         <li class="nav-item">
           <a aria-controls="credit_mutations" aria-selected="false" class="nav-link" data-bs-toggle="tab" href="#credit_mutations" id="credit_mutations-tab" role="tab">
             Inleg en correcties
@@ -230,7 +230,7 @@
               <% end %></div>
           </div>
         <% end %>
-        <% if policy(CreditMutation).index? %>
+        <% if policy(Activity).credit_mutations? %>
           <div aria-labelledby="credit_mutations-tab" class="tab-pane" id="credit_mutations" role="tabpanel">
             <div class="table-responsive">
               <table class="table table-striped">

@@ -1,7 +1,7 @@
 class OrderPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-      if user&.treasurer? || user&.main_bartender? || user&.renting_manager?
+      if user&.treasurer? || user&.renting_manager? || user&.main_bartender?
         scope
       elsif user
         scope.orders_for(user)
@@ -14,6 +14,6 @@ class OrderPolicy < ApplicationPolicy
   end
 
   def create?
-    user&.treasurer? || user&.main_bartender?
+    user&.treasurer? || user&.renting_manager? || user&.main_bartender?
   end
 end
