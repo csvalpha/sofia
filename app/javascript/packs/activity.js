@@ -21,8 +21,9 @@ document.addEventListener('turbolinks:load', () => {
     });
 
     // Selects the first visible tab in the activity detail tabs
-    var firstTabEl = document.querySelector('#activityTabs li:first-child a')
-    var firstTab = new bootstrap.Tab(firstTabEl)
-    firstTab.show()
+    var firstTabEl = document.querySelector('#activityTabs li:first-child a');
+    /* eslint-disable no-undef */
+    var firstTab = new bootstrap.Tab(firstTabEl);
+    firstTab.show();
   }
 });
