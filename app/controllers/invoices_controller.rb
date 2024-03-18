@@ -6,7 +6,7 @@ class InvoicesController < ApplicationController
   def index
     authorize Invoice
 
-    @invoices = Invoice.all.order(created_at: :desc)
+    @invoices = Invoice.includes(:user, :activity, :rows).order(created_at: :desc)
     @activities_json = Activity.all.to_json(only: %i[id title start_time])
     @invoice = Invoice.new
     @invoice.rows.build

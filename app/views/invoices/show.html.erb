@@ -63,7 +63,7 @@
         </tbody>
       </table>
 
-      <% unless @invoice.paid? %>
+      <% unless !policy(Invoice).send_invoice? || @invoice.paid? %>
         <%= link_to pay_invoice_url @invoice.token do %>
           <button class="col-sm-3 offset-sm-9 btn btn-primary">Betalen</button>
         <% end %>

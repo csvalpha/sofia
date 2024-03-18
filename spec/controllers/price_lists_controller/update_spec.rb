@@ -1,19 +1,19 @@
 require 'rails_helper'
 
-describe ActivitiesController, type: :controller do
+describe PriceListsController, type: :controller do
   describe 'PUT update' do
-    let(:activity) do
-      create(:activity, price_list: create(:price_list))
+    let(:price_list) do
+      create(:price_list)
     end
     let(:request) do
-      put :update, params: { id: activity.id, activity: activity.attributes }
+      put :update, params: { id: price_list.id, price_list: price_list.attributes }
     end
 
     before do
       sign_in user
-      activity.title = 'New Title'
+      price_list.name = 'New Name'
       request
-      activity.reload
+      price_list.reload
     end
 
     describe 'when without permission' do
@@ -25,22 +25,20 @@ describe ActivitiesController, type: :controller do
     describe 'when as main-bartender' do
       let(:user) { create(:user, :main_bartender) }
 
-      it { expect(request.status).to eq 302 }
-      it { expect(activity.title).to eq 'New Title' }
+      it { expect(request.status).to eq 403 }
     end
 
     describe 'when as renting-manager' do
       let(:user) { create(:user, :renting_manager) }
 
-      it { expect(request.status).to eq 302 }
-      it { expect(activity.title).to eq 'New Title' }
+      it { expect(request.status).to eq 403 }
     end
 
     describe 'when as treasurer' do
       let(:user) { create(:user, :treasurer) }
 
       it { expect(request.status).to eq 302 }
-      it { expect(activity.title).to eq 'New Title' }
+      it { expect(price_list.name).to eq 'New Name' }
     end
   end
 end

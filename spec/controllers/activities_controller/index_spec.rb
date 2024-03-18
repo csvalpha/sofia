@@ -32,6 +32,17 @@ describe ActivitiesController, type: :controller do
       end
     end
 
+    describe 'when as renting-manager' do
+      let(:user) { create(:user, :renting_manager) }
+
+      it do
+        expect(request.status).to eq 200
+        expect(assigns(:activities).size).to eq 3
+        expect(assigns(:price_lists_json)).to eq PriceList.all.to_json(only: %i[id name])
+        expect(assigns(:activity)).to be_an_instance_of(Activity)
+      end
+    end
+
     describe 'when as treasurer' do
       let(:user) { create(:user, :treasurer) }
 

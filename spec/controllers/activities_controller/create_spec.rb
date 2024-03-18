@@ -9,9 +9,24 @@ describe ActivitiesController, type: :controller do
       post :create, params: { activity: activity.attributes }
     end
 
-    it 'creates a new activity' do
+    it 'treasurer creates a new activity' do
       sign_in create(:user, :treasurer)
       expect { request }.to(change(Activity, :count).by(1))
+    end
+
+    it 'renting-manager creates a new activity' do
+      sign_in create(:user, :renting_manager)
+      expect { request }.to(change(Activity, :count).by(1))
+    end
+
+    it 'main-bartender creates a new activity' do
+      sign_in create(:user, :main_bartender)
+      expect { request }.to(change(Activity, :count).by(1))
+    end
+
+    it 'user cannot create a new activity' do
+      sign_in create(:user)
+      expect { request }.not_to change(Activity, :count)
     end
 
     it 'redirects after create' do

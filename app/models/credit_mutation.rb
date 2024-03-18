@@ -8,6 +8,10 @@ class CreditMutation < ApplicationRecord
 
   validate :activity_not_locked
 
+  scope :linked_to_activity, (lambda {
+    where.not(activity: nil)
+  })
+
   before_destroy -> { throw(:abort) }
 
   def activity_not_locked

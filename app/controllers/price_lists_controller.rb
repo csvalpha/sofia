@@ -2,12 +2,13 @@ class PriceListsController < ApplicationController
   before_action :authenticate_user!
 
   after_action :verify_authorized
+  after_action :verify_policy_scoped, only: :index
 
   def index
-    price_lists = PriceList.order(created_at: :desc)
-    products = Product.all.order(:id).includes(:product_prices)
+    authorize PriceList
 
-    authorize price_lists
+    price_lists = policy_scope(PriceList.order(created_at: :desc))
+    products = Product.all.order(:id).includes(:product_prices)
 
     @price_list = PriceList.new
 
