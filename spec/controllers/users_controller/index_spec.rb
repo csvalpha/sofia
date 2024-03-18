@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe UsersController, type: :controller do
-  
   describe 'GET index' do
     let(:alice) { create(:user, :treasurer, :manual) }
     let(:bob) { create(:user, :renting_manager, :manual) }

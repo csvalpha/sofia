@@ -17,7 +17,7 @@ describe PriceListsController, type: :controller do
 
     describe 'treasurer can unarchive a price_list' do
       let(:user) { create(:user, :treasurer) }
-      
+
       it { expect(request.status).to eq 200 }
       it { expect(price_list.archived_at).to be_nil }
     end

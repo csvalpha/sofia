@@ -1,10 +1,9 @@
 require 'rails_helper'
 
 describe CreditMutationsController, type: :controller do
-  
   describe 'GET index' do
     let(:credit_mutation) { create(:credit_mutation, user: create(:user)) }
-    let(:credit_mutation_with_activity) { create(:credit_mutation, activity: create(:activity), user: create(:user)) } 
+    let(:credit_mutation_with_activity) { create(:credit_mutation, activity: create(:activity), user: create(:user)) }
     let(:request) { get :index }
 
     before do

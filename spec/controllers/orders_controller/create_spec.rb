@@ -37,7 +37,7 @@ describe OrdersController, type: :controller do
 
     describe 'when as renting-manager' do
       let(:user) { create(:user, :renting_manager) }
-      
+
       it 'when with order on activity' do
         expect { request }.to(change(Order, :count).by(1))
       end
@@ -49,7 +49,7 @@ describe OrdersController, type: :controller do
 
     describe 'when as main-bartender' do
       let(:user) { create(:user, :main_bartender) }
-      
+
       it 'when with order on activity' do
         expect { request }.to(change(Order, :count).by(1))
       end
@@ -61,7 +61,7 @@ describe OrdersController, type: :controller do
 
     describe 'when as user' do
       let(:user) { create(:user) }
-      
+
       it 'when with order on activity' do
         expect { request }.not_to change(Order, :count)
       end

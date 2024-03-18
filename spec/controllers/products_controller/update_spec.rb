@@ -6,7 +6,9 @@ describe ProductsController, type: :controller do
       create(:product, product_prices: [create(:product_price)])
     end
     let(:request) do
-      put :update, params: { id: product.id, product: product.attributes.merge({ product_prices_attributes: [product.product_prices.first.attributes]}) }
+      put :update,
+          params: { id: product.id,
+                    product: product.attributes.merge({ product_prices_attributes: [product.product_prices.first.attributes] }) }
     end
 
     before do

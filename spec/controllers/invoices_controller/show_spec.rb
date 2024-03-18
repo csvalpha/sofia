@@ -28,7 +28,7 @@ describe InvoicesController, type: :controller do
 
     context 'when as main-bartender' do
       it 'forbids' do
-        sign_in create(:user)
+        sign_in create(:user, :main_bartender)
         get :show, params: { id: invoice.id }
 
         expect(response).to have_http_status(:forbidden)

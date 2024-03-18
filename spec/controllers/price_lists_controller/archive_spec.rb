@@ -17,9 +17,9 @@ describe PriceListsController, type: :controller do
 
     describe 'treasurer can archive a price_list' do
       let(:user) { create(:user, :treasurer) }
-      
+
       it { expect(request.status).to eq 200 }
-      it { expect(price_list.archived_at.today?).to eq true }
+      it { expect(price_list.archived_at.today?).to be true }
     end
 
     describe 'renting-manager cannot archive a price_list' do

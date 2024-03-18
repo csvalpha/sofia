@@ -5,7 +5,7 @@ class CreditMutationsController < ApplicationController
 
   def index
     authorize CreditMutation
-    
+
     @credit_mutations = policy_scope(CreditMutation.includes(model_includes)
                                       .order(created_at: :desc)
                                       .page(params[:page]))

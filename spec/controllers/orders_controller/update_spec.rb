@@ -12,10 +12,12 @@ describe OrdersController, type: :controller do
     end
     let(:products) { activity.price_list.products.sample(2) }
     let(:request) do
-      put :update, params: { id: order.id, order_rows_attributes: [{id: order.order_rows.first.id, product_count: 3}] }
+      put :update, params: { id: order.id, order_rows_attributes: [{ id: order.order_rows.first.id, product_count: 3 }] }
     end
     let(:request_on_locked_activity) do
-      put :update, params: { id: order_on_locked_activity.id, order_rows_attributes: [{id: order_on_locked_activity.order_rows.first.id, product_count: 3}] }
+      put :update,
+          params: { id: order_on_locked_activity.id,
+                    order_rows_attributes: [{ id: order_on_locked_activity.order_rows.first.id, product_count: 3 }] }
     end
 
     before do
