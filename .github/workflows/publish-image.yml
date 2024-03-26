@@ -51,16 +51,16 @@ jobs:
     needs: metadata
     steps:
       - name: Checkout code
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           ref: ${{ inputs.sha }}
           fetch-depth: 0
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0
+        uses: docker/setup-buildx-action@2b51285047da1547ffb1b2203d8be4c0af6b1f20 # v3.2.0
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # tag=v2.1.0
+        uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc # v2.2.0
         with:
           registry: ${{ vars.DOCKER_REGISTRY_URL }}
           username: ${{ github.repository_owner }}
@@ -68,7 +68,7 @@ jobs:
 
       - name: Build and push image
         id: build_push_image
-        uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
+        uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0 # v5.3.0
         with:
           push: true
           context: .
@@ -90,7 +90,7 @@ jobs:
 
       - name: Create Sentry release
         if: ${{ !(github.event_name == 'workflow_dispatch' && github.workflow == 'Publish Image') }}
-        uses: getsentry/action-release@4744f6a65149f441c5f396d5b0877307c0db52c7 # v1.4.1
+        uses: getsentry/action-release@e769183448303de84c5a06aaaddf9da7be26d6c7 # v1.7.0
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ vars.SENTRY_ORG_NAME }}
@@ -121,7 +121,7 @@ jobs:
           done
 
       - name: Update Publish Image check run
-        uses: guidojw/actions/update-check-run@abb0ee8d1336edf73383f2e5a09abd3a22f25b13 # v1.3.3
+        uses: guidojw/actions/update-check-run@c9efd29142fa8dee171af69eb081fc24d703cfc1 # v1.4.5
         with:
           app_id: ${{ vars.GH_APP_ID }}
           private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
