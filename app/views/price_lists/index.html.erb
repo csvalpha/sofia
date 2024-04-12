@@ -1,6 +1,7 @@
 <% content_for :title, "Prijslijsten - #{Rails.application.config.x.site_name}" %>
 <% content_for :modal do %>
   <%= render 'modal' %>
+  <%= render 'edit_modal' %>
 <% end %>
 
 <%= content_tag :div, id: "pricelists-container", class: "container footer-padding",
@@ -14,7 +15,7 @@
         <span class="my-1">
           Hier worden alle prijslijsten en alle producten getoond.
         </span>
-        <button class="btn btn-sm btn-primary" data-bs-target="#editPriceListModal" data-bs-toggle="modal" role="button">
+        <button class="btn btn-sm btn-primary" data-bs-target="#newPriceListModal" data-bs-toggle="modal" role="button">
           <%= fa_icon 'plus', class: 'me-1' %>
           Nieuwe prijslijst
         </button>
@@ -107,13 +108,20 @@
               </button>
             </div>
           </td>
-          <td class="products-archive-button center-text" v-for="priceList in filteredPriceLists">
-          <button class="btn btn-sm btn-outline-secondary" v-if="priceList.archived_at" v-on:click="unarchivePriceList(priceList)">
-            <%= fa_icon 'repeat' %>
-          </button>
-          <button class="btn btn-sm btn-outline-secondary" v-else="" v-on:click="archivePriceList(priceList)">
-            <%= fa_icon 'archive' %>
-          </button>
+          <td v-for="priceList in filteredPriceLists">
+            <div class="center-text d-flex">
+              <div class="products-archive-button">
+                <button class="btn btn-sm btn-outline-secondary" v-if="priceList.archived_at" v-on:click="unarchivePriceList(priceList)">
+                  <%= fa_icon 'repeat' %>
+                </button>
+                <button class="btn btn-sm btn-outline-secondary" v-else="" v-on:click="archivePriceList(priceList)">
+                  <%= fa_icon 'archive' %>
+                </button>
+              </div>
+              <button class="btn btn-sm btn-outline-secondary ms-2" v-if="<%= policy(PriceList).update? %>" v-on:click="editPriceList(priceList)">
+                  <%= fa_icon 'pencil' %>
+              </button>
+            </div>
           </td>
         </tr>
         </tbody>

@@ -16,10 +16,10 @@ document.addEventListener('turbolinks:load', () => {
     // Make sure property exists before Vue sees the data
     products.forEach(p => p.editing = false);
 
-    new Vue({
+    const app = new Vue({
       el: element,
       data: () => {
-        return { priceLists: priceLists, products: products, showArchived: false };
+        return { priceLists: priceLists, products: products, showArchived: false, currentlyEditingPriceList: null };
       },
       computed: {
         filteredPriceLists: function() {
@@ -133,6 +133,12 @@ document.addEventListener('turbolinks:load', () => {
           return products;
         },
 
+        editPriceList: function(priceList) {
+          this.currentlyEditingPriceList = priceList;
+          /* eslint-disable no-undef */
+          bootstrap.Modal.getOrCreateInstance('#editPriceListModal').show();
+        },
+
         archivePriceList: function(priceList) {
           this.$http.post(`/price_lists/${priceList.id}/archive`, {}).then((response) => {
             priceList.archived_at = response.data;
@@ -151,6 +157,18 @@ document.addEventListener('turbolinks:load', () => {
 
         productPriceToCurrency: function(productPrice) {
           return (productPrice && productPrice.price) ? `€ ${parseFloat(productPrice.price).toFixed(2)}` : '';
+        },
+      }
+    });
+
+    new Vue({
+      el: document.getElementById('editPriceListModal'),
+      computed: {
+        url() {
+          return '/price_lists/' + app.currentlyEditingPriceList?.id;
+        },
+        name() {
+          return app.currentlyEditingPriceList?.name;
         },
       }
     });
