@@ -52,7 +52,7 @@ group :development, :test do
   gem 'bullet'
   gem 'colorize'
   gem 'consistency_fail'
-  gem 'dotenv-rails', '~> 2.7.0'
+  gem 'dotenv-rails', '~> 3.1.2'
   gem 'guard-livereload', '~> 2.5.0'
   gem 'guard-rspec', require: false
   gem 'pry-byebug'
