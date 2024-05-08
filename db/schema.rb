@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_02_124405) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_13_094147) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -41,6 +41,19 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_02_124405) do
     t.index ["activity_id"], name: "index_credit_mutations_on_activity_id"
     t.index ["created_by_id"], name: "index_credit_mutations_on_created_by_id"
     t.index ["user_id"], name: "index_credit_mutations_on_user_id"
+  end
+
+  create_table "identities", force: :cascade do |t|
+    t.string "username", null: false
+    t.string "password_digest", null: false
+    t.bigint "user_id", null: false
+    t.string "otp_secret_key", null: false
+    t.boolean "otp_enabled", default: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_identities_on_user_id"
+    t.index ["username"], name: "index_identities_on_username", unique: true
   end
 
   create_table "invoice_rows", force: :cascade do |t|
@@ -138,12 +151,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_02_124405) do
   end
 
   create_table "roles", force: :cascade do |t|
-    t.integer "group_uid", null: false
+    t.integer "group_uid"
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "role_type"
-    t.index ["role_type", "group_uid"], name: "index_roles_on_role_type_and_group_uid", unique: true
   end
 
   create_table "roles_users", force: :cascade do |t|
@@ -168,6 +180,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_02_124405) do
     t.string "email"
     t.date "birthday"
     t.boolean "deactivated", default: false, null: false
+    t.string "activation_token"
+    t.datetime "activation_token_valid_till"
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 

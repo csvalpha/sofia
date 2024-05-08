@@ -15,5 +15,13 @@ FactoryBot.define do
         user.roles = [FactoryBot.create(:role, role_type: :main_bartender)]
       end
     end
+
+    trait(:from_amber) do
+      provider { 'amber_oauth2' }
+    end
+
+    trait(:identity) do
+      provider { 'identity' }
+    end
   end
 end

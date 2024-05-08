@@ -12,6 +12,12 @@ RSpec.describe User, type: :model do
       it { expect(user).not_to be_valid }
     end
 
+    context 'when with invalid email' do
+      subject(:user) { build_stubbed(:user, email: "not_an_valid_email") }
+
+      it { expect(user).not_to be_valid }
+    end
+
     context 'when deactivating with credit' do
       subject(:user) { create(:user, deactivated: true) }
 
@@ -38,6 +44,40 @@ RSpec.describe User, type: :model do
       before { user }
 
       it { expect(described_class.in_amber).not_to include user }
+    end
+  end
+
+  describe '.identity' do
+    context 'when identity' do
+      subject(:user) { create(:user, provider: 'identity') }
+
+      before { user }
+
+      it { expect(described_class.identity).to include user }
+    end
+
+    context 'when not identity' do
+      subject(:user) { create(:user, provider: 'another_provider') }
+
+      before { user }
+
+      it { expect(described_class.identity).not_to include user }
+    end
+
+    context 'when without email' do
+      subject(:user) { build(:user, :identity, email: nil) }
+
+      before { build(:identity, user: user) }
+
+      it { expect(user).not_to be_valid }
+    end
+
+    context 'when with valid email' do
+      subject(:user) { build(:user, :identity, email: "valid@email.com") }
+
+      before { build(:identity, user: user) }
+
+      it { expect(user).to be_valid }
     end
   end
 
@@ -75,19 +115,27 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '.active / .inactive' do
+  describe '.active / .deactivated / .not_activated' do
     context 'when active' do
       subject(:user) { create(:user) }
 
       it { expect(described_class.active).to include user }
-      it { expect(described_class.inactive).not_to include user }
+      it { expect(described_class.deactivated).not_to include user }
     end
 
     context 'when deactivated' do
       subject(:user) { create(:user, deactivated: true) }
 
       it { expect(described_class.active).not_to include user }
-      it { expect(described_class.inactive).to include user }
+      it { expect(described_class.deactivated).to include user }
+    end
+
+    context 'when not activated' do
+      subject(:user) { create(:user, provider: 'identity') }
+
+      it { expect(described_class.not_activated).to include user }
+      it { expect(described_class.active).not_to include user }
+      it { expect(described_class.deactivated).not_to include user }
     end
   end
 
@@ -224,7 +272,7 @@ RSpec.describe User, type: :model do
 
   describe '#update_role' do
     context 'when getting new roles' do
-      subject(:user) { create(:user) }
+      subject(:user) { create(:user, :from_amber) }
 
       let(:role) { create(:role) }
 
@@ -390,7 +438,7 @@ RSpec.describe User, type: :model do
 
   describe '#archive!' do
     context 'when archiving a user' do
-      subject(:user) { create(:user) }
+      subject(:user) { create(:user, identity: create(:identity)) }
 
       let(:nil_attributes) do
         %w[avatar_thumb_url email birthday]
@@ -405,12 +453,108 @@ RSpec.describe User, type: :model do
       it { expect { user.archive! }.not_to(change(user, :id)) }
       it { expect { user.archive! }.not_to(change(user, :uid)) }
       it { expect { user.archive! }.not_to(change(user, :provider)) }
+      it { expect { user.archive! }.not_to(change(user, :identity)) }
 
       it do
         nil_attributes.each do |attribute|
           expect(user[attribute]).to be_nil
         end
       end
+    end
+  end
+
+  describe '#before_save' do
+    context 'identity' do
+      subject(:user) { create(:user, provider: 'identity') }
+
+      it { expect(user.activation_token).not_to be_nil }
+      it do 
+        expect(user.activation_token_valid_till).not_to be_nil
+        expect(user.activation_token_valid_till.day).to eq (Time.now + 5.day).day
+      end
+    end
+
+    context 'not identity' do
+      subject(:user) { create(:user) }
+
+      it { expect(user.activation_token).to be_nil }
+      it { expect(user.activation_token_valid_till).to be_nil }
+    end
+  end
+
+  describe '#after_save' do
+    context 'deactivated upon creation' do
+      subject(:user) { build(:user, deactivated: true) }
+
+      it do 
+        expect(user).to receive(:archive!)
+        user.save
+      end
+    end
+
+    context 'deactivated after update' do
+      subject(:user) { create(:user, deactivated: false) }
+
+      before { user.deactivated = true }
+
+      it do 
+        expect(user).to receive(:archive!)
+        user.save
+      end
+    end
+
+    context 'deactivated and not changed' do
+      subject(:user) { create(:user, deactivated: true) }
+
+      before { user.email = "valid@email.com" }
+
+      it do 
+        expect(user).not_to receive(:archive!)
+        user.save
+      end
+    end
+
+    context 'not deactivated upon creation' do
+      subject(:user) { build(:user, deactivated: false) }
+
+      it do 
+        expect(user).not_to receive(:archive!)
+        user.save
+      end
+    end
+
+    context 'not deactivated after update' do
+      subject(:user) { create(:user, deactivated: true) }
+
+      before { user.deactivated = false }
+
+      it do 
+        expect(user).not_to receive(:archive!)
+        user.save
+      end
+    end
+  end
+
+  describe '#after_create' do
+    context 'identity' do
+      subject(:user) { build(:user, :identity) }
+
+      it do 
+        expect(UserMailer).to send_email(:account_creation_email, :deliver_later, user)
+        user.save
+      end
+
+      after do
+        clear_enqueued_jobs
+      end
+    end
+
+    context 'not identity' do
+      subject(:user) { create(:user) }
+
+      before { user.save }
+
+      it { expect(enqueued_jobs.size).to eq(0) }
     end
   end
 end

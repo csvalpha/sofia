@@ -1,0 +1,17 @@
+<% content_for :title, "Account activatie - #{Rails.application.config.x.site_name}" %>
+
+<div class="card w-auto position-absolute top-50 start-50 translate-middle">
+  <div class="card-header pt-3">
+    <h4 class="card-title">Streepsysteem account activeren</h4>
+  </div>
+  <div class="card-body px-4 py-3">
+    <%= simple_form_for @identity, url: "/users/auth/identity/register", wrapper: :vertical_form do |f| %>
+      <%= f.input :user_id, as: :hidden, input_html: {name: 'user_id', value: @identity.user_id} %>
+      <%= f.input :password, as: :password, required: true, input_html: {name: 'password'} %>
+      <%= f.input :password_confirmation, as: :password, required: true, input_html: {name: 'password_confirmation'} %>
+      <div class="d-grid mt-4">
+        <%= f.button :submit, 'Activeren', class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+  </div>
+</div>

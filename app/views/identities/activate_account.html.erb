@@ -1,0 +1,20 @@
+<% content_for :title, "Account activatie - #{Rails.application.config.x.site_name}" %>
+
+<div class="card w-auto position-absolute top-50 start-50 translate-middle">
+  <div class="card-header pt-3">
+    <h4 class="card-title">Account activeren</h4>
+  </div>
+  <div class="card-body px-4 py-3">
+    <%= simple_form_for @identity, url: identities_path(user_id: @user_id, activation_token: @activation_token), method: :post, wrapper: :vertical_form do |f| %>
+      <%= f.input :username, as: :string, required: true, input_html: {class: 'identity-input'} %>
+      <% if @request_email %>
+        <%= f.input :email, as: :email, required: true, input_html: {class: 'identity-input', name: 'user[email]', value: ''} %>
+      <% end %>
+      <%= f.input :password, as: :password, required: true, input_html: {class: 'identity-input'} %>
+      <%= f.input :password_confirmation, as: :password, required: true, input_html: {class: 'identity-input'} %>
+      <div class="d-grid mt-4">
+        <%= f.button :submit, 'Activeren', class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+  </div>
+</div>

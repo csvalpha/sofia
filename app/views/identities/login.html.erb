@@ -1,0 +1,101 @@
+<% content_for :title, "Login - #{Rails.application.config.x.site_name}" %>
+
+<div class="container py-1 mt-3 d-none" id="authenticate_flash_holder">
+  <div class="row">
+    <div class="col-12 col-md-6 mx-auto">
+        <div class="row">
+          <div class="col-12 text-center">
+            <div class="alert alert-dismissible fade show alert-danger" role="alert">
+              <p class="mb-0" id="authenticate_flash_message"></p>
+              <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"></button>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<%= simple_form_for :identity, id: "authentication_form", authenticity_token: false, wrapper: :vertical_form do |f| %>
+  <div class="card w-auto position-absolute top-50 start-50 translate-middle" id="login_card">
+    <div class="card-header pt-3">
+      <h4 class="card-title">Inloggen</h4>
+    </div>
+    <div class="card-body px-4 py-3">
+      <%= f.input :auth_key, as: :string, label: "Gebruikersnaam", input_html: {name: 'auth_key', class: 'identity-input'} %>
+      <%= f.input :password, as: :password, label: "Wachtwoord", hint: 'Wachtwoord vergeten?', wrapper: :with_hint_link, input_html: {name: 'password', class: 'identity-input'}, hint_html: {href: forgot_password_view_identities_path} %>
+      <div class="d-grid mt-4">
+        <button class="btn btn-primary" type="submit" formaction='javascript:authenticate_login();' id="login_submit_button">Inloggen</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card w-auto position-absolute top-50 start-50 translate-middle d-none" id="otp_card">
+    <div class="card-header pt-3">
+      <h4 class="card-title">Authenticatiecode</h4>
+    </div>
+    <div class="card-body px-4 py-3 ">
+      <%= f.input :verification_code, as: :string, label: "Authenticatiecode", input_html: {name: 'verification_code', value: '', class: 'identity-input'} %>
+      <p>
+        Open de authenticatie app op je telefoon en geef hier de zescijferige authenticatiecode op. Authenticatie codes kwijtgeraakt? Neem dan contact op met de ICT-commissie voor identificatie.
+      </p>
+      <div class="d-grid mt-4">
+        <button class="btn btn-primary" type="submit" formaction='javascript:authenticate_otp();' id="otp_submit_button">Authenticeren</button>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<script>
+async function authenticate_login() {
+  var formData = new FormData(document.querySelector("#authentication_form"));
+
+  const response = await fetch("/users/auth/identity/callback", {
+    method: "POST",
+    body: formData,
+    headers: {
+      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    }
+  });
+
+  if (response.headers.get('Content-Type').includes("application/json")) {
+    const json = await response.json();
+
+    if (json.login_success) {
+      window.location.replace(json.redirect_url);
+    } else if (json.otp_required) {
+      // username and password correct, now ask for authentication code
+      document.querySelector("#authenticate_flash_holder").classList.add('d-none');
+      document.querySelector("#login_card").classList.add('d-none');
+      document.querySelector("#otp_card").classList.remove('d-none');
+    } else {
+      // username or password is wrong
+      document.querySelector("#authenticate_flash_message").textContent = json.error_message;
+      document.querySelector("#authenticate_flash_holder").classList.remove('d-none');
+    }
+  } else {
+    // we did not get json back, so that most likely means a CORS-related error or an error on the server-side
+    document.querySelector("#authenticate_flash_message").innerHTML = "Inloggen mislukt door een error. Herlaad de pagina en probeer het nog een keer. <br/><i>Werkt het na een paar keer proberen nog steeds niet? Neem dan contact op met de ICT-commissie.</i>";
+    document.querySelector("#authenticate_flash_holder").classList.remove('d-none');
+  }
+} 
+
+async function authenticate_otp() {
+  var formData = new FormData(document.querySelector("#authentication_form"));
+  
+  const response = await fetch("/users/auth/identity/callback", {
+    method: "POST",
+    body: formData,
+    headers: {
+      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    }
+  });
+  const json = await response.json();
+  if (json.login_success) {
+    window.location.replace(json.redirect_url);
+  } else {
+    // authentication code is wrong
+    document.querySelector("#authenticate_flash_message").textContent = json.error_message;
+    document.querySelector("#authenticate_flash_holder").classList.remove('d-none');
+  }
+}
+</script>

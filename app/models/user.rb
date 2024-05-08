@@ -1,5 +1,5 @@
 class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
-  devise :omniauthable, omniauth_providers: [:amber_oauth2]
+  devise :omniauthable, omniauth_providers: [:amber_oauth2, :identity]
   has_many :orders, dependent: :destroy
   has_many :order_rows, through: :orders, dependent: :destroy
   has_many :credit_mutations, dependent: :destroy
@@ -11,14 +11,43 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   validates :name, presence: true
   validates :uid, uniqueness: true, allow_blank: true
   validate :no_deactivation_when_nonzero_credit
+  validates :email, format: { with: Devise.email_regexp }, allow_blank: true
+  validates :email, presence: true, if: ->(user) { !user.deactivated && user.identity.present? }
 
   scope :in_amber, (-> { where(provider: 'amber_oauth2') })
+  scope :identity, (-> { where(provider: 'identity') })
   scope :manual, (-> { where(provider: nil) })
-  scope :active, (-> { where(deactivated: false) })
-  scope :inactive, (-> { where(deactivated: true) })
+  scope :active, (-> {
+    where(deactivated: false).where('(provider IS NULL OR provider != ?) OR (provider = ? AND id IN (?))', 'identity', 'identity', Identity.select('user_id'))
+  })
+  scope :not_activated, (-> { where(deactivated: false, provider: 'identity').where('id NOT IN (?)', Identity.select('user_id')) })
+  scope :deactivated, (-> { where(deactivated: true) })
   scope :treasurer, (-> { joins(:roles).merge(Role.treasurer) })
 
+  has_one :identity, dependent: :delete
+  accepts_nested_attributes_for :identity
+
   attr_accessor :current_activity
+
+  before_save do
+    if new_record? && self.provider == 'identity'
+      self.activation_token = SecureRandom.urlsafe_base64
+      self.activation_token_valid_till = 5.day.from_now
+    end
+  end
+
+  after_save do
+    a = age
+    if self.deactivated && (new_record? || self.deactivated_previously_changed?(from: false, to: true))
+      archive!
+    end
+  end
+
+  after_create do
+    if User.identity.exists?(id: self.id)
+      UserMailer.account_creation_email(self).deliver_later
+    end
+  end
 
   def credit
     credit_mutations.sum('amount') - order_rows.sum('product_count * price_per_product')
@@ -66,16 +95,18 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def update_role(groups)
-    roles_to_have = Role.where(group_uid: groups)
-    roles_users_to_have = roles_to_have.map { |role| RolesUsers.find_or_create_by(role: role, user: self) }
+    if (User.in_amber.exists?(self.id))
+      roles_to_have = Role.where(group_uid: groups)
+      roles_users_to_have = roles_to_have.map { |role| RolesUsers.find_or_create_by(role: role, user: self) }
 
-    roles_users_not_to_have = roles_users - roles_users_to_have
-    roles_users_not_to_have.map(&:destroy)
+      roles_users_not_to_have = roles_users - roles_users_to_have
+      roles_users_not_to_have.map(&:destroy)
+    end
   end
 
   def archive!
     attributes.each_key do |attribute|
-      self[attribute] = nil unless %w[deleted_at updated_at created_at provider id uid].include? attribute
+      self[attribute] = nil unless %w[deleted_at updated_at created_at provider identity id uid].include? attribute
     end
     self.name = "Gearchiveerde gebruiker #{id}"
     self.deactivated = true
@@ -96,6 +127,11 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
       birthday: auth[:info][:birthday]
     )
     user
+  end
+
+  def self.from_omniauth_inspect(auth)
+    identity = Identity.find(auth.uid)
+    identity.user
   end
 
   # :nocov:

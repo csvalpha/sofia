@@ -1,12 +1,12 @@
 <% if flash.any? %>
-  <div class="container py-1">
+  <div class="container py-1 mt-3">
     <div class="row">
       <div class="col-12 col-md-6 mx-auto">
         <% flash.each do |key, value| %>
           <div class="row">
             <div class="col-12 text-center">
               <div class="alert alert-dismissible fade show <%= flash_class key %>" role="alert">
-                <%= value %>
+                <%= value.html_safe %>
                 <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"/>
               </div>
             </div>

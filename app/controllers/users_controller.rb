@@ -1,27 +1,37 @@
 class UsersController < ApplicationController # rubocop:disable Metrics/ClassLength
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: %i[activate_account]
 
-  after_action :verify_authorized
+  after_action :verify_authorized, except: %i[activate_account]
 
   def index # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     authorize User
 
     @manual_users = User.manual.active.order(:name)
+    @identity_users = User.identity.active.order(:name)
     @amber_users = User.in_amber.active.order(:name)
-    @inactive_users = User.inactive.order(:name)
+    @not_activated_users = User.not_activated.order(:name)
+    @deactivated_users = User.deactivated.order(:name)
     @users_credits = User.calculate_credits
 
     @manual_users_json = @manual_users.as_json(only: %w[id name])
                                       .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
+    @identity_users_json = @identity_users.as_json(only: %w[id name])
+                                      .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
+
     @amber_users_json = @amber_users.as_json(only: %w[id name])
                                     .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
-    @inactive_users_json = @inactive_users.as_json(only: %w[id name])
+    @not_activated_users_json = @not_activated_users.as_json(only: %w[id name])
+                                    .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
+
+    @deactivated_users_json = @deactivated_users.as_json(only: %w[id name])
                                           .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
     @new_user = User.new
   end
+
+  include ActiveModel::OneTimePassword::InstanceMethodsOnActivation
 
   def show
     @user = User.includes(:credit_mutations, roles_users: :role).find(params[:id])
@@ -29,6 +39,26 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
 
     @user_json = @user.to_json(only: %i[id name deactivated])
     @new_mutation = CreditMutation.new(user: @user)
+
+    @identity = Identity.find_by(user_id: @user.id)
+    if @identity
+      qr_code = RQRCode::QRCode.new(@identity.provisioning_uri(@identity.username, issuer: "Streepsysteem #{Rails.application.config.x.site_association}"))
+      @svg_qr_code = qr_code.as_svg(
+        color: "000",
+        shape_rendering: "crispEdges",
+        module_size: 10,
+        standalone: true,
+        use_path: true,
+        viewbox: true,
+        svg_attributes: {
+          width: "100%",
+          height: "auto",
+          class: "qr-code"
+        }
+      )
+    else
+      @identity = Identity.new
+    end
 
     @new_user = @user
   end
@@ -114,6 +144,39 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     render json: activities_hash
   end
 
+  def activate_account 
+    user = User.find(params.require(:id))
+    authorize user
+
+    if params[:activation_token] != nil
+      activation_token = params.require(:activation_token)
+      unless user.activation_token == activation_token &&
+            user.activation_token_valid_till.try(:>, Time.zone.now)
+        return head :not_found
+      end
+    else
+      return head :not_found
+    end
+    @identity = Identity.new(user: user)
+  end
+
+  def update_with_identity
+    @user = User.find(params[:id])
+    authorize @user
+
+    @identity = @user.identity
+    authorize @identity
+    
+    if @user.update(params.require(:user).permit(%i[email] + (current_user.treasurer? ? %i[name deactivated] : []), identity_attributes: %i[id username]))
+      flash[:success] = 'Gegevens gewijzigd'
+    else
+      flash[:error] = "Gegevens wijzigen mislukt; #{@user.errors.full_messages.join(', ')}"
+    end
+
+    redirect_to @user
+  end
+
+  
   private
 
   def send_slack_users_refresh_notification
@@ -145,6 +208,6 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
   end
 
   def permitted_attributes
-    params.require(:user).permit(%w[name email])
+    params.require(:user).permit(%w[name email provider])
   end
 end
