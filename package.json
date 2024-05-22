@@ -17,7 +17,7 @@
     "axios": "^1.4.0",
     "babel-loader": "^8.3.0",
     "bootstrap": "^5.2.3",
-    "css-loader": "^6.7.3",
+    "css-loader": "^7.1.2",
     "jquery": "^3.6.4",
     "moment": "^2.29.4",
     "popper.js": "^1.16.1",
