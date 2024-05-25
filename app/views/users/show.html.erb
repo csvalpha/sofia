@@ -2,6 +2,7 @@
 <% content_for :modal do %>
   <%= render 'mutation_modal' %>
   <%= render 'modal' %>
+  <%= render 'edit_identity_modal' %>
 <% end %>
 
 
@@ -65,7 +66,12 @@
           <% end %></tr>
         </tbody>
       </table>
-      <% if current_user.treasurer? %>
+      <% if @identity && policy(@identity).update? %>
+        <button class="btn btn-sm btn-primary pull-right ms-2" data-bs-target="#edit_identity_modal" data-bs-toggle="modal" role="button">
+          <%= fa_icon 'sliders', class: 'me-1' %>
+          Instellingen
+        </button>
+      <% elsif current_user.treasurer? %>
         <button class="btn btn-sm btn-primary pull-right ms-2" data-bs-target="#edit_user_modal" data-bs-toggle="modal" role="button">
           <%= fa_icon 'pencil', class: 'me-1' %>
           Gebruiker wijzigen

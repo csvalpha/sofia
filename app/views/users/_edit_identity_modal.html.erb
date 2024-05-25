@@ -1,0 +1,139 @@
+<div aria-hidden="true" aria-labelledby="edit_identity_modal_label" class="modal fade" id="edit_identity_modal" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Instellingen</h5>
+        <button aria-label="close" class="btn-close" data-bs-dismiss="modal" type="button"/>
+      </div>
+      <div class="modal-body">
+        <% if @identity && policy(@identity).update? %>
+          <div class="card mb-3">
+            <div class="card-header py-2" type="button" data-bs-toggle="collapse" data-bs-target="#user-data-collapse" aria-expanded="false" aria-controls="user-data-collapse">
+              <h5 class="mb-0 py-1">Gegevens <%= fa_icon 'caret-down', class: 'float-end me-1' %></h5>
+            </div>
+            <div class="collapse card-body" id="user-data-collapse">
+              <%= simple_form_for @user, wrapper: :horizontal_form, url: update_with_identity_user_path, method: :patch do |f| %>
+                <%= f.simple_fields_for :identity do |i| %>
+                  <%= i.input :username, required: true %>
+                <% end %>
+                <% if current_user.treasurer? %>
+                  <%= f.input :name, label: 'Naam', placeholder: 'Naam', required: true %>
+                <% end %>
+                <%= f.input :email, label: 'E-mailadres', placeholder: 'E-mailadres', required: true %>
+                <% if current_user.treasurer? %>
+                  <div class="row">
+                    <div class="col-lg-3">
+                      Gedeactiveerd
+                    </div>
+                    <div class="col-lg-9">
+                      <%= f.check_box :deactivated %>
+                    </div>
+                  </div>
+                <% end %>
+                <%= f.button :submit, 'Opslaan', :data => {:disable_with => 'Bezig...'}, class: 'btn btn-primary float-end', method: :patch %>
+              <% end %>
+            </div>
+          </div>
+          
+          <div class="card mb-3">
+            <div class="card-header py-2" type="button" data-bs-toggle="collapse" data-bs-target="#password-collapse" aria-expanded="false" aria-controls="password-collapse">
+              <h5 class="mb-0 py-1">Wachtwoord <%= fa_icon 'caret-down', class: 'float-end me-1' %></h5>
+            </div>
+            <div class="collapse card-body" id="password-collapse">
+              <%= simple_form_for @identity, wrapper: :horizontal_form, url: update_password_identity_path(@identity.id), method: :patch do |f| %>
+                <%= f.input :old_password %>
+                <%= f.input :password %>
+                <%= f.input :password_confirmation, required: false %>
+                <%= f.button :submit, 'Opslaan', :data => {:disable_with => 'Bezig...'}, class: 'btn btn-primary float-end', method: :patch %>
+              <% end %>
+            </div>
+          </div>
+          
+          <div class="card mb-3">
+            <div class="card-header py-2" type="button" data-bs-toggle="collapse" data-bs-target="#otp-collapse" aria-expanded="false" aria-controls="otp-collapse">
+              <h5 class="mb-0 py-1">Two-factor-authenticatie <%= fa_icon 'caret-down', class: 'float-end me-1' %></h5>
+            </div>
+            <div class="collapse card-body" id="otp-collapse">
+              <p>
+                Two-factor-authenticatie geeft een extra beveiligingslaag door bij het
+                inloggen naast je wachtwoord ook om een zescijferige code te vragen. Deze code
+                wordt gegenereerd door een app op je telefoon. Zo heb je naast iets dat je
+                weet (wachtwoord) ook iets nodig dat je hebt (telefoon) om in te kunnen
+                loggen.
+              </p>
+              
+              <% if @identity.otp_enabled %>
+                <div class='alert alert-success' role='alert'>
+                  <div class='container'>
+                    <div class='row align-items-center'>
+                      <p class='col-lg-8 col-md-12 mb-0'>
+                        <strong>Je hebt two-factor-authenticatie geactiveerd!</strong>
+                      </p>
+                      <div class='col-lg-4 col-md-12'>
+                        <%= link_to 'Deactiveren', disable_otp_identity_path, class: 'btn btn-danger  float-end' %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% else %>
+                <%= simple_form_for @identity, wrapper: :horizontal_form, url: enable_otp_identity_path(@identity.id), method: :patch do |f| %>
+                  <p>
+                    Scan de QR-code hieronder met een authenticatorapp. Er zijn
+                    authenticatorapps beschikbaar voor alle mobiele platforms. Hier volgen
+                    enkele links naar apps:
+                  </p>
+              
+                  <ul>
+                    <li>
+                      <%= fa_icon 'android', class: 'me-1' %>
+                      <a
+                        href='https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2'
+                        target='_blank'
+                      >
+                        Google Authenticator
+                      </a>
+                    </li>
+                    <li>
+                    <%= fa_icon 'apple', class: 'me-1' %>
+                      <a
+                        href='https://itunes.apple.com/us/app/authenticator/id766157276?mt=8'
+                        target='_blank'
+                      >
+                        Authenticator
+                      </a>
+                    </li>
+                    <li>
+                      <%= fa_icon 'windows', class: 'me-1' %>
+                      <a
+                        href='https://www.microsoft.com/en-us/store/p/microsoft-authenticator/9nblgggzmcj6'
+                        target='_blank'
+                      >
+                        Microsoft Authenticator
+                      </a>
+                    </li>
+                  </ul>
+                  <p>
+                    Nadat je de code gescand hebt, bevestig je de set-up door een keer een
+                    gegenereerde code in te voeren.
+                  </p>
+              
+                  <%= render inline: @svg_qr_code %>
+                  
+                  <div class="mt-3">
+                    <%= f.input :verification_code, as: :string, input_html: { name: 'verification_code', value: "" } %>
+                  </div>
+
+                  <%= f.button :submit, '2FA Activeren', :data => {:disable_with => 'Bezig...'}, class: 'btn btn-primary float-end', method: :patch %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Sluiten</button>
+      </div>
+    </div>
+  </div>
+</div>

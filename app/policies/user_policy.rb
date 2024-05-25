@@ -22,4 +22,8 @@ class UserPolicy < ApplicationPolicy
   def activities?
     user&.treasurer? || record == user
   end
+
+  def update_with_identity?
+    record == user && User.active.identity.exists?(id: record)
+  end
 end

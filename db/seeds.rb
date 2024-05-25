@@ -45,4 +45,6 @@ p 'Seeding roles...'
 Role.create(role_type: :treasurer, group_uid: 3)
 Role.create(role_type: :main_bartender, group_uid: 3)
 Role.create(role_type: :main_bartender, group_uid: 2)
+Role.create(role_type: :treasurer)
+Role.create(role_type: :main_bartender)
 # rubocop:enable Rails/Output

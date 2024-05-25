@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::Base
   include Pundit
 
+  protect_from_forgery with: :exception, prepend: true
+
   before_action :set_sentry_context
   before_action :set_paper_trail_whodunnit
   before_action :set_layout_flag
@@ -33,5 +35,9 @@ class ApplicationController < ActionController::Base
   def set_layout_flag
     @show_navigationbar = true
     @show_extras = true
+  end
+
+  def normalize_error_messages(full_messages)
+    return full_messages.map{ |message| message.downcase }.join(", ")
   end
 end
