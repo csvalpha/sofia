@@ -59,16 +59,22 @@ async function authenticate_login() {
 
   if (response.headers.get('Content-Type').includes("application/json")) {
     const json = await response.json();
+    document.querySelector("#authenticate_flash_holder").classList.add('d-none');
 
-    if (json.login_success) {
+    if (json.state == "logged_in") {
       window.location.replace(json.redirect_url);
-    } else if (json.otp_required) {
-      // username and password correct, now ask for authentication code
-      document.querySelector("#authenticate_flash_holder").classList.add('d-none');
+    } else if (json.state == "otp_prompt") {
+      // show prompt for authentication code
       document.querySelector("#login_card").classList.add('d-none');
       document.querySelector("#otp_card").classList.remove('d-none');
-    } else {
-      // username or password is wrong
+    } else if (json.state == "password_prompt") {
+      // show prompt for password
+      document.querySelector("#authenticate_flash_holder").classList.remove('d-none');
+      document.querySelector("#login_card").classList.remove('d-none');
+      document.querySelector("#otp_card").classList.add('d-none');
+    }
+
+    if (json.error_message) {
       document.querySelector("#authenticate_flash_message").textContent = json.error_message;
       document.querySelector("#authenticate_flash_holder").classList.remove('d-none');
     }
