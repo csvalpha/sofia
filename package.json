@@ -24,7 +24,7 @@
     "postcss-cssnext": "^3.1.1",
     "remove-accents": "^0.4.4",
     "turbolinks-animate": "^3.2.1",
-    "vue": "^2.7.14",
+    "vue": "^3.5.12",
     "vue-loader": "^15.10.1",
     "vue-resource": "^1.5.3",
     "vue-template-compiler": "^2.7.14",
