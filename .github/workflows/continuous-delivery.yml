@@ -26,7 +26,7 @@ concurrency:
 
 env:
   PROJECT_NAME: sofia
-
+gi8t
 jobs:
   branch_check:
     name: Branch Check
@@ -130,7 +130,9 @@ jobs:
     with:
       sha: ${{ needs.merge.outputs.sha }}
     secrets:
+      codecov_token: ${{ secrets.CODECOV_TOKEN }}
       rails_master_key: ${{ secrets.RAILS_MASTER_KEY }}
+      
 
   publish_image:
     name: Publish Image
