@@ -26,7 +26,7 @@ concurrency:
 
 env:
   PROJECT_NAME: sofia
-gi8t
+  
 jobs:
   branch_check:
     name: Branch Check
