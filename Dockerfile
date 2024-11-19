@@ -27,7 +27,7 @@ ARG NODE_ENV='production'
 
 # Pre-install gems, so that they can be cached.
 COPY Gemfile* /app/
-RUN if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ]; then \
+RUN if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ] || [ "$RAILS_ENV" = 'luxproduction' ]; then \
     bundle config set --local without 'development test'; \
   else \
     bundle config set --local without 'development'; \
@@ -42,7 +42,9 @@ RUN yarn install --immutable
 COPY . /app/
 
 # Precompile assets after copying app because whole Rails pipeline is needed.
-RUN if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ]; then \
+RUN --mount=type=secret,id=rails_master_key \
+  if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ] || [ "$RAILS_ENV" = 'luxproduction' ]; then \
+    # Use secret if RAILS_MASTER_KEY build arg is not set.
     SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile; \
   else \
     echo "Skipping assets:precompile"; \

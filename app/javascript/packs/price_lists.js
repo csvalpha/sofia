@@ -8,7 +8,7 @@ Vue.use(VueResource);
 document.addEventListener('turbolinks:load', () => {
   Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-  var element = document.getElementById('price_lists_table');
+  var element = document.getElementById('pricelists-container');
   if (element != null) {
     var priceLists = JSON.parse(element.dataset.priceLists);
     var products = JSON.parse(element.dataset.products);
@@ -19,7 +19,16 @@ document.addEventListener('turbolinks:load', () => {
     new Vue({
       el: element,
       data: () => {
-        return { priceLists: priceLists, products: products };
+        return { priceLists: priceLists, products: products, showArchived: false };
+      },
+      computed: {
+        filteredPriceLists: function() {
+          if (this.showArchived) {
+            return priceLists;
+          } else {
+            return priceLists.filter(priceList => !priceList.archived_at);
+          }
+        }
       },
       methods: {
         findPrice: function(product, priceList) {
@@ -122,6 +131,22 @@ document.addEventListener('turbolinks:load', () => {
             this.products.splice(index, 1);
           }
           return products;
+        },
+
+        archivePriceList: function(priceList) {
+          this.$http.post(`/price_lists/${priceList.id}/archive`, {}).then((response) => {
+            priceList.archived_at = response.data;
+          }, (response) => {
+            this.errors = response.data.errors;
+          });
+        },
+
+        unarchivePriceList: function(priceList) {
+          this.$http.post(`/price_lists/${priceList.id}/unarchive`, {}).then((response) => {
+            priceList.archived_at = response.data;
+          }, (response) => {
+            this.errors = response.data.errors;
+          });
         },
 
         productPriceToCurrency: function(productPrice) {

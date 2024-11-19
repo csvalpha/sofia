@@ -64,18 +64,23 @@ module Sofia
 
     config.x.site_name = ENV.fetch('SITE_NAME', 'S.O.F.I.A.')
     config.x.site_short_name = ENV.fetch('SITE_SHORT_NAME', 'SOFIA')
+    config.x.site_long_name = ENV.fetch('SITE_LONG_NAME', 'Streepsysteem voor de Ordentelijke Festiviteiten van Inleggend Alpha')
     config.x.site_association = ENV.fetch('SITE_ASSOCIATION', 'C.S.V. Alpha')
 
-    config.x.code_beer = ENV.fetch('CODE_BEER', nil)
-    config.x.code_craft_beer = ENV.fetch('CODE_CRAFT_BEER', nil)
-    config.x.code_non_alcoholic = ENV.fetch('CODE_NON_ALCOHOLIC', nil)
-    config.x.code_distilled = ENV.fetch('CODE_DISTILLED', nil)
-    config.x.code_wine = ENV.fetch('CODE_WINE', nil)
-    config.x.code_food = ENV.fetch('CODE_FOOD', nil)
-    config.x.code_tobacco = ENV.fetch('CODE_TOBACCO', nil)
-    config.x.code_donation = ENV.fetch('CODE_DONATION', nil)
-    config.x.code_credit_mutation = ENV.fetch('CODE_CREDIT_MUTATION', nil)
-    config.x.code_cash = ENV.fetch('CODE_CASH', nil)
-    config.x.code_pin = ENV.fetch('CODE_PIN', nil)
+    config.x.codes                = {
+      beer: ENV.fetch('CODE_BEER', nil),
+      low_alcohol_beer: ENV.fetch('CODE_LOW_ALCOHOL_BEER', nil),
+      craft_beer: ENV.fetch('CODE_CRAFT_BEER', nil),
+      non_alcoholic: ENV.fetch('CODE_NON_ALCOHOLIC', nil),
+      distilled: ENV.fetch('CODE_DISTILLED', nil),
+      whiskey: ENV.fetch('CODE_WHISKEY', nil),
+      wine: ENV.fetch('CODE_WINE', nil),
+      food: ENV.fetch('CODE_FOOD', nil),
+      tobacco: ENV.fetch('CODE_TOBACCO', nil),
+      donation: ENV.fetch('CODE_DONATION', nil),
+      credit_mutation: ENV.fetch('CODE_CREDIT_MUTATION', nil),
+      cash: ENV.fetch('CODE_CASH', nil),
+      pin: ENV.fetch('CODE_PIN', nil)
+    }
   end
 end

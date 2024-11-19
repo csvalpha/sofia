@@ -7,6 +7,13 @@ on:
         description: Merge staging into master first? (y/N)
         required: false
         default: 'n'
+      target_env:
+        type: choice
+        description: Target environment
+        options:
+          - csvalpha
+          - luxadmosam
+        default: 'csvalpha'
 
 concurrency:
   group: cd-${{ github.ref_name }}
@@ -20,9 +27,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Validate branch
+        env:
+          TARGET_ENV: ${{ github.event.inputs.target_env }}
         run: |
           if [ "$GITHUB_REF_NAME" != 'staging' ] && [ "$GITHUB_REF_NAME" != 'master' ]; then
             echo 'This workflow can only be run on branches staging and master.'
+            exit 1
+          fi
+          if [ "$TARGET_ENV" == 'luxadmosam' ] && [ "$GITHUB_REF_NAME" != 'master' ]; then
+            echo 'Only the master branch can be deployed to Lux ad Mosam.'
             exit 1
           fi
 
@@ -35,12 +48,13 @@ jobs:
       stage: ${{ steps.get_metadata.outputs.stage }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
 
       - name: Get metadata
         id: get_metadata
         env:
           INPUT_MERGE: ${{ github.event.inputs.merge }}
+          TARGET_ENV: ${{ github.event.inputs.target_env }}
         run: |
           if [ "$GITHUB_REF_NAME" = 'master' ]; then
             if [ "${INPUT_MERGE,,}" = 'y' ]; then
@@ -52,7 +66,11 @@ jobs:
               fi
             fi
 
-            echo 'stage=production' >> "$GITHUB_OUTPUT"
+            if [ "$TARGET_ENV" == 'luxadmosam' ]; then
+              echo 'stage=luxproduction' >> "$GITHUB_OUTPUT"
+            else
+              echo 'stage=production' >> "$GITHUB_OUTPUT"
+            fi
           else
             echo 'stage=staging' >> "$GITHUB_OUTPUT"
           fi
@@ -80,7 +98,7 @@ jobs:
 
       - name: Checkout code
         if: fromJSON(needs.metadata.outputs.has_diff)
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
 
       - name: Run merge
         if: fromJSON(needs.metadata.outputs.has_diff)
@@ -127,15 +145,19 @@ jobs:
     steps:
       - name: Get environment URL
         id: get_url
+        env:
+          TARGET_ENV: ${{ github.event.inputs.target_env }}
         run: |
-          if [ "$GITHUB_REF_NAME" = 'master' ]; then
+          if [ "$TARGET_ENV" == 'luxadmosam' ] && [ "$GITHUB_REF_NAME" = 'master' ]; then
+            echo 'environment_url=https://luxstreep.csvalpha.nl' >> "$GITHUB_OUTPUT"
+          elif [ "$GITHUB_REF_NAME" = 'master' ]; then
             echo 'environment_url=https://streep.csvalpha.nl' >> "$GITHUB_OUTPUT"
           else
             echo 'environment_url=https://stagingstreep.csvalpha.nl' >> "$GITHUB_OUTPUT"
           fi
 
       - name: Checkout code
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
         with:
           ref: ${{ needs.merge.outputs.sha }}
 
@@ -147,7 +169,7 @@ jobs:
           env: ${{ needs.metadata.outputs.stage }}
 
       - name: Deploy
-        uses: appleboy/ssh-action@334f9259f2f8eb3376d33fa4c684fff373f2c2a6 # v0.1.10
+        uses: appleboy/ssh-action@55dabf81b49d4120609345970c91507e2d734799 # v1.0.0
         env:
           STAGE: ${{ needs.metadata.outputs.stage }}
         with:
