@@ -67,7 +67,7 @@ module Sofia
     config.x.site_long_name = ENV.fetch('SITE_LONG_NAME', 'Streepsysteem voor de Ordentelijke Festiviteiten van Inleggend Alpha')
     config.x.site_association = ENV.fetch('SITE_ASSOCIATION', 'C.S.V. Alpha')
 
-    config.x.codes                = {
+    config.x.codes = {
       beer: ENV.fetch('CODE_BEER', nil),
       low_alcohol_beer: ENV.fetch('CODE_LOW_ALCOHOL_BEER', nil),
       craft_beer: ENV.fetch('CODE_CRAFT_BEER', nil),
