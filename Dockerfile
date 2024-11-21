@@ -44,7 +44,6 @@ COPY . /app/
 # Precompile assets after copying app because whole Rails pipeline is needed.
 RUN --mount=type=secret,id=rails_master_key \
   if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ] || [ "$RAILS_ENV" = 'luxproduction' ]; then \
-    # Use secret if RAILS_MASTER_KEY build arg is not set.
     SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile; \
   else \
     echo "Skipping assets:precompile"; \

@@ -11,6 +11,10 @@ on:
         description: The commit SHA to run the workflow on
         required: false
         type: string
+    secrets:
+      rails_master_key:
+        description: The Rails master key
+        required: true
 
 jobs:
   build:
@@ -118,8 +122,11 @@ jobs:
           name: app
 
       - name: Test
+        env:
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
         run: |
           docker run \
+          -e RAILS_MASTER_KEY \
           -e POSTGRES_USER=postgres \
           -e POSTGRES_PASSWORD=postgres \
           -e POSTGRES_HOST=localhost \

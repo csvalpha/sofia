@@ -124,7 +124,6 @@ GEM
     devise-i18n (1.10.2)
       devise (>= 4.8.0)
     diff-lcs (1.5.0)
-    digest (3.1.1)
     docile (1.4.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
@@ -222,8 +221,6 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
-    libv8-node (16.10.0.0)
-    libv8-node (16.10.0.0-x86_64-linux)
     listen (3.7.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -249,8 +246,6 @@ GEM
       rake
     mini_mime (1.1.5)
     mini_portile2 (2.8.4)
-    mini_racer (0.6.2)
-      libv8-node (~> 16.10.0.0)
     minitest (5.20.0)
     mollie-api-ruby (4.7.1)
     msgpack (1.5.2)
@@ -586,7 +581,6 @@ DEPENDENCIES
   kaminari (~> 1.2.0)
   listen
   mina (~> 1.2.0)
-  mini_racer (~> 0.6.0)
   mollie-api-ruby (~> 4.7.0)
   net-imap
   net-pop

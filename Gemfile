@@ -12,7 +12,6 @@ gem 'http', '~> 5.0.0'
 gem 'jbuilder', '~> 2.11.0'
 gem 'jquery-rails', '~> 4.5.0'
 gem 'kaminari', '~> 1.2.0'
-gem 'mini_racer', '~> 0.6.0'
 gem 'mollie-api-ruby', '~> 4.7.0'
 gem 'net-imap', require: false
 gem 'net-pop', require: false

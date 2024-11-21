@@ -123,6 +123,8 @@ jobs:
     uses: csvalpha/sofia/.github/workflows/continuous-integration.yml@staging
     with:
       sha: ${{ needs.merge.outputs.sha }}
+    secrets:
+      rails_master_key: ${{ secrets.RAILS_MASTER_KEY }}
 
   publish_image:
     name: Publish Image
