@@ -27,7 +27,7 @@ RSpec.describe Product, type: :model do
 
   describe '#requires_age' do
     context 'when with requires age category' do
-      subject(:product) { create(:product, category: %w[beer craft_beer distilled wine tobacco].sample) }
+      subject(:product) { create(:product, category: %w[beer craft_beer distilled whiskey wine tobacco].sample) }
 
       it { expect(product.requires_age).to be true }
     end

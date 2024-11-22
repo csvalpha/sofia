@@ -13,3 +13,7 @@ end
 task :production do
   set :deploy_to, '/opt/docker/sofia/production'
 end
+
+task :luxproduction do
+  set :deploy_to, '/opt/docker/sofia/luxproduction'
+end

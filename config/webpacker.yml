@@ -97,3 +97,7 @@ production: &production
 staging:
   <<: *production
   public_root_path: public # https://github.com/rails/webpacker/issues/1912
+
+luxproduction:
+  <<: *production
+  public_root_path: public # https://github.com/rails/webpacker/issues/1912
