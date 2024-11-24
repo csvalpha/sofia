@@ -12,9 +12,6 @@ on:
         required: false
         type: string
     secrets:
-      codecov_token:
-        description: Codecov token
-        required: true
       rails_master_key:
         description: The Rails master key
         required: true
