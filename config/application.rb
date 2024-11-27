@@ -32,8 +32,8 @@ module Sofia
       Rails.env.to_sym, :amber_client_secret
     ) || ENV.fetch('AMBER_CLIENT_SECRET', nil)
 
-    config.x.amber_host = credentials.dig(Rails.env.to_sym, :amber_host)
-    config.x.tomato_host          = credentials.dig(Rails.env.to_sym, :tomato_host)
+    config.x.amber_host          = credentials.dig(Rails.env.to_sym, :amber_host)
+    config.x.sofia_host          = credentials.dig(Rails.env.to_sym, :sofia_host)
 
     config.x.slack_webhook        = credentials.dig(Rails.env.to_sym, :slack_webhook) || ''
     config.x.slack_channel        = '#monitoring'
