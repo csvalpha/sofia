@@ -55,7 +55,7 @@ $ EDITOR="code --wait" bundle exec rails credentials:edit
 In OAuth AMBER (github.com/csvalpha/amber-api), execute the following command (in `rails console`):
 
 ```ruby
-app = Doorkeeper::Application.create(name: 'SOFIA - Streepsysteem der C.S.V. Alpha', redirect_uri: 'http://localhost:5000/users/auth/amber_oauth2/callback', scopes: 'public tomato')
+app = Doorkeeper::Application.create(name: 'SOFIA - Streepsysteem der C.S.V. Alpha', redirect_uri: 'http://localhost:5000/users/auth/amber_oauth2/callback', scopes: 'public sofia')
 app.uid
 app.plaintext_secret
 ```
