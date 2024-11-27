@@ -12,7 +12,7 @@ module OmniAuth
 
       def authorize_params
         params = super
-        params[:scope] = 'public tomato sofia'
+        params[:scope] = 'public sofia'
         params
       end
 
