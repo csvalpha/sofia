@@ -107,7 +107,7 @@ jobs:
     needs: [metadata, publish]
     if: github.event_name == 'workflow_dispatch' && github.workflow == 'Publish Image' && always()
     permissions:
-      - checks: write
+      checks: write
     steps:
       - name: Get conclusion
         id: get_conclusion

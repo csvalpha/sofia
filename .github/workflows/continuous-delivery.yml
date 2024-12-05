@@ -214,7 +214,7 @@ jobs:
     needs: [branch_check, metadata, merge, continuous_integration, publish_image, deploy]
     if: (github.ref_name == 'staging' || github.ref_name == 'master') && always()
     permissions:
-      - checks: write
+      checks: write
     steps:
       - name: Get conclusion
         id: get_conclusion
