@@ -19,7 +19,7 @@
                 <input class="d-none" name="invoice[activity_id]" v-bind:value="selectedSuggestion.id"/>
 
                 <input @focus="openSuggestions" @input="openSuggestions" aria-haspopup="true" autocomplete="off"
-                       class="form-control" placeholder="Begin met typen..." required="true" type="text"
+                       class="form-control" placeholder="Zoek op specifieke gebruiker..." required="true" type="text"
                        v-bind:aria-expanded="dropdownOpened" v-model="query"/>
                 <div class="row g-0 w-100 position-relative">
                   <ul class="dropdown-menu" v-bind:class="{'show':dropdownOpened}">

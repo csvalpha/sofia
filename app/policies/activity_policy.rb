@@ -14,7 +14,7 @@ class ActivityPolicy < ApplicationPolicy
   end
 
   def update?
-    user&.treasurer?  || user&.renting_manager? || user&.main_bartender?
+    user&.treasurer? || user&.renting_manager? || user&.main_bartender?
   end
 
   def lock?

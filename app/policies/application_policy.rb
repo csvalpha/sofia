@@ -7,7 +7,7 @@ class ApplicationPolicy
   end
 
   def index?
-    user&.treasurer?  || user&.renting_manager? || user&.main_bartender?
+    user&.treasurer? || user&.renting_manager? || user&.main_bartender?
   end
 
   def show?
