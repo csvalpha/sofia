@@ -9,7 +9,7 @@ describe PriceListsController, type: :controller do
       post :create, params: { price_list: price_list.attributes }
     end
 
-    it 'treasurer cna create a new price_list' do
+    it 'treasurer can create a new price_list' do
       sign_in create(:user, :treasurer)
       expect { request }.to(change(PriceList, :count).by(1))
     end
