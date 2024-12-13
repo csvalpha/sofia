@@ -14,7 +14,7 @@ class PriceListPolicy < ApplicationPolicy
   end
 
   def show?
-    user&.treasurer? || user&.main_bartender? || user&.renting_manager?
+    user&.treasurer?  || user&.renting_manager? || user&.main_bartender?
   end
 
   def create?
