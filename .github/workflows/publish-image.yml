@@ -106,6 +106,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [metadata, publish]
     if: github.event_name == 'workflow_dispatch' && github.workflow == 'Publish Image' && always()
+    permissions:
+      checks: write
     steps:
       - name: Get conclusion
         id: get_conclusion
@@ -121,10 +123,9 @@ jobs:
           done
 
       - name: Update Publish Image check run
-        uses: guidojw/actions/update-check-run@abb0ee8d1336edf73383f2e5a09abd3a22f25b13 # v1.3.3
+        uses: LouisBrunner/checks-action@6b626ffbad7cc56fd58627f774b9067e6118af23 # v2.0.0
         with:
-          app_id: ${{ vars.GH_APP_ID }}
-          private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          token: ${{ github.token }}
           name: Publish Image
           conclusion: ${{ steps.get_conclusion.outputs.conclusion }}
           details_url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
