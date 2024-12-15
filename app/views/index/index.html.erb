@@ -3,7 +3,7 @@
 
 <div class="container py-sm-3">
   <div class="row">
-    <% if user&.treasurer? || user&.renting_manager? || user&.main_bartender? %>
+    <% if current_user&.treasurer? || current_user&.renting_manager? || current_user&.main_bartender? %>
       <div class="col-12 col-md-6 mb-2">
         <div class="card">
           <h5 class="card-header">Welkom,  <%= current_user.name %>
