@@ -120,12 +120,11 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
 
   def product_totals
     authorize Activity
-  
+
     permitted_params = params.permit(:id, :user, :paid_with_pin, :paid_with_cash)
     activity = Activity.includes(:price_list, orders: [{ order_rows: :product }, :user]).find(permitted_params[:id])
     render json: activity.count_per_product(**permitted_params.except(:id).to_h.symbolize_keys)
   end
-  
 
   def sumup_callback
     if params['smp-status'] == 'success'
