@@ -33,6 +33,76 @@ describe ActivitiesController, type: :controller do
         expect(json.find { |item| item['name'] == products.first[:name] }['amount']).to eq 6
         expect(json.find { |item| item['name'] == products.last[:name] }['amount']).to eq 3
       end
+
+      context 'when filtering for user' do
+        let(:order) { create(:order, activity: activity, user: user) }
+        let(:params) { { id: activity.id, user: user.id } }
+
+        it do
+          expect(json.find { |item| item['name'] == products.first[:name] }['amount']).to eq 2
+          expect(json.find { |item| item['name'] == products.last[:name] }['amount']).to eq 3
+        end
+      end
+
+      context 'when filtering for cash' do
+        let(:order) { create(:order, activity: activity, paid_with_cash: true) }
+        let(:params) { { id: activity.id, paid_with_cash: true } }
+
+        it do
+          expect(json.find { |item| item['name'] == products.first[:name] }['amount']).to eq 2
+          expect(json.find { |item| item['name'] == products.last[:name] }['amount']).to eq 3
+        end
+      end
+
+      context 'when filtering for pin' do
+        let(:order) { create(:order, activity: activity, paid_with_pin: true) }
+        let(:params) { { id: activity.id, paid_with_pin: true } }
+
+        it do
+          expect(json.find { |item| item['name'] == products.first[:name] }['amount']).to eq 2
+          expect(json.find { |item| item['name'] == products.last[:name] }['amount']).to eq 3
+        end
+      end
+    end
+
+    describe 'when as renting-manager' do
+      let(:user) { create(:user, :renting_manager) }
+
+      it do
+        expect(request.status).to eq 200
+        expect(json.find { |item| item['name'] == products.first[:name] }['amount']).to eq 6
+        expect(json.find { |item| item['name'] == products.last[:name] }['amount']).to eq 3
+      end
+
+      context 'when filtering for user' do
+        let(:order) { create(:order, activity: activity, user: user) }
+        let(:params) { { id: activity.id, user: user.id } }
+
+        it do
+          expect(json.find { |item| item['name'] == products.first[:name] }['amount']).to eq 2
+          expect(json.find { |item| item['name'] == products.last[:name] }['amount']).to eq 3
+        end
+      end
+
+      context 'when filtering for cash' do
+        let(:order) { create(:order, activity: activity, paid_with_cash: true) }
+        let(:params) { { id: activity.id, paid_with_cash: true } }
+
+        it do
+          expect(json.find { |item| item['name'] == products.first[:name] }['amount']).to eq 2
+          expect(json.find { |item| item['name'] == products.last[:name] }['amount']).to eq 3
+        end
+      end
+
+      context 'when filtering for pin' do
+        let(:order) { create(:order, activity: activity, paid_with_pin: true) }
+        let(:params) { { id: activity.id, paid_with_pin: true } }
+
+        it do
+          expect(json.find { |item| item['name'] == products.first[:name] }['amount']).to eq 2
+          expect(json.find { |item| item['name'] == products.last[:name] }['amount']).to eq 3
+        end
+      end
     end
 
     describe 'when as treasurer' do
