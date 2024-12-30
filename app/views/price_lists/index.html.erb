@@ -16,7 +16,7 @@
           Hier worden alle prijslijsten en alle producten getoond.
         </span>
         <% if policy(PriceList).create? %>
-          <button class="btn btn-sm btn-primary" data-bs-target="#editPriceListModal" data-bs-toggle="modal" role="button">
+          <button class="btn btn-sm btn-primary" data-bs-target="#newPriceListModal" data-bs-toggle="modal" role="button">
             <%= fa_icon 'plus', class: 'me-1' %>
             Nieuwe prijslijst
           </button>
