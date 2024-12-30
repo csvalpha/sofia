@@ -47,7 +47,11 @@
                 <%= activity.price_list.name %>
               </td>
               <td>
-                <%= link_to activity.created_by.name, activity.created_by %>
+                <% if policy(activity.created_by).show? %>
+                  <%= link_to activity.created_by.name, activity.created_by %>
+                <% else %>
+                  <%= activity.created_by.name %>
+                <% end%>
               </td>
             </tr>
           <% end %>

@@ -15,19 +15,23 @@
         <span class="my-1">
           Hier worden alle prijslijsten en alle producten getoond.
         </span>
-        <button class="btn btn-sm btn-primary" data-bs-target="#newPriceListModal" data-bs-toggle="modal" role="button">
-          <%= fa_icon 'plus', class: 'me-1' %>
-          Nieuwe prijslijst
-        </button>
+        <% if policy(PriceList).create? %>
+          <button class="btn btn-sm btn-primary" data-bs-target="#editPriceListModal" data-bs-toggle="modal" role="button">
+            <%= fa_icon 'plus', class: 'me-1' %>
+            Nieuwe prijslijst
+          </button>
+        <% end %>
       </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="show-archived-check" v-model="showArchived">
-        <label class="form-check-label" for="show-archived-check">
-          Laat gearchieveerde prijslijsten zien 
-        </label>
-      </div>
+      <% if policy(PriceList).archive? %>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="show-archived-check" v-model="showArchived">
+          <label class="form-check-label" for="show-archived-check">
+            Laat gearchieveerde prijslijsten zien 
+          </label>
+        </div>
+      <% end %>
       
-      <table id='price-lists-table' class='price-lists-table table table-striped overflow-scroll mw-100 mx-auto d-block'>
+      <table id='price-lists-table' class='price-lists-table table table-striped overflow-scroll mw-100 mx-auto d-block pe-2'>
         <thead class="table-header-rotated products">
         <tr>
           <th class="products-id" scope="col">ID</th>
@@ -40,7 +44,7 @@
               </span>
             </div>
           </th>
-          <th class="products-actions" v-if="filteredPriceLists.length > 0">
+          <th class="products-actions" v-if="<%= policy(Product).update? %> && filteredPriceLists.length > 0">
           </th>
         </tr>
         </thead>
@@ -92,7 +96,7 @@
                 {{ productPriceToCurrency(findPrice(product, priceList)) }}
               </span>
             </td>
-            <td class="products-new-edit-button" v-if="filteredPriceLists.length > 0">
+            <td class="products-new-edit-button" v-if="<%= policy(Product).update? %> && filteredPriceLists.length > 0">
               <button class="btn btn-sm btn-outline-secondary" v-on:click="editProduct(product)">
                 <%= fa_icon 'pencil' %>
               </button>
@@ -102,10 +106,12 @@
         <tr>
           <td colspan="3">
             <div class="d-grid">
-              <button class="btn btn-secondary btn-sm products-button-new" v-on:click.prevent="newProduct">
-                Voeg een nieuw product toe
-                <%= fa_icon 'plus-square', class: 'ps-2' %>
-              </button>
+              <% if policy(Product).create? %>
+                <button class="btn btn-secondary btn-sm products-button-new" v-on:click.prevent="newProduct">
+                  Voeg een nieuw product toe
+                  <%= fa_icon 'plus-square', class: 'ps-2' %>
+                </button>
+              <% end %>
             </div>
           </td>
           <td v-for="priceList in filteredPriceLists">

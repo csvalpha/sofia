@@ -21,6 +21,13 @@ describe ActivitiesController, type: :controller do
       expect(request.status).to eq 403
     end
 
+    it 'unauthenticated when as renting-manager' do
+      sign_in create(:user, :renting_manager)
+      request
+
+      expect(request.status).to eq 403
+    end
+
     context 'when as treasurer' do
       let(:user) { create(:user, :treasurer) }
 
