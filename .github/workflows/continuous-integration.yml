@@ -125,7 +125,6 @@ jobs:
           name: app
 
       - name: Test
-        - name: Test
           env:
             RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           run: |
