@@ -20,7 +20,13 @@ RSpec.describe Role, type: :model do
       it { expect(role.name).to eq Rails.application.config.x.treasurer_title.capitalize }
     end
 
-    context 'when main bartender' do
+    context 'when renting-manager' do
+      subject(:role) { build_stubbed(:role, role_type: :renting_manager) }
+
+      it { expect(role.name).to eq 'Verhuur manager' }
+    end
+
+    context 'when main-bartender' do
       subject(:role) { build_stubbed(:role, role_type: :main_bartender) }
 
       it { expect(role.name).to eq 'Hoofdtapper' }

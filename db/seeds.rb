@@ -42,9 +42,10 @@ p 'Seeding invoices'
 FactoryBot.create_list(:invoice, 3, :with_rows)
 
 p 'Seeding roles...'
-Role.create(role_type: :treasurer, group_uid: 3)
-Role.create(role_type: :main_bartender, group_uid: 3)
-Role.create(role_type: :main_bartender, group_uid: 2)
+Role.create(role_type: :treasurer, group_uid: 4)
+Role.create(role_type: :renting_manager, group_uid: 5)
+Role.create(role_type: :main_bartender, group_uid: 6)
 Role.create(role_type: :treasurer)
+Role.create(role_type: :renting_manager)
 Role.create(role_type: :main_bartender)
 # rubocop:enable Rails/Output

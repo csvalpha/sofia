@@ -94,6 +94,10 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
     @main_bartender ||= roles.where(role_type: :main_bartender).any?
   end
 
+  def renting_manager?
+    @renting_manager ||= roles.where(role_type: :renting_manager).any?
+  end
+
   def update_role(groups)
     if (User.in_amber.exists?(self.id))
       roles_to_have = Role.where(group_uid: groups)

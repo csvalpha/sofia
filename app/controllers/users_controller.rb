@@ -6,11 +6,11 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
   def index # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     authorize User
 
-    @manual_users = User.manual.active.order(:name)
-    @identity_users = User.identity.active.order(:name)
-    @amber_users = User.in_amber.active.order(:name)
-    @not_activated_users = User.not_activated.order(:name)
-    @deactivated_users = User.deactivated.order(:name)
+    @manual_users = User.manual.active.order(:name).select { |u| policy(u).show? }
+    @identity_users = User.identity.active.order(:name).select { |u| policy(u).show? }
+    @amber_users = User.in_amber.active.order(:name).select { |u| policy(u).show? }
+    @inactive_users = User.inactive.order(:name).select { |u| policy(u).show? }
+    @deactivated_users = User.deactivated.order(:name).select { |u| policy(u).show? }
     @users_credits = User.calculate_credits
 
     @manual_users_json = @manual_users.as_json(only: %w[id name])

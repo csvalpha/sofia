@@ -16,12 +16,22 @@ FactoryBot.define do
       end
     end
 
+    trait(:renting_manager) do
+      after :create do |user, _evaluator|
+        user.roles = [FactoryBot.create(:role, role_type: :renting_manager)]
+      end
+    end
+
     trait(:from_amber) do
       provider { 'amber_oauth2' }
     end
 
     trait(:identity) do
       provider { 'identity' }
+    end
+
+    trait(:manual) do
+      provider { nil }
     end
   end
 end

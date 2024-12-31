@@ -1,6 +1,6 @@
 class UserPolicy < ApplicationPolicy
   def index?
-    user&.treasurer?
+    user&.treasurer? || user&.renting_manager? || user&.main_bartender?
   end
 
   def refresh_user_list?
@@ -12,7 +12,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def show?
-    user&.treasurer? || record == user
+    user&.treasurer? || (user&.renting_manager? && User.manual.exists?(id: record)) || record == user
   end
 
   def json?
@@ -20,7 +20,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def activities?
-    user&.treasurer? || record == user
+    show?
   end
 
   def update_with_identity?
