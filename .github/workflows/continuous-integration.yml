@@ -125,18 +125,18 @@ jobs:
           name: app
 
       - name: Test
-          env:
-            RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-          run: |
-            mkdir coverage
-            docker run \ 
-              -e RAILS_MASTER_KEY \
-              -e POSTGRES_USER=postgres \
-              -e POSTGRES_PASSWORD=postgres \
-              -e POSTGRES_HOST=localhost \
-              --network=host \
-              -v "$(pwd)"'/coverage:/app/coverage' \ 
-              app bin/ci.sh spec
+        env:
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+        run: |
+          mkdir coverage
+          docker run \ 
+            -e RAILS_MASTER_KEY \
+            -e POSTGRES_USER=postgres \
+            -e POSTGRES_PASSWORD=postgres \
+            -e POSTGRES_HOST=localhost \
+            --network=host \
+            -v "$(pwd)"'/coverage:/app/coverage' \ 
+             app bin/ci.sh spec
 
 
       - name: Upload coverage report to Codecov
