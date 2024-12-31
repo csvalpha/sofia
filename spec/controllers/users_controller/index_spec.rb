@@ -5,14 +5,17 @@ describe UsersController, type: :controller do
     let(:alice) { create(:user, :treasurer, :manual) }
     let(:bob) { create(:user, :renting_manager, :manual) }
     let(:carl) { create(:user, :main_bartender, :manual) }
-    let(:amber) { create(:user, :from_amber) }
     let(:eve) { create(:user, :manual) }
 
     before do
+      create(:user, :from_amber)
+      create(:user, :sofia_account)
+      active_sofia_account_user = create(:user, :sofia_account)
+      create(:sofia_account, user: active_sofia_account_user)
+      create(:user, :manual, deactivated: true)
       alice
       bob
       carl
-      amber
       eve
     end
 
@@ -23,6 +26,9 @@ describe UsersController, type: :controller do
 
         expect(assigns(:manual_users).size).to eq 4
         expect(assigns(:amber_users).size).to eq 1
+        expect(assigns(:sofia_account_users).size).to eq 1
+        expect(assigns(:not_activated_users).size).to eq 1
+        expect(assigns(:deactivated_users).size).to eq 1
       end
     end
 
@@ -33,6 +39,9 @@ describe UsersController, type: :controller do
 
         expect(assigns(:manual_users).size).to eq 4
         expect(assigns(:amber_users).size).to eq 0
+        expect(assigns(:sofia_account_users).size).to eq 0
+        expect(assigns(:not_activated_users).size).to eq 0
+        expect(assigns(:deactivated_users).size).to eq 1
       end
     end
 
@@ -43,6 +52,9 @@ describe UsersController, type: :controller do
 
         expect(assigns(:manual_users).size).to eq 1
         expect(assigns(:amber_users).size).to eq 0
+        expect(assigns(:sofia_account_users).size).to eq 0
+        expect(assigns(:not_activated_users).size).to eq 0
+        expect(assigns(:deactivated_users).size).to eq 0
       end
     end
 

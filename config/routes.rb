@@ -27,8 +27,8 @@ Rails.application.routes.draw do
     member do
       get :activities
       get :json
-      get :activate_account
-      patch :update_with_identity
+      get :activate_sofia_account
+      patch :update_with_sofia_account
     end
   end
 
@@ -51,7 +51,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :identities, only: %i[create] do
+  resources :sofia_accounts, only: %i[create] do
     collection do
       get :login
       get :activate_account

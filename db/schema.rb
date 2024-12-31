@@ -43,7 +43,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_13_094147) do
     t.index ["user_id"], name: "index_credit_mutations_on_user_id"
   end
 
-  create_table "identities", force: :cascade do |t|
+  create_table "sofia_accounts", force: :cascade do |t|
     t.string "username", null: false
     t.string "password_digest", null: false
     t.bigint "user_id", null: false
@@ -52,8 +52,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_13_094147) do
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_identities_on_user_id"
-    t.index ["username"], name: "index_identities_on_username", unique: true
+    t.index ["user_id"], name: "index_sofia_accounts_on_user_id"
+    t.index ["username"], name: "index_sofia_accounts_on_username", unique: true
   end
 
   create_table "invoice_rows", force: :cascade do |t|

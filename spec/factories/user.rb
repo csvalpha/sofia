@@ -26,8 +26,8 @@ FactoryBot.define do
       provider { 'amber_oauth2' }
     end
 
-    trait(:identity) do
-      provider { 'identity' }
+    trait(:sofia_account) do
+      provider { 'sofia_account' }
     end
 
     trait(:manual) do

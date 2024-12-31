@@ -7,16 +7,16 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     authorize User
 
     @manual_users = User.manual.active.order(:name).select { |u| policy(u).show? }
-    @identity_users = User.identity.active.order(:name).select { |u| policy(u).show? }
     @amber_users = User.in_amber.active.order(:name).select { |u| policy(u).show? }
-    @inactive_users = User.inactive.order(:name).select { |u| policy(u).show? }
+    @sofia_account_users = User.sofia_account.active.order(:name).select { |u| policy(u).show? }
+    @not_activated_users = User.not_activated.order(:name).select { |u| policy(u).show? }
     @deactivated_users = User.deactivated.order(:name).select { |u| policy(u).show? }
     @users_credits = User.calculate_credits
 
     @manual_users_json = @manual_users.as_json(only: %w[id name])
                                       .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
-    @identity_users_json = @identity_users.as_json(only: %w[id name])
+    @sofia_account_users_json = @sofia_account_users.as_json(only: %w[id name])
                                       .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
     @amber_users_json = @amber_users.as_json(only: %w[id name])
@@ -40,9 +40,9 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     @user_json = @user.to_json(only: %i[id name deactivated])
     @new_mutation = CreditMutation.new(user: @user)
 
-    @identity = Identity.find_by(user_id: @user.id)
-    if @identity
-      qr_code = RQRCode::QRCode.new(@identity.provisioning_uri(@identity.username, issuer: "Streepsysteem #{Rails.application.config.x.site_association}"))
+    @sofia_account = SofiaAccount.find_by(user_id: @user.id)
+    if @sofia_account
+      qr_code = RQRCode::QRCode.new(@sofia_account.provisioning_uri(@sofia_account.username, issuer: "Streepsysteem #{Rails.application.config.x.site_association}"))
       @svg_qr_code = qr_code.as_svg(
         color: "000",
         shape_rendering: "crispEdges",
@@ -57,7 +57,7 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
         }
       )
     else
-      @identity = Identity.new
+      @sofia_account = SofiaAccount.new
     end
 
     @new_user = @user
@@ -144,7 +144,7 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     render json: activities_hash
   end
 
-  def activate_account 
+  def activate_sofia_account 
     user = User.find(params.require(:id))
     authorize user
 
@@ -157,17 +157,17 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     else
       return head :not_found
     end
-    @identity = Identity.new(user: user)
+    @sofia_account = SofiaAccount.new(user: user)
   end
 
-  def update_with_identity
+  def update_with_sofia_account
     @user = User.find(params[:id])
     authorize @user
 
-    @identity = @user.identity
-    authorize @identity
+    @sofia_account = @user.sofia_account
+    authorize @sofia_account
     
-    if @user.update(params.require(:user).permit(%i[email] + (current_user.treasurer? ? %i[name deactivated] : []), identity_attributes: %i[id username]))
+    if @user.update(params.require(:user).permit(%i[email] + (current_user.treasurer? ? %i[name deactivated] : []), sofia_account_attributes: %i[id username]))
       flash[:success] = 'Gegevens gewijzigd'
     else
       flash[:error] = "Gegevens wijzigen mislukt; #{@user.errors.full_messages.join(', ')}"

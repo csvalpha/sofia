@@ -1,13 +1,13 @@
 <% content_for :title, "Gebruikers - #{Rails.application.config.x.site_name}" %>
 <% content_for :modal do %>
   <%= render 'modal' %>
-  <%= render 'new_identity_user_modal' %>
+  <%= render 'new_sofia_account_user_modal' %>
 <% end %>
 
 <div class="container footer-padding">
   <h1 class="my-4">Gebruikers</h1>
 
-  <%= content_tag :div, id: 'users-index', data: {manual_users: @manual_users_json, identity_users: @identity_users_json, amber_users: @amber_users_json, not_activated_users: @not_activated_users_json, deactivated_users: @deactivated_users_json} do %>
+  <%= content_tag :div, id: 'users-index', data: {manual_users: @manual_users_json, sofia_account_users: @sofia_account_users_json, amber_users: @amber_users_json, not_activated_users: @not_activated_users_json, deactivated_users: @deactivated_users_json} do %>
     <div class="d-flex justify-content-between align-items-center">
       <h3>Handmatig aangemaakte gebruikers</h3>
       <% if policy(User).create? %>
@@ -38,14 +38,14 @@
     
     <div class="d-flex justify-content-between align-items-center">
       <h3>Streepsysteem gebruikers</h3>
-      <button class="btn btn-sm btn-primary" data-bs-target="#new_identity_user_modal" data-bs-toggle="modal" role="button">
+      <button class="btn btn-sm btn-primary" data-bs-target="#new_sofia_account_user_modal" data-bs-toggle="modal" role="button">
         <%= fa_icon 'plus' %>
         <span class="d-none d-md-inline ms-1">
           Nieuwe gebruiker
         </span>
       </button>
     </div>
-    <users-table :users="identity_users" class="mb-5"></users-table>
+    <users-table :users="sofia_account_users" class="mb-5"></users-table>
 
     <% if @not_activated_users.any? %>
       <div class="d-flex justify-content-between align-items-center mt-5">

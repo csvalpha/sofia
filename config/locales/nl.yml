@@ -34,7 +34,7 @@ nl:
 
   activerecord:
     attributes:
-      identity:
+      sofia_account:
         activation_token: 'Activatie-token'
         email: 'Emailadres'
         old_password: 'Oud wachtwoord'

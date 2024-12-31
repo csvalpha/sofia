@@ -12,25 +12,25 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   validates :uid, uniqueness: true, allow_blank: true
   validate :no_deactivation_when_nonzero_credit
   validates :email, format: { with: Devise.email_regexp }, allow_blank: true
-  validates :email, presence: true, if: ->(user) { !user.deactivated && user.identity.present? }
+  validates :email, presence: true, if: ->(user) { !user.deactivated && user.sofia_account.present? }
 
   scope :in_amber, (-> { where(provider: 'amber_oauth2') })
-  scope :identity, (-> { where(provider: 'identity') })
+  scope :sofia_account, (-> { where(provider: 'sofia_account') })
   scope :manual, (-> { where(provider: nil) })
   scope :active, (-> {
-    where(deactivated: false).where('(provider IS NULL OR provider != ?) OR (provider = ? AND id IN (?))', 'identity', 'identity', Identity.select('user_id'))
+    where(deactivated: false).where('(provider IS NULL OR provider != ?) OR (provider = ? AND id IN (?))', 'sofia_account', 'sofia_account', SofiaAccount.select('user_id'))
   })
-  scope :not_activated, (-> { where(deactivated: false, provider: 'identity').where('id NOT IN (?)', Identity.select('user_id')) })
+  scope :not_activated, (-> { where(deactivated: false, provider: 'sofia_account').where('id NOT IN (?)', SofiaAccount.select('user_id')) })
   scope :deactivated, (-> { where(deactivated: true) })
   scope :treasurer, (-> { joins(:roles).merge(Role.treasurer) })
 
-  has_one :identity, dependent: :delete
-  accepts_nested_attributes_for :identity
+  has_one :sofia_account, dependent: :destroy
+  accepts_nested_attributes_for :sofia_account
 
   attr_accessor :current_activity
 
   before_save do
-    if new_record? && self.provider == 'identity'
+    if new_record? && self.provider == 'sofia_account'
       self.activation_token = SecureRandom.urlsafe_base64
       self.activation_token_valid_till = 5.day.from_now
     end
@@ -44,7 +44,7 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   after_create do
-    if User.identity.exists?(id: self.id)
+    if User.sofia_account.exists?(id: self.id)
       UserMailer.account_creation_email(self).deliver_later
     end
   end
@@ -110,7 +110,7 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def archive!
     attributes.each_key do |attribute|
-      self[attribute] = nil unless %w[deleted_at updated_at created_at provider identity id uid].include? attribute
+      self[attribute] = nil unless %w[deleted_at updated_at created_at provider sofia_account id uid].include? attribute
     end
     self.name = "Gearchiveerde gebruiker #{id}"
     self.deactivated = true
@@ -134,8 +134,8 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def self.from_omniauth_inspect(auth)
-    identity = Identity.find(auth.uid)
-    identity.user
+    sofia_account = SofiaAccount.find(auth.uid)
+    sofia_account.user
   end
 
   # :nocov:
