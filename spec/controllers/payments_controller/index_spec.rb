@@ -17,6 +17,24 @@ describe PaymentsController, type: :controller do
       end
     end
 
+    context 'when as renting-manager' do
+      it 'forbids' do
+        sign_in create(:user, :renting_manager)
+        get :index
+
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    context 'when as main-bartender' do
+      it 'forbids' do
+        sign_in create(:user, :main_bartender)
+        get :index
+
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
     context 'when as user' do
       it 'forbids' do
         sign_in create(:user)

@@ -55,7 +55,7 @@ class OrdersController < ApplicationController
 
     authorize @order
 
-    if @order.activity.locked?
+    if @order.activity&.locked?
       render json: {}, status: :forbidden
     else
       @order.order_rows.each do |order_row|

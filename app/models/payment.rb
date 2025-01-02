@@ -33,7 +33,7 @@ class Payment < ApplicationRecord
     mollie_payment = Mollie::Payment.create(
       amount: { value: format('%<amount>.2f', amount: attributes[:amount]), currency: 'EUR' },
       description: description,
-      redirect_url: "http://#{Rails.application.config.x.tomato_host}/payments/#{obj.id}/callback"
+      redirect_url: "http://#{Rails.application.config.x.sofia_host}/payments/#{obj.id}/callback"
     )
 
     obj.update(mollie_id: mollie_payment.id)

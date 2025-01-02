@@ -20,10 +20,10 @@ gem 'net-smtp', require: false
 gem 'omniauth', '~> 2.1.1'
 gem 'omniauth-oauth2', '~> 1.8.0'
 gem 'omniauth-rails_csrf_protection', '~> 1.0', '>= 1.0.1'
-gem 'paper_trail', '~> 14.0.0'
+gem 'paper_trail', '~> 16.0.0'
 gem 'paranoia', '~> 3.0.0'
 gem 'pg', '~> 1.5.3'
-gem 'puma', '~> 6.2.2'
+gem 'puma', '~> 6.4.0'
 gem 'pundit', '~> 2.3.0'
 gem 'rack-attack', '~> 6.6.1'
 gem 'rails', '~> 7.0.4', '>= 7.0.4.3'
@@ -79,6 +79,7 @@ group :test do
   gem 'rubocop-rails'
   gem 'rubocop-rspec'
   gem 'simplecov', require: false
+  gem 'simplecov-lcov', '~> 0.8.0', require: false
   gem 'terminal-notifier-guard'
   gem 'timecop'
 end
