@@ -6,10 +6,12 @@ describe SofiaAccountsController, type: :controller do
       create(:sofia_account)
     end
     let(:user) { sofia_account.user }
-    let(:request_params) { { 
-      id: sofia_account.id,
-      verification_code: sofia_account.otp_code
-    } }
+    let(:request_params) do
+      {
+        id: sofia_account.id,
+        verification_code: sofia_account.otp_code
+      }
+    end
     let(:request) do
       patch :enable_otp, params: request_params
     end

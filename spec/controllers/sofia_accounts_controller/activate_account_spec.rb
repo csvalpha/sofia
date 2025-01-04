@@ -2,21 +2,25 @@ require 'rails_helper'
 
 describe SofiaAccountsController, type: :controller do
   describe 'GET activate_account' do
-    let(:user) { create(:user, :sofia_account, activation_token: SecureRandom.urlsafe_base64, activation_token_valid_till: Time.now + 5.day) }
-    let(:request_params) { { 
-      activation_token: user.activation_token, 
-      user_id: user.id 
-    } }
+    let(:user) do
+      create(:user, :sofia_account, activation_token: SecureRandom.urlsafe_base64, activation_token_valid_till: 5.days.from_now)
+    end
+    let(:request_params) do
+      {
+        activation_token: user.activation_token,
+        user_id: user.id
+      }
+    end
     let(:request) do
       get :activate_account, params: request_params
     end
 
     context 'no request_email for user with email' do
-      before do 
-        request 
+      before do
+        request
       end
 
-      it 'request_email to be false' do 
+      it 'request_email to be false' do
         expect(assigns(:request_email)).to be false
       end
 
@@ -24,12 +28,12 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'valid for user without email' do
-      before do 
+      before do
         user.update(email: nil)
-        request 
+        request
       end
 
-      it 'request_email to be true' do 
+      it 'request_email to be true' do
         expect(assigns(:request_email)).to be true
       end
 
@@ -38,7 +42,7 @@ describe SofiaAccountsController, type: :controller do
 
     context 'without user_id' do
       before do
-        request_params = { 
+        request_params = {
           activation_token: user.activation_token
         }
         request
@@ -49,7 +53,7 @@ describe SofiaAccountsController, type: :controller do
 
     context 'without activation_token' do
       before do
-        request_params = { 
+        request_params = {
           user_id: user.id
         }
         request

@@ -5,15 +5,21 @@ describe SofiaAccountsController, type: :controller do
     let(:user) { create(:user, :sofia_account) }
     let(:sofia_account) { create(:sofia_account, user: user) }
     # we need attrs, because omni-auth identity immediately transforms password into password_digest when building
-    let(:request_params) { { 
-      username: sofia_account.username, 
-    } }
+    let(:request_params) do
+      {
+        username: sofia_account.username
+      }
+    end
     let(:request) do
       post :forgot_password, params: request_params
     end
 
     context 'valid' do
       before do
+        clear_enqueued_jobs
+      end
+
+      after do
         clear_enqueued_jobs
       end
 
@@ -24,18 +30,14 @@ describe SofiaAccountsController, type: :controller do
         expect(user.activation_token).not_to be_nil
         expect(user.activation_token_valid_till).not_to be_nil
       end
-
-      after do
-        clear_enqueued_jobs
-      end 
     end
 
     context 'user without email' do
-      before do 
+      before do
         user.update(email: nil)
         @old_user = user.dup
         clear_enqueued_jobs
-        request 
+        request
         user.reload
       end
 
@@ -47,11 +49,11 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'without username' do
-      before do 
+      before do
         request_params[:username] = nil
         @old_user = user.dup
         clear_enqueued_jobs
-        request 
+        request
         user.reload
       end
 
@@ -63,11 +65,11 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'with non-existent username' do
-      before do 
-        request_params[:username] = "something_else"
+      before do
+        request_params[:username] = 'something_else'
         @old_user = user.dup
         clear_enqueued_jobs
-        request 
+        request
         user.reload
       end
 

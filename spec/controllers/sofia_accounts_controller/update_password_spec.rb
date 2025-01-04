@@ -3,17 +3,19 @@ require 'rails_helper'
 describe SofiaAccountsController, type: :controller do
   describe 'PATCH update_password' do
     let(:sofia_account) do
-      create(:sofia_account, password: "password1234", password_confirmation: "password1234")
+      create(:sofia_account, password: 'password1234', password_confirmation: 'password1234')
     end
     let(:user) { sofia_account.user }
-    let(:request_params) { { 
-      id: sofia_account.id,
-      sofia_account: { 
-        old_password: sofia_account.password,
-        password: "new_password1234", 
-        password_confirmation: "new_password1234"
+    let(:request_params) do
+      {
+        id: sofia_account.id,
+        sofia_account: {
+          old_password: sofia_account.password,
+          password: 'new_password1234',
+          password_confirmation: 'new_password1234'
+        }
       }
-    } }
+    end
     let(:request) do
       patch :update_password, params: request_params
     end
@@ -28,7 +30,7 @@ describe SofiaAccountsController, type: :controller do
 
       it 'updates sofia_account' do
         expect(request.status).to eq 302
-        expect(sofia_account.authenticate(@old_sofia_account.password)).to be false 
+        expect(sofia_account.authenticate(@old_sofia_account.password)).to be false
         expect(sofia_account.authenticate(request_params[:sofia_account][:password])).to be sofia_account
       end
     end
@@ -93,7 +95,7 @@ describe SofiaAccountsController, type: :controller do
     describe 'with wrong old_password' do
       before do
         @old_sofia_account = sofia_account.dup
-        request_params[:sofia_account][:old_password] = "something_else"
+        request_params[:sofia_account][:old_password] = 'something_else'
         sign_in user
         request
         sofia_account.reload
@@ -123,8 +125,8 @@ describe SofiaAccountsController, type: :controller do
     describe 'with invalid password' do
       before do
         @old_sofia_account = sofia_account.dup
-        request_params[:sofia_account][:password] = "too_short"
-        request_params[:sofia_account][:password_confirmation] = "too_short"
+        request_params[:sofia_account][:password] = 'too_short'
+        request_params[:sofia_account][:password_confirmation] = 'too_short'
         sign_in user
         request
         sofia_account.reload
@@ -139,7 +141,7 @@ describe SofiaAccountsController, type: :controller do
     describe 'with non-matching confirmation' do
       before do
         @old_sofia_account = sofia_account.dup
-        request_params[:sofia_account][:password_confirmation] = "something_else"
+        request_params[:sofia_account][:password_confirmation] = 'something_else'
         sign_in user
         request
         sofia_account.reload
@@ -150,7 +152,6 @@ describe SofiaAccountsController, type: :controller do
         expect(flash[:error]).to match(/wachtwoord bevestiging komt niet overeen met wachtwoord/)
       end
     end
-
 
     describe 'without password_confirmation' do
       before do

@@ -2,32 +2,36 @@ require 'rails_helper'
 
 describe SofiaAccountsController, type: :controller do
   describe 'PATCH reset_password' do
-    let(:user) { create(:user, :sofia_account, activation_token: SecureRandom.urlsafe_base64, activation_token_valid_till: Time.now + 5.day) }
-    let(:sofia_account) do
-      create(:sofia_account, user: user, password: "password1234", password_confirmation: "password1234")
+    let(:user) do
+      create(:user, :sofia_account, activation_token: SecureRandom.urlsafe_base64, activation_token_valid_till: 5.days.from_now)
     end
-    let(:request_params) { { 
-      id: sofia_account.id,
-      sofia_account: { 
-        password: "new_password1234", 
-        password_confirmation: "new_password1234" 
-      }, 
-      activation_token: user.activation_token
-    } }
+    let(:sofia_account) do
+      create(:sofia_account, user: user, password: 'password1234', password_confirmation: 'password1234')
+    end
+    let(:request_params) do
+      {
+        id: sofia_account.id,
+        sofia_account: {
+          password: 'new_password1234',
+          password_confirmation: 'new_password1234'
+        },
+        activation_token: user.activation_token
+      }
+    end
     let(:request) do
       patch :reset_password, params: request_params
     end
 
     context 'valid' do
-      before do 
+      before do
         @old_sofia_account = sofia_account.dup
-        request 
+        request
         sofia_account.reload
         user.reload
       end
 
       it 'updates sofia_account' do
-        expect(sofia_account.authenticate(@old_sofia_account.password)).to be false 
+        expect(sofia_account.authenticate(@old_sofia_account.password)).to be false
         expect(sofia_account.authenticate(request_params[:sofia_account][:password])).to be sofia_account
         expect(user.activation_token).to be_nil
         expect(user.activation_token_valid_till).to be_nil
@@ -35,10 +39,10 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'without activation_token' do
-      before do 
+      before do
         request_params[:activation_token] = nil
         @old_sofia_account = sofia_account.dup
-        request 
+        request
         sofia_account.reload
         user.reload
       end
@@ -52,10 +56,10 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'with expired activation_token' do
-      before do 
-        user.update(activation_token_valid_till: Time.now - 1.minute)
+      before do
+        user.update(activation_token_valid_till: 1.minute.ago)
         @old_sofia_account = sofia_account.dup
-        request 
+        request
         sofia_account.reload
         user.reload
       end
@@ -69,10 +73,10 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'with wrong activation_token' do
-      before do 
+      before do
         request_params[:activation_token] = SecureRandom.urlsafe_base64
         @old_sofia_account = sofia_account.dup
-        request 
+        request
         sofia_account.reload
         user.reload
       end
@@ -86,10 +90,10 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'without password' do
-      before do 
+      before do
         request_params[:sofia_account][:password] = nil
         @old_sofia_account = sofia_account.dup
-        request 
+        request
         sofia_account.reload
         user.reload
       end
@@ -103,10 +107,10 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'without password_confirmation' do
-      before do 
+      before do
         request_params[:sofia_account][:password_confirmation] = nil
         @old_sofia_account = sofia_account.dup
-        request 
+        request
         sofia_account.reload
         user.reload
       end
@@ -120,10 +124,10 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'with wrong password_confirmation' do
-      before do 
-        request_params[:sofia_account][:password_confirmation] = "something_else"
+      before do
+        request_params[:sofia_account][:password_confirmation] = 'something_else'
         @old_sofia_account = sofia_account.dup
-        request 
+        request
         sofia_account.reload
         user.reload
       end
@@ -137,11 +141,11 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'with invalid password' do
-      before do 
-        request_params[:sofia_account][:password] = "too_short"
-        request_params[:sofia_account][:password_confirmation] = "too_short"
+      before do
+        request_params[:sofia_account][:password] = 'too_short'
+        request_params[:sofia_account][:password_confirmation] = 'too_short'
         @old_sofia_account = sofia_account.dup
-        request 
+        request
         sofia_account.reload
         user.reload
       end

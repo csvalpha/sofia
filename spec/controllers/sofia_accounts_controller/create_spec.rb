@@ -2,25 +2,29 @@ require 'rails_helper'
 
 describe SofiaAccountsController, type: :controller do
   describe 'POST create' do
-    let(:user) { create(:user, :sofia_account, activation_token: SecureRandom.urlsafe_base64, activation_token_valid_till: Time.now + 5.day) }
+    let(:user) do
+      create(:user, :sofia_account, activation_token: SecureRandom.urlsafe_base64, activation_token_valid_till: 5.days.from_now)
+    end
     # we need attrs, because omni-auth identity immediately transforms password into password_digest when building
-    let(:request_params) { { 
-      sofia_account: { 
-        username: Faker::Internet.username, 
-        password: "password1234", 
-        password_confirmation: "password1234" 
-      }, 
-      activation_token: user.activation_token, 
-      user_id: user.id 
-    } }
+    let(:request_params) do
+      {
+        sofia_account: {
+          username: Faker::Internet.username,
+          password: 'password1234',
+          password_confirmation: 'password1234'
+        },
+        activation_token: user.activation_token,
+        user_id: user.id
+      }
+    end
     let(:request) do
       post :create, params: request_params
     end
 
     context 'without email for user with email' do
-      before do 
+      before do
         @old_email = user.email
-        request 
+        request
         user.reload
       end
 
@@ -38,10 +42,10 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'with email for user without email' do
-      before do 
+      before do
         user.update(email: nil)
         request_params[:user] = { email: Faker::Internet.email }
-        request 
+        request
         user.reload
       end
 
@@ -60,10 +64,10 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'with email for user with email' do
-      before do 
+      before do
         @old_user = user.dup
         request_params[:user] = { email: Faker::Internet.email }
-        request 
+        request
         user.reload
       end
 
@@ -76,10 +80,10 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'without email for user without email' do
-      before do 
+      before do
         user.update(email: nil)
         @old_user = user.dup
-        request 
+        request
         user.reload
       end
 
@@ -92,11 +96,11 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'with invalid email for user without email' do
-      before do 
+      before do
         user.update(email: nil)
-        request_params[:user] = { email: "invalid_email" }
+        request_params[:user] = { email: 'invalid_email' }
         @old_user = user.dup
-        request 
+        request
         user.reload
       end
 
@@ -109,10 +113,10 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'without activation_token' do
-      before do 
+      before do
         request_params[:activation_token] = nil
         @old_user = user.dup
-        request 
+        request
         user.reload
       end
 
@@ -125,7 +129,7 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'without user_id' do
-      before do 
+      before do
         request_params[:user_id] = nil
         @old_user = user.dup
         request
@@ -141,10 +145,10 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'with expired activation_token' do
-      before do 
-        user.update(activation_token_valid_till: Time.now - 1.minute)
+      before do
+        user.update(activation_token_valid_till: 1.minute.ago)
         @old_user = user.dup
-        request 
+        request
         user.reload
       end
 
@@ -157,10 +161,10 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'with wrong activation_token' do
-      before do 
+      before do
         request_params[:activation_token] = SecureRandom.urlsafe_base64
         @old_user = user.dup
-        request 
+        request
         user.reload
       end
 
@@ -173,10 +177,10 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'with user already activated' do
-      before do 
+      before do
         create(:sofia_account, user: user)
         @old_user = user.dup
-        request 
+        request
         user.reload
       end
 
@@ -188,10 +192,10 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'without username' do
-      before do 
+      before do
         request_params[:sofia_account][:username] = nil
         @old_user = user.dup
-        request 
+        request
         user.reload
       end
 
@@ -204,10 +208,10 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'without password' do
-      before do 
+      before do
         request_params[:sofia_account][:password] = nil
         @old_user = user.dup
-        request 
+        request
         user.reload
       end
 
@@ -220,10 +224,10 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'without password_confirmation' do
-      before do 
+      before do
         request_params[:sofia_account][:password_confirmation] = nil
         @old_user = user.dup
-        request 
+        request
         user.reload
       end
 
@@ -236,10 +240,10 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'with wrong password_confirmation' do
-      before do 
-        request_params[:sofia_account][:password_confirmation] = "something_else"
+      before do
+        request_params[:sofia_account][:password_confirmation] = 'something_else'
         @old_user = user.dup
-        request 
+        request
         user.reload
       end
 
@@ -252,11 +256,11 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'with invalid password' do
-      before do 
-        request_params[:sofia_account][:password] = "too_short"
-        request_params[:sofia_account][:password_confirmation] = "too_short"
+      before do
+        request_params[:sofia_account][:password] = 'too_short'
+        request_params[:sofia_account][:password_confirmation] = 'too_short'
         @old_user = user.dup
-        request 
+        request
         user.reload
       end
 
@@ -269,10 +273,10 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'with user_id of non-existent user' do
-      before do 
+      before do
         request_params[:user_id] = User.count
         @old_user = user.dup
-        request 
+        request
         user.reload
       end
 
@@ -285,10 +289,10 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'with user_id of deactivated user' do
-      before do 
+      before do
         user.update(deactivated: true)
         @old_user = user.dup
-        request 
+        request
         user.reload
       end
 

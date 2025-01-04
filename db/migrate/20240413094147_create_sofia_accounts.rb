@@ -6,7 +6,7 @@ class CreateSofiaAccounts < ActiveRecord::Migration[7.0]
       t.references :user, null: false, unique: true
       t.string :otp_secret_key, null: false
       t.boolean :otp_enabled, default: false
-      
+
       t.datetime :deleted_at
       t.timestamps
 
@@ -17,6 +17,6 @@ class CreateSofiaAccounts < ActiveRecord::Migration[7.0]
     add_column :users, :activation_token_valid_till, :datetime
 
     remove_index :roles, column: %i[role_type group_uid]
-    change_column_null :roles, :group_uid, true, 999999
+    change_column_null :roles, :group_uid, true, 999_999
   end
 end

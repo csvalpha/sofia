@@ -38,6 +38,6 @@ class ApplicationController < ActionController::Base
   end
 
   def normalize_error_messages(full_messages)
-    return full_messages.map{ |message| message.downcase }.join(", ")
+    full_messages.map(&:downcase).join(', ')
   end
 end

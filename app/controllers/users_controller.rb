@@ -17,16 +17,16 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
                                       .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
     @sofia_account_users_json = @sofia_account_users.as_json(only: %w[id name])
-                                      .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
+                                                    .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
     @amber_users_json = @amber_users.as_json(only: %w[id name])
                                     .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
     @not_activated_users_json = @not_activated_users.as_json(only: %w[id name])
-                                    .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
+                                                    .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
     @deactivated_users_json = @deactivated_users.as_json(only: %w[id name])
-                                          .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
+                                                .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
     @new_user = User.new
   end
@@ -42,18 +42,19 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
 
     @sofia_account = SofiaAccount.find_by(user_id: @user.id)
     if @sofia_account
-      qr_code = RQRCode::QRCode.new(@sofia_account.provisioning_uri(@sofia_account.username, issuer: "Streepsysteem #{Rails.application.config.x.site_association}"))
+      qr_code = RQRCode::QRCode.new(@sofia_account.provisioning_uri(@sofia_account.username,
+                                                                    issuer: "Streepsysteem #{Rails.application.config.x.site_association}"))
       @svg_qr_code = qr_code.as_svg(
-        color: "000",
-        shape_rendering: "crispEdges",
+        color: '000',
+        shape_rendering: 'crispEdges',
         module_size: 10,
         standalone: true,
         use_path: true,
         viewbox: true,
         svg_attributes: {
-          width: "100%",
-          height: "auto",
-          class: "qr-code"
+          width: '100%',
+          height: 'auto',
+          class: 'qr-code'
         }
       )
     else
@@ -150,8 +151,9 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
 
     @sofia_account = @user.sofia_account
     authorize @sofia_account
-    
-    if @user.update(params.require(:user).permit(%i[email] + (current_user.treasurer? ? %i[name deactivated] : []), sofia_account_attributes: %i[id username]))
+
+    if @user.update(params.require(:user).permit(%i[email] + (current_user.treasurer? ? %i[name deactivated] : []),
+                                                 sofia_account_attributes: %i[id username]))
       flash[:success] = 'Gegevens gewijzigd'
     else
       flash[:error] = "Gegevens wijzigen mislukt; #{@user.errors.full_messages.join(', ')}"
@@ -160,7 +162,6 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     redirect_to @user
   end
 
-  
   private
 
   def send_slack_users_refresh_notification

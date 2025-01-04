@@ -1,7 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe SofiaAccount, type: :model do
-  subject(:sofia_account) { build_stubbed(:sofia_account, user: build_stubbed(:user, activation_token: SecureRandom.urlsafe_base64), password: 'password1234') }
+  subject(:sofia_account) do
+    build_stubbed(:sofia_account, user: build_stubbed(:user, activation_token: SecureRandom.urlsafe_base64), password: 'password1234')
+  end
 
   describe '#valid?' do
     it { expect(sofia_account).to be_valid }
@@ -57,7 +59,7 @@ RSpec.describe SofiaAccount, type: :model do
     end
 
     context 'when having duplicate fields' do
-      let(:sofia_account) { create(:sofia_account, password: "password1234") }
+      let(:sofia_account) { create(:sofia_account, password: 'password1234') }
 
       context 'username' do
         subject(:duplicate_sofia_account) { build_stubbed(:sofia_account, username: sofia_account.username) }
@@ -80,15 +82,15 @@ RSpec.describe SofiaAccount, type: :model do
   end
 
   describe 'activate_account_url' do
-    it { expect(SofiaAccount.activate_account_url(sofia_account.user.id, sofia_account.user.activation_token)).to eq "http://testhost:1337/sofia_accounts/activate_account?activation_token=#{sofia_account.user.activation_token}&user_id=#{sofia_account.user.id}" }
+    it { expect(described_class.activate_account_url(sofia_account.user.id, sofia_account.user.activation_token)).to eq "http://testhost:1337/sofia_accounts/activate_account?activation_token=#{sofia_account.user.activation_token}&user_id=#{sofia_account.user.id}" }
   end
 
   describe 'new_activation_link_url' do
-    it { expect(SofiaAccount.new_activation_link_url(sofia_account.user.id)).to eq "http://testhost:1337/sofia_accounts/new_activation_link?user_id=#{sofia_account.user.id}" }
+    it { expect(described_class.new_activation_link_url(sofia_account.user.id)).to eq "http://testhost:1337/sofia_accounts/new_activation_link?user_id=#{sofia_account.user.id}" }
   end
 
   describe 'forgot_password_url' do
-    it { expect(SofiaAccount.forgot_password_url()).to eq "http://testhost:1337/sofia_accounts/forgot_password" }
+    it { expect(described_class.forgot_password_url).to eq 'http://testhost:1337/sofia_accounts/forgot_password' }
   end
 
   describe 'reset_password_url' do

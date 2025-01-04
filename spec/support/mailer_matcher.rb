@@ -1,4 +1,4 @@
-require "rspec/expectations"
+require 'rspec/expectations'
 
 RSpec::Matchers.define :send_email do |mailer_action, mailer_when, mailer_args|
   match do |mailer_class|

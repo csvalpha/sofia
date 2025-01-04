@@ -13,7 +13,7 @@ RSpec.describe User, type: :model do
     end
 
     context 'when with invalid email' do
-      subject(:user) { build_stubbed(:user, email: "not_an_valid_email") }
+      subject(:user) { build_stubbed(:user, email: 'not_an_valid_email') }
 
       it { expect(user).not_to be_valid }
     end
@@ -73,7 +73,7 @@ RSpec.describe User, type: :model do
     end
 
     context 'when with valid email' do
-      subject(:user) { build(:user, :sofia_account, email: "valid@email.com") }
+      subject(:user) { build(:user, :sofia_account, email: 'valid@email.com') }
 
       before { build(:sofia_account, user: user) }
 
@@ -459,7 +459,7 @@ RSpec.describe User, type: :model do
         %w[avatar_thumb_url email birthday]
       end
 
-      before do 
+      before do
         create(:sofia_account, user: user)
         user.archive!
         user.reload
@@ -488,9 +488,10 @@ RSpec.describe User, type: :model do
       subject(:user) { create(:user, :sofia_account) }
 
       it { expect(user.activation_token).not_to be_nil }
-      it do 
+
+      it do
         expect(user.activation_token_valid_till).not_to be_nil
-        expect(user.activation_token_valid_till.day).to eq (Time.now + 5.day).day
+        expect(user.activation_token_valid_till.day).to eq 5.days.from_now.day
       end
     end
 
@@ -506,7 +507,7 @@ RSpec.describe User, type: :model do
     context 'deactivated upon creation' do
       subject(:user) { build(:user, deactivated: true) }
 
-      it do 
+      it do
         expect(user).to receive(:archive!)
         user.save
       end
@@ -517,7 +518,7 @@ RSpec.describe User, type: :model do
 
       before { user.deactivated = true }
 
-      it do 
+      it do
         expect(user).to receive(:archive!)
         user.save
       end
@@ -526,9 +527,9 @@ RSpec.describe User, type: :model do
     context 'deactivated and not changed' do
       subject(:user) { create(:user, deactivated: true) }
 
-      before { user.email = "valid@email.com" }
+      before { user.email = 'valid@email.com' }
 
-      it do 
+      it do
         expect(user).not_to receive(:archive!)
         user.save
       end
@@ -537,7 +538,7 @@ RSpec.describe User, type: :model do
     context 'not deactivated upon creation' do
       subject(:user) { build(:user, deactivated: false) }
 
-      it do 
+      it do
         expect(user).not_to receive(:archive!)
         user.save
       end
@@ -548,7 +549,7 @@ RSpec.describe User, type: :model do
 
       before { user.deactivated = false }
 
-      it do 
+      it do
         expect(user).not_to receive(:archive!)
         user.save
       end
@@ -559,26 +560,26 @@ RSpec.describe User, type: :model do
     context 'sofia_account' do
       subject(:user) { build(:user, :sofia_account) }
 
-      it do 
-        expect(UserMailer).to send_email(:account_creation_email, :deliver_later, user)
-        user.save
-      end
-
       after do
         clear_enqueued_jobs
+      end
+
+      it do
+        expect(UserMailer).to send_email(:account_creation_email, :deliver_later, user)
+        user.save
       end
     end
 
     context 'not sofia_account' do
       subject(:user) { build(:user) }
 
+      after do
+        clear_enqueued_jobs
+      end
+
       it do
         expect(UserMailer).not_to receive(:account_creation_email)
         user.save
-      end
-
-      after do
-        clear_enqueued_jobs
       end
     end
   end

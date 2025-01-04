@@ -3,7 +3,7 @@ class SofiaAccount < OmniAuth::Identity::Models::ActiveRecord
 
   belongs_to :user
 
-  validates :user, presence: true, uniqueness: true
+  validates :user, uniqueness: true
   validates :username, presence: true, uniqueness: true
   validates :password, length: { minimum: 12 }, allow_nil: true # the presence of :password is already checked by omniauth-sofia-account itself
 
@@ -31,5 +31,4 @@ class SofiaAccount < OmniAuth::Identity::Models::ActiveRecord
     default_options = Rails.application.config.action_mailer.default_url_options
     URI::Generic.build(default_options.merge(path: "/sofia_accounts/#{id}/reset_password", query: params.to_query)).to_s
   end
-  
 end

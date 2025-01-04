@@ -1,5 +1,5 @@
 class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
-  devise :omniauthable, omniauth_providers: [:amber_oauth2, :identity]
+  devise :omniauthable, omniauth_providers: %i[amber_oauth2 identity]
   has_many :orders, dependent: :destroy
   has_many :order_rows, through: :orders, dependent: :destroy
   has_many :credit_mutations, dependent: :destroy
@@ -17,10 +17,10 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   scope :in_amber, (-> { where(provider: 'amber_oauth2') })
   scope :sofia_account, (-> { where(provider: 'sofia_account') })
   scope :manual, (-> { where(provider: nil) })
-  scope :active, (-> {
+  scope :active, (lambda {
     where(deactivated: false).where('(provider IS NULL OR provider != ?) OR (provider = ? AND id IN (?))', 'sofia_account', 'sofia_account', SofiaAccount.select('user_id'))
   })
-  scope :not_activated, (-> { where(deactivated: false, provider: 'sofia_account').where('id NOT IN (?)', SofiaAccount.select('user_id')) })
+  scope :not_activated, (-> { where(deactivated: false, provider: 'sofia_account').where.not(id: SofiaAccount.select('user_id')) })
   scope :deactivated, (-> { where(deactivated: true) })
   scope :treasurer, (-> { joins(:roles).merge(Role.treasurer) })
 
@@ -30,23 +30,19 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   attr_accessor :current_activity
 
   before_save do
-    if new_record? && self.provider == 'sofia_account'
+    if new_record? && provider == 'sofia_account'
       self.activation_token = SecureRandom.urlsafe_base64
-      self.activation_token_valid_till = 5.day.from_now
+      self.activation_token_valid_till = 5.days.from_now
     end
   end
 
   after_save do
     a = age
-    if self.deactivated && (new_record? || self.deactivated_previously_changed?(from: false, to: true))
-      archive!
-    end
+    archive! if deactivated && (new_record? || deactivated_previously_changed?(from: false, to: true))
   end
 
   after_create do
-    if User.sofia_account.exists?(id: self.id)
-      UserMailer.account_creation_email(self).deliver_later
-    end
+    UserMailer.account_creation_email(self).deliver_later if User.sofia_account.exists?(id: id)
   end
 
   def credit
@@ -99,7 +95,7 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def update_role(groups)
-    if (User.in_amber.exists?(self.id))
+    if User.in_amber.exists?(id)
       roles_to_have = Role.where(group_uid: groups)
       roles_users_to_have = roles_to_have.map { |role| RolesUsers.find_or_create_by(role: role, user: self) }
 

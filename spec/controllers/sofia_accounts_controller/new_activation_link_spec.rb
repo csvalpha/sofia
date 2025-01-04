@@ -2,11 +2,15 @@ require 'rails_helper'
 
 describe SofiaAccountsController, type: :controller do
   describe 'GET new_activation_link' do
-    let(:user) { create(:user, :sofia_account, activation_token: SecureRandom.urlsafe_base64, activation_token_valid_till: Time.now + 5.day) }
-    let(:request_params) { { 
-      activation_token: user.activation_token, 
-      user_id: user.id 
-    } }
+    let(:user) do
+      create(:user, :sofia_account, activation_token: SecureRandom.urlsafe_base64, activation_token_valid_till: 5.days.from_now)
+    end
+    let(:request_params) do
+      {
+        activation_token: user.activation_token,
+        user_id: user.id
+      }
+    end
     let(:request) do
       get :new_activation_link, params: request_params
     end
@@ -16,26 +20,26 @@ describe SofiaAccountsController, type: :controller do
         clear_enqueued_jobs
       end
 
+      after do
+        clear_enqueued_jobs
+      end
+
       it 'shows success message and sends email' do
         expect(UserMailer).to send_email(:new_activation_link_email, :deliver_later, user)
         request
-        expect(assigns(:message)).to eq "Er is een nieuwe activatielink voor uw account verstuurd naar uw emailadres."
+        expect(assigns(:message)).to eq 'Er is een nieuwe activatielink voor uw account verstuurd naar uw emailadres.'
         user.reload
         expect(user.activation_token).not_to be_nil
         expect(user.activation_token_valid_till).not_to be_nil
       end
-
-      after do
-        clear_enqueued_jobs
-      end
     end
 
     context 'without email' do
-      before do 
+      before do
         user.update(email: nil)
         @old_user = user.dup
         clear_enqueued_jobs
-        request 
+        request
       end
 
       it 'shows error message and does not send email' do
@@ -46,7 +50,7 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'without user_id' do
-      before do 
+      before do
         request_params[:user_id] = nil
         @old_user = user.dup
         clear_enqueued_jobs
@@ -61,11 +65,11 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'with user already activated' do
-      before do 
+      before do
         user.update(sofia_account: create(:sofia_account, user: user))
         @old_user = user.dup
         clear_enqueued_jobs
-        request 
+        request
       end
 
       it 'shows error message and does not send email' do
@@ -76,11 +80,11 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'with user_id of non-existent user' do
-      before do 
+      before do
         request_params[:user_id] = User.count + 1
         @old_user = user.dup
         clear_enqueued_jobs
-        request 
+        request
       end
 
       it 'shows error message and does not send email' do
@@ -91,11 +95,11 @@ describe SofiaAccountsController, type: :controller do
     end
 
     context 'with user_id of deactivated user' do
-      before do 
+      before do
         user.update(deactivated: true)
         @old_user = user.dup
         clear_enqueued_jobs
-        request 
+        request
       end
 
       it 'shows error message and does not send email' do
