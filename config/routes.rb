@@ -27,7 +27,6 @@ Rails.application.routes.draw do
     member do
       get :activities
       get :json
-      get :activate_sofia_account
       patch :update_with_sofia_account
     end
   end

@@ -11,7 +11,7 @@ document.addEventListener('turbolinks:load', () => {
   var element = document.getElementById('users-index');
   if (element !== null) {
     var manual_users = JSON.parse(element.dataset.manualUsers);
-    var sofia_account_users = JSON.parse(element.dataset.sofia_accountUsers);
+    var sofia_account_users = JSON.parse(element.dataset.sofiaAccountUsers);
     var amber_users = JSON.parse(element.dataset.amberUsers);
     var not_activated_users = JSON.parse(element.dataset.notActivatedUsers);
     var deactivated_users = JSON.parse(element.dataset.deactivatedUsers);

@@ -144,22 +144,6 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     render json: activities_hash
   end
 
-  def activate_sofia_account 
-    user = User.find(params.require(:id))
-    authorize user
-
-    if params[:activation_token] != nil
-      activation_token = params.require(:activation_token)
-      unless user.activation_token == activation_token &&
-            user.activation_token_valid_till.try(:>, Time.zone.now)
-        return head :not_found
-      end
-    else
-      return head :not_found
-    end
-    @sofia_account = SofiaAccount.new(user: user)
-  end
-
   def update_with_sofia_account
     @user = User.find(params[:id])
     authorize @user

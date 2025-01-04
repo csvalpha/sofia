@@ -10,7 +10,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
     end
   end
 
-  def sofia_account
+  def identity
     user = User.from_omniauth_inspect(request.env['omniauth.auth'])
     
     if user.persisted?
@@ -45,7 +45,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
   def failure
     error_message = "Inloggen mislukt."
-    if request.env['omniauth.error.strategy'].instance_of? OmniAuth::Strategies::SofiaAccount
+    if request.env['omniauth.error.strategy'].instance_of? OmniAuth::Strategies::Identity
       if request.env['omniauth.error.type'].to_s == "invalid_credentials"
         error_message << " De ingevulde gegevens zijn incorrect."
       else
