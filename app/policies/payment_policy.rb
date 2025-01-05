@@ -1,6 +1,6 @@
 class PaymentPolicy < ApplicationPolicy
   def index?
-    mollie_enabled? && user.treasurer?
+    mollie_enabled? && user&.treasurer?
   end
 
   def create?
