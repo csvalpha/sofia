@@ -10,9 +10,11 @@
       <h1>
         Facturen
       </h1>
-      <button class="btn btn-sm btn-primary" data-bs-target="#new_invoice_modal" data-bs-toggle="modal" role="button">
-        Nieuwe factuur
-      </button>
+      <% if policy(Invoice).create? %>
+        <button class="btn btn-sm btn-primary" data-bs-target="#new_invoice_modal" data-bs-toggle="modal" role="button">
+          Nieuwe factuur
+        </button>
+      <% end %>
     </div>
     <div class="col-sm-12">
       <div class="table-responsive">
@@ -27,7 +29,9 @@
             <th scope="col">Naam</th>
             <th scope="col">Mailadres</th>
             <th scope="col">Status</th>
-            <th scope="col">Verstuur</th>
+            <% if policy(Invoice).send_invoice? %>
+              <th scope="col">Verstuur</th>
+            <% end %>
           </tr>
           </thead>
           <tbody class="table-group-divider">
@@ -40,7 +44,11 @@
                 <%= link_to invoice.human_id, invoice %>
               </td>
               <td>
-                <%= link_to invoice.user.name, invoice.user %>
+                <% if policy(invoice.user).show? %>
+                  <%= link_to invoice.user.name, invoice.user %>
+                <% else %>
+                  <%= invoice.user.name %>
+                <% end%>
               </td>
               <td>
                 <%= link_to invoice.activity.title, invoice.activity %>
@@ -57,13 +65,15 @@
               <td>
                 <%= t(invoice.status).humanize %>
               </td>
-              <td>
-                <% if policy(Invoice).send_invoice? && invoice.pending? %>
-                  <%= simple_form_for invoice, wrapper: :horizontal_form, url: send_invoice_invoice_path(id: invoice.id), method: :post do |f| %>
-                    <%= f.button :submit, 'Factuur versturen', class: 'btn btn-primary' %>
+              <% if policy(Invoice).send_invoice? %>
+                <td>
+                  <% if invoice.pending? %>
+                    <%= simple_form_for invoice, wrapper: :horizontal_form, url: send_invoice_invoice_path(id: invoice.id), method: :post do |f| %>
+                      <%= f.button :submit, 'Factuur versturen', class: 'btn btn-primary' %>
+                    <% end %>
                   <% end %>
-                <% end %>
-              </td>
+                </td>
+              <% end %>
             </tr>
           <% end %>
           </tbody>
