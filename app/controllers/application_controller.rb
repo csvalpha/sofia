@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  include Pundit::Authorization
+  include Pundit
 
   before_action :set_sentry_context
   before_action :set_paper_trail_whodunnit
