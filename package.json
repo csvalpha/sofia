@@ -32,7 +32,7 @@
     "vue-template-compiler": "^2.7.14",
     "vue-turbolinks": "^2.2.2",
     "webfontloader": "^1.6.28",
-    "webpack": "^4.47.0",
+    "webpack": "^5.97.1",
     "webpack-cli": "^4.10.0"
   },
   "devDependencies": {
