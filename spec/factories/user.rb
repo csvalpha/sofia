@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :user do
     name { Faker::Movies::StarWars.character }
 
-    sequence(:email) { |n| Faker::Internet.safe_email(name: "#{Faker::Internet.user_name}#{n}") }
+    sequence(:email) { |n| Faker::Internet.email(name: "#{Faker::Internet.user_name}#{n}") }
 
     trait(:treasurer) do
       after :create do |user, _evaluator|
