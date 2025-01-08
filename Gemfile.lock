@@ -119,10 +119,10 @@ GEM
     docile (1.4.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
-    dotenv (2.8.1)
-    dotenv-rails (2.8.1)
-      dotenv (= 2.8.1)
-      railties (>= 3.2)
+    dotenv (3.1.7)
+    dotenv-rails (3.1.7)
+      dotenv (= 3.1.7)
+      railties (>= 6.1)
     em-websocket (0.5.3)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0)
@@ -228,7 +228,7 @@ GEM
       net-pop
       net-smtp
     marcel (1.0.4)
-    method_source (1.0.0)
+    method_source (1.1.0)
     mime-types (3.4.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2022.0105)
@@ -552,7 +552,7 @@ DEPENDENCIES
   consistency_fail
   devise (~> 4.9.4)
   devise-i18n (~> 1.12.1)
-  dotenv-rails (~> 2.8.1)
+  dotenv-rails (~> 3.1.7)
   factory_bot_rails (~> 6.4.4)
   faker (~> 3.5.1)
   font-awesome-rails (~> 4.7.0.9)
