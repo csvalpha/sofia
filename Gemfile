@@ -49,7 +49,7 @@ group :development, :test do
   gem 'awesome_print'
   gem 'better_errors'
   gem 'brakeman', require: false
-  gem 'bullet'
+  gem 'bullet', '~> 8.0'
   gem 'colorize'
   gem 'consistency_fail'
   gem 'dotenv-rails', '~> 2.8.1'
@@ -74,7 +74,7 @@ end
 
 group :test do
   gem 'rails-controller-testing', '~> 1.0.5'
-  gem 'rubocop', '~> 1.69.2', require: false
+  gem 'rubocop', '~> 1.50.0', require: false
   gem 'rubocop-performance'
   gem 'rubocop-rails'
   gem 'rubocop-rspec'

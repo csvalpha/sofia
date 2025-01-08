@@ -18,7 +18,7 @@ class Payment < ApplicationRecord
   validate :user_xor_invoice
   validate :user_amount
 
-  scope :not_completed, (-> { where.not(status: COMPLETE_STATUSES) })
+  scope :not_completed, -> { where.not(status: COMPLETE_STATUSES) }
 
   after_save :process_complete_payment!
 

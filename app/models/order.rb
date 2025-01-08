@@ -1,7 +1,7 @@
 class Order < ApplicationRecord
   belongs_to :activity
   belongs_to :user, optional: true
-  belongs_to :created_by, class_name: 'User', inverse_of: :orders
+  belongs_to :created_by, class_name: 'User'
 
   has_many :order_rows, dependent: :destroy
   accepts_nested_attributes_for :order_rows
@@ -15,7 +15,7 @@ class Order < ApplicationRecord
   before_create :can_user_create_order?
   before_destroy -> { throw(:abort) }
 
-  scope :orders_for, (->(user) { where(user: user) })
+  scope :orders_for, ->(user) { where(user: user) }
 
   def can_user_create_order?
     throw(:abort) unless user.nil? || user.can_order(activity)

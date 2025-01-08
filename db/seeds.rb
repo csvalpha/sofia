@@ -1,4 +1,4 @@
-require_relative './seeds/products'
+require_relative 'seeds/products'
 
 # rubocop:disable Rails/Output
 p 'Seeding products...'
@@ -6,9 +6,8 @@ seed_products
 
 p 'Seeding price lists...'
 price_lists_names = %w[BSA Inkoopprijs Extern]
-price_lists = []
-price_lists_names.each do |name|
-  price_lists << FactoryBot.create(:price_list, :with_all_products, name: name)
+price_lists = price_lists_names.map do |name|
+  FactoryBot.create(:price_list, :with_all_products, name: name)
 end
 
 p 'Seeding users...'

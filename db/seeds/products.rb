@@ -1,6 +1,4 @@
 def seed_products # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-  products = []
-
   # rubocop:disable Style/WordArray
   products_beer = ['Bier (glas)', 'Bier (pul)', 'Bier (pitcher)', '12+1']
   products_low_alcohol_beer = ['Alcoholarm bier', 'Radler 0.0']
@@ -14,8 +12,8 @@ def seed_products # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metri
   products_donation = ['Donatie']
   # rubocop:enable Style/WordArray
 
-  products_beer.each do |name|
-    products << Product.create(name: name, category: :beer)
+  products = products_beer.map do |name|
+    Product.create(name: name, category: :beer)
   end
 
   products_low_alcohol_beer.each do |name|

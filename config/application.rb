@@ -9,6 +9,8 @@ module Sofia
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
 
+    # config.action_controller.raise_on_open_redirects = false
+
     config.time_zone = 'Europe/Amsterdam'
 
     config.generators.javascript_engine = :js
@@ -28,9 +30,7 @@ module Sofia
     config.x.amber_api_url       = "#{Rails.env.development? ? 'http' : 'https'}://#{credentials.dig(Rails.env.to_sym, :amber_host)}"
 
     config.x.amber_client_id     = credentials.dig(Rails.env.to_sym, :amber_client_id) || ENV.fetch('AMBER_CLIENT_ID', nil)
-    config.x.amber_client_secret = credentials.dig(
-      Rails.env.to_sym, :amber_client_secret
-    ) || ENV.fetch('AMBER_CLIENT_SECRET', nil)
+    config.x.amber_client_secret = credentials.dig(Rails.env.to_sym, :amber_client_secret) || ENV.fetch('AMBER_CLIENT_SECRET', nil)
 
     config.x.amber_host          = credentials.dig(Rails.env.to_sym, :amber_host)
     config.x.sofia_host          = credentials.dig(Rails.env.to_sym, :sofia_host)

@@ -5,26 +5,26 @@ class Activity < ApplicationRecord
   has_many :credit_mutations, dependent: :destroy
   has_many :ordering_users, through: :orders, source: :user
   belongs_to :price_list
-  belongs_to :created_by, class_name: 'User', inverse_of: :activities
+  belongs_to :created_by, class_name: 'User'
   belongs_to :locked_by, class_name: 'User', optional: true
 
   validates :title, :start_time, :end_time, presence: true
   validates_datetime :end_time, after: :start_time
   validate :activity_not_locked
 
-  scope :upcoming, (lambda {
+  scope :upcoming, lambda {
     where('(start_time < ? and end_time > ?) or start_time > ?', Time.zone.now,
           Time.zone.now, Time.zone.now).order(:start_time, :end_time)
-  })
+  }
 
-  scope :current, (lambda {
+  scope :current, lambda {
     where('(start_time < ? and end_time > ?)', Time.zone.now,
           Time.zone.now).order(:start_time, :end_time)
-  })
+  }
 
-  scope :not_locked, (lambda {
+  scope :not_locked, lambda {
     where('end_time >= ? AND locked_by_id IS NULL', 2.months.ago)
-  })
+  }
 
   delegate :products, to: :price_list
 
