@@ -51,14 +51,14 @@ RSpec.describe Invoice, type: :model do
     let(:activity) { create(:activity) }
     let(:user) { create(:user) }
 
-    subject(:invoice) { build(:invoice, activity: activity, user: user) }
+    subject(:invoice) { build(:invoice, activity:, user:) }
 
     before do
-      create_list(:order, 5, :with_items, user: user, activity: activity)
+      create_list(:order, 5, :with_items, user:, activity:)
       activity.update(locked_by: user)
       invoice.save
       invoice.reload
-      create(:invoice_row, invoice: invoice, amount: 5, price: 10)
+      create(:invoice_row, invoice:, amount: 5, price: 10)
     end
 
     it { expect(invoice.amount).to eq activity.revenue_by_user(user) + 50 }
@@ -66,7 +66,7 @@ RSpec.describe Invoice, type: :model do
 
   describe '#set_human_id' do
     let(:activity) { create(:activity, :manually_locked) }
-    let(:invoice) { build(:invoice, activity: activity) }
+    let(:invoice) { build(:invoice, activity:) }
 
     before do
       create_list(:invoice, 2)

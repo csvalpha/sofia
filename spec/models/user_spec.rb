@@ -16,7 +16,7 @@ RSpec.describe User, type: :model do
       subject(:user) { create(:user, deactivated: true) }
 
       before do
-        create(:order_with_items, user: user)
+        create(:order_with_items, user:)
       end
 
       it { expect(user).not_to be_valid }
@@ -65,7 +65,7 @@ RSpec.describe User, type: :model do
 
       let(:treasurer_role) { create(:role, role_type: :treasurer) }
 
-      before { create(:roles_users, user: user, role: treasurer_role) }
+      before { create(:roles_users, user:, role: treasurer_role) }
 
       it { expect(described_class.treasurer).to include user }
     end
@@ -94,11 +94,11 @@ RSpec.describe User, type: :model do
   describe '#credit' do
     subject(:user) { create(:user) }
 
-    let(:order) { create(:order, user: user) }
+    let(:order) { create(:order, user:) }
     let(:product_price) { create(:product_price, price_list: order.activity.price_list, price: 1.23) }
 
     before do
-      create(:order_row, order: order, product: product_price.product, product_count: 1)
+      create(:order_row, order:, product: product_price.product, product_count: 1)
     end
 
     it { expect(user.credit).to eq(-1.23) }
@@ -111,7 +111,7 @@ RSpec.describe User, type: :model do
       let(:role) { create(:role) }
 
       before do
-        create(:roles_users, role: role, user: user)
+        create(:roles_users, role:, user:)
       end
 
       it { expect(user.roles).to match_array [role] }
@@ -121,7 +121,7 @@ RSpec.describe User, type: :model do
       subject(:user) { create(:user) }
 
       let(:role) { create(:role) }
-      let(:roles_users) { create(:roles_users, role: role, user: user) }
+      let(:roles_users) { create(:roles_users, role:, user:) }
 
       before do
         roles_users
@@ -189,7 +189,7 @@ RSpec.describe User, type: :model do
       let(:role) { create(:role, role_type: :treasurer) }
 
       before do
-        create(:roles_users, role: role, user: user)
+        create(:roles_users, role:, user:)
       end
 
       it { expect(user.treasurer?).to be true }
@@ -209,7 +209,7 @@ RSpec.describe User, type: :model do
       let(:role) { create(:role, role_type: :main_bartender) }
 
       before do
-        create(:roles_users, role: role, user: user)
+        create(:roles_users, role:, user:)
       end
 
       it { expect(user.main_bartender?).to be true }
@@ -264,9 +264,9 @@ RSpec.describe User, type: :model do
 
     let(:product_price) { build(:product_price, price: 2.00) }
     let(:price_list) { build(:price_list, product_price: [product_price]) }
-    let(:activity) { build(:activity, price_list: price_list) }
+    let(:activity) { build(:activity, price_list:) }
 
-    let(:default_order) { { products: [product_price.product], activity: activity, user: user } }
+    let(:default_order) { { products: [product_price.product], activity:, user: } }
 
     let(:order) do
       create(:order_with_items, default_order.merge(created_at: 4.weeks.ago))
@@ -277,7 +277,7 @@ RSpec.describe User, type: :model do
     end
 
     let(:third_order) do
-      create(:order_with_items, default_order.merge(user: user, created_at: Time.zone.now))
+      create(:order_with_items, default_order.merge(user:, created_at: Time.zone.now))
     end
 
     before do
@@ -349,10 +349,10 @@ RSpec.describe User, type: :model do
     context 'when with data' do
       let(:product_price) { build(:product_price, price: 2.18) }
       let(:price_list) { build(:price_list, product_price: [product_price]) }
-      let(:activity) { build(:activity, price_list: price_list) }
+      let(:activity) { build(:activity, price_list:) }
 
       context 'without orders' do
-        let(:credit_mutation) { create(:credit_mutation, user: user, amount: 20) }
+        let(:credit_mutation) { create(:credit_mutation, user:, amount: 20) }
 
         before do
           credit_mutation
@@ -363,7 +363,7 @@ RSpec.describe User, type: :model do
 
       context 'without credit_mutations' do
         let(:order) do
-          build(:order_with_items, products: [product_price.product], activity: activity, user: user)
+          build(:order_with_items, products: [product_price.product], activity:, user:)
         end
 
         before do
@@ -375,9 +375,9 @@ RSpec.describe User, type: :model do
 
       context 'when with both' do
         let(:order) do
-          build(:order_with_items, products: [product_price.product], activity: activity, user: user)
+          build(:order_with_items, products: [product_price.product], activity:, user:)
         end
-        let(:credit_mutation) { create(:credit_mutation, user: user, amount: 20) }
+        let(:credit_mutation) { create(:credit_mutation, user:, amount: 20) }
 
         before do
           credit_mutation

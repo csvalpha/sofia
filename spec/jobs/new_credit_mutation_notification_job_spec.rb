@@ -4,7 +4,7 @@ RSpec.describe NewCreditMutationNotificationJob, type: :job do
   describe '#perform' do
     let(:user) { create(:user, name: 'Buddy Normal', email: 'bahamas@example.com') }
     let(:emails) { ActionMailer::Base.deliveries }
-    let(:mutation) { create(:credit_mutation, user: user, amount: -2.30) }
+    let(:mutation) { create(:credit_mutation, user:, amount: -2.30) }
 
     subject(:job) { perform_enqueued_jobs { described_class.perform_now(mutation) } }
 

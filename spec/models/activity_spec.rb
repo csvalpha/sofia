@@ -92,7 +92,7 @@ RSpec.describe Activity, type: :model do
   describe '#lock_date' do
     let(:start_time) { (2.months + 3.days).ago }
 
-    subject(:activity) { build(:activity, start_time: start_time, end_time: start_time + 4.hours) }
+    subject(:activity) { build(:activity, start_time:, end_time: start_time + 4.hours) }
 
     it { expect(activity.lock_date).to eq activity.end_time + 2.months }
     it { expect(activity.locked?).to be true }
@@ -115,7 +115,7 @@ RSpec.describe Activity, type: :model do
       let(:activity) { create(:activity) }
 
       before do
-        create(:order, activity: activity)
+        create(:order, activity:)
       end
 
       it { expect(activity.destroyable?).to be false }
@@ -125,7 +125,7 @@ RSpec.describe Activity, type: :model do
       let(:activity) { create(:activity) }
 
       before do
-        create(:credit_mutation, activity: activity)
+        create(:credit_mutation, activity:)
       end
 
       it { expect(activity.destroyable?).to be false }
@@ -189,8 +189,8 @@ RSpec.describe Activity, type: :model do
 
       context 'when with credit mutations' do
         before do
-          create(:credit_mutation, activity: activity, amount: 10)
-          create(:credit_mutation, activity: activity, amount: 50)
+          create(:credit_mutation, activity:, amount: 10)
+          create(:credit_mutation, activity:, amount: 50)
         end
 
         it { expect(activity.credit_mutations_total).to eq 60 }
@@ -200,14 +200,14 @@ RSpec.describe Activity, type: :model do
     describe '#revenue_with(out)_cash' do
       let(:product) { activity.price_list.products.sample }
       let(:product_price) { activity.price_list.product_price_for(product).price }
-      let(:cash_order) { create(:order, :cash, activity: activity) }
-      let(:pin_order) { create(:order, :pin, activity: activity) }
-      let(:order) { create(:order, activity: activity) }
+      let(:cash_order) { create(:order, :cash, activity:) }
+      let(:pin_order) { create(:order, :pin, activity:) }
+      let(:order) { create(:order, activity:) }
 
       before do
-        create(:order_row, product: product, order: cash_order, product_count: 2)
-        create(:order_row, product: product, order: order, product_count: 3)
-        create(:order_row, product: product, order: pin_order, product_count: 4)
+        create(:order_row, product:, order: cash_order, product_count: 2)
+        create(:order_row, product:, order:, product_count: 3)
+        create(:order_row, product:, order: pin_order, product_count: 4)
       end
 
       it { expect(activity.revenue_with_cash).to eq product_price * 2 }
@@ -219,15 +219,15 @@ RSpec.describe Activity, type: :model do
     describe '#cash_total' do
       let(:product) { activity.price_list.products.sample }
       let(:product_price) { activity.price_list.product_price_for(product).price }
-      let(:cash_order) { create(:order, :cash, activity: activity) }
-      let(:pin_order) { create(:order, :pin, activity: activity) }
-      let(:order) { create(:order, activity: activity) }
+      let(:cash_order) { create(:order, :cash, activity:) }
+      let(:pin_order) { create(:order, :pin, activity:) }
+      let(:order) { create(:order, activity:) }
 
       before do
-        create(:credit_mutation, activity: activity, amount: 50)
-        create(:order_row, product: product, order: cash_order, product_count: 2)
-        create(:order_row, product: product, order: order, product_count: 3)
-        create(:order_row, product: product, order: pin_order, product_count: 4)
+        create(:credit_mutation, activity:, amount: 50)
+        create(:order_row, product:, order: cash_order, product_count: 2)
+        create(:order_row, product:, order:, product_count: 3)
+        create(:order_row, product:, order: pin_order, product_count: 4)
       end
 
       it { expect(activity.cash_total).to eq (2 * product_price) + 50 }
@@ -236,15 +236,15 @@ RSpec.describe Activity, type: :model do
     describe '#revenue_total' do
       let(:product) { activity.price_list.products.sample }
       let(:product_price) { activity.price_list.product_price_for(product).price }
-      let(:cash_order) { create(:order, :cash, activity: activity) }
-      let(:pin_order) { create(:order, :pin, activity: activity) }
-      let(:order) { create(:order, activity: activity) }
+      let(:cash_order) { create(:order, :cash, activity:) }
+      let(:pin_order) { create(:order, :pin, activity:) }
+      let(:order) { create(:order, activity:) }
 
       before do
-        create(:credit_mutation, activity: activity, amount: 50)
-        create(:order_row, product: product, order: cash_order, product_count: 2)
-        create(:order_row, product: product, order: order, product_count: 3)
-        create(:order_row, product: product, order: pin_order, product_count: 4)
+        create(:credit_mutation, activity:, amount: 50)
+        create(:order_row, product:, order: cash_order, product_count: 2)
+        create(:order_row, product:, order:, product_count: 3)
+        create(:order_row, product:, order: pin_order, product_count: 4)
       end
 
       it { expect(activity.revenue_total).to eq 9 * product_price }
@@ -252,16 +252,16 @@ RSpec.describe Activity, type: :model do
 
     describe '#count_per_product' do
       let(:products) { activity.price_list.products.sample(2) }
-      let(:unbound_order) { create(:order, activity: activity) }
+      let(:unbound_order) { create(:order, activity:) }
 
       before do
-        create(:order_row, order: order, product_count: 2, product: products.first)
-        create(:order_row, order: order, product_count: 3, product: products.last)
+        create(:order_row, order:, product_count: 2, product: products.first)
+        create(:order_row, order:, product_count: 3, product: products.last)
         create(:order_row, order: unbound_order, product_count: 4, product: products.first)
       end
 
       context 'without arguments' do
-        let(:order) { create(:order, activity: activity) }
+        let(:order) { create(:order, activity:) }
 
         it { expect(activity.count_per_product.find { |item| item[:name] == products.first[:name] }[:amount]).to eq 6 }
         it { expect(activity.count_per_product.find { |item| item[:name] == products.last[:name] }[:amount]).to eq 3 }
@@ -269,21 +269,21 @@ RSpec.describe Activity, type: :model do
 
       context 'when specific user' do
         let(:user) { create(:user) }
-        let(:order) { create(:order, activity: activity, user: user) }
+        let(:order) { create(:order, activity:, user:) }
 
-        it { expect(activity.count_per_product(user: user).find { |item| item[:name] == products.first[:name] }[:amount]).to eq 2 }
-        it { expect(activity.count_per_product(user: user).find { |item| item[:name] == products.last[:name] }[:amount]).to eq 3 }
+        it { expect(activity.count_per_product(user:).find { |item| item[:name] == products.first[:name] }[:amount]).to eq 2 }
+        it { expect(activity.count_per_product(user:).find { |item| item[:name] == products.last[:name] }[:amount]).to eq 3 }
       end
 
       context 'when paid with pin' do
-        let(:order) { create(:order, activity: activity, paid_with_pin: true) }
+        let(:order) { create(:order, activity:, paid_with_pin: true) }
 
         it { expect(activity.count_per_product(paid_with_pin: true).find { |item| item[:name] == products.first[:name] }[:amount]).to eq 2 }
         it { expect(activity.count_per_product(paid_with_pin: true).find { |item| item[:name] == products.last[:name] }[:amount]).to eq 3 }
       end
 
       context 'when paid with cash' do
-        let(:order) { create(:order, activity: activity, paid_with_cash: true) }
+        let(:order) { create(:order, activity:, paid_with_cash: true) }
         let(:count_per_product) { activity.count_per_product(paid_with_cash: true) }
 
         it { expect(count_per_product.find { |item| item[:name] == products.first[:name] }[:amount]).to eq 2 }
@@ -294,14 +294,14 @@ RSpec.describe Activity, type: :model do
     describe '#revenue_by_category' do
       let(:product) { create(:product, category: :beer) }
       let(:other_product) { create(:product, category: :wine) }
-      let(:order) { create(:order, activity: activity) }
+      let(:order) { create(:order, activity:) }
 
       before do
-        create(:product_price, price_list: activity.price_list, product: product, price: 2)
+        create(:product_price, price_list: activity.price_list, product:, price: 2)
         create(:product_price, price_list: activity.price_list, product: other_product, price: 3)
 
-        create(:order_row, order: order, product: product, product_count: 1)
-        create(:order_row, order: order, product: other_product, product_count: 1)
+        create(:order_row, order:, product:, product_count: 1)
+        create(:order_row, order:, product: other_product, product_count: 1)
       end
 
       it { expect(activity.revenue_by_category['beer']).to eq 2 }
@@ -310,14 +310,14 @@ RSpec.describe Activity, type: :model do
     describe '#revenue_per_product' do
       let(:product) { create(:product, category: :beer) }
       let(:other_product) { create(:product, category: :wine) }
-      let(:order) { create(:order, activity: activity) }
+      let(:order) { create(:order, activity:) }
 
       before do
-        create(:product_price, price_list: activity.price_list, product: product, price: 2)
+        create(:product_price, price_list: activity.price_list, product:, price: 2)
         create(:product_price, price_list: activity.price_list, product: other_product, price: 3)
 
-        create(:order_row, order: order, product: product, product_count: 1)
-        create(:order_row, order: order, product: other_product, product_count: 1)
+        create(:order_row, order:, product:, product_count: 1)
+        create(:order_row, order:, product: other_product, product_count: 1)
       end
 
       it { expect(activity.revenue_per_product[product]).to eq 2 }
@@ -327,11 +327,11 @@ RSpec.describe Activity, type: :model do
       let(:user) { create(:user) }
       let(:price) { create(:product_price, price: 2) }
       let(:activity) { create(:activity, price_list: price.price_list) }
-      let(:order) { create(:order, activity: activity, user: user) }
+      let(:order) { create(:order, activity:, user:) }
 
       before do
-        create(:order_row, order: order, product: price.product, product_count: 10)
-        create(:order_row, order: order, product: price.product, product_count: 40)
+        create(:order_row, order:, product: price.product, product_count: 10)
+        create(:order_row, order:, product: price.product, product_count: 40)
       end
 
       it { expect(activity.revenue_by_user(user)).to eq 100 }
@@ -341,7 +341,7 @@ RSpec.describe Activity, type: :model do
       let(:bartender) { create(:user) }
 
       before do
-        create(:order, created_by: bartender, activity: activity)
+        create(:order, created_by: bartender, activity:)
       end
 
       it { expect(activity.bartenders).to match_array [bartender] }
@@ -358,13 +358,13 @@ RSpec.describe Activity, type: :model do
     subject(:activity) { create(:activity) }
 
     let(:manually_added_user) { create(:user) }
-    let(:manually_added_user_order) { create(:order, user: manually_added_user, activity: activity) }
+    let(:manually_added_user_order) { create(:order, user: manually_added_user, activity:) }
 
     # Make sure that a user only shows up once in the list, even if he/she has placed multiple orders
-    let(:second_manually_added_user_order) { create(:order, user: manually_added_user, activity: activity) }
+    let(:second_manually_added_user_order) { create(:order, user: manually_added_user, activity:) }
 
     let(:provider_added_user) { create(:user, provider: 'some_provider') }
-    let(:provider_added_user_order) { create(:order, user: provider_added_user, activity: activity) }
+    let(:provider_added_user_order) { create(:order, user: provider_added_user, activity:) }
 
     before do
       manually_added_user_order

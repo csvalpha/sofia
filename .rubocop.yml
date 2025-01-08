@@ -4,8 +4,8 @@ require:
   - rubocop-performance
 
 AllCops:
-  TargetRailsVersion: 6.0
-  TargetRubyVersion: 3.0
+  TargetRailsVersion: 7.0
+  TargetRubyVersion: 3.2
   Exclude:
     - 'bin/**/*'
     - 'db/schema.rb'

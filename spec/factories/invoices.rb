@@ -7,7 +7,7 @@ FactoryBot.define do
 
     trait :with_rows do
       after(:create) do |invoice, _evaluator|
-        create :invoice_row, invoice: invoice
+        create :invoice_row, invoice:
       end
     end
   end

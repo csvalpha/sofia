@@ -5,7 +5,7 @@ describe OrdersController, type: :controller do
     let(:activity) { create(:activity) }
     let(:locked_activity) { create(:activity) }
     let(:order) do
-      create(:order, activity: activity, user: create(:user))
+      create(:order, activity:, user: create(:user))
     end
     let(:order_on_locked_activity) do
       create(:order, activity: locked_activity, user: create(:user))
@@ -21,7 +21,7 @@ describe OrdersController, type: :controller do
     end
 
     before do
-      create(:order_row, order: order, product_count: 2, product: activity.price_list.products.first)
+      create(:order_row, order:, product_count: 2, product: activity.price_list.products.first)
       create(:order_row, order: order_on_locked_activity, product_count: 2, product: locked_activity.price_list.products.first)
       locked_activity.update(locked_by: create(:user))
 

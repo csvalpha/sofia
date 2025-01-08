@@ -38,7 +38,7 @@ RSpec.describe CreditMutation, type: :model do
 
     context 'when with a locked activity' do
       let(:activity) { build(:activity, :locked) }
-      let(:mutation) { build(:credit_mutation, activity: activity) }
+      let(:mutation) { build(:credit_mutation, activity:) }
 
       it { expect(mutation).not_to be_valid }
     end
