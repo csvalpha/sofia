@@ -1,6 +1,4 @@
 def seed_products # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-  products = []
-
   # rubocop:disable Style/WordArray
   products_beer = ['Bier (glas)', 'Bier (pul)', 'Bier (pitcher)', '12+1']
   products_low_alcohol_beer = ['Alcoholarm bier', 'Radler 0.0']
@@ -14,44 +12,44 @@ def seed_products # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metri
   products_donation = ['Donatie']
   # rubocop:enable Style/WordArray
 
-  products_beer.each do |name|
-    products << Product.create(name: name, category: :beer)
+  products = products_beer.map do |name|
+    Product.create(name:, category: :beer)
   end
 
   products_low_alcohol_beer.each do |name|
-    products << Product.create(name: name, category: :low_alcohol_beer)
+    products << Product.create(name:, category: :low_alcohol_beer)
   end
 
   products_craft_beer.each do |name|
-    products << Product.create(name: name, category: :craft_beer)
+    products << Product.create(name:, category: :craft_beer)
   end
 
   products_non_alcoholic.each do |name|
-    products << Product.create(name: name, category: :non_alcoholic)
+    products << Product.create(name:, category: :non_alcoholic)
   end
 
   products_distilled.each do |name|
-    products << Product.create(name: name, category: :distilled)
+    products << Product.create(name:, category: :distilled)
   end
 
   products_whiskey.each do |name|
-    products << Product.create(name: name, category: :whiskey)
+    products << Product.create(name:, category: :whiskey)
   end
 
   products_wine.each do |name|
-    products << Product.create(name: name, category: :wine)
+    products << Product.create(name:, category: :wine)
   end
 
   products_food.each do |name|
-    products << Product.create(name: name, category: :food)
+    products << Product.create(name:, category: :food)
   end
 
   products_tobacco.each do |name|
-    products << Product.create(name: name, category: :tobacco)
+    products << Product.create(name:, category: :tobacco)
   end
 
   products_donation.each do |name|
-    products << Product.create(name: name, category: :donation)
+    products << Product.create(name:, category: :donation)
   end
 
   products

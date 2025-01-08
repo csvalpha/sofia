@@ -48,7 +48,7 @@ RSpec.describe Payment, type: :model do
   describe '.not_completed' do
     context 'when with not_completed status' do
       %w[open pending].each do |status|
-        subject(:payment) { create(:payment, status: status) }
+        subject(:payment) { create(:payment, status:) }
 
         before { payment }
 
@@ -58,7 +58,7 @@ RSpec.describe Payment, type: :model do
 
     context 'when with complete status' do
       %w[paid failed canceled expired].each do |status|
-        subject(:payment) { create(:payment, status: status) }
+        subject(:payment) { create(:payment, status:) }
 
         before { payment }
 
@@ -71,7 +71,7 @@ RSpec.describe Payment, type: :model do
     let(:user) { create(:user) }
 
     context 'when updating user payment to paid' do
-      subject(:payment) { create(:payment, user: user, amount: 22.00, status: 'open') }
+      subject(:payment) { create(:payment, user:, amount: 22.00, status: 'open') }
 
       describe 'creates credit mutation' do
         before do
@@ -89,9 +89,9 @@ RSpec.describe Payment, type: :model do
 
     context 'when updating invoice payment to paid' do
       let(:invoice_row) { create(:invoice_row, amount: 1, price: 22.00) }
-      let(:invoice) { create(:invoice, rows: [invoice_row], user: user) }
+      let(:invoice) { create(:invoice, rows: [invoice_row], user:) }
 
-      subject(:payment) { create(:payment, user: nil, invoice: invoice, amount: invoice.amount, status: 'open') }
+      subject(:payment) { create(:payment, user: nil, invoice:, amount: invoice.amount, status: 'open') }
 
       describe 'creates credit mutation' do
         before do
@@ -109,7 +109,7 @@ RSpec.describe Payment, type: :model do
     end
 
     context 'when not updating payment to paid' do
-      subject(:payment) { create(:payment, user: user, amount: 22.00, status: 'open') }
+      subject(:payment) { create(:payment, user:, amount: 22.00, status: 'open') }
 
       it { expect { payment.update(status: 'open') }.not_to change(CreditMutation, :count) }
       it { expect { payment.update(status: 'pending') }.not_to change(CreditMutation, :count) }
@@ -119,7 +119,7 @@ RSpec.describe Payment, type: :model do
     end
 
     context 'when updating already paid payment' do
-      subject(:payment) { create(:payment, user: user, amount: 22.00, status: 'paid') }
+      subject(:payment) { create(:payment, user:, amount: 22.00, status: 'paid') }
 
       before do
         payment.update(status: 'paid')
