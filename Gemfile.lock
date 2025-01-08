@@ -588,7 +588,7 @@ DEPENDENCIES
   redis-rails (~> 5.0.2)
   rest-client (~> 2.1.0)
   rspec-rails
-  rubocop (~> 1.50.0)
+  rubocop (~> 1.50.2)
   rubocop-performance
   rubocop-rails
   rubocop-rspec

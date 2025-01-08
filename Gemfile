@@ -74,7 +74,7 @@ end
 
 group :test do
   gem 'rails-controller-testing', '~> 1.0.5'
-  gem 'rubocop', '~> 1.50.0', require: false
+  gem 'rubocop', '~> 1.50.2', require: false
   gem 'rubocop-performance'
   gem 'rubocop-rails'
   gem 'rubocop-rspec'
