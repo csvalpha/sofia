@@ -32,7 +32,7 @@ class Payment < ApplicationRecord
 
     mollie_payment = Mollie::Payment.create(
       amount: { value: format('%<amount>.2f', amount: attributes[:amount]), currency: 'EUR' },
-      description: description,
+      description:,
       redirect_url: "http://#{Rails.application.config.x.sofia_host}/payments/#{obj.id}/callback"
     )
 
@@ -52,8 +52,8 @@ class Payment < ApplicationRecord
   end
 
   def process_user!
-    mutation = CreditMutation.create(user: user,
-                                     amount: amount,
+    mutation = CreditMutation.create(user:,
+                                     amount:,
                                      description: 'iDEAL inleg', created_by: user)
 
     UserCreditMailer.new_credit_mutation_mail(mutation).deliver_later
@@ -61,7 +61,7 @@ class Payment < ApplicationRecord
 
   def process_invoice!
     CreditMutation.create(user: invoice.user,
-                          amount: amount,
+                          amount:,
                           description: "Betaling factuur #{invoice.human_id}", created_by: invoice.user)
     invoice.update(status: 'paid')
 

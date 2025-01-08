@@ -32,7 +32,7 @@ RSpec.describe Order, type: :model do
 
     context 'when with locked activity' do
       let(:activity) { build_stubbed(:activity, :locked) }
-      let(:order) { build(:order, activity: activity) }
+      let(:order) { build(:order, activity:) }
 
       it { expect(order).not_to be_valid }
     end
@@ -49,12 +49,12 @@ RSpec.describe Order, type: :model do
       let(:product) { create(:product) }
       let(:price_list) { create(:price_list, :with_products, products: [product]) }
 
-      let(:activity) { create(:activity, price_list: price_list) }
+      let(:activity) { create(:activity, price_list:) }
 
-      subject(:order) { create(:order, activity: activity) }
+      subject(:order) { create(:order, activity:) }
 
       before do
-        create(:order_row, order: order, product: product, product_count: 2)
+        create(:order_row, order:, product:, product_count: 2)
         order.reload
       end
 
@@ -66,15 +66,15 @@ RSpec.describe Order, type: :model do
     let(:product_a) { create(:product, name: 'A') }
     let(:product_b) { create(:product, name: 'B') }
     let(:price_list) { create(:price_list, :with_products, products: [product_a, product_b]) }
-    let(:activity) { create(:activity, price_list: price_list) }
-    let(:order) { create(:order, activity: activity) }
-    let(:to_new_order) { create(:order, activity: activity, created_at: 11.days.from_now) }
+    let(:activity) { create(:activity, price_list:) }
+    let(:order) { create(:order, activity:) }
+    let(:to_new_order) { create(:order, activity:, created_at: 11.days.from_now) }
 
     subject(:count) { described_class.count_per_product(10.days.ago, 10.days.from_now) }
 
     before do
-      create_list(:order_row, 2, order: order, product: product_a, product_count: 2)
-      create_list(:order_row, 3, order: order, product: product_b, product_count: 3)
+      create_list(:order_row, 2, order:, product: product_a, product_count: 2)
+      create_list(:order_row, 3, order:, product: product_b, product_count: 3)
       create_list(:order_row, 3, order: to_new_order, product: product_b, product_count: 3)
     end
 
@@ -86,15 +86,15 @@ RSpec.describe Order, type: :model do
     let(:product_a) { create(:product, name: 'A', category: 'beer') }
     let(:product_b) { create(:product, name: 'B', category: 'wine') }
     let(:price_list) { create(:price_list, :with_products, products: [product_a, product_b]) }
-    let(:activity) { create(:activity, price_list: price_list) }
-    let(:order) { create(:order, activity: activity) }
-    let(:to_new_order) { create(:order, activity: activity, created_at: 11.days.from_now) }
+    let(:activity) { create(:activity, price_list:) }
+    let(:order) { create(:order, activity:) }
+    let(:to_new_order) { create(:order, activity:, created_at: 11.days.from_now) }
 
     subject(:count) { described_class.count_per_category(10.days.ago, 10.days.from_now) }
 
     before do
-      create_list(:order_row, 2, order: order, product: product_a, product_count: 2)
-      create_list(:order_row, 3, order: order, product: product_b, product_count: 3)
+      create_list(:order_row, 2, order:, product: product_a, product_count: 2)
+      create_list(:order_row, 3, order:, product: product_b, product_count: 3)
       create_list(:order_row, 3, order: to_new_order, product: product_b, product_count: 3)
     end
 
@@ -106,17 +106,17 @@ RSpec.describe Order, type: :model do
     let(:activity) { create(:activity) }
 
     context 'when no user' do
-      let(:order) { build(:order, paid_with_cash: true, activity: activity) }
+      let(:order) { build(:order, paid_with_cash: true, activity:) }
 
       it { expect(order.save).to be true }
     end
 
     context 'when non-amber user without credit' do
       let(:user) { create(:user) }
-      let(:order) { build(:order, user: user, activity: activity) }
+      let(:order) { build(:order, user:, activity:) }
 
       before do
-        create(:credit_mutation, user: user, amount: -1)
+        create(:credit_mutation, user:, amount: -1)
       end
 
       it { expect(order.save).to be true }
@@ -124,7 +124,7 @@ RSpec.describe Order, type: :model do
 
     context 'when amber user' do
       let(:user) { create(:user, provider: 'amber_oauth2') }
-      let(:order) { build(:order, user: user, activity: activity) }
+      let(:order) { build(:order, user:, activity:) }
 
       context 'with credit' do
         # Note that a credit of 0 counts as non-negative credit
@@ -133,8 +133,8 @@ RSpec.describe Order, type: :model do
 
       context 'without credit with activity order' do
         before do
-          create(:order, user: user, activity: activity)
-          create(:credit_mutation, user: user, amount: -1)
+          create(:order, user:, activity:)
+          create(:credit_mutation, user:, amount: -1)
         end
 
         it { expect(order.save).to be true }
@@ -142,7 +142,7 @@ RSpec.describe Order, type: :model do
 
       context 'without credit without activity order' do
         before do
-          create(:credit_mutation, user: user, amount: -1)
+          create(:credit_mutation, user:, amount: -1)
         end
 
         it { expect(order.save).to be false }

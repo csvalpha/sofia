@@ -32,13 +32,13 @@ RSpec.describe OrderRow, type: :model do
   describe '#copy_product_price' do
     let(:product) { create(:product) }
     let(:price_list) { create(:price_list) }
-    let(:activity) { create(:activity, price_list: price_list) }
-    let(:order) { create(:order, activity: activity) }
+    let(:activity) { create(:activity, price_list:) }
+    let(:order) { create(:order, activity:) }
     let!(:product_price) do
-      create(:product_price, price_list: price_list, product: product, price: 2.00)
+      create(:product_price, price_list:, product:, price: 2.00)
     end
 
-    subject!(:order_row) { create(:order_row, order: order, product: product) }
+    subject!(:order_row) { create(:order_row, order:, product:) }
 
     context 'when with a product' do
       it { expect(order_row.price_per_product).to eq(2.00) }
@@ -65,10 +65,10 @@ RSpec.describe OrderRow, type: :model do
     context 'when with an order' do
       let(:all_products) { create_list(:product, 5) }
       let(:price_list) { create(:price_list, :with_products, products: all_products) }
-      let(:activity) { create(:activity, price_list: price_list) }
-      let(:order) { create(:order, activity: activity) }
+      let(:activity) { create(:activity, price_list:) }
+      let(:order) { create(:order, activity:) }
 
-      subject(:order_row) { create(:order_row, order: order) }
+      subject(:order_row) { create(:order_row, order:) }
 
       before { create(:product) }
 

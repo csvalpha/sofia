@@ -6,7 +6,7 @@ describe InvoicesController, type: :controller do
     let(:id) { invoice.id }
 
     let(:http_request) do
-      get :pay, params: { id: id }
+      get :pay, params: { id: }
     end
 
     context 'when authorized' do

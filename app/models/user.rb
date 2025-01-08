@@ -71,7 +71,7 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def update_role(groups)
     roles_to_have = Role.where(group_uid: groups)
-    roles_users_to_have = roles_to_have.map { |role| RolesUsers.find_or_create_by(role: role, user: self) }
+    roles_users_to_have = roles_to_have.map { |role| RolesUsers.find_or_create_by(role:, user: self) }
 
     roles_users_not_to_have = roles_users - roles_users_to_have
     roles_users_not_to_have.map(&:destroy)

@@ -32,7 +32,7 @@ describe ActivitiesController, type: :controller do
       end
 
       context 'when with non-empty activity' do
-        let(:additional_records) { create(:order, activity: activity) }
+        let(:additional_records) { create(:order, activity:) }
 
         it { expect(request.status).to eq 302 }
         it { expect(Activity.count).to eq 1 }
@@ -48,7 +48,7 @@ describe ActivitiesController, type: :controller do
       end
 
       context 'when with non-empty activity' do
-        let(:additional_records) { create(:order, activity: activity) }
+        let(:additional_records) { create(:order, activity:) }
 
         it { expect(request.status).to eq 302 }
         it { expect(Activity.count).to eq 1 }
@@ -64,7 +64,7 @@ describe ActivitiesController, type: :controller do
       end
 
       context 'when with non-empty activity' do
-        let(:additional_records) { create(:order, activity: activity) }
+        let(:additional_records) { create(:order, activity:) }
 
         it { expect(request.status).to eq 302 }
         it { expect(Activity.count).to eq 1 }
