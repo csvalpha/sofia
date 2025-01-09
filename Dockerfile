@@ -1,4 +1,4 @@
-FROM ruby:3.2.2-slim@sha256:70370316b02901d7db3f6e453d6259ed4d0d52326d6ac57e3a579f7e3b616e41
+FROM ruby:3.2.6-slim@sha256:c582e3505878002d0b6e316d14a4543d276c84ba040afc73fceef25b6321f80f
 
 # Add build-essential tools.
 RUN apt-get update -qq && \
@@ -7,7 +7,7 @@ RUN apt-get update -qq && \
   git \
   libpq-dev \
   curl \
-  netcat \
+  netcat-traditional \
   wkhtmltopdf
 
 # Add Node, required for asset pipeline.
