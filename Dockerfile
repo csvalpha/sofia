@@ -24,7 +24,6 @@ ARG BUILD_HASH='unknown'
 ENV BUILD_HASH=$BUILD_HASH
 ARG RAILS_ENV='production'
 ARG NODE_ENV='production'
-ARG RAILS_MASTER_KEY
 
 # Pre-install gems, so that they can be cached.
 COPY Gemfile* /app/
@@ -43,10 +42,8 @@ RUN yarn install --immutable
 COPY . /app/
 
 # Precompile assets after copying app because whole Rails pipeline is needed.
-RUN --mount=type=secret,id=rails_master_key \
-  if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ] || [ "$RAILS_ENV" = 'luxproduction' ]; then \
-    # Use secret if RAILS_MASTER_KEY build arg is not set.
-    RAILS_MASTER_KEY="${RAILS_MASTER_KEY:-$(cat /run/secrets/rails_master_key)}" bundle exec rails assets:precompile; \
+RUN if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ] || [ "$RAILS_ENV" = 'luxproduction' ]; then \
+    SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile; \
   else \
     echo "Skipping assets:precompile"; \
   fi

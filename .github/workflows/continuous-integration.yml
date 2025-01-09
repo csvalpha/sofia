@@ -76,14 +76,20 @@ jobs:
           name: app
 
       - name: Lint
-        env:
-          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
         run: |
           EXIT_STATUS=0
-          ./actionlint -ignore 'SC2153:'  -ignore 'property "sha" is not defined in object type {}' || \
-            EXIT_STATUS=$?
-          docker run -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_HOST=localhost -e \
-            RAILS_MASTER_KEY --network=host app bin/ci.sh lint || EXIT_STATUS=$?
+          ./actionlint \
+          -ignore 'property "gh_app_private_key" is not defined' \
+          -ignore 'SC2153:' \
+          -ignore 'property "sha" is not defined in object type {}' || \
+          EXIT_STATUS=$?
+          docker run \
+          -e POSTGRES_USER=postgres \
+          -e POSTGRES_PASSWORD=postgres \
+          -e POSTGRES_HOST=localhost \
+          --network=host \
+          app bin/ci.sh lint || \
+          EXIT_STATUS=$?
           exit $EXIT_STATUS
 
   test:
@@ -123,8 +129,15 @@ jobs:
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
         run: |
           mkdir coverage
-          docker run -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_HOST=localhost -e \
-            RAILS_MASTER_KEY --network=host -v "$(pwd)"'/coverage:/app/coverage' app bin/ci.sh spec
+          docker run \
+            -e RAILS_MASTER_KEY \
+            -e POSTGRES_USER=postgres \
+            -e POSTGRES_PASSWORD=postgres \
+            -e POSTGRES_HOST=localhost \
+            --network=host \
+            -v "$(pwd)"'/coverage:/app/coverage' \
+             app bin/ci.sh spec
+
 
       - name: Upload coverage report to Codecov
         if: ${{ !cancelled() }}
