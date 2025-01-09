@@ -7,7 +7,7 @@ RUN apt-get update -qq && \
   git \
   libpq-dev \
   curl \
-  netcat \
+  netcat-traditional \
   wkhtmltopdf
 
 # Add Node, required for asset pipeline.
