@@ -4,10 +4,10 @@ describe CreditMutationsController, type: :controller do
   describe 'POST create' do
     let(:user) { create(:user) }
     let(:credit_mutation) do
-      build(:credit_mutation, user: user)
+      build(:credit_mutation, user:)
     end
     let(:credit_mutation_with_activity) do
-      build(:credit_mutation, activity: create(:activity), user: user)
+      build(:credit_mutation, activity: create(:activity), user:)
     end
     let(:request1) do
       post :create, params: { credit_mutation: credit_mutation.attributes, format: :json }

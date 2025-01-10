@@ -5,7 +5,7 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   has_many :credit_mutations, dependent: :destroy
   has_many :activities, dependent: :destroy, foreign_key: 'created_by_id', inverse_of: :created_by
 
-  has_many :roles_users, class_name: 'RolesUsers', dependent: :destroy, inverse_of: :user
+  has_many :roles_users, class_name: 'RolesUsers', dependent: :destroy
   has_many :roles, through: :roles_users
 
   validates :name, presence: true
@@ -14,15 +14,15 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   validates :email, format: { with: Devise.email_regexp }, allow_blank: true
   validates :email, presence: true, if: ->(user) { !user.deactivated && user.sofia_account.present? }
 
-  scope :in_amber, (-> { where(provider: 'amber_oauth2') })
-  scope :sofia_account, (-> { where(provider: 'sofia_account') })
-  scope :manual, (-> { where(provider: nil) })
+  scope :in_amber, -> { where(provider: 'amber_oauth2') }
+  scope :sofia_account, -> { where(provider: 'sofia_account') }
+  scope :manual, -> { where(provider: nil) }
   scope :active, (lambda {
     where(deactivated: false).where('(provider IS NULL OR provider != ?) OR (provider = ? AND id IN (?))', 'sofia_account', 'sofia_account', SofiaAccount.select('user_id'))
   })
-  scope :not_activated, (-> { where(deactivated: false, provider: 'sofia_account').where.not(id: SofiaAccount.select('user_id')) })
-  scope :deactivated, (-> { where(deactivated: true) })
-  scope :treasurer, (-> { joins(:roles).merge(Role.treasurer) })
+  scope :not_activated, -> { where(deactivated: false, provider: 'sofia_account').where.not(id: SofiaAccount.select('user_id')) }
+  scope :deactivated, -> { where(deactivated: true) }
+  scope :treasurer, -> { joins(:roles).merge(Role.treasurer) }
 
   has_one :sofia_account, dependent: :destroy
   accepts_nested_attributes_for :sofia_account
@@ -78,7 +78,7 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
     if activity.nil?
       !insufficient_credit
     else
-      !insufficient_credit or activity.orders.select { |order| order.user_id == id }.any?
+      !insufficient_credit or activity.orders.any? { |order| order.user_id == id }
     end
   end
 
@@ -97,7 +97,7 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   def update_role(groups)
     if User.in_amber.exists?(id)
       roles_to_have = Role.where(group_uid: groups)
-      roles_users_to_have = roles_to_have.map { |role| RolesUsers.find_or_create_by(role: role, user: self) }
+      roles_users_to_have = roles_to_have.map { |role| RolesUsers.find_or_create_by(role:, user: self) }
 
       roles_users_not_to_have = roles_users - roles_users_to_have
       roles_users_not_to_have.map(&:destroy)

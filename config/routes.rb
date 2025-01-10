@@ -75,7 +75,7 @@ Rails.application.routes.draw do
   require 'sidekiq/web'
   require 'sidekiq-scheduler/web'
 
-  authenticate :user, ->(u) { u.treasurer? } do
+  authenticate :user, lambda(&:treasurer?) do
     mount Sidekiq::Web => '/sidekiq'
   end
 

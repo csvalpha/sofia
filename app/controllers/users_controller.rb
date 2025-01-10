@@ -168,7 +168,7 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     return unless Rails.env.production? || Rails.env.staging? || Rails.env.luxproduction?
 
     # :nocov:
-    SlackMessageJob.perform_later("User ##{current_user.id} (#{current_user.name}) "\
+    SlackMessageJob.perform_later("User ##{current_user.id} (#{current_user.name}) " \
                                   "is importing users from Amber (#{Rails.application.config.x.amber_api_host})")
     # :nocov:
   end

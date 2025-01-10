@@ -15,7 +15,7 @@ class PaymentsController < ApplicationController
 
     if payment.valid?
       checkout_url = payment.mollie_payment.checkout_url
-      redirect_to URI.parse(checkout_url).to_s
+      redirect_to URI.parse(checkout_url).to_s, allow_other_host: true
     else
       flash[:error] = payment.errors
       redirect_to add_payments_path

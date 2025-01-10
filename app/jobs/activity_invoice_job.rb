@@ -3,7 +3,7 @@ class ActivityInvoiceJob < ApplicationJob
 
   def perform(activity)
     activity.manually_added_users_with_orders.each do |user|
-      Invoice.create(activity: activity, user: user)
+      Invoice.create(activity:, user:)
     end
   end
 end
