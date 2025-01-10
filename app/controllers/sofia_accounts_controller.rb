@@ -11,21 +11,9 @@ class SofiaAccountsController < ApplicationController
     user_id = params.require(:user_id)
 
     user = User.find_by(id: user_id)
-    if !user
-      raise 'uw account bestaat niet'
-    elsif user.deactivated
-      raise 'uw account is gedeactiveerd'
-    elsif user.sofia_account
-      raise 'uw account is al geactiveerd'
-    end
+    validate_user(user)
 
-    activation_token = params.require(:activation_token)
-    if user.activation_token != activation_token || user.activation_token_valid_till.try(:<, Time.zone.now)
-      new_activation_link_url = SofiaAccount.new_activation_link_url(user.id)
-      raise "de activatielink is verlopen of ongeldig. Een nieuwe activatielink kan worden aangevraagd via <a href='#{new_activation_link_url}'>#{new_activation_link_url}</a>"
-    end
-
-    sofia_account = SofiaAccount.new(permitted_attributes.merge(user_id: user_id))
+    sofia_account = SofiaAccount.new(permitted_attributes.merge(user_id:))
     raise normalize_error_messages(sofia_account.errors.full_messages) unless sofia_account.save
 
     user.reload
@@ -45,6 +33,25 @@ class SofiaAccountsController < ApplicationController
 
     sign_in(:user, user)
     redirect_to user.roles.any? ? root_path : user_path(user.id), flash: { success: 'Account geactiveerd!' }
+  rescue StandardError => e
+    redirect_back_or_to :root, flash: { error: "Account activeren mislukt: #{e.message}." }
+  end
+
+  def validate_user(user)
+    if !user
+      raise 'uw account bestaat niet'
+    elsif user.deactivated
+      raise 'uw account is gedeactiveerd'
+    elsif user.sofia_account
+      raise 'uw account is al geactiveerd'
+    end
+
+    activation_token = params.require(:activation_token)
+    if user.activation_token != activation_token || user.activation_token_valid_till.try(:<, Time.zone.now)
+      new_activation_link_url = SofiaAccount.new_activation_link_url(user.id)
+      raise "de activatielink is verlopen of ongeldig. Een nieuwe activatielink kan worden aangevraagd via
+             <a href='#{new_activation_link_url}'>#{new_activation_link_url}</a>"
+    end
   rescue ActionController::ParameterMissing => e
     param_name = I18n.t("activerecord.attributes.sofia_account.#{e.param}")
     redirect_back_or_to :root, flash: { error: "Account activeren mislukt: #{param_name.downcase} is niet aanwezig." }
@@ -61,7 +68,8 @@ class SofiaAccountsController < ApplicationController
 
       if !@sofia_account.authenticate(params.require(:sofia_account)[:old_password])
         raise 'het oude wachtwoord is fout of niet opgegeven'
-      elsif new_attributes[:password].blank? # sofia_account.update(...) just does nothing instead of showing error, so we show error manually
+      elsif new_attributes[:password].blank?
+        # sofia_account.update(...) just does nothing instead of showing error, so we show error manually
         raise 'wachtwoord moet opgegeven zijn'
       elsif !@sofia_account.update(new_attributes)
         raise normalize_error_messages(@sofia_account.errors.full_messages)
@@ -88,7 +96,7 @@ class SofiaAccountsController < ApplicationController
       end
 
       redirect_to user_path(@sofia_account.user_id)
-    rescue ActionController::ParameterMissing => e
+    rescue ActionController::ParameterMissing
       redirect_back_or_to :root, flash: { error: 'Two-factor-authenticatie aanzetten mislukt: de verificatie token is niet aanwezig.' }
     rescue StandardError => e
       redirect_back_or_to :root, flash: { error: "Two-factor-authenticatie aanzetten mislukt: #{e.message}." }
@@ -170,10 +178,12 @@ class SofiaAccountsController < ApplicationController
     activation_token = params.require(:activation_token)
     if user.activation_token != activation_token || user.activation_token_valid_till.try(:<, Time.zone.now)
       forgot_password_url = SofiaAccount.forgot_password_url
-      raise "de resetlink is verlopen of ongeldig. Een nieuwe resetlink kan worden aangevraagd via <a href='#{forgot_password_url}'>#{forgot_password_url}</a>"
+      raise "de resetlink is verlopen of ongeldig. Een nieuwe resetlink kan worden aangevraagd via
+      <a href='#{forgot_password_url}'>#{forgot_password_url}</a>"
     end
 
-    if params.require(:sofia_account)[:password].blank? # sofia_account.update(...) just does nothing instead of showing error, so we show error manually
+    if params.require(:sofia_account)[:password].blank?
+      # sofia_account.update(...) just does nothing instead of showing error, so we show error manually
       raise 'wachtwoord moet opgegeven zijn'
     elsif !sofia_account.update(params.require(:sofia_account).permit(%i[password password_confirmation]))
       raise normalize_error_messages(sofia_account.errors.full_messages)
@@ -192,9 +202,9 @@ class SofiaAccountsController < ApplicationController
   end
 
   def login
-    if current_user
-      redirect_to current_user.roles.any? ? root_path : user_path(current_user.id)
-    end
+    return unless current_user
+
+    redirect_to current_user.roles.any? ? root_path : user_path(current_user.id)
   end
 
   private

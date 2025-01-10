@@ -1,7 +1,7 @@
 class UsersController < ApplicationController # rubocop:disable Metrics/ClassLength
-  before_action :authenticate_user!, except: %i[activate_account]
+  before_action :authenticate_user!
 
-  after_action :verify_authorized, except: %i[activate_account]
+  after_action :verify_authorized
 
   def index # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     authorize User

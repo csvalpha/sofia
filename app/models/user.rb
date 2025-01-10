@@ -18,7 +18,8 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   scope :sofia_account, -> { where(provider: 'sofia_account') }
   scope :manual, -> { where(provider: nil) }
   scope :active, (lambda {
-    where(deactivated: false).where('(provider IS NULL OR provider != ?) OR (provider = ? AND id IN (?))', 'sofia_account', 'sofia_account', SofiaAccount.select('user_id'))
+    where(deactivated: false).where('(provider IS NULL OR provider != ?) OR
+                                     (provider = ? AND id IN (?))', 'sofia_account', 'sofia_account', SofiaAccount.select('user_id'))
   })
   scope :not_activated, -> { where(deactivated: false, provider: 'sofia_account').where.not(id: SofiaAccount.select('user_id')) }
   scope :deactivated, -> { where(deactivated: true) }
@@ -37,12 +38,12 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   after_save do
-    a = age
+    age
     archive! if deactivated && (new_record? || deactivated_previously_changed?(from: false, to: true))
   end
 
   after_create do
-    UserMailer.account_creation_email(self).deliver_later if User.sofia_account.exists?(id: id)
+    UserMailer.account_creation_email(self).deliver_later if User.sofia_account.exists?(id:)
   end
 
   def credit
@@ -95,13 +96,13 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def update_role(groups)
-    if User.in_amber.exists?(id)
-      roles_to_have = Role.where(group_uid: groups)
-      roles_users_to_have = roles_to_have.map { |role| RolesUsers.find_or_create_by(role:, user: self) }
+    return unless User.in_amber.exists?(id)
 
-      roles_users_not_to_have = roles_users - roles_users_to_have
-      roles_users_not_to_have.map(&:destroy)
-    end
+    roles_to_have = Role.where(group_uid: groups)
+    roles_users_to_have = roles_to_have.map { |role| RolesUsers.find_or_create_by(role:, user: self) }
+
+    roles_users_not_to_have = roles_users - roles_users_to_have
+    roles_users_not_to_have.map(&:destroy)
   end
 
   def archive!

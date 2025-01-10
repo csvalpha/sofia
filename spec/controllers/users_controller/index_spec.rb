@@ -20,10 +20,12 @@ describe UsersController, type: :controller do
     end
 
     context 'when as treasurer' do
-      it 'shows all users' do
-        sign_in alice
+      before do
+        sign_in carl
         get :index
+      end
 
+      it 'shows all users' do
         expect(assigns(:manual_users).size).to eq 4
         expect(assigns(:amber_users).size).to eq 1
         expect(assigns(:sofia_account_users).size).to eq 1
@@ -33,10 +35,12 @@ describe UsersController, type: :controller do
     end
 
     context 'when as renting-manager' do
-      it 'shows manual users' do
+      before do
         sign_in bob
         get :index
+      end
 
+      it 'shows manual users' do
         expect(assigns(:manual_users).size).to eq 4
         expect(assigns(:amber_users).size).to eq 0
         expect(assigns(:sofia_account_users).size).to eq 0
@@ -46,10 +50,12 @@ describe UsersController, type: :controller do
     end
 
     context 'when as main-bartender' do
-      it 'shows own user' do
+      before do
         sign_in carl
         get :index
+      end
 
+      it 'shows own user' do
         expect(assigns(:manual_users).size).to eq 1
         expect(assigns(:amber_users).size).to eq 0
         expect(assigns(:sofia_account_users).size).to eq 0

@@ -15,7 +15,7 @@ describe SofiaAccountsController, type: :controller do
       get :activate_account, params: request_params
     end
 
-    context 'no request_email for user with email' do
+    context 'without request_email for user with email' do
       before do
         request
       end
@@ -27,7 +27,7 @@ describe SofiaAccountsController, type: :controller do
       it { expect(request.status).to eq 200 }
     end
 
-    context 'valid for user without email' do
+    context 'without email' do
       before do
         user.update(email: nil)
         request

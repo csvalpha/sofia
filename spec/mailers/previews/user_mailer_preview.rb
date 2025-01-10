@@ -7,7 +7,7 @@ class UserMailerPreview < ActionMailer::Preview
 
   def forgot_password_mail
     user = User.new(id: 999_999, provider: 'sofia_account', activation_token: 'mockup_activation_token')
-    sofia_account = SofiaAccount.new(id: 888_888, user: user, username: 'mockup_username')
+    SofiaAccount.new(id: 888_888, user:, username: 'mockup_username')
     UserMailer.forgot_password_email(user)
   end
 

@@ -20,7 +20,7 @@ describe 'SofiaAccount login', type: :request do
       post '/users/auth/identity/callback', params: request_params
     end
 
-    context 'for non-existent sofia_account' do
+    context 'with non-existent sofia_account' do
       before do
         request_params[:auth_key] = 'something_else'
         request
@@ -37,8 +37,8 @@ describe 'SofiaAccount login', type: :request do
       end
     end
 
-    context 'for sofia_account without otp' do
-      context 'valid login' do
+    context 'with sofia_account without otp' do
+      context 'when valid login' do
         before do
           request
         end
@@ -55,7 +55,7 @@ describe 'SofiaAccount login', type: :request do
         end
       end
 
-      context 'wrong password' do
+      context 'when wrong password' do
         before do
           request_params[:password] = 'something_else'
           request
@@ -73,8 +73,8 @@ describe 'SofiaAccount login', type: :request do
       end
     end
 
-    context 'for sofia_account with otp' do
-      context 'valid login' do
+    context 'with sofia_account with otp' do
+      context 'when valid login' do
         before do
           sofia_account.update(otp_enabled: true)
           request
@@ -92,7 +92,7 @@ describe 'SofiaAccount login', type: :request do
         end
       end
 
-      context 'wrong password' do
+      context 'with wrong password' do
         before do
           sofia_account.update(otp_enabled: true)
           request_params[:password] = 'something_else'
@@ -128,7 +128,7 @@ describe 'SofiaAccount login', type: :request do
         end
       end
 
-      context 'wrong otp code' do
+      context 'with wrong otp code' do
         before do
           sofia_account.update(otp_enabled: true)
           request_params[:verification_code] = 'something_else'

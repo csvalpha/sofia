@@ -3,7 +3,7 @@ require 'rails_helper'
 describe UsersController, type: :controller do
   describe 'PATCH update_with_sofia_account' do
     let(:user) { create(:user, :sofia_account, name: 'Old name') }
-    let(:sofia_account) { create(:sofia_account, user: user, username: 'Old username') }
+    let(:sofia_account) { create(:sofia_account, user:, username: 'Old username') }
     let(:sofia_account_attributes) { { username: 'AAAA' } }
     let(:request) do
       patch :update_with_sofia_account,

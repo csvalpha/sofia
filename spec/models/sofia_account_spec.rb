@@ -8,7 +8,7 @@ RSpec.describe SofiaAccount, type: :model do
   describe '#valid?' do
     it { expect(sofia_account).to be_valid }
 
-    context 'username' do
+    context 'with username' do
       context 'when without' do
         subject(:sofia_account) { build_stubbed(:sofia_account, username: nil) }
 
@@ -28,7 +28,7 @@ RSpec.describe SofiaAccount, type: :model do
       end
     end
 
-    context 'password' do
+    context 'with password' do
       context 'when without' do
         subject(:sofia_account) do
           build_stubbed(:sofia_account, password: nil)
@@ -61,19 +61,19 @@ RSpec.describe SofiaAccount, type: :model do
     context 'when having duplicate fields' do
       let(:sofia_account) { create(:sofia_account, password: 'password1234') }
 
-      context 'username' do
+      context 'with username' do
         subject(:duplicate_sofia_account) { build(:sofia_account, username: sofia_account.username) }
 
         it { expect(duplicate_sofia_account).not_to be_valid }
       end
 
-      context 'password' do
+      context 'with password' do
         subject(:duplicate_sofia_account) { build_stubbed(:sofia_account, password: sofia_account.password) }
 
         it { expect(duplicate_sofia_account).to be_valid }
       end
 
-      context 'user' do
+      context 'with user' do
         subject(:duplicate_sofia_account) { build_stubbed(:sofia_account, user: sofia_account.user) }
 
         it { expect(duplicate_sofia_account).not_to be_valid }

@@ -67,7 +67,7 @@ RSpec.describe User, type: :model do
     context 'when without email' do
       subject(:user) { build(:user, :sofia_account, email: nil) }
 
-      before { build(:sofia_account, user: user) }
+      before { build(:sofia_account, user:) }
 
       it { expect(user).not_to be_valid }
     end
@@ -75,7 +75,7 @@ RSpec.describe User, type: :model do
     context 'when with valid email' do
       subject(:user) { build(:user, :sofia_account, email: 'valid@email.com') }
 
-      before { build(:sofia_account, user: user) }
+      before { build(:sofia_account, user:) }
 
       it { expect(user).to be_valid }
     end
@@ -439,11 +439,11 @@ RSpec.describe User, type: :model do
   end
 
   describe 'destroy' do
-    context 'sofia_account' do
+    context 'with sofia_account' do
       subject(:user) { create(:user, :sofia_account) }
 
       before do
-        create(:sofia_account, user: user)
+        create(:sofia_account, user:)
         user.destroy
       end
 
@@ -452,7 +452,7 @@ RSpec.describe User, type: :model do
   end
 
   describe '#archive!' do
-    context 'sofia_account' do
+    context 'with sofia_account' do
       subject(:user) { create(:user, :sofia_account) }
 
       let(:nil_attributes) do
@@ -460,7 +460,7 @@ RSpec.describe User, type: :model do
       end
 
       before do
-        create(:sofia_account, user: user)
+        create(:sofia_account, user:)
         user.archive!
         user.reload
       end
@@ -484,7 +484,7 @@ RSpec.describe User, type: :model do
   end
 
   describe '#before_save' do
-    context 'sofia_account' do
+    context 'with sofia_account' do
       subject(:user) { create(:user, :sofia_account) }
 
       it { expect(user.activation_token).not_to be_nil }
@@ -495,7 +495,7 @@ RSpec.describe User, type: :model do
       end
     end
 
-    context 'not sofia_account' do
+    context 'without sofia_account' do
       subject(:user) { create(:user) }
 
       it { expect(user.activation_token).to be_nil }
@@ -504,7 +504,7 @@ RSpec.describe User, type: :model do
   end
 
   describe '#after_save' do
-    context 'deactivated upon creation' do
+    context 'when deactivated upon creation' do
       subject(:user) { build(:user, deactivated: true) }
 
       it do
@@ -513,7 +513,7 @@ RSpec.describe User, type: :model do
       end
     end
 
-    context 'deactivated after update' do
+    context 'when deactivated after update' do
       subject(:user) { create(:user, deactivated: false) }
 
       before { user.deactivated = true }
@@ -524,7 +524,7 @@ RSpec.describe User, type: :model do
       end
     end
 
-    context 'deactivated and not changed' do
+    context 'when deactivated and not changed' do
       subject(:user) { create(:user, deactivated: true) }
 
       before { user.email = 'valid@email.com' }
@@ -535,7 +535,7 @@ RSpec.describe User, type: :model do
       end
     end
 
-    context 'not deactivated upon creation' do
+    context 'when not deactivated upon creation' do
       subject(:user) { build(:user, deactivated: false) }
 
       it do
@@ -544,7 +544,7 @@ RSpec.describe User, type: :model do
       end
     end
 
-    context 'not deactivated after update' do
+    context 'when not deactivated after update' do
       subject(:user) { create(:user, deactivated: true) }
 
       before { user.deactivated = false }
@@ -557,7 +557,7 @@ RSpec.describe User, type: :model do
   end
 
   describe '#after_create' do
-    context 'sofia_account' do
+    context 'with sofia_account' do
       subject(:user) { build(:user, :sofia_account) }
 
       after do
@@ -565,12 +565,12 @@ RSpec.describe User, type: :model do
       end
 
       it do
-        expect(UserMailer).to send_email(:account_creation_email, :deliver_later, user)
         user.save
+        expect(UserMailer).to send_email(:account_creation_email, :deliver_later, user)
       end
     end
 
-    context 'not sofia_account' do
+    context 'without sofia_account' do
       subject(:user) { build(:user) }
 
       after do
