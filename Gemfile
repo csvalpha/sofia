@@ -12,7 +12,6 @@ gem 'http', '~> 5.2.0'
 gem 'jbuilder', '~> 2.13.0'
 gem 'jquery-rails', '~> 4.6.0'
 gem 'kaminari', '~> 1.2.2'
-gem 'mini_racer', '~> 0.16.0'
 gem 'mollie-api-ruby', '~> 4.15.0'
 gem 'net-imap', require: false
 gem 'net-pop', require: false
@@ -52,7 +51,7 @@ group :development, :test do
   gem 'bullet', '~> 8.0'
   gem 'colorize'
   gem 'consistency_fail'
-  gem 'dotenv-rails', '~> 2.8.1'
+  gem 'dotenv-rails', '~> 3.1.7'
   gem 'guard-livereload', '~> 2.5.2'
   gem 'guard-rspec', require: false
   gem 'pry-byebug'

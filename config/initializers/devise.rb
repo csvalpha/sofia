@@ -1,4 +1,5 @@
 Devise.setup do |config|
+  config.secret_key = Rails.application.secret_key_base
   config.mailer_sender = Rails.application.config.x.ict_email
 
   # ==> ORM configuration
