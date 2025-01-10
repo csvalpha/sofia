@@ -62,7 +62,7 @@ RSpec.describe SofiaAccount, type: :model do
       let(:sofia_account) { create(:sofia_account, password: 'password1234') }
 
       context 'username' do
-        subject(:duplicate_sofia_account) { build_stubbed(:sofia_account, username: sofia_account.username) }
+        subject(:duplicate_sofia_account) { build(:sofia_account, username: sofia_account.username) }
 
         it { expect(duplicate_sofia_account).not_to be_valid }
       end
