@@ -5,18 +5,18 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   has_many :credit_mutations, dependent: :destroy
   has_many :activities, dependent: :destroy, foreign_key: 'created_by_id', inverse_of: :created_by
 
-  has_many :roles_users, class_name: 'RolesUsers', dependent: :destroy, inverse_of: :user
+  has_many :roles_users, class_name: 'RolesUsers', dependent: :destroy
   has_many :roles, through: :roles_users
 
   validates :name, presence: true
   validates :uid, uniqueness: true, allow_blank: true
   validate :no_deactivation_when_nonzero_credit
 
-  scope :in_amber, (-> { where(provider: 'amber_oauth2') })
-  scope :manual, (-> { where(provider: nil) })
-  scope :active, (-> { where(deactivated: false) })
-  scope :inactive, (-> { where(deactivated: true) })
-  scope :treasurer, (-> { joins(:roles).merge(Role.treasurer) })
+  scope :in_amber, -> { where(provider: 'amber_oauth2') }
+  scope :manual, -> { where(provider: nil) }
+  scope :active, -> { where(deactivated: false) }
+  scope :inactive, -> { where(deactivated: true) }
+  scope :treasurer, -> { joins(:roles).merge(Role.treasurer) }
 
   attr_accessor :current_activity
 
@@ -53,7 +53,7 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
     if activity.nil?
       !insufficient_credit
     else
-      !insufficient_credit or activity.orders.select { |order| order.user_id == id }.any?
+      !insufficient_credit or activity.orders.any? { |order| order.user_id == id }
     end
   end
 
@@ -65,9 +65,13 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
     @main_bartender ||= roles.where(role_type: :main_bartender).any?
   end
 
+  def renting_manager?
+    @renting_manager ||= roles.where(role_type: :renting_manager).any?
+  end
+
   def update_role(groups)
     roles_to_have = Role.where(group_uid: groups)
-    roles_users_to_have = roles_to_have.map { |role| RolesUsers.find_or_create_by(role: role, user: self) }
+    roles_users_to_have = roles_to_have.map { |role| RolesUsers.find_or_create_by(role:, user: self) }
 
     roles_users_not_to_have = roles_users - roles_users_to_have
     roles_users_not_to_have.map(&:destroy)

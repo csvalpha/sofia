@@ -13,14 +13,14 @@
             <%= fa_icon 'home', class: 'me-2', text: 'Home' %>
           <% end %>
         </li>
-        <% if current_user&.main_bartender? || current_user&.treasurer? %>
+        <% if policy(Activity).index? %>
           <li class="nav-item">
             <%= nav_link activities_path, class: 'nav-link' do %>
               <%= fa_icon 'calendar', class: 'me-2', text: 'Activiteiten' %>
             <% end %>
           </li>
         <% end %>
-        <% if current_user&.treasurer? %>
+        <% if current_user&.treasurer? || current_user&.renting_manager? %>
           <li class="nav-item">
             <%= nav_link users_path, class: 'nav-link' do %>
               <%= fa_icon 'users', class: 'me-2', text: 'Gebruikers' %>
@@ -31,28 +31,36 @@
               <%= fa_icon 'beer', class: 'me-2', text: 'Prijslijsten' %>
             <% end %>
           </li>
+        <% end %>
+        <% if current_user&.treasurer? %>
           <li class="nav-item">
             <%= nav_link credit_mutations_path, class: 'nav-link' do %>
               <%= fa_icon 'money', class: 'me-2', text: 'Inleg en saldocorrecties' %>
             <% end %>
           </li>
+        <% end %>
+        <% if policy(:zatladder).index? %>
           <li class="nav-item">
             <%= nav_link zatladder_index_path, class: 'nav-link' do %>
               <%= fa_icon 'list', class: 'me-2', text: 'Zatladder' %>
             <% end %>
           </li>
+        <% end %>
+        <% if policy(Invoice).index? %>
           <li class="nav-item">
             <%= nav_link invoices_path, class: 'nav-link' do %>
               <%= fa_icon 'shopping-cart', class: 'me-2', text: 'Facturen' %>
             <% end %>
           </li>
-          <% if policy(Payment).index? %>
-            <li class="nav-item">
-              <%= nav_link payments_path, class: 'nav-link' do %>
-                <%= fa_icon 'credit-card', class: 'me-2', text: 'Betalingen' %>
-              <% end %>
-            </li>
-          <% end %>
+        <% end %>
+        <% if policy(Payment).index? %>
+          <li class="nav-item">
+            <%= nav_link payments_path, class: 'nav-link' do %>
+              <%= fa_icon 'credit-card', class: 'me-2', text: 'Betalingen' %>
+            <% end %>
+          </li>
+        <% end %>
+        <% if policy(:finance_overview).index? %>
           <li class="nav-item">
             <%= nav_link finance_overview_index_path, class: 'nav-link' do %>
               <%= fa_icon 'money', class: 'me-2', text: 'Financien' %>

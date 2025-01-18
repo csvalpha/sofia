@@ -1,5 +1,5 @@
 class OrderRow < ApplicationRecord
-  belongs_to :order, inverse_of: :order_rows
+  belongs_to :order
   belongs_to :product
 
   validates :product_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
@@ -18,7 +18,9 @@ class OrderRow < ApplicationRecord
   end
 
   def no_changes_of_product_count_allowed
-    errors.add(:product_count, 'cannot be altered') if !new_record? && product_count_changed? && order.activity.locked?
+    return unless !new_record? && product_count_changed? && order.activity.locked?
+
+    errors.add(:product_count, 'cannot be altered because the activity is locked')
   end
 
   def no_changes_of_price_per_product_allowed

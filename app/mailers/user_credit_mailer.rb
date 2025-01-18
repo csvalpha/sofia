@@ -15,7 +15,7 @@ class UserCreditMailer < ApplicationMailer
 
     subject = "Er is #{@success_count.positive? ? 'een' : 'geen'} saldomail verstuurd"
 
-    mail to: treasurer.email, subject: subject
+    mail to: treasurer.email, subject:
   end
 
   def new_credit_mutation_mail(credit_mutation)

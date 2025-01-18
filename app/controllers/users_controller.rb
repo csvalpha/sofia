@@ -6,9 +6,9 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
   def index # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     authorize User
 
-    @manual_users = User.manual.active.order(:name)
-    @amber_users = User.in_amber.active.order(:name)
-    @inactive_users = User.inactive.order(:name)
+    @manual_users = User.manual.active.order(:name).select { |u| policy(u).show? }
+    @amber_users = User.in_amber.active.order(:name).select { |u| policy(u).show? }
+    @inactive_users = User.inactive.order(:name).select { |u| policy(u).show? }
     @users_credits = User.calculate_credits
 
     @manual_users_json = @manual_users.as_json(only: %w[id name])
@@ -120,7 +120,7 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     return unless Rails.env.production? || Rails.env.staging? || Rails.env.luxproduction?
 
     # :nocov:
-    SlackMessageJob.perform_later("User ##{current_user.id} (#{current_user.name}) "\
+    SlackMessageJob.perform_later("User ##{current_user.id} (#{current_user.name}) " \
                                   "is importing users from Amber (#{Rails.application.config.x.amber_api_host})")
     # :nocov:
   end

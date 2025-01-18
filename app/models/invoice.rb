@@ -5,7 +5,7 @@ class Invoice < ApplicationRecord
 
   belongs_to :user
   belongs_to :activity
-  has_many :rows, class_name: 'InvoiceRow', inverse_of: :invoice, dependent: :destroy
+  has_many :rows, class_name: 'InvoiceRow', dependent: :destroy
   accepts_nested_attributes_for :rows
 
   validate :activity_is_locked

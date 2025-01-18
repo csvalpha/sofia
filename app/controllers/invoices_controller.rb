@@ -6,7 +6,7 @@ class InvoicesController < ApplicationController
   def index
     authorize Invoice
 
-    @invoices = Invoice.all.order(created_at: :desc)
+    @invoices = Invoice.includes(:user, :activity, :rows).order(created_at: :desc)
     @activities_json = Activity.all.to_json(only: %i[id title start_time])
     @invoice = Invoice.new
     @invoice.rows.build
@@ -52,7 +52,7 @@ class InvoicesController < ApplicationController
 
     if payment.valid?
       checkout_url = payment.mollie_payment.checkout_url
-      redirect_to URI.parse(checkout_url).to_s
+      redirect_to URI.parse(checkout_url).to_s, allow_other_host: true
     else
       flash[:error] = payment.errors
       redirect_to invoice_path params[:id]

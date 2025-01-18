@@ -1,6 +1,6 @@
 class InvoicePolicy < ApplicationPolicy
   def index?
-    user&.treasurer?
+    user&.treasurer? || user&.renting_manager?
   end
 
   def send_invoice?

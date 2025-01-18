@@ -5,6 +5,8 @@ class PriceList < ApplicationRecord
 
   validates :name, presence: true
 
+  scope :unarchived, -> { where(archived_at: nil) }
+
   def product_price_for(product)
     @product_price ||= ProductPrice.includes(:product).where(price_list: self)
     @product_price.find { |pp| pp.product == product }

@@ -23,7 +23,7 @@ describe ActivitiesController, type: :controller do
       it { expect(request.status).to eq 403 }
     end
 
-    describe 'when as main bartender' do
+    describe 'when as main-bartender' do
       let(:user) { create(:user, :main_bartender) }
 
       context 'when with empty activity' do
@@ -32,7 +32,23 @@ describe ActivitiesController, type: :controller do
       end
 
       context 'when with non-empty activity' do
-        let(:additional_records) { create(:order, activity: activity) }
+        let(:additional_records) { create(:order, activity:) }
+
+        it { expect(request.status).to eq 302 }
+        it { expect(Activity.count).to eq 1 }
+      end
+    end
+
+    describe 'when as renting-manager' do
+      let(:user) { create(:user, :renting_manager) }
+
+      context 'when with empty activity' do
+        it { expect(request.status).to eq 302 }
+        it { expect(Activity.count).to eq 0 }
+      end
+
+      context 'when with non-empty activity' do
+        let(:additional_records) { create(:order, activity:) }
 
         it { expect(request.status).to eq 302 }
         it { expect(Activity.count).to eq 1 }
@@ -48,7 +64,7 @@ describe ActivitiesController, type: :controller do
       end
 
       context 'when with non-empty activity' do
-        let(:additional_records) { create(:order, activity: activity) }
+        let(:additional_records) { create(:order, activity:) }
 
         it { expect(request.status).to eq 302 }
         it { expect(Activity.count).to eq 1 }

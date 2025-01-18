@@ -29,6 +29,13 @@ describe ActivitiesController, type: :controller do
       it { expect(activity.title).to eq 'New Title' }
     end
 
+    describe 'when as renting-manager' do
+      let(:user) { create(:user, :renting_manager) }
+
+      it { expect(request.status).to eq 302 }
+      it { expect(activity.title).to eq 'New Title' }
+    end
+
     describe 'when as treasurer' do
       let(:user) { create(:user, :treasurer) }
 
