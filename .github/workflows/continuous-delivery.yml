@@ -126,7 +126,7 @@ jobs:
     name: Continuous Integration
     needs: [metadata, merge]
     if: fromJSON(needs.metadata.outputs.has_diff) || github.event.inputs.ignore_metadata_diff
-    uses: csvalpha/sofia/.github/workflows/continuous-integration.yml@$staging
+    uses: csvalpha/sofia/.github/workflows/continuous-integration.yml@staging
     with:
       sha: ${{ needs.merge.outputs.sha }}
     secrets:
@@ -137,7 +137,7 @@ jobs:
     name: Publish Image
     needs: [metadata, merge]
     if: fromJSON(needs.metadata.outputs.has_diff) || github.event.inputs.ignore_metadata_diff
-    uses: csvalpha/sofia/.github/workflows/publish-image.yml@$staging
+    uses: csvalpha/sofia/.github/workflows/publish-image.yml@staging
     with:
       sha: ${{ needs.merge.outputs.sha }}
     secrets:
