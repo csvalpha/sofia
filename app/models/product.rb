@@ -6,7 +6,6 @@ class Product < ApplicationRecord
   has_many :price_lists, through: :product_prices, dependent: :restrict_with_error
 
   validates :name, :category, presence: true
-  validate :name_readonly
 
   accepts_nested_attributes_for :product_prices, allow_destroy: true
 
@@ -19,10 +18,4 @@ class Product < ApplicationRecord
   end
 
   private
-
-  def name_readonly
-    return if new_record?
-
-    errors.add(:name, 'is readonly') if name_changed?
-  end
 end
