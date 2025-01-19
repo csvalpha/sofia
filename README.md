@@ -40,7 +40,7 @@ When the `master.key` is present, you can use `bundle exec rails credentials:edi
 [Read more about Rails credentials on EngineYard.com.](https://www.engineyard.com/blog/rails-encrypted-credentials-on-rails-5.2)
 
 ```
-$ EDITOR="nano --wait" bundle exec rails credentials:edit
+$ EDITOR=nano bundle exec rails credentials:edit
 ```
 
 ### Configuring roles
