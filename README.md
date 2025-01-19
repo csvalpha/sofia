@@ -5,7 +5,7 @@ Alpha SOFIA
 [![Continuous Delivery](https://github.com/csvalpha/sofia/actions/workflows/continuous-delivery.yml/badge.svg)](https://github.com/csvalpha/sofia/actions/workflows/continuous-delivery.yml)
 [![codecov](https://codecov.io/github/csvalpha/sofia/graph/badge.svg?token=RGR5PARLD5)](https://codecov.io/github/csvalpha/sofia)
 
-The source code belonging to Alpha SOFIA. It is a system built with Ruby on Rails with Turbolinks and a little VueJS, used to manage orders in our own bar "Flux". Users authenticate via OAuth API (currently "Alpha AMBER") to see how much credit they got left, or to be able to register new orders and/or payments.
+The source code belonging to Alpha SOFIA. It is a system built with Ruby on Rails with Turbolinks and a little VueJS, used to manage orders in our own bar "Flux". Users authenticate via OAuth API (currently "Alpha AMBER") or through the buildin login portal to see how much credit they got left, or to be able to register new orders and/or payments.
 
 Use this repository to build upon, use as-is, learn from it, prove a point or whatever 😏
 
@@ -17,19 +17,16 @@ _On Linux-like systems_
 - Bundler (`gem install bundler`)
 - NodeJS (see `.nvmrc`)
 - Yarn
-- Postgresql 9.5+
-- Running versions of
-  - Alpha AMBER API
-  - Alpha AMBER UI (for logging in)
+- Postgresql 14.7+
 
 ## Installation
 
 1. Clone this repository
 1. Run the following commands:
   1. `bundle install` (might take a couple of minutes)
-  1. `yarn`
+  1. `yarn install`
   1. `bundle exec rails db:setup`
-  1. `bundle exec rails s -p 5000` (port specified so it doesn't use the same as AMBER API)
+  1. `bundle exec rails s -b 0.0.0.0 -p 5000`
 1. Go to http://localhost:5000 and you should see SOFIA running
 1. Copy `.env.example` to `.env` with `cp .env.example .env` and edit the values where necessary
 1. (When you want to use the invoice module) Follow https://github.com/zakird/wkhtmltopdf_binary_gem#installation-and-usage
@@ -42,36 +39,34 @@ When the `master.key` is present, you can use `bundle exec rails credentials:edi
 
 [Read more about Rails credentials on EngineYard.com.](https://www.engineyard.com/blog/rails-encrypted-credentials-on-rails-5.2)
 
-Tip: you can also use one of the following commands to use an editor of your choice:
-
 ```
-$ EDITOR="atom --wait" bundle exec rails credentials:edit
-$ EDITOR="subl --wait" bundle exec rails credentials:edit
-$ EDITOR="code --wait" bundle exec rails credentials:edit
+$ EDITOR="nano --wait" bundle exec rails credentials:edit
 ```
-
-### OAuth configuration
-
-In OAuth AMBER (github.com/csvalpha/amber-api), execute the following command (in `rails console`):
-
-```ruby
-app = Doorkeeper::Application.create(name: 'SOFIA - Streepsysteem der C.S.V. Alpha', redirect_uri: 'http://localhost:5000/users/auth/amber_oauth2/callback', scopes: 'public sofia')
-app.uid
-app.plaintext_secret
-```
-
-Next, copy the uid and plaintext secret to the `.env` in SOFIA (as `amber_client_id` and `amber_client_secret`).
 
 ### Configuring roles
 
-Users can have roles in SOFIA, namely Treasurer ("SB-penningmeester") and/or Main Bartender ("Hoofdtapper"). A user can also log in without a role. These roles are derived from the groups the user is in. These groups are saved in the AMBER API.
+Users can have roles in SOFIA, namely Treasurer ("SB-penningmeester"), Renting manager("Verhuur")and/or Main Bartender ("Hoofdtapper"). A user can also log in without a role. These roles are derived from the groups the user is in. These groups are saved in the AMBER API.
 
 Roles are created in the following way during the seeding:
 
 ```ruby
-Role.create(role_type: :treasurer, group_uid: 3)
-Role.create(role_type: :main_bartender, group_uid: 3)
-Role.create(role_type: :main_bartender, group_uid: 2)
+Role.create(role_type: :treasurer, group_uid: 4)
+Role.create(role_type: :renting_manager, group_uid: 5)
+Role.create(role_type: :main_bartender, group_uid: 6)
+```
+
+## Testing & Linting
+
+To Run the test locally the following command can be used 
+```
+bundle exec rspec
+```
+
+To run the linting locally you can use the following commands 
+```
+yarn lint
+yarn run sass-lint -v -q
+bundle exec rubocop
 ```
 
 ## Deploying
