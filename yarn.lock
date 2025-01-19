@@ -4572,10 +4572,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.30001688, caniuse-lite@npm:^1.0.30001690":
+"caniuse-lite@npm:^1.0.30001688":
   version: 1.0.30001690
   resolution: "caniuse-lite@npm:1.0.30001690"
   checksum: f2c1b595f15d8de4d9ccd155d61ac9f00ac62f1515870505a0186266fd52aef169fcddc90d8a4814e52b77107244806466fadc2c216662f23f1022a430e735ee
+  languageName: node
+  linkType: hard
+
+"caniuse-lite@npm:^1.0.30001692":
+  version: 1.0.30001692
+  resolution: "caniuse-lite@npm:1.0.30001692"
+  checksum: 484113e3fabbe223fff0380c25c861da265a34c3f75bb5af1f254423b43e713a3c7f0c313167df52fb203f42ea68bd0df8a9e73642becfe1e9fa5734b5fc55a5
   languageName: node
   linkType: hard
 
@@ -12899,7 +12906,7 @@ __metadata:
     axios: ^1.4.0
     babel-loader: ^8.4.1
     bootstrap: ^5.3.3
-    caniuse-lite: ^1.0.30001690
+    caniuse-lite: ^1.0.30001692
     core-js: 2.6.12
     css-loader: ^6.11.0
     eslint: ^8.57.1

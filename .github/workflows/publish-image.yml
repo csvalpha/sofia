@@ -65,7 +65,7 @@ jobs:
 
       - name: Build and push image
         id: build_push_image
-        uses: docker/build-push-action@b32b51a8eda65d6793cd0494a773d4f6bcef32dc # v6.11.0
+        uses: docker/build-push-action@67a2d409c0a876cbe6b11854e3e25193efe4e62d # v6.12.0
         with:
           push: true
           context: .
@@ -85,7 +85,7 @@ jobs:
 
       - name: Create Sentry release
         if: ${{ !(github.event_name == 'workflow_dispatch' && github.workflow == 'Publish Image') }}
-        uses: getsentry/action-release@1841d945bad68068f92f796114d0fa534129764d # v1.8.0
+        uses: getsentry/action-release@f6dfa3d84a1c740b94aa45255c5e032b744a095d # v1.9.0
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ vars.SENTRY_ORG_NAME }}
