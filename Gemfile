@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'active_model_otp', '~> 2.3', '>= 2.3.1'
 gem 'bcrypt', '~> 3.1.20'
 gem 'bootsnap', '~> 1.18.4'
 gem 'browser', '~> 5.3.1'
@@ -17,6 +18,7 @@ gem 'net-imap', require: false
 gem 'net-pop', require: false
 gem 'net-smtp', require: false
 gem 'omniauth', '~> 2.1.2'
+gem 'omniauth-identity', '~> 3.0', '>= 3.0.9'
 gem 'omniauth-oauth2', '~> 1.8.0'
 gem 'omniauth-rails_csrf_protection', '~> 1.0', '>= 1.0.2'
 gem 'paper_trail', '~> 16.0.0'
@@ -29,6 +31,7 @@ gem 'rails', '~> 7.1.0'
 gem 'rails-i18n', '~> 7.0.10'
 gem 'redis-rails', '~> 5.0.2'
 gem 'rest-client', '~> 2.1.0'
+gem 'rqrcode', '~> 2.2'
 gem 'sassc-rails', '~> 2.1.2'
 gem 'sentry-rails', '~> 5.22', '>= 5.22.1'
 gem 'sentry-ruby', '~> 5.22', '>= 5.22.1'

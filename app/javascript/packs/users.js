@@ -11,14 +11,18 @@ document.addEventListener('turbolinks:load', () => {
   var element = document.getElementById('users-index');
   if (element !== null) {
     var manual_users = JSON.parse(element.dataset.manualUsers);
+    var sofia_account_users = JSON.parse(element.dataset.sofiaAccountUsers);
     var amber_users = JSON.parse(element.dataset.amberUsers);
-    var inactive_users = JSON.parse(element.dataset.inactiveUsers);
+    var not_activated_users = JSON.parse(element.dataset.notActivatedUsers);
+    var deactivated_users = JSON.parse(element.dataset.deactivatedUsers);
     new Vue({
       el: element,
       data: () => ({
         manual_users,
+        sofia_account_users,
         amber_users,
-        inactive_users
+        not_activated_users,
+        deactivated_users
       }),
       components: {
         UsersTable

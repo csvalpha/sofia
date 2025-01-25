@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="users-table">
-    <table class="table table-striped">
+    <table class="table table-striped" v-if="users.length > 0">
       <thead>
         <tr>
           <th id="id" class="ps-4" aria-colindex="1" @click="sortUsers('id')">
@@ -41,7 +41,7 @@
       </tfoot>
     </table>
 
-    <div v-if="users.length === 0" class="text-center">
+    <div v-else class="text-center">
       <div class="">
         <em>Er zijn geen gebruikers om weer te geven</em>
       </div>
@@ -81,7 +81,7 @@ export default {
   computed: {
     total: function() {
       return this.users.map(user => user.credit)
-        .reduce((current, credit) => parseFloat(current) + parseFloat(credit));
+        .reduce((current, credit) => parseFloat(current) + parseFloat(credit), 0);
     },
 
     sortedUsers: function() {
