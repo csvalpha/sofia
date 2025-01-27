@@ -25,11 +25,11 @@
         <div class="form-check">
           <input class="form-check-input" type="checkbox" id="show-archived-check" v-model="showArchived">
           <label class="form-check-label" for="show-archived-check">
-            Laat gearchieveerde prijslijsten zien 
+            Laat gearchieveerde prijslijsten zien
           </label>
         </div>
       <% end %>
-      
+
       <table id='price-lists-table' class='price-lists-table table table-striped overflow-scroll mw-100 mx-auto d-block pe-2'>
         <thead class="table-header-rotated products">
         <tr>
@@ -60,7 +60,7 @@
             </td>
             <td class="products-new products-name">
               <div class="d-flex">
-                <input class="form-control flex-grow-1" placeholder="Productnaam" type="text" v-model="product.name" :disabled="product.id"/>
+                <input class="form-control flex-grow-1" placeholder="Productnaam" type="text" v-model="product.name">
               </div>
             </td>
             <td class="products-new products-category">
