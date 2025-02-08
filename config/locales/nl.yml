@@ -31,3 +31,15 @@ nl:
   views:
     pagination:
       truncate: "&hellip;"
+
+  activerecord:
+    attributes:
+      sofia_account:
+        activation_token: 'Activatie-token'
+        email: 'Emailadres'
+        old_password: 'Oud wachtwoord'
+        password: 'Wachtwoord'
+        password_confirmation: 'Wachtwoord bevestiging'
+        username: 'Gebruikersnaam'
+        user_id: 'Gebruikers-id'
+        verification_code: 'Verificatie code'
