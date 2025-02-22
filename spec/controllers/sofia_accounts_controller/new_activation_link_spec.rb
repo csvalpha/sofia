@@ -24,10 +24,10 @@ describe SofiaAccountsController, type: :controller do
         clear_enqueued_jobs
       end
 
-      it 'shows success message and sends email' do
+      it 'shows success message and sends email' do # rubocop:disable RSpec/ExampleLength
+        expect(UserMailer).to send_email(:new_activation_link_email, :deliver_later, user)
         request
         expect(assigns(:message)).to eq 'Er is een nieuwe activatielink voor uw account verstuurd naar uw emailadres.'
-        expect(UserMailer).to send_email(:new_activation_link_email, :deliver_later, user)
         user.reload
         expect(user.activation_token).not_to be_nil
         expect(user.activation_token_valid_till).not_to be_nil

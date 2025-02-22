@@ -134,7 +134,7 @@ describe SofiaAccountsController, type: :controller do
         expect(SofiaAccount.count).to eq 0
         expect(user.sofia_account).to be_nil
         expect(user.dup.attributes).to eq old_user.attributes
-        expect(flash[:error]).to match(/activatie-token is niet aanwezig/)
+        expect(flash[:error]).to match(/Activatie-token is niet aanwezig/)
       end
     end
 
@@ -152,7 +152,7 @@ describe SofiaAccountsController, type: :controller do
         expect(SofiaAccount.count).to eq 0
         expect(user.sofia_account).to be_nil
         expect(user.dup.attributes).to eq old_user.attributes
-        expect(flash[:error]).to match(/gebruikers-id is niet aanwezig/)
+        expect(flash[:error]).to match(/Gebruikers-id is niet aanwezig/)
       end
     end
 

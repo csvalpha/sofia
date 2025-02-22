@@ -3,7 +3,7 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
 
   after_action :verify_authorized
 
-  def index # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def index # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     authorize User
 
     @manual_users = User.manual.active.order(:name).select { |u| policy(u).show? }
@@ -33,7 +33,7 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
 
   include ActiveModel::OneTimePassword::InstanceMethodsOnActivation
 
-  def show
+  def show # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @user = User.includes(:credit_mutations, roles_users: :role).find(params[:id])
     authorize @user
 
@@ -145,7 +145,7 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     render json: activities_hash
   end
 
-  def update_with_sofia_account
+  def update_with_sofia_account # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @user = User.find(params[:id])
     authorize @user
 

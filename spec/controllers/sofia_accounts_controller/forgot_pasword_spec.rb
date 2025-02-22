@@ -24,9 +24,9 @@ describe SofiaAccountsController, type: :controller do
       end
 
       it 'shows success message and sends email' do
+        expect(UserMailer).to send_email(:forgot_password_email, :deliver_later, user)
         request
         user.reload
-        expect(UserMailer).to send_email(:forgot_password_email, :deliver_later, user)
         expect(user.activation_token).not_to be_nil
         expect(user.activation_token_valid_till).not_to be_nil
       end

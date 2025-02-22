@@ -508,7 +508,7 @@ RSpec.describe User, type: :model do
       subject(:user) { build(:user, deactivated: true) }
 
       it do
-        expect(user).to receive(:archive!)
+        expect(user).to receive(:archive!) # rubocop:disable RSpec/SubjectStub, RSpec/MessageSpies
         user.save
       end
     end
@@ -519,7 +519,7 @@ RSpec.describe User, type: :model do
       before { user.deactivated = true }
 
       it do
-        expect(user).to receive(:archive!)
+        expect(user).to receive(:archive!) # rubocop:disable RSpec/SubjectStub, RSpec/MessageSpies
         user.save
       end
     end
@@ -530,7 +530,7 @@ RSpec.describe User, type: :model do
       before { user.email = 'valid@email.com' }
 
       it do
-        expect(user).not_to receive(:archive!)
+        expect(user).not_to receive(:archive!) # rubocop:disable RSpec/SubjectStub, RSpec/MessageSpies
         user.save
       end
     end
@@ -539,7 +539,7 @@ RSpec.describe User, type: :model do
       subject(:user) { build(:user, deactivated: false) }
 
       it do
-        expect(user).not_to receive(:archive!)
+        expect(user).not_to receive(:archive!) # rubocop:disable RSpec/SubjectStub, RSpec/MessageSpies
         user.save
       end
     end
@@ -550,7 +550,7 @@ RSpec.describe User, type: :model do
       before { user.deactivated = false }
 
       it do
-        expect(user).not_to receive(:archive!)
+        expect(user).not_to receive(:archive!) # rubocop:disable RSpec/SubjectStub, RSpec/MessageSpies
         user.save
       end
     end
@@ -565,8 +565,8 @@ RSpec.describe User, type: :model do
       end
 
       it do
-        user.save
         expect(UserMailer).to send_email(:account_creation_email, :deliver_later, user)
+        user.save
       end
     end
 
@@ -578,7 +578,7 @@ RSpec.describe User, type: :model do
       end
 
       it do
-        expect(UserMailer).not_to receive(:account_creation_email)
+        expect(UserMailer).not_to receive(:account_creation_email) # rubocop:disable RSpec/MessageSpies
         user.save
       end
     end

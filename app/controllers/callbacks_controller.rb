@@ -26,7 +26,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
   def check_identity_with_user(user, sofia_account)
     if sofia_account&.otp_enabled
-      check_identity_with_otp(user, params[:verification_code])
+      check_identity_with_otp(sofia_account, user)
     elsif sofia_account
       # no OTP enabled
       sign_in(:user, user)
@@ -39,11 +39,11 @@ class CallbacksController < Devise::OmniauthCallbacksController
     end
   end
 
-  def check_identity_with_otp(user, one_time_password)
-    if !one_time_password
+  def check_identity_with_otp(sofia_account, user)
+    if params[:verification_code].blank?
       # OTP code not present, so request it
       render(json: { state: 'otp_prompt' })
-    elsif sofia_account.authenticate_otp(one_time_password)
+    elsif sofia_account.authenticate_otp(params[:verification_code])
       # OTP code correct
       sign_in(:user, user)
       render(json: { state: 'logged_in', redirect_url: user.roles.any? ? root_path : user_path(user.id) })

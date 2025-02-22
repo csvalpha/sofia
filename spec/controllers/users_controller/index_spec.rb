@@ -21,7 +21,7 @@ describe UsersController, type: :controller do
 
     context 'when as treasurer' do
       before do
-        sign_in carl
+        sign_in alice
         get :index
       end
 

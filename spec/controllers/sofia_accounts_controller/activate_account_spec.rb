@@ -42,9 +42,7 @@ describe SofiaAccountsController, type: :controller do
 
     context 'without user_id' do
       before do
-        request_params = {
-          activation_token: user.activation_token
-        }
+        request_params[:user_id] = nil
         request
       end
 
@@ -53,9 +51,7 @@ describe SofiaAccountsController, type: :controller do
 
     context 'without activation_token' do
       before do
-        request_params = {
-          user_id: user.id
-        }
+        request_params[:activation_token] = nil
         request
       end
 
