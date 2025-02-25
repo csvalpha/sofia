@@ -108,7 +108,7 @@ jobs:
 
       - name: Run merge
         if: fromJSON(needs.metadata.outputs.has_diff) || github.event.inputs.ignore_metadata_diff
-        uses: devmasx/merge-branch@854d3ac71ed1e9deb668e0074781b81fdd6e771f # tag=v1.4.0
+        uses: devmasx/merge-branch@854d3ac71ed1e9deb668e0074781b81fdd6e771f # v1.4.0
         with:
           type: now
           from_branch: staging
@@ -126,7 +126,7 @@ jobs:
     name: Continuous Integration
     needs: [metadata, merge]
     if: fromJSON(needs.metadata.outputs.has_diff) || github.event.inputs.ignore_metadata_diff
-    uses: csvalpha/sofia/.github/workflows/continuous-integration.yml@staging
+    uses: ./.github/workflows/continuous-integration.yml
     with:
       sha: ${{ needs.merge.outputs.sha }}
     secrets:
@@ -137,7 +137,7 @@ jobs:
     name: Publish Image
     needs: [metadata, merge]
     if: fromJSON(needs.metadata.outputs.has_diff) || github.event.inputs.ignore_metadata_diff
-    uses: csvalpha/sofia/.github/workflows/publish-image.yml@staging
+    uses: ./.github/workflows/publish-image.yml
     with:
       sha: ${{ needs.merge.outputs.sha }}
     secrets:
