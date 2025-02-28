@@ -33,6 +33,7 @@ RUN if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ] || [ "$RA
     bundle config set --local without 'development'; \
   fi
 RUN bundle install
+
 # Pre-install npm packages, so that they can be cached.
 COPY package.json yarn.lock .yarnrc.yml ./
 COPY .yarn .yarn
@@ -46,5 +47,5 @@ RUN if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ] || [ "$RA
   else \
     echo "Skipping assets:precompile"; \
   fi
-  
+
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
