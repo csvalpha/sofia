@@ -1,29 +1,29 @@
 FROM ruby:3.3.7-alpine@sha256:6b6a2db6b52015669dcc4b3613c1cfd02f7a74ebbcad98dbe290a814e8ff84e4
 
-# Add build-essential tools.
-RUN apt-get update -qq && \
-  apt-get install -y \
-  build-essential \
-  git \
-  libpq-dev \
-  curl \
-  netcat-traditional \
-  wkhtmltopdf
-
-# Add Node, required for asset pipeline.
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
-  apt-get install -y nodejs && \
-  npm install -q -g yarn
-
-RUN mkdir /app
-WORKDIR /app
-
-# Define args that can be supplied with
-# `docker build --build-args RAILS_ENV=<env>`, defaults to production.
 ARG BUILD_HASH='unknown'
 ENV BUILD_HASH=$BUILD_HASH
 ARG RAILS_ENV='production'
 ARG NODE_ENV='production'
+
+# Add build-essential tools.
+RUN apk add --update \
+  bash \
+  build-base \
+  git \
+  postgresql-dev \
+  curl \
+  netcat \
+  wkhtmltopdf \
+  nodejs \
+  npm \
+  yarn \
+  && rm -rf /var/cache/apk/*
+
+# Add Node, required for asset pipeline.
+RUN apk add --update nodejs=16.20.2 npm yarn
+
+RUN mkdir /app
+WORKDIR /app
 
 # Pre-install gems, so that they can be cached.
 COPY Gemfile* /app/
