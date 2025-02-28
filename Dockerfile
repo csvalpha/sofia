@@ -15,7 +15,8 @@ RUN apt-get update -qq && \
   libpq-dev \
   curl \
   netcat-traditional \
-  wkhtmltopdf
+  wkhtmltopdf \
+  libyaml-dev
 
 # Add Node, required for asset pipeline.
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
