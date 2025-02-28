@@ -37,10 +37,14 @@ RUN bundle install
 COPY package.json yarn.lock .yarnrc.yml ./
 COPY .yarn .yarn
 RUN yarn install --immutable
+
 COPY . /app/
+
 # Precompile assets after copying app because whole Rails pipeline is needed.
 RUN if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ] || [ "$RAILS_ENV" = 'luxproduction' ]; then \
     SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile; \
   else \
     echo "Skipping assets:precompile"; \
   fi
+  
+CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
