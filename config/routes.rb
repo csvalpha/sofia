@@ -27,6 +27,7 @@ Rails.application.routes.draw do
     member do
       get :activities
       get :json
+      patch :update_with_sofia_account
     end
   end
 
@@ -46,6 +47,23 @@ Rails.application.routes.draw do
     end
     collection do
       get :add
+    end
+  end
+
+  resources :sofia_accounts, only: %i[create] do
+    collection do
+      get :login
+      get :activate_account
+      get :new_activation_link
+      get :forgot_password, as: :forgot_password_view, action: :forgot_password_view
+      post :forgot_password
+    end
+    member do
+      get :reset_password, as: :reset_password_view, action: :reset_password_view
+      patch :reset_password
+      patch :update_password
+      patch :enable_otp
+      patch :disable_otp
     end
   end
 

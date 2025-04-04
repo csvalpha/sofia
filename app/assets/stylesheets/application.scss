@@ -77,6 +77,20 @@ a {
   }
 }
 
+.sofia-account-input {
+  min-width: 18rem;
+}
+
+.qr-code {
+  max-width: 20rem;
+}
+
+main {
+  // Wanneer er veel activiteiten zijn, gaat de quote onderaan de 
+  // pagina onder de footer, dus voeg padding toe met de hoogte van de footer
+  padding-bottom: 48px;
+}
+
 .footer {
   position: absolute;
   bottom: 0;
