@@ -32,10 +32,6 @@ class CreditInsufficientNotificationJob < ApplicationJob
 
     return unless Rails.env.production? || Rails.env.staging? || Rails.env.luxproduction?
 
-    SlackMessageJob.perform_later("Er is voor #{Rails.application.config.x.amber_api_host} een saldomail " \
-                                  "verstuurd naar #{success_count} mensen, en #{unnotifyable_users.count} saldomail(s) kon(den) niet " \
-                                  'verzonden worden door het ontbreken van een e-mail adres.')
-
     HealthCheckJob.perform_later('credit_insufficient')
   end
 end
