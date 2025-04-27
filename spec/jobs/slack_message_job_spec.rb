@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe SlackMessageJob, type: :job do
+RSpec.describe SlackMessageJob do
   describe '#perform' do
     let(:job) { described_class.new }
 

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe SlackHelper, type: :helper do
+RSpec.describe SlackHelper do
   include described_class
 
   describe '#ping' do

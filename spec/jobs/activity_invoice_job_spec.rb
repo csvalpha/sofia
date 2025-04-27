@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe ActivityInvoiceJob, type: :job do
+RSpec.describe ActivityInvoiceJob do
   describe '#perform' do
     let(:activity) { create(:activity) }
     let(:manual_users) { create_list(:user, 3) }

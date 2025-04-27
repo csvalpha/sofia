@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe PaymentsController, type: :controller do
+describe PaymentsController do
   describe 'POST create' do
     let(:user) { create(:user) }
     let(:eve) { create(:user) }
@@ -14,10 +14,8 @@ describe PaymentsController, type: :controller do
     let(:mollie) { instance_double(Mollie::Payment) }
 
     before do
-      allow(Mollie::Payment).to receive(:create).and_return(mollie)
-      allow(Mollie::Payment).to receive(:get).and_return(mollie)
-      allow(mollie).to receive(:id).and_return(1)
-      allow(mollie).to receive(:checkout_url).and_return('https://example.com')
+      allow(Mollie::Payment).to receive_messages(create: mollie, get: mollie)
+      allow(mollie).to receive_messages(id: 1, checkout_url: 'https://example.com')
     end
 
     context 'when with incorrect amount' do

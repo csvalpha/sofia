@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe OrdersController, type: :controller do
+describe OrdersController do
   describe 'DELETE destroy' do
     let(:activity) { create(:activity) }
     let(:locked_activity) { create(:activity) }
