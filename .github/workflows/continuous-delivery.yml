@@ -108,7 +108,7 @@ jobs:
 
       - name: Run merge
         if: fromJSON(needs.metadata.outputs.has_diff) || github.event.inputs.ignore_metadata_diff
-        uses: devmasx/merge-branch@854d3ac71ed1e9deb668e0074781b81fdd6e771f # tag=v1.4.0
+        uses: devmasx/merge-branch@854d3ac71ed1e9deb668e0074781b81fdd6e771f # v1.4.0
         with:
           type: now
           from_branch: staging
@@ -126,7 +126,7 @@ jobs:
     name: Continuous Integration
     needs: [metadata, merge]
     if: fromJSON(needs.metadata.outputs.has_diff) || github.event.inputs.ignore_metadata_diff
-    uses: csvalpha/sofia/.github/workflows/continuous-integration.yml@staging
+    uses: ./.github/workflows/continuous-integration.yml
     with:
       sha: ${{ needs.merge.outputs.sha }}
     secrets:
@@ -137,7 +137,7 @@ jobs:
     name: Publish Image
     needs: [metadata, merge]
     if: fromJSON(needs.metadata.outputs.has_diff) || github.event.inputs.ignore_metadata_diff
-    uses: csvalpha/sofia/.github/workflows/publish-image.yml@staging
+    uses: ./.github/workflows/publish-image.yml
     with:
       sha: ${{ needs.merge.outputs.sha }}
     secrets:
@@ -178,7 +178,7 @@ jobs:
           env: ${{ needs.metadata.outputs.stage }}
 
       - name: Deploy
-        uses: appleboy/ssh-action@7eaf76671a0d7eec5d98ee897acda4f968735a17 # v1.2.0
+        uses: appleboy/ssh-action@2ead5e36573f08b82fbfce1504f1a4b05a647c6f # v1.2.2
         env:
           STAGE: ${{ needs.metadata.outputs.stage }}
         with:
@@ -193,7 +193,7 @@ jobs:
             docker-compose up -d
 
       - name: Finalize Sentry release
-        uses: getsentry/action-release@f6dfa3d84a1c740b94aa45255c5e032b744a095d # v1.9.0
+        uses: getsentry/action-release@00ed2a6cc2171514e031a0f5b4b3cdc586dc171a # v3.1.1
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ vars.SENTRY_ORG_NAME }}
