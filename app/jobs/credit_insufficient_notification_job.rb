@@ -23,7 +23,7 @@ class CreditInsufficientNotificationJob < ApplicationJob
     User.all.select { |user| user.credit.negative? }
   end
 
-  def send_notification_delivery_reports(success_count, unnotifyable_users) # rubocop:disable Metrics/AbcSize
+  def send_notification_delivery_reports(success_count, unnotifyable_users)
     User.treasurer.each do |treasurer|
       UserCreditMailer.credit_delivery_report_mail(
         treasurer, success_count, unnotifyable_users
