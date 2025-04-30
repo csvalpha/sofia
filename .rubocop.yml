@@ -7,17 +7,14 @@ plugins:
 
 AllCops:
   TargetRailsVersion: 7.1
-  TargetRubyVersion: 3.2
+  TargetRubyVersion: 3.3
   Exclude:
     - 'bin/**/*'
     - 'db/schema.rb'
-    - 'db/migrate/archive/*'
-    - 'config/initializers/secret_token.rb'
     - 'config/initializers/simple_form.rb'
     - 'config/initializers/simple_form_bootstrap.rb'
     - 'node_modules/**/*'
     - 'vendor/**/*'
-    - '.pryrc'
   DisplayCopNames: true
   DisplayStyleGuide: true.
   NewCops: enable
