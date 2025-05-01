@@ -33,9 +33,6 @@ module Sofia
     config.x.amber_host           = credentials.dig(Rails.env.to_sym, :amber_host)
     config.x.sofia_host           = credentials.dig(Rails.env.to_sym, :sofia_host)
 
-    config.x.slack_webhook        = credentials.dig(Rails.env.to_sym, :slack_webhook) || ''
-    config.x.slack_channel        = '#monitoring'
-
     config.x.smtp_username        = credentials.dig(:production, :smtp_username)
     config.x.smtp_password        = credentials.dig(:production, :smtp_password)
     config.x.sentry_dsn           = credentials.dig(Rails.env.to_sym, :sentry_dsn)
