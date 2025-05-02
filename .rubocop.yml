@@ -11,7 +11,7 @@ AllCops:
   Exclude:
     - 'bin/**/*'
     - 'db/schema.rb'
-    - 'db/migrate/archive/*,
+    - 'db/migrate/archive/**/*',
     - 'config/initializers/simple_form.rb'
     - 'config/initializers/simple_form_bootstrap.rb'
     - 'node_modules/**/*'
