@@ -12,7 +12,7 @@ gem 'http', '~> 5.2.0'
 gem 'jbuilder', '~> 2.13.0'
 gem 'jquery-rails', '~> 4.6.0'
 gem 'kaminari', '~> 1.2.2'
-gem 'mollie-api-ruby', '~> 4.16.0'
+gem 'mollie-api-ruby', '~> 4.17.0'
 gem 'net-imap', require: false
 gem 'net-pop', require: false
 gem 'net-smtp', require: false
@@ -25,7 +25,7 @@ gem 'pg', '~> 1.5.9'
 gem 'puma', '~> 6.6.0'
 gem 'pundit', '~> 2.5.0'
 gem 'rack-attack', '~> 6.7.0'
-gem 'rails', '~> 7.1.5', '>= 7.1.5.1'
+gem 'rails', '~> 7.2.2', '>= 7.2.2.1'
 gem 'rails-i18n', '~> 7.0.10'
 gem 'redis-rails', '~> 5.0.2'
 gem 'rest-client', '~> 2.1.0'
@@ -47,10 +47,10 @@ group :development, :test do
   gem 'awesome_print'
   gem 'better_errors'
   gem 'brakeman', require: false
-  gem 'bullet', '~> 8.0', '>= 8.0.1'
+  gem 'bullet', '~> 8.0', '>= 8.0.6'
   gem 'colorize'
   gem 'consistency_fail'
-  gem 'dotenv-rails', '~> 3.1.7'
+  gem 'dotenv-rails', '~> 3.1.8'
   gem 'guard-livereload', '~> 2.5.2'
   gem 'guard-rspec', require: false
   gem 'pry-byebug'
@@ -72,7 +72,7 @@ end
 
 group :test do
   gem 'rails-controller-testing', '~> 1.0.5'
-  gem 'rubocop', '~> 1.75.1', require: false
+  gem 'rubocop', '~> 1.75.5', require: false
   gem 'rubocop-performance'
   gem 'rubocop-rails'
   gem 'rubocop-rspec'
