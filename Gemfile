@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'bcrypt', '~> 3.1.20'
 gem 'bootsnap', '~> 1.18.4'
-gem 'browser', '~> 5.3.1'
+gem 'browser', '~> 6.2.0'
 gem 'devise', '~>4.9.4'
 gem 'devise-i18n', '~>1.13.0'
 gem 'factory_bot_rails', '~> 6.4.4'
@@ -12,7 +12,7 @@ gem 'http', '~> 5.2.0'
 gem 'jbuilder', '~> 2.13.0'
 gem 'jquery-rails', '~> 4.6.0'
 gem 'kaminari', '~> 1.2.2'
-gem 'mollie-api-ruby', '~> 4.16.0'
+gem 'mollie-api-ruby', '~> 4.17.0'
 gem 'net-imap', require: false
 gem 'net-pop', require: false
 gem 'net-smtp', require: false
@@ -36,7 +36,6 @@ gem 'sentry-sidekiq', '~> 5.23'
 gem 'sidekiq', '~> 7.3.9'
 gem 'sidekiq-scheduler', '~> 5.0.6'
 gem 'simple_form', '~> 5.3.1'
-gem 'slack-notifier', '~> 2.4.0'
 gem 'turbolinks', '~> 5.2.1'
 gem 'uglifier', '~> 4.2.1'
 gem 'validates_timeliness', '~> 7.1.0'
@@ -48,10 +47,10 @@ group :development, :test do
   gem 'awesome_print'
   gem 'better_errors'
   gem 'brakeman', require: false
-  gem 'bullet', '~> 8.0', '>= 8.0.1'
+  gem 'bullet', '~> 8.0', '>= 8.0.6'
   gem 'colorize'
   gem 'consistency_fail'
-  gem 'dotenv-rails', '~> 3.1.7'
+  gem 'dotenv-rails', '~> 3.1.8'
   gem 'guard-livereload', '~> 2.5.2'
   gem 'guard-rspec', require: false
   gem 'pry-byebug'
@@ -73,7 +72,7 @@ end
 
 group :test do
   gem 'rails-controller-testing', '~> 1.0.5'
-  gem 'rubocop', '~> 1.75.1', require: false
+  gem 'rubocop', '~> 1.75.5', require: false
   gem 'rubocop-performance'
   gem 'rubocop-rails'
   gem 'rubocop-rspec'
