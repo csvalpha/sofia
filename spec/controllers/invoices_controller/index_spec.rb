@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe InvoicesController, type: :controller do
+describe InvoicesController do
   describe 'GET index' do
     let(:invoices) { create_list(:invoice, 2) }
 

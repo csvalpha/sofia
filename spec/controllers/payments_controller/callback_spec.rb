@@ -1,7 +1,7 @@
 # rubocop:disable RSpec/AnyInstance
 require 'rails_helper'
 
-describe PaymentsController, type: :controller do
+describe PaymentsController do
   describe 'GET callback' do
     let(:user) { create(:user) }
     let(:payment) do
@@ -16,8 +16,7 @@ describe PaymentsController, type: :controller do
 
       before do
         allow_any_instance_of(Payment).to receive(:mollie_payment).and_return(mollie)
-        allow(mollie).to receive(:status).and_return(:paid)
-        allow(mollie).to receive(:paid?).and_return(true)
+        allow(mollie).to receive_messages(status: :paid, paid?: true)
 
         request
         payment.reload
@@ -34,8 +33,7 @@ describe PaymentsController, type: :controller do
 
       before do
         allow_any_instance_of(Payment).to receive(:mollie_payment).and_return(mollie)
-        allow(mollie).to receive(:status).and_return(:open)
-        allow(mollie).to receive(:paid?).and_return(false)
+        allow(mollie).to receive_messages(status: :open, paid?: false)
 
         request
         payment.reload

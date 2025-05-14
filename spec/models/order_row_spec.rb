@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe OrderRow, type: :model do
+RSpec.describe OrderRow do
   subject(:order_row) { create(:order_row) }
 
   describe '#valid' do

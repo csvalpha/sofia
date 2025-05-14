@@ -1,7 +1,9 @@
-require:
+plugins:
+  - rubocop-factory_bot
+  - rubocop-performance
   - rubocop-rails
   - rubocop-rspec
-  - rubocop-performance
+  - rubocop-rspec_rails
 
 AllCops:
   TargetRailsVersion: 7.1
@@ -9,6 +11,7 @@ AllCops:
   Exclude:
     - 'bin/**/*'
     - 'db/schema.rb'
+    - 'db/migrate/archive/**/*'
     - 'config/initializers/simple_form.rb'
     - 'config/initializers/simple_form_bootstrap.rb'
     - 'node_modules/**/*'
@@ -100,8 +103,5 @@ Style/StringMethods:
 Naming/MemoizedInstanceVariableName:
   Enabled: false
 
-RSpec/FilePath:
-  Enabled: false
-
-Rails/BulkChangeTable:
+RSpec/SpecFilePathFormat:
   Enabled: false

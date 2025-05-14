@@ -72,10 +72,12 @@ end
 
 group :test do
   gem 'rails-controller-testing', '~> 1.0.5'
-  gem 'rubocop', '~> 1.75.1', require: false
-  gem 'rubocop-performance'
-  gem 'rubocop-rails'
-  gem 'rubocop-rspec'
+  gem 'rubocop', '~> 1.75.3', require: false
+  gem 'rubocop-factory_bot', '~> 2.27.1', require: false
+  gem 'rubocop-performance', '~> 1.25', require: false
+  gem 'rubocop-rails', '~> 2.31', require: false
+  gem 'rubocop-rspec', '~> 3.5', require: false
+  gem 'rubocop-rspec_rails', '~> 2.31', require: false
   gem 'simplecov', require: false
   gem 'simplecov-lcov', '~> 0.8.0', require: false
   gem 'terminal-notifier-guard'
