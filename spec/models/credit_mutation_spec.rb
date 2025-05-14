@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe CreditMutation, type: :model do
+RSpec.describe CreditMutation do
   subject(:mutation) { build_stubbed(:credit_mutation) }
 
   describe '#valid' do

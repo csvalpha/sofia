@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Payment, type: :model do
+RSpec.describe Payment do
   subject(:payment) { build_stubbed(:payment) }
 
   describe '#valid' do
