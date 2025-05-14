@@ -12,7 +12,7 @@ gem 'http', '~> 5.2.0'
 gem 'jbuilder', '~> 2.13.0'
 gem 'jquery-rails', '~> 4.6.0'
 gem 'kaminari', '~> 1.2.2'
-gem 'mollie-api-ruby', '~> 4.16.0'
+gem 'mollie-api-ruby', '~> 4.17.0'
 gem 'net-imap', require: false
 gem 'net-pop', require: false
 gem 'net-smtp', require: false
@@ -47,10 +47,10 @@ group :development, :test do
   gem 'awesome_print'
   gem 'better_errors'
   gem 'brakeman', require: false
-  gem 'bullet', '~> 8.0', '>= 8.0.1'
+  gem 'bullet', '~> 8.0', '>= 8.0.6'
   gem 'colorize'
   gem 'consistency_fail'
-  gem 'dotenv-rails', '~> 3.1.7'
+  gem 'dotenv-rails', '~> 3.1.8'
   gem 'guard-livereload', '~> 2.5.2'
   gem 'guard-rspec', require: false
   gem 'pry-byebug'
@@ -72,7 +72,7 @@ end
 
 group :test do
   gem 'rails-controller-testing', '~> 1.0.5'
-  gem 'rubocop', '~> 1.75.3', require: false
+  gem 'rubocop', '~> 1.75.5', require: false
   gem 'rubocop-factory_bot', '~> 2.27.1', require: false
   gem 'rubocop-performance', '~> 1.25', require: false
   gem 'rubocop-rails', '~> 2.31', require: false
