@@ -3,7 +3,7 @@ class AddFunctionalNameToRole < ActiveRecord::Migration[5.1]
     remove_index :roles, column: %i[name group_uid]
     add_column :roles, :role_type, :integer
 
-    Role.all.each do |role|
+    Role.find_each do |role|
       name = role.read_attribute(:name)
       case name
       when 'Treasurer'
@@ -21,7 +21,7 @@ class AddFunctionalNameToRole < ActiveRecord::Migration[5.1]
     remove_index :roles, column: %i[role_type group_uid]
     add_column :roles, :name, :string
 
-    Role.all.each do |role|
+    Role.find_each do |role|
       if role.treasurer?
         role.update(name: 'Treasurer')
       elsif role.main_bartender?

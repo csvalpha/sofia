@@ -8,7 +8,7 @@ class PriceListsController < ApplicationController
     authorize PriceList
 
     price_lists = policy_scope(PriceList.order(created_at: :desc))
-    products = Product.all.order(:id).includes(:product_prices)
+    products = Product.order(:id).includes(:product_prices)
 
     @price_list = PriceList.new
 

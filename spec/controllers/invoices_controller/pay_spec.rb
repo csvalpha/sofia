@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe InvoicesController, type: :controller do
+describe InvoicesController do
   describe 'GET /:id/pay' do
     let(:invoice) { create(:invoice, :with_rows) }
     let(:id) { invoice.id }
