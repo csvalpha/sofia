@@ -13,9 +13,9 @@ gem 'jbuilder', '~> 2.13.0'
 gem 'jquery-rails', '~> 4.6.0'
 gem 'kaminari', '~> 1.2.2'
 gem 'mollie-api-ruby', '~> 4.16.0'
-gem 'net-imap', require: false
-gem 'net-pop', require: false
-gem 'net-smtp', require: false
+gem 'net-imap', '~> 0.5.7'
+gem 'net-pop',  '~> 0.1.2'
+gem 'net-smtp', '~> 0.5.1'
 gem 'omniauth', '~> 2.1.3'
 gem 'omniauth-oauth2', '~> 1.8.0'
 gem 'omniauth-rails_csrf_protection', '~> 1.0', '>= 1.0.2'
@@ -40,33 +40,33 @@ gem 'turbolinks', '~> 5.2.1'
 gem 'uglifier', '~> 4.2.1'
 gem 'validates_timeliness', '~> 7.1.0'
 gem 'webpacker', '~> 5.4.4'
-gem 'wicked_pdf'
-gem 'wkhtmltopdf-binary'
+gem 'wicked_pdf', '~> 2.6.3'
+gem 'wkhtmltopdf-binary', '~> 0.12.6.5'
 
 group :development, :test do
-  gem 'awesome_print'
-  gem 'better_errors'
-  gem 'brakeman', require: false
+  gem 'awesome_print', '~> 1.9.2'
+  gem 'better_errors', '~> 2.9.1'
+  gem 'brakeman', '~> 5.2.3', require: false
   gem 'bullet', '~> 8.0', '>= 8.0.1'
-  gem 'colorize'
+  gem 'colorize', '~> 0.8.1'
   gem 'consistency_fail'
   gem 'dotenv-rails', '~> 3.1.7'
   gem 'guard-livereload', '~> 2.5.2'
-  gem 'guard-rspec', require: false
-  gem 'pry-byebug'
-  gem 'pry-rails'
-  gem 'rb-readline'
-  gem 'rspec-rails'
+  gem 'guard-rspec', '~> 4.7.3', require: false
+  gem 'pry-byebug', '~> 3.10.1'
+  gem 'pry-rails', '~> 0.3.9'
+  gem 'rb-readline', '~> 0.5.5'
+  gem 'rspec-rails', '~> 6.0.2'
 end
 
 group :development do
-  gem 'capistrano-sidekiq'
-  gem 'foreman', require: false
-  gem 'listen'
+  gem 'capistrano-sidekiq', '~> 2.3.0'
+  gem 'foreman', '~> 0.87.2', require: false
+  gem 'listen', '~> 3.7.1'
   gem 'mina', '~> 1.2.5'
-  gem 'spring', require: false
-  gem 'spring-commands-rspec', require: false
-  gem 'spring-watcher-listen', require: false
+  gem 'spring', '~> 2.1.1', require: false
+  gem 'spring-commands-rspec', '~> 1.0.4', require: false
+  gem 'spring-watcher-listen', '~> 2.0.1', require: false
   gem 'web-console', '~> 4.2.1'
 end
 
@@ -78,10 +78,10 @@ group :test do
   gem 'rubocop-rails', '~> 2.31', require: false
   gem 'rubocop-rspec', '~> 3.5', require: false
   gem 'rubocop-rspec_rails', '~> 2.31', require: false
-  gem 'simplecov', require: false
+  gem 'simplecov','~> 0.21.2', require: false
   gem 'simplecov-lcov', '~> 0.8.0', require: false
-  gem 'terminal-notifier-guard'
-  gem 'timecop'
+  gem 'terminal-notifier-guard', '~> 1.7.0'
+  gem 'timecop', '~> 0.9.5'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
