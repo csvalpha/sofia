@@ -60,7 +60,7 @@ group :development, :test do
 end
 
 group :development do
-  gem 'capistrano-sidekiq', '~> 2.3.0'
+  gem 'capistrano-sidekiq', '~> 3.0.0'
   gem 'foreman', '~> 0.87.2', require: false
   gem 'listen', '~> 3.7.1'
   gem 'mina', '~> 1.2.5'
