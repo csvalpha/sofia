@@ -34,7 +34,7 @@ gem 'sentry-rails', '~> 5.24'
 gem 'sentry-ruby', '~> 5.24'
 gem 'sentry-sidekiq', '~> 5.24'
 gem 'sidekiq', '~> 7.3.9'
-gem 'sidekiq-scheduler', '~> 5.0.6'
+gem 'sidekiq-scheduler', '~> 6.0.1'
 gem 'simple_form', '~> 5.3.1'
 gem 'turbolinks', '~> 5.2.1'
 gem 'uglifier', '~> 4.2.1'
@@ -60,7 +60,7 @@ group :development, :test do
 end
 
 group :development do
-  gem 'capistrano-sidekiq', '~> 2.3.0'
+  gem 'capistrano-sidekiq', '~> 3.0.0'
   gem 'foreman', '~> 0.88.1', require: false
   gem 'listen', '~> 3.9.0'
   gem 'mina', '~> 1.2.5'
