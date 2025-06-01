@@ -64,7 +64,7 @@ group :development do
   gem 'foreman', '~> 0.87.2', require: false
   gem 'listen', '~> 3.7.1'
   gem 'mina', '~> 1.2.5'
-  gem 'spring', '~> 2.1.1', require: false
+  gem 'spring', '~> 4.3.0', require: false
   gem 'spring-commands-rspec', '~> 1.0.4', require: false
   gem 'spring-watcher-listen', '~> 2.0.1', require: false
   gem 'web-console', '~> 4.2.1'
