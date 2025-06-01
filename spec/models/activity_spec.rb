@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Activity, type: :model do
+RSpec.describe Activity do
   subject(:activity) { build_stubbed(:activity) }
 
   describe '#valid' do
@@ -344,7 +344,7 @@ RSpec.describe Activity, type: :model do
         create(:order, created_by: bartender, activity:)
       end
 
-      it { expect(activity.bartenders).to match_array [bartender] }
+      it { expect(activity.bartenders).to contain_exactly(bartender) }
     end
   end
 

@@ -8,12 +8,12 @@
     "build:css": "sass ./app/assets/stylesheets/application.sass.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules"
   },
   "dependencies": {
-    "@babel/core": "^7.26.9",
+    "@babel/core": "^7.27.1",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/plugin-syntax-object-rest-spread": "^7.8.3",
-    "@babel/plugin-transform-runtime": "^7.26.9",
-    "@babel/preset-env": "^7.26.9",
+    "@babel/plugin-transform-runtime": "^7.27.1",
+    "@babel/preset-env": "^7.27.2",
     "@popperjs/core": "^2.11.8",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.4.0",
@@ -43,7 +43,7 @@
   "devDependencies": {
     "eslint": "^8.57.1",
     "eslint-loader": "^4.0.2",
-    "eslint-plugin-vue": "^9.32.0",
+    "eslint-plugin-vue": "^9.33.0",
     "sass-lint": "^1.13.1",
     "webpack-dev-server": "^4.15.2"
   },

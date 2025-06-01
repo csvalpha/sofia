@@ -68,6 +68,11 @@ yarn lint
 yarn run sass-lint -v -q
 bundle exec rubocop
 ```
+## Migrations 
+
+When migrations are executed on master and everthing worked they can be archived with the following command.
+
+    bundle exec rails db:migrate:archive
 
 ## Deploying
 
