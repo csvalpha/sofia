@@ -46,7 +46,7 @@ gem 'wkhtmltopdf-binary', '~> 0.12.6.5'
 group :development, :test do
   gem 'awesome_print', '~> 1.9.2'
   gem 'better_errors', '~> 2.9.1'
-  gem 'brakeman', '~> 5.2.3', require: false
+  gem 'brakeman', '~> 7.0.2', require: false
   gem 'bullet', '~> 8.0', '>= 8.0.6'
   gem 'colorize', '~> 0.8.1'
   gem 'consistency_fail'
