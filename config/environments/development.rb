@@ -1,7 +1,4 @@
 Rails.application.configure do
-  # Verifies that versions and hashed value of the package contents in the project's package.json
-  config.webpacker.check_yarn_integrity = true
-
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on
@@ -70,7 +67,7 @@ Rails.application.configure do
   config.action_mailer.asset_host = 'http://localhost:5000'
   config.action_mailer.preview_path = Rails.root.join('spec', 'mailers', 'previews')
 
-  config.sass.inline_source_maps = true
+#  config.sass.inline_source_maps = true
 
   config.after_initialize do
     Bullet.enable = true
