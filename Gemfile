@@ -48,7 +48,7 @@ group :development, :test do
   gem 'better_errors', '~> 2.10.1'
   gem 'brakeman', '~> 7.0.2', require: false
   gem 'bullet', '~> 8.0', '>= 8.0.8'
-  gem 'colorize', '~> 0.8.1'
+  gem 'colorize', '~> 1.1.0'
   gem 'consistency_fail'
   gem 'dotenv-rails', '~> 3.1.8'
   gem 'guard-livereload', '~> 2.5.2'
