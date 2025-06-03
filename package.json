@@ -40,7 +40,7 @@
     "eslint-loader": "^4.0.2",
     "eslint-plugin-vue": "^9.33.0",
     "sass-lint": "^1.13.1",
-    "webpack-dev-server": "^4.15.2"
+    "webpack-dev-server": "^5.2.2"
   },
   "packageManager": "yarn@3.8.7"
 }
