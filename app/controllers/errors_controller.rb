@@ -8,7 +8,7 @@ class ErrorsController < ApplicationController
   end
 
   def unacceptable
-    render status: :unprocessable_entity
+    render status: :unprocessable_content
   end
 
   def internal_server_error
