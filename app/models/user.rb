@@ -38,7 +38,7 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
     age
   end
 
-  def minor
+  def minor?
     return false unless age
 
     age < 18
