@@ -5277,7 +5277,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"core-js@npm:2.6.12, core-js@npm:^2.4.0":
+"core-js@npm:3.43.0":
+  version: 3.43.0
+  resolution: "core-js@npm:3.43.0"
+  checksum: b6da4099d9556ce23f8ada331c8cdc4a6803089a4de837126d52058ec05b74be1c6019e00ff2cf17635989d16562ddddf13cc6fa189d254914b4a42eb4960322
+  languageName: node
+  linkType: hard
+
+"core-js@npm:^2.4.0":
   version: 2.6.12
   resolution: "core-js@npm:2.6.12"
   checksum: 44fa9934a85f8c78d61e0c8b7b22436330471ffe59ec5076fe7f324d6e8cf7f824b14b1c81ca73608b13bdb0fef035bd820989bf059767ad6fa13123bb8bd016
@@ -13008,7 +13015,7 @@ __metadata:
     babel-loader: ^8.4.1
     bootstrap: ^5.3.6
     caniuse-lite: ^1.0.30001723
-    core-js: 2.6.12
+    core-js: 3.43.0
     css-loader: ^6.11.0
     eslint: ^8.57.1
     eslint-loader: ^4.0.2
