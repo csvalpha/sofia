@@ -13,7 +13,6 @@
 //= require rails-ujs
 //= require turbolinks
 //= require jquery3
-//= require flatpickr
 //= require bootstrap.bundle.min.js
 //= require webfontloader.js
 //= require turbolinks-animate/src/index.js

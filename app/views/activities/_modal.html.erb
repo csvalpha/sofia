@@ -9,14 +9,9 @@
       </div><%= simple_form_for @activity, wrapper: :horizontal_form do |f| %>
         <div class="modal-body" id="activities_modal">
           <%= f.input :title, label: 'Titel', placeholder: 'Titel', required: true %>
-          <div class="row mb-3">
-            <div class="col">
-              <%= f.input :start_time, as: :string, input_html: { class: 'form-control datetimepicker', autocomplete: 'off', id: 'activity_start_time' }, label: 'Begintijd' %>
-            </div>
-            <div class="col">
-              <%= f.input :end_time, as: :string, input_html: { class: 'form-control datetimepicker', autocomplete: 'off', id: 'activity_end_time' }, label: 'Eindtijd' %>
-            </div>
-          </div>
+          <%= f.input :start_time, as: :string, label: 'Begintijd', order: %i[hour minute day month year] %>
+          <%= f.input :end_time, as: :string, label: 'Eindtijd', order: %i[hour minute day month year] %>
+
           <div class="mb-3 row">
             <label class="col-sm-3 col-form-label" for="activity_price_list">
               Prijslijst
