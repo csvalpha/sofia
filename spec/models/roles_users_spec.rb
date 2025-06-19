@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe RolesUsers, type: :model do
+RSpec.describe RolesUsers do
   subject(:roles_users) { build_stubbed(:roles_users) }
 
   describe '#valid' do

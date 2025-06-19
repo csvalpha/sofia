@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe InvoicesController, type: :controller do
+describe InvoicesController do
   describe 'POST create' do
     let(:invoice) do
       build(:invoice, user: create(:user), activity: create(:activity, :locked))

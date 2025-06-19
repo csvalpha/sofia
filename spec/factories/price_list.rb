@@ -22,7 +22,7 @@ FactoryBot.define do
 
     after(:create) do |price_list, evaluator|
       if evaluator.with_all_products
-        Product.all.each do |product|
+        Product.find_each do |product|
           create(:product_price, price_list:, product:)
         end
       elsif evaluator.with_specific_products

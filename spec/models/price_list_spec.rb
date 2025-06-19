@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe PriceList, type: :model do
+RSpec.describe PriceList do
   subject(:price_list) { build_stubbed(:price_list) }
 
   describe '#valid' do

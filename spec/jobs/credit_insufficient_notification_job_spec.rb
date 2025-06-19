@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe CreditInsufficientNotificationJob, type: :job do
+RSpec.describe CreditInsufficientNotificationJob do
   describe '#perform' do
     let(:user) { create(:user, name: 'Buddy Normal') }
     let(:negative_user) { create(:user, name: 'Bro Negative', email: 'user@csvalpha.nl') }
