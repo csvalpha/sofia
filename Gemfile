@@ -5,10 +5,10 @@ gem 'bootsnap', '~> 1.18.6'
 gem 'browser', '~> 6.2.0'
 gem 'devise', '~>4.9.4'
 gem 'devise-i18n', '~>1.13.0'
-gem 'factory_bot_rails', '~> 6.4.4'
+gem 'factory_bot_rails', '~> 6.5.0'
 gem 'faker', '~> 3.5.1'
 gem 'font-awesome-rails', '~> 4.7.0.9'
-gem 'http', '~> 5.2.0'
+gem 'http', '~> 5.3.1'
 gem 'jbuilder', '~> 2.13.0'
 gem 'jquery-rails', '~> 4.6.0'
 gem 'kaminari', '~> 1.2.2'
@@ -30,10 +30,10 @@ gem 'rails-i18n', '~> 7.0.10'
 gem 'redis-rails', '~> 5.0.2'
 gem 'rest-client', '~> 2.1.0'
 gem 'sassc-rails', '~> 2.1.2'
-gem 'sentry-rails', '~> 5.24'
-gem 'sentry-ruby', '~> 5.24'
-gem 'sentry-sidekiq', '~> 5.24'
-gem 'sidekiq', '~> 8.0.3'
+gem 'sentry-rails', '~> 5.25'
+gem 'sentry-ruby', '~> 5.25'
+gem 'sentry-sidekiq', '~> 5.25'
+gem 'sidekiq', '~> 8.0.4'
 gem 'sidekiq-scheduler', '~> 6.0.1'
 gem 'simple_form', '~> 5.3.1'
 gem 'turbolinks', '~> 5.2.1'
@@ -72,7 +72,7 @@ end
 
 group :test do
   gem 'rails-controller-testing', '~> 1.0.5'
-  gem 'rubocop', '~> 1.75.8', require: false
+  gem 'rubocop', '~> 1.76.1', require: false
   gem 'rubocop-factory_bot', '~> 2.27.1', require: false
   gem 'rubocop-performance', '~> 1.25', require: false
   gem 'rubocop-rails', '~> 2.32', require: false
