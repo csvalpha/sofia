@@ -54,7 +54,7 @@ class PriceListsController < ApplicationController
       if @price_list.save
         format.json { render json: @price_list.archived_at }
       else
-        format.json { render json: @price_list.errors, status: :unprocessable_entity }
+        format.json { render json: @price_list.errors, status: :unprocessable_content }
       end
     end
   end
@@ -69,7 +69,7 @@ class PriceListsController < ApplicationController
       if @price_list.save
         format.json { render json: @price_list.archived_at }
       else
-        format.json { render json: @price_list.errors, status: :unprocessable_entity }
+        format.json { render json: @price_list.errors, status: :unprocessable_content }
       end
     end
   end
