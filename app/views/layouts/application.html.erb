@@ -31,7 +31,6 @@
           environment: '<%= Rails.env %>',
           release: '<%= ENV['BUILD_HASH'] %>'
         });
-
         Sentry.configureScope(scope => {
           scope.setUser({ id: <%= current_user&.id || 'null' %> });
         });
