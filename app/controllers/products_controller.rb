@@ -11,7 +11,7 @@ class ProductsController < ApplicationController
     if @product.save
       render json: @product, include: json_includes, except: json_exludes, methods: :t_category
     else
-      render json: @product.errors, status: :unprocessable_entity
+      render json: @product.errors, status: :unprocessable_content
     end
   end
 
@@ -21,7 +21,7 @@ class ProductsController < ApplicationController
     if @product.update(permitted_attributes)
       render json: @product, include: json_includes, except: json_exludes, methods: :t_category
     else
-      render json: @product.errors, status: :unprocessable_entity
+      render json: @product.errors, status: :unprocessable_content
     end
   end
 

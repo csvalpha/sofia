@@ -20,8 +20,8 @@
 
     <% if Rails.application.config.x.sentry_dsn %>
       <script
-        src="https://browser.sentry-cdn.com/7.120.3/bundle.min.js"
-        integrity="sha384-QhNWP5Exx8ZPPgZF2s+nKw/cl8cah1/6MVdZfR8a22f2KO0OsBNonujHvYJlrWIP"
+        src="https://browser.sentry-cdn.com/8.55.0/bundle.min.js"
+        integrity="sha384-BlRl+vkcjdIA/AKRb8zWtiqlVVXepUsSv0+vho7ZMUTsNudEyQjGUKo9W86Hc1EC"
         crossorigin="anonymous"
       ></script>
 
@@ -31,7 +31,6 @@
           environment: '<%= Rails.env %>',
           release: '<%= ENV['BUILD_HASH'] %>'
         });
-
         Sentry.configureScope(scope => {
           scope.setUser({ id: <%= current_user&.id || 'null' %> });
         });

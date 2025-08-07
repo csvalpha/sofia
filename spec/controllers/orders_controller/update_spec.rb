@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe OrdersController, type: :controller do
+describe OrdersController do
   describe 'PUT update' do
     let(:activity) { create(:activity) }
     let(:locked_activity) { create(:activity) }
@@ -55,7 +55,7 @@ describe OrdersController, type: :controller do
 
       it 'when with order on locked activity' do
         request_on_locked_activity
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(Order.first.order_rows.last.product_count).to eq 2
       end
     end
@@ -71,7 +71,7 @@ describe OrdersController, type: :controller do
 
       it 'when with order on locked activity' do
         request_on_locked_activity
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(Order.first.order_rows.last.product_count).to eq 2
       end
     end
@@ -87,7 +87,7 @@ describe OrdersController, type: :controller do
 
       it 'when with order on locked activity' do
         request_on_locked_activity
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(Order.first.order_rows.last.product_count).to eq 2
       end
     end

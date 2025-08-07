@@ -1,4 +1,11 @@
-FROM ruby:3.2.6-slim@sha256:d55e7e5d2c00e0e39c4ef1871e67f85f257797846cc69993d3ac1d7b83f1862f
+FROM ruby:3.3.7-slim@sha256:696f37b3cd55288b5127850e3eeae67dd20595ab77a6724f7bb05baa8c6b4878
+
+# Define args that can be supplied with
+# `docker build --build-args RAILS_ENV=<env>`, defaults to production.
+ARG BUILD_HASH='unknown'
+ENV BUILD_HASH=$BUILD_HASH
+ARG RAILS_ENV='production'
+ARG NODE_ENV='production'
 
 # Add build-essential tools.
 RUN apt-get update -qq && \
@@ -8,7 +15,8 @@ RUN apt-get update -qq && \
   libpq-dev \
   curl \
   netcat-traditional \
-  wkhtmltopdf
+  wkhtmltopdf \
+  libyaml-dev
 
 # Add Node, required for asset pipeline.
 RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - && \
@@ -17,13 +25,6 @@ RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - && \
 
 RUN mkdir /app
 WORKDIR /app
-
-# Define args that can be supplied with
-# `docker build --build-args RAILS_ENV=<env>`, defaults to production.
-ARG BUILD_HASH='unknown'
-ENV BUILD_HASH=$BUILD_HASH
-ARG RAILS_ENV='production'
-ARG NODE_ENV='production'
 
 # Pre-install gems, so that they can be cached.
 COPY Gemfile* /app/

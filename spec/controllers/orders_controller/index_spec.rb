@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe OrdersController, type: :controller do
+describe OrdersController do
   describe 'GET index' do
     let(:alice) { create(:user, :treasurer) }
     let(:bob) { create(:user, :renting_manager) }

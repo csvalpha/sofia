@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ActivitiesController, type: :controller do
+describe ActivitiesController do
   describe 'GET index' do
     let(:unlocked_activities) { create(:activity) }
     let(:locked_activities) { create_list(:activity, 2, :locked) }

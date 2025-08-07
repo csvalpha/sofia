@@ -46,7 +46,7 @@ module OmniAuth
       end
 
       def groups_from_json(json)
-        json.map { |group| group['id'] }
+        json.pluck('id')
       end
     end
   end
