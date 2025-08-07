@@ -29,7 +29,6 @@
     "popper.js": "^1.16.1",
     "postcss-cssnext": "^3.1.1",
     "remove-accents": "^0.5.0",
-    "sass": "^1.88.0",
     "turbolinks-animate": "^3.2.1",
     "vue": "^2.7.14",
     "vue-loader": "^15.11.1",
@@ -44,7 +43,7 @@
     "eslint": "^8.57.1",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-vue": "^9.33.0",
-    "sass-lint": "^1.13.1",
+    "sass": "^1.88.0",
     "webpack-dev-server": "^4.15.2"
   },
   "packageManager": "yarn@3.8.7"
