@@ -42,5 +42,5 @@
     "sass-lint": "^1.13.1",
     "webpack-dev-server": "^4.15.2"
   },
-  "packageManager": "yarn@4.6.0"
+  "packageManager": "yarn@3.8.7"
 }
