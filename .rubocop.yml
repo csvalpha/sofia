@@ -7,7 +7,7 @@ plugins:
 
 AllCops:
   TargetRailsVersion: 7.2
-  TargetRubyVersion: 3.4
+  TargetRubyVersion: 3.3
   Exclude:
     - 'bin/**/*'
     - 'db/schema.rb'
