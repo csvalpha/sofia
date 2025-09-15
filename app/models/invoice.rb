@@ -31,10 +31,11 @@ class Invoice < ApplicationRecord
   private
 
   def set_human_id
-    this_year_invoices = Invoice.where("human_id LIKE '?%'", Time.zone.now.year)
+    year_prefix = Time.zone.now.year.to_s
+    this_year_invoices = Invoice.where("human_id LIKE ?", "#{year_prefix}%")
     invoice_number = this_year_invoices.count + 1
 
-    self.human_id = "#{Time.zone.now.year}#{invoice_number.to_s.rjust(4, '0')}"
+    self.human_id = "#{year_prefix}#{invoice_number.to_s.rjust(4, '0')}"
   end
 
   def activity_is_locked
