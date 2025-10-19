@@ -22,6 +22,13 @@ class ErrorsController < ApplicationController
     render plain: '406 Not Acceptable', status: :not_acceptable
   end
 
+  def unprocessable_entity
+    render template: 'errors/unprocessable_entity', status: :unprocessable_entity
+  rescue StandardError => e
+    Rails.logger.error("Error rendering unprocessable_entity page: #{e.message}")
+    render plain: '422 Unprocessable Entity', status: :unprocessable_entity
+  end
+
   def internal_server_error
     render template: 'errors/internal_server_error', status: :internal_server_error
   rescue StandardError => e
