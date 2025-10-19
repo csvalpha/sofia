@@ -1,5 +1,5 @@
 class ErrorsController < ApplicationController
-  layout "application"
+  layout 'application'
 
   def forbidden
     render template: 'errors/forbidden', status: :forbidden
