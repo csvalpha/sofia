@@ -1,38 +1,34 @@
 class ErrorsController < ApplicationController
   layout 'errors'
 
+  rescue_from StandardError, with: :handle_rendering_error
+
   def forbidden
-    render template: 'errors/forbidden', status: :forbidden
-  rescue StandardError => e
-    Rails.logger.error("Error rendering forbidden page: #{e.message}")
-    render plain: '403 Forbidden', status: :forbidden
+    render_error_page('errors/forbidden', :forbidden, '403 Forbidden')
   end
 
   def not_found
-    render template: 'errors/not_found', status: :not_found
-  rescue StandardError => e
-    Rails.logger.error("Error rendering not_found page: #{e.message}")
-    render plain: '404 Not Found', status: :not_found
+    render_error_page('errors/not_found', :not_found, '404 Not Found')
   end
 
   def unacceptable
-    render template: 'errors/unacceptable', status: :not_acceptable
-  rescue StandardError => e
-    Rails.logger.error("Error rendering unacceptable page: #{e.message}")
-    render plain: '406 Not Acceptable', status: :not_acceptable
+    render_error_page('errors/unacceptable', :not_acceptable, '406 Not Acceptable')
   end
 
   def unprocessable_entity
-    render template: 'errors/unprocessable_entity', status: :unprocessable_entity
-  rescue StandardError => e
-    Rails.logger.error("Error rendering unprocessable_entity page: #{e.message}")
-    render plain: '422 Unprocessable Entity', status: :unprocessable_entity
+    render_error_page('errors/unprocessable_entity', :unprocessable_entity, '422 Unprocessable Entity')
   end
 
   def internal_server_error
-    render template: 'errors/internal_server_error', status: :internal_server_error
+    render_error_page('errors/internal_server_error', :internal_server_error, '500 Internal Server Error')
+  end
+
+  private
+
+  def render_error_page(template, status, fallback_message)
+    render template: template, status: status
   rescue StandardError => e
-    Rails.logger.error("Error rendering internal_server_error page: #{e.message}")
-    render plain: '500 Internal Server Error', status: :internal_server_error
+    Rails.logger.error("Error rendering #{status} page: #{e.message}")
+    render plain: fallback_message, status: status
   end
 end
