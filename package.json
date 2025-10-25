@@ -15,7 +15,7 @@
     "@rails/webpacker": "^5.4.4",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.4.0",
-    "babel-loader": "^8.4.1",
+    "babel-loader": "^10.0.0",
     "bootstrap": "^5.3.8",
     "caniuse-lite": "^1.0.30001750",
     "core-js": "2.6.12",
