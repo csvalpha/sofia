@@ -19,6 +19,12 @@ RSpec.describe Product, type: :model do
     end
   end
 
+  context 'when updating the name' do
+      subject(:product) { create(:product) }
+
+      it { expect(product.update(name: 'new_name')).to be true }
+    end
+
   describe '#requires_age' do
     context 'when with requires age category' do
       subject(:product) { create(:product, category: %w[beer craft_beer distilled whiskey wine tobacco].sample) }
