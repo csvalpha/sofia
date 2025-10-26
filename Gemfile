@@ -56,7 +56,7 @@ group :development, :test do
   gem 'pry-byebug', '~> 3.11.0'
   gem 'pry-rails', '~> 0.3.11'
   gem 'rb-readline', '~> 0.5.5'
-  gem 'rspec-rails', '~> 6.1.5'
+  gem 'rspec-rails', '~> 8.0.2'
 end
 
 group :development do
