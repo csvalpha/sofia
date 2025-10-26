@@ -31,7 +31,7 @@
           environment: '<%= Rails.env %>',
           release: '<%= ENV['BUILD_HASH'] %>'
         });
-        Sentry.setUser({ id: <%= current_user&.id || 'null' %> });
+        Sentry.setUser({ id: <%= current_user&.id.to_json %> });
       </script>
     <% end %>
 
