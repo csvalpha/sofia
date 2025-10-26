@@ -56,7 +56,7 @@ document.addEventListener('turbolinks:load', () => {
 
         saveProduct: function(product) {
           if (product.id && product._beforeEditingCache.name !== product.name) {
-            if (!confirm("Weet je zeker dat je de productnaam wilt wijzigen? Pas hier mee op want dit kan problemen geven in bestaande orders. Als je twijfelt, maak dan een nieuw product aan in plaats van het bestaande te hernoemen.")) {
+            if (!confirm('Weet je zeker dat je de productnaam wilt wijzigen? Pas hier mee op want dit kan problemen geven in bestaande orders. Als je twijfelt, maak dan een nieuw product aan in plaats van het bestaande te hernoemen.')) {
               return;
             }
           }
