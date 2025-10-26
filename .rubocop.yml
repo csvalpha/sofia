@@ -103,5 +103,8 @@ Style/StringMethods:
 Naming/MemoizedInstanceVariableName:
   Enabled: false
 
+Naming/PredicateMethod:
+  Enabled: false
+
 RSpec/SpecFilePathFormat:
   Enabled: false
