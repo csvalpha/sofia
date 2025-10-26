@@ -112,8 +112,9 @@ GEM
     colorize (1.1.0)
     concurrent-ruby (1.3.5)
     connection_pool (2.5.4)
-    consistency_fail (0.3.7)
     crass (1.0.6)
+    database_consistency (2.0.6)
+      activerecord (>= 3.2)
     date (3.4.1)
     devise (4.9.4)
       bcrypt (~> 3.0)
@@ -250,6 +251,7 @@ GEM
     mina (1.2.5)
       rake
     mini_mime (1.1.5)
+    minitest (5.25.5)
     mini_portile2 (2.8.9)
     minitest (5.26.0)
     mollie-api-ruby (4.17.0)
@@ -277,9 +279,6 @@ GEM
     net-ssh (7.3.0)
     netrc (0.11.0)
     nio4r (2.7.4)
-    nokogiri (1.18.8)
-      mini_portile2 (~> 2.8.2)
-      racc (~> 1.4)
     nokogiri (1.18.8-x86_64-linux-gnu)
       racc (~> 1.4)
     notiffany (0.1.3)
@@ -597,7 +596,6 @@ GEM
     zeitwerk (2.7.3)
 
 PLATFORMS
-  ruby
   x86_64-linux
 
 DEPENDENCIES
@@ -610,7 +608,7 @@ DEPENDENCIES
   bullet (~> 8.0, >= 8.0.8)
   capistrano-sidekiq (~> 3.0.0)
   colorize (~> 1.1.0)
-  consistency_fail
+  database_consistency (~> 2.0.6)
   devise (~> 4.9.4)
   devise-i18n (~> 1.13.0)
   dotenv-rails (~> 3.1.8)
