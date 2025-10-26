@@ -17,6 +17,12 @@ RSpec.describe Product, type: :model do
 
       it { expect(product).not_to be_valid }
     end
+
+    context 'when updating the name' do
+      subject(:product) { create(:product) }
+
+      it { expect(product.update(name: 'new_name')).to be true }
+    end
   end
 
   describe '#requires_age' do
