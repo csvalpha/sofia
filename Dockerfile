@@ -19,7 +19,7 @@ RUN apt-get update -qq && \
   libyaml-dev
 
 # Add Node, required for asset pipeline.
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - && \
   apt-get install -y nodejs && \
   npm install -q -g yarn
 
