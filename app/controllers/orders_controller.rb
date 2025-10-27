@@ -34,7 +34,7 @@ class OrdersController < ApplicationController
       order_data.user.current_activity = order_data.activity unless order_data.user.nil?
       render json: order_data.as_json(include: json_includes)
     else
-      render json: @order.errors, status: :unprocessable_entity
+      render json: @order.errors, status: :unprocessable_content
     end
   end
 
@@ -46,7 +46,7 @@ class OrdersController < ApplicationController
     if @order.update(permitted_attributes_on_update)
       render json: @order.to_json(proper_json)
     else
-      render json: @order.errors, status: :unprocessable_entity
+      render json: @order.errors, status: :unprocessable_content
     end
   end
 

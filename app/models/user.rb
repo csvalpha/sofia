@@ -38,7 +38,7 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
     age
   end
 
-  def minor
+  def minor?
     return false unless age
 
     age < 18
@@ -113,20 +113,20 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def self.calculate_credits
-    credits = User.all.left_outer_joins(:credit_mutations).group(:id).sum('amount')
+    credits = User.left_outer_joins(:credit_mutations).group(:id).sum('amount')
     costs = User.calculate_spendings
 
     credits.each_with_object({}) { |(id, credit), h| h[id] = credit - costs.fetch(id, 0) }
   end
 
   def self.calculate_spendings(from: '01-01-1970', to: Time.zone.now)
-    User.all.joins(:order_rows)
-        .where('orders.created_at >= ? AND orders.created_at < ?', from, to)
+    User.joins(:order_rows)
+        .where(orders: { created_at: from...to })
         .group(:id).sum('product_count * price_per_product')
   end
 
   def self.orderscreen_json_includes
-    %i[credit avatar_thumb_or_default_url minor insufficient_credit can_order]
+    %i[credit avatar_thumb_or_default_url minor? insufficient_credit can_order]
   end
 
   private

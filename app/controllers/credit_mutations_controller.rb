@@ -27,7 +27,7 @@ class CreditMutationsController < ApplicationController
 
       else
         format.html { redirect_to which_redirect?, flash: { error: @mutation.errors.full_messages.join(', ') } }
-        format.json { render json: @mutation.errors, status: :unprocessable_entity }
+        format.json { render json: @mutation.errors, status: :unprocessable_content }
       end
     end
   end

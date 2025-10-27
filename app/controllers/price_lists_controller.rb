@@ -8,7 +8,7 @@ class PriceListsController < ApplicationController
     authorize PriceList
 
     price_lists = policy_scope(PriceList.order(created_at: :desc))
-    products = Product.all.order(:id).includes(:product_prices)
+    products = Product.order(:id).includes(:product_prices)
 
     @price_list = PriceList.new
 
@@ -54,7 +54,7 @@ class PriceListsController < ApplicationController
       if @price_list.save
         format.json { render json: @price_list.archived_at }
       else
-        format.json { render json: @price_list.errors, status: :unprocessable_entity }
+        format.json { render json: @price_list.errors, status: :unprocessable_content }
       end
     end
   end
@@ -69,7 +69,7 @@ class PriceListsController < ApplicationController
       if @price_list.save
         format.json { render json: @price_list.archived_at }
       else
-        format.json { render json: @price_list.errors, status: :unprocessable_entity }
+        format.json { render json: @price_list.errors, status: :unprocessable_content }
       end
     end
   end

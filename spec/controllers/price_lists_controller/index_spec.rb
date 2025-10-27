@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe PriceListsController, type: :controller do
+describe PriceListsController do
   describe 'GET index' do
     let(:archived_price_lists) { create_list(:price_list, 3, :archived) }
     let(:unarchived_price_lists) { create_list(:price_list, 3) }
@@ -15,8 +15,8 @@ describe PriceListsController, type: :controller do
         sign_in create(:user, :treasurer)
         get :index
 
-        expect(assigns(:price_lists_json)).to eq PriceList.all.order(created_at: :desc).to_json(except: %i[created_at updated_at
-                                                                                                           deleted_at])
+        expect(assigns(:price_lists_json)).to eq PriceList.order(created_at: :desc).to_json(except: %i[created_at updated_at
+                                                                                                       deleted_at])
       end
     end
 

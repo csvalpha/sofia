@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ActivitiesController, type: :controller do
+describe ActivitiesController do
   describe 'GET product_totals' do
     let(:activity) { create(:activity) }
     let(:params) { { id: activity.id } }

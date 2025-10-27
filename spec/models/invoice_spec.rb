@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Invoice, type: :model do
+RSpec.describe Invoice do
   subject(:invoice) { build_stubbed(:invoice) }
 
   describe '#valid' do

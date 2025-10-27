@@ -22,6 +22,28 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
     @price_lists_json = PriceList.unarchived.to_json(only: %i[id name])
   end
 
+  def show # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    @activity = Activity.includes(:price_list,
+                                  { orders: [{ order_rows: :product }, :user, :created_by] }).find(params[:id])
+    authorize @activity
+
+    @price_list = @activity.price_list
+    @bartenders = @activity.bartenders
+    @orders = @activity.orders
+
+    @credit_mutations = @activity.credit_mutations
+    @credit_mutations_total = @activity.credit_mutations_total
+
+    @revenue_by_category = @activity.revenue_by_category
+    @revenue_with_cash = @activity.revenue_with_cash
+    @revenue_with_pin = @activity.revenue_with_pin
+    @revenue_with_credit = @activity.revenue_with_credit
+    @cash_total = @activity.cash_total
+    @revenue_total = @activity.revenue_total
+
+    @count_per_product = @activity.count_per_product
+  end
+
   def create
     @activity = Activity.new(permitted_attributes.merge(created_by: current_user))
     authorize @activity
@@ -59,28 +81,6 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
     end
 
     redirect_to Activity
-  end
-
-  def show # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-    @activity = Activity.includes(:price_list,
-                                  { orders: [{ order_rows: :product }, :user, :created_by] }).find(params[:id])
-    authorize @activity
-
-    @price_list = @activity.price_list
-    @bartenders = @activity.bartenders
-    @orders = @activity.orders
-
-    @credit_mutations = @activity.credit_mutations
-    @credit_mutations_total = @activity.credit_mutations_total
-
-    @revenue_by_category = @activity.revenue_by_category
-    @revenue_with_cash = @activity.revenue_with_cash
-    @revenue_with_pin = @activity.revenue_with_pin
-    @revenue_with_credit = @activity.revenue_with_credit
-    @cash_total = @activity.cash_total
-    @revenue_total = @activity.revenue_total
-
-    @count_per_product = @activity.count_per_product
   end
 
   def order_screen # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
@@ -168,7 +168,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
     users_credits = User.calculate_credits
     User.active.order(:name).map do |user|
       user.current_activity = @activity
-      user.as_json(methods: %i[avatar_thumb_or_default_url minor insufficient_credit can_order])
+      user.as_json(methods: %i[avatar_thumb_or_default_url minor? insufficient_credit can_order])
           .merge(credit: users_credits.fetch(user.id, 0))
     end
   end

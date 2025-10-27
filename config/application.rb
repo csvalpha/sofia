@@ -2,12 +2,24 @@ require_relative 'boot'
 
 require 'rails/all'
 
+# Require the gems listed in Gemfile, including any gems
+# you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
 module Sofia
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.1
+    config.load_defaults 7.2
+
+    # Please, add to the `ignore` list any other `lib` subdirectories that do
+    # not contain `.rb` files, or that should not be reloaded or eager loaded.
+    # Common ones are `templates`, `generators`, or `middleware`, for example.
+    config.autoload_lib(ignore: %w[assets tasks generators])
+
+    # Configuration for the application, engines, and railties goes here.
+    #
+    # These settings can be overridden in specific environments using the files
+    # in config/environments, which are processed later.
 
     config.time_zone = 'Europe/Amsterdam'
 
@@ -32,9 +44,6 @@ module Sofia
 
     config.x.amber_host           = credentials.dig(Rails.env.to_sym, :amber_host)
     config.x.sofia_host           = credentials.dig(Rails.env.to_sym, :sofia_host)
-
-    config.x.slack_webhook        = credentials.dig(Rails.env.to_sym, :slack_webhook) || ''
-    config.x.slack_channel        = '#monitoring'
 
     config.x.smtp_username        = credentials.dig(:production, :smtp_username)
     config.x.smtp_password        = credentials.dig(:production, :smtp_password)
