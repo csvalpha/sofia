@@ -50,3 +50,6 @@ yarn-debug.log*
 
 # Ignore Jetbrains IDE files
 /.idea
+
+# Ignore gemini-Cli files
+gemini.md
