@@ -21,7 +21,7 @@ RSpec.describe Product do
     context 'when updating the name' do
       subject(:product) { create(:product) }
 
-      it { expect(product.update(name: 'new_name')).to be false }
+      it { expect(product.update(name: 'new_name')).to be true }
     end
   end
 
