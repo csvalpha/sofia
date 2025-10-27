@@ -1,9 +1,9 @@
-<div aria-hidden="true" aria-labelledby="editPriceListModalLabel" class="modal fade" id="editPriceListModal" role="dialog">
+<div aria-hidden="true" aria-labelledby="newPriceListModalLabel" class="modal fade" id="newPriceListModal" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">
-          <%= @price_list.persisted? ? 'Prijslijst wijzigen' : 'Nieuwe prijslijst' %>
+          Nieuwe prijslijst
         </h5>
         <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"/>
       </div><%= simple_form_for @price_list, wrapper: :horizontal_form do |f| %>

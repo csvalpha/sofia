@@ -1,0 +1,23 @@
+<div aria-hidden="true" aria-labelledby="editPriceListModalLabel" class="modal fade" id="editPriceListModal" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          Prijslijst wijzigen
+        </h5>
+        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"/>
+      </div>
+      <%= simple_form_for(:price_list, wrapper: :horizontal_form, method: :patch) do |f| %>
+        <div class="modal-body">
+          <%= f.input :name, label: 'Naam', placeholder: 'Naam', required: true, input_html: { ':value': 'name' } %>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">
+            Annuleren
+          </button>
+          <%= f.button :submit, 'Naam wijzigen', :data => {:disable_with => 'Bezig...'}, class: 'btn btn-primary', method: :patch, ':formaction': 'url'  %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
