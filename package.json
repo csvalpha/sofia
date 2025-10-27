@@ -2,7 +2,10 @@
   "name": "sofia",
   "private": true,
   "scripts": {
-    "lint": "eslint 'app/javascript/**/*.{js,vue}'"
+    "lint": "eslint 'app/javascript/**/*.{js,vue}'",
+    "build": "webpack --config webpack.config.js",
+    "watch": "webpack --config webpack.config.js --watch",
+    "build:css": "sass ./app/assets/stylesheets/application.sass.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules"
   },
   "dependencies": {
     "@babel/core": "^7.28.5",
@@ -12,7 +15,6 @@
     "@babel/plugin-transform-runtime": "^7.28.5",
     "@babel/preset-env": "^7.28.5",
     "@popperjs/core": "^2.11.8",
-    "@rails/webpacker": "^5.4.4",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.4.0",
     "babel-loader": "^8.4.1",
@@ -25,6 +27,7 @@
     "popper.js": "^1.16.1",
     "postcss-cssnext": "^3.1.1",
     "remove-accents": "^0.5.0",
+    "sass": "^1.93.2",
     "turbolinks-animate": "^3.2.1",
     "vue": "^2.7.16",
     "vue-loader": "^15.11.1",
@@ -32,15 +35,13 @@
     "vue-template-compiler": "^2.7.16",
     "vue-turbolinks": "^2.2.2",
     "webfontloader": "^1.6.28",
-    "webpack": "^4.47.0",
-    "webpack-cli": "^4.10.0"
+    "webpack": "^5.102.1",
+    "webpack-cli": "^6.0.1"
   },
   "devDependencies": {
     "eslint": "^8.57.1",
     "eslint-loader": "^4.0.2",
-    "eslint-plugin-vue": "^9.33.0",
-    "sass-lint": "^1.13.1",
-    "webpack-dev-server": "^4.15.2"
+    "eslint-plugin-vue": "^9.33.0"
   },
   "packageManager": "yarn@3.8.7"
 }

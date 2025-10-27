@@ -3,18 +3,22 @@
   <head>
     <title><%= yield(:title) %>  </title>
 
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
 
-    <%= javascript_pack_tag 'activities', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'price_lists', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'payment_add', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'credit_mutations', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'user', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'order_screen', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'users', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'activity', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'invoices', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag "activities", "data-turbo-track": "reload", defer: true %>
+    <%= javascript_include_tag "price_lists", "data-turbo-track": "reload", defer: true %>
+    <%= javascript_include_tag "payment_add", "data-turbo-track": "reload", defer: true %>
+    <%= javascript_include_tag "credit_mutations", "data-turbo-track": "reload", defer: true %>
+    <%= javascript_include_tag "user", "data-turbo-track": "reload", defer: true %>
+    <%= javascript_include_tag "order_screen", "data-turbo-track": "reload", defer: true %>
+    <%= javascript_include_tag "users", "data-turbo-track": "reload", defer: true %>
+    <%= javascript_include_tag "activity", "data-turbo-track": "reload", defer: true %>
+    <%= javascript_include_tag "invoices", "data-turbo-track": "reload", defer: true %>
+
+    <%= csrf_meta_tags %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
 
     <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport"/>
 
@@ -37,7 +41,7 @@
 
 
 
-    <%= csrf_meta_tags %>
+    
 
   </head>
   <body>
