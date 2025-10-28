@@ -1,4 +1,7 @@
 <% content_for :title, "Activiteit #{@activity.title} - #{Rails.application.config.x.site_name}" %>
+<% content_for :head do %>
+  <%= javascript_include_tag "activity", "data-turbo-track": "reload", defer: true %>
+<% end %>
 <% content_for :modal do %>
   <%= render 'edit_modal' %>
 <% end %>

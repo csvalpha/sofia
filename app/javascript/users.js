@@ -1,18 +1,13 @@
 import Vue from 'vue/dist/vue.esm';
-import TurbolinksAdapter from 'vue-turbolinks';
-import axios from 'axios';
 import UsersTable from '../components/user/UsersTable.vue';
 
-Vue.use(TurbolinksAdapter);
-
-document.addEventListener('turbolinks:load', () => {
-  axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-  var element = document.getElementById('users-index');
+document.addEventListener('turbo:load', () => {
+  const element = document.getElementById('users-index');
   if (element !== null) {
-    var manual_users = JSON.parse(element.dataset.manualUsers);
-    var amber_users = JSON.parse(element.dataset.amberUsers);
-    var inactive_users = JSON.parse(element.dataset.inactiveUsers);
+    const manual_users = JSON.parse(element.dataset.manualUsers);
+    const amber_users = JSON.parse(element.dataset.amberUsers);
+    const inactive_users = JSON.parse(element.dataset.inactiveUsers);
+
     new Vue({
       el: element,
       data: () => ({

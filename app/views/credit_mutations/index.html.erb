@@ -1,4 +1,7 @@
 <% content_for :title, "Inleg en saldocorrecties - #{Rails.application.config.x.site_name}" %>
+<% content_for :head do %>
+  <%= javascript_include_tag "credit_mutations", "data-turbo-track": "reload", defer: true %>
+<% end %>
 <% content_for :modal do %>
   <%= render 'modal' %>
 <% end %>

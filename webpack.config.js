@@ -1,5 +1,5 @@
-// webpack.config.js
 const path = require("path");
+const fs = require("fs");
 const webpack = require("webpack");
 const { VueLoaderPlugin } = require("vue-loader");
 

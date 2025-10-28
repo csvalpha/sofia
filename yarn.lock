@@ -1683,6 +1683,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hotwired/turbo-rails@npm:^8.0.18":
+  version: 8.0.18
+  resolution: "@hotwired/turbo-rails@npm:8.0.18"
+  dependencies:
+    "@hotwired/turbo": ^8.0.18
+    "@rails/actioncable": ">=7.0"
+  checksum: b08b47f0368b2e2bbe803dfc305e879689a9efe409d41c9cbde8e1bcba9feaf5fe774105a731df44c9ddb001bd28926afb9598c4037a2c68bbf3cc165fce87c3
+  languageName: node
+  linkType: hard
+
+"@hotwired/turbo@npm:^8.0.18":
+  version: 8.0.18
+  resolution: "@hotwired/turbo@npm:8.0.18"
+  checksum: 553d3515040c6f0d8f87bd2b3305734aea47462eb8ae5645509b29d2bdb1c37298ef88045e3c9e575102492c74c5c88af9b2695831eed3c49a50d02d27a4f46d
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.13.0":
   version: 0.13.0
   resolution: "@humanwhocodes/config-array@npm:0.13.0"
@@ -2066,6 +2083,13 @@ __metadata:
   version: 2.11.8
   resolution: "@popperjs/core@npm:2.11.8"
   checksum: e5c69fdebf52a4012f6a1f14817ca8e9599cb1be73dd1387e1785e2ed5e5f0862ff817f420a87c7fc532add1f88a12e25aeb010ffcbdc98eace3d55ce2139cf0
+  languageName: node
+  linkType: hard
+
+"@rails/actioncable@npm:>=7.0":
+  version: 8.1.0
+  resolution: "@rails/actioncable@npm:8.1.0"
+  checksum: 66f9d623c1d992b351c20055215b2c83515f6e336a39312659ef4d06b91f5039f40ba1cd90bf4aee5003b49445f6a355c98535086fd5804a64b719e71acc3859
   languageName: node
   linkType: hard
 
@@ -2536,13 +2560,6 @@ __metadata:
     json-schema-traverse: ^1.0.0
     require-from-string: ^2.0.2
   checksum: 1797bf242cfffbaf3b870d13565bd1716b73f214bb7ada9a497063aada210200da36e3ed40237285f3255acc4feeae91b1fb183625331bad27da95973f7253d9
-  languageName: node
-  linkType: hard
-
-"animate.css@npm:^3.7.2":
-  version: 3.7.2
-  resolution: "animate.css@npm:3.7.2"
-  checksum: 7262dfe8fb7929c5c296b20e2a6d8d302bd80c02cb8ccf4cf751b7b142aea5c013d0b942aada5775991dd87f041f5a023135ba86110a0619ef3001913fb1afec
   languageName: node
   linkType: hard
 
@@ -6307,6 +6324,7 @@ __metadata:
     "@babel/plugin-syntax-object-rest-spread": ^7.8.3
     "@babel/plugin-transform-runtime": ^7.28.5
     "@babel/preset-env": ^7.28.5
+    "@hotwired/turbo-rails": ^8.0.18
     "@popperjs/core": ^2.11.8
     autosuggest-highlight: ^3.3.4
     axios: ^1.4.0
@@ -6324,12 +6342,11 @@ __metadata:
     postcss-cssnext: ^3.1.1
     remove-accents: ^0.5.0
     sass: ^1.93.2
-    turbolinks-animate: ^3.2.1
     vue: ^2.7.16
     vue-loader: ^15.11.1
     vue-resource: ^1.5.3
+    vue-style-loader: ^4.1.3
     vue-template-compiler: ^2.7.16
-    vue-turbolinks: ^2.2.2
     webfontloader: ^1.6.28
     webpack: ^5.102.1
     webpack-cli: ^6.0.1
@@ -6555,23 +6572,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"turbolinks-animate@npm:^3.2.1":
-  version: 3.2.1
-  resolution: "turbolinks-animate@npm:3.2.1"
-  dependencies:
-    animate.css: ^3.7.2
-    turbolinks: ^5.2.0
-  checksum: b457e8d87855df9873ee0a6ca8fb4e8e8c2995903ad2adaa7c5d676006fafb8bf5b99634214f7e30bcb376120830a61693af66c2e7b0d06093f2c020b6dec80f
-  languageName: node
-  linkType: hard
-
-"turbolinks@npm:^5.2.0":
-  version: 5.2.0
-  resolution: "turbolinks@npm:5.2.0"
-  checksum: df393c321ed19d9761e632ff357d3cb032a9ca32c07f1ef8202e5f5bb9d17fcc93cdec0d9dfcf0fbca56c373a9dffa2c151639383e663a72897ae434a877819b
-  languageName: node
-  linkType: hard
-
 "type-check@npm:^0.4.0, type-check@npm:~0.4.0":
   version: 0.4.0
   resolution: "type-check@npm:0.4.0"
@@ -6789,7 +6789,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue-style-loader@npm:^4.1.0":
+"vue-style-loader@npm:^4.1.0, vue-style-loader@npm:^4.1.3":
   version: 4.1.3
   resolution: "vue-style-loader@npm:4.1.3"
   dependencies:
@@ -6813,13 +6813,6 @@ __metadata:
   version: 1.9.1
   resolution: "vue-template-es2015-compiler@npm:1.9.1"
   checksum: ad1e85662783be3ee262c323b05d12e6a5036fca24f16dc0f7ab92736b675919cb4fa4b79b28753eac73119b709d1b36789bf60e8ae423f50c4db35de9370e8b
-  languageName: node
-  linkType: hard
-
-"vue-turbolinks@npm:^2.2.2":
-  version: 2.2.2
-  resolution: "vue-turbolinks@npm:2.2.2"
-  checksum: ad38b736f5d7372c39d3fa62d24aa35350932f4d15c455cb054adf43d895df296ac14d4960c9dec7208da8a0fd83428fa80803f6e242ee9f6abb75f428950bbe
   languageName: node
   linkType: hard
 

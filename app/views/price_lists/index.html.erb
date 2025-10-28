@@ -1,4 +1,7 @@
 <% content_for :title, "Prijslijsten - #{Rails.application.config.x.site_name}" %>
+<% content_for :head do %>
+  <%= javascript_include_tag "price_lists", "data-turbo-track": "reload", defer: true %>
+<% end %>
 <% content_for :modal do %>
   <%= render 'modal' %>
 <% end %>

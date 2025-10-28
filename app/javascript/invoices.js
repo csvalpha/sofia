@@ -1,19 +1,12 @@
 import Vue from 'vue/dist/vue.esm';
-import TurbolinksAdapter from 'vue-turbolinks';
-import VueResource from 'vue-resource';
 
 import UserInput from '../components/UserInput.vue';
 import moment from 'moment';
 
-Vue.use(TurbolinksAdapter);
-Vue.use(VueResource);
-
-document.addEventListener('turbolinks:load', () => {
-  Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-  var element = document.getElementById('new_invoice_modal');
+document.addEventListener('turbo:load', () => {
+  const element = document.getElementById('new_invoice_modal');
   if (element != null) {
-    var activities = JSON.parse(element.dataset.activities);
+    const activities = JSON.parse(element.dataset.activities);
     new Vue({
       el: element,
       components: {
@@ -33,12 +26,11 @@ document.addEventListener('turbolinks:load', () => {
         },
         suggestions() {
           return this.allSuggestions.filter(value => {
-            return value.title.indexOf(this.query) >= 0;
+            return value.title.toLowerCase().indexOf(this.query.toLowerCase()) >= 0;
           });
         }
       },
       methods: {
-        // When one of the suggestion is clicked
         suggestionClicked: function (index) {
           this.selectedSuggestion = this.suggestions[index];
           this.query = this.selectedSuggestion.title;
@@ -52,16 +44,27 @@ document.addEventListener('turbolinks:load', () => {
           return moment(time).format('DD-MM-YY HH:mm');
         },
         addRow() {
-          document.getElementById('invoice_row').appendChild(document.getElementById('invoice_row').lastChild.cloneNode(true));
-          var newRow = document.getElementById('invoice_row').lastChild;
+          const invoiceRowContainer = document.getElementById('invoice_row');
+          const lastRow = invoiceRowContainer.lastChild;
+          const newRow = lastRow.cloneNode(true);
+
+          invoiceRowContainer.appendChild(newRow);
           newRow.childNodes.forEach((fieldWrapper) => {
             let newIndex = -1;
-            if (fieldWrapper.nodeType === Node.ELEMENT_NODE) {
-              console.log(fieldWrapper.firstChild.name);
-              if (newIndex === -1) {
-                newIndex = Number(fieldWrapper.firstChild.name.match(/invoice\[rows_attributes\]\[(\d+)\]/)[1]) + 1;
+            if (fieldWrapper.nodeType === Node.ELEMENT_NODE && fieldWrapper.firstChild) {
+              const nameAttr = fieldWrapper.firstChild.name;
+              if (nameAttr) {
+                if (newIndex === -1) {
+                  const match = nameAttr.match(/invoice\[rows_attributes\]\[(\d+)\]/);
+                  if (match && match[1]) {
+                    newIndex = Number(match[1]) + 1;
+                  }
+                }
+                if (newIndex !== -1) {
+                  fieldWrapper.firstChild.name = nameAttr.replace(/\[\d+\]/g, '[' + newIndex + ']');
+                  fieldWrapper.firstChild.value = '';
+                }
               }
-              fieldWrapper.firstChild.name = fieldWrapper.firstChild.name.replace(/\[\d+\]/g, '[' +  newIndex + ']');
             }
           });
         }

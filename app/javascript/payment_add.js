@@ -1,13 +1,7 @@
 import Vue from 'vue/dist/vue.esm';
-import TurbolinksAdapter from 'vue-turbolinks';
-import axios from 'axios';
 
-Vue.use(TurbolinksAdapter);
-
-document.addEventListener('turbolinks:load', () => {
-  axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-  var element = document.getElementById('payment-add');
+document.addEventListener('turbo:load', () => {
+  const element = document.getElementById('payment-add');
   if (element !== null) {
     new Vue({
       el: element,
@@ -19,12 +13,12 @@ document.addEventListener('turbolinks:load', () => {
       },
       computed: {
         newCredit() {
-          return (this.currentCredit + parseFloat(this.paymentAmount)).toFixed(2);
+          return (this.currentCredit + this.paymentAmount).toFixed(2);
         }
       },
       methods: {
         amountValid() {
-          return parseFloat(this.paymentAmount) >= 20;
+          return this.paymentAmount >= 20;
         }
       },
     });

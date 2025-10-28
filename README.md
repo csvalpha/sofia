@@ -5,7 +5,7 @@ Alpha SOFIA
 [![Continuous Delivery](https://github.com/csvalpha/sofia/actions/workflows/continuous-delivery.yml/badge.svg)](https://github.com/csvalpha/sofia/actions/workflows/continuous-delivery.yml)
 [![codecov](https://codecov.io/github/csvalpha/sofia/graph/badge.svg?token=RGR5PARLD5)](https://codecov.io/github/csvalpha/sofia)
 
-The source code belonging to Alpha SOFIA. It is a system built with Ruby on Rails with Turbolinks and a little VueJS, used to manage orders in our own bar "Flux". Users authenticate via OAuth API (currently "Alpha AMBER") or through the builtin login portal to see how much credit they got left, or to be able to register new orders and/or payments.
+The source code belonging to Alpha SOFIA. It is a system built with Ruby on Rails with Turbo and a little VueJS, used to manage orders in our own bar "Flux". Users authenticate via OAuth API (currently "Alpha AMBER") or through the builtin login portal to see how much credit they got left, or to be able to register new orders and/or payments.
 
 Use this repository to build upon, use as-is, learn from it, prove a point or whatever 😏
 

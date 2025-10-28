@@ -1,17 +1,10 @@
 import Vue from 'vue/dist/vue.esm';
-import TurbolinksAdapter from 'vue-turbolinks';
-import VueResource from 'vue-resource';
 
-Vue.use(TurbolinksAdapter);
-Vue.use(VueResource);
-
-document.addEventListener('turbolinks:load', () => {
-  Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-  var element = document.getElementById('pricelists-container');
+document.addEventListener('turbo:load', () => {
+  const element = document.getElementById('pricelists-container');
   if (element != null) {
-    var priceLists = JSON.parse(element.dataset.priceLists);
-    var products = JSON.parse(element.dataset.products);
+    const priceLists = JSON.parse(element.dataset.priceLists);
+    const products = JSON.parse(element.dataset.products);
 
     // Make sure property exists before Vue sees the data
     products.forEach(p => p.editing = false);
@@ -24,9 +17,9 @@ document.addEventListener('turbolinks:load', () => {
       computed: {
         filteredPriceLists: function() {
           if (this.showArchived) {
-            return priceLists;
+            return this.priceLists;
           } else {
-            return priceLists.filter(priceList => !priceList.archived_at);
+            return this.priceLists.filter(priceList => !priceList.archived_at);
           }
         }
       },
@@ -35,7 +28,7 @@ document.addEventListener('turbolinks:load', () => {
           if (!product || !product.product_prices) {
             return { price: null };
           }
-          var price = product.product_prices.find(p => (p.product_id === product.id && p.price_list_id === priceList.id));
+          const price = product.product_prices.find(p => (p.product_id === product.id && p.price_list_id === priceList.id));
 
           return price || product.product_prices.push({
             product_id: product.id,
@@ -45,13 +38,13 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         newProduct () {
-          var newProduct = {
+          const newProduct = {
             name: '',
             category: 0,
             editing: true,
             product_prices: [],
           };
-          return products.push(newProduct);
+          return this.products.push(newProduct);
         },
 
         saveProduct: function(product) {
@@ -63,7 +56,7 @@ document.addEventListener('turbolinks:load', () => {
           const sanitizedProduct = this.sanitizeProductInput(product);
           if (sanitizedProduct.id) { // Existing product
             this.$http.put(`/products/${sanitizedProduct.id}.json`, { product: sanitizedProduct }).then( (response) => {
-              var newProduct = response.data;
+              let newProduct = response.data;
               newProduct.editing = false;
 
               this.$set(this.products, this.products.indexOf(product), newProduct);
@@ -72,10 +65,10 @@ document.addEventListener('turbolinks:load', () => {
             });
           } else {
             this.$http.post('/products.json', { product: sanitizedProduct }).then( (response) => {
-              var index = this.products.indexOf(product);
+              const index = this.products.indexOf(product);
               this.products.splice(index, 1);
 
-              var newProduct = response.data;
+              let newProduct = response.data;
               newProduct.editing = false;
 
               this.products.push(newProduct);
@@ -132,10 +125,10 @@ document.addEventListener('turbolinks:load', () => {
 
             product.editing = false;
           } else {
-            var index = this.products.indexOf(product);
+            const index = this.products.indexOf(product);
             this.products.splice(index, 1);
           }
-          return products;
+          return this.products;
         },
 
         archivePriceList: function(priceList) {

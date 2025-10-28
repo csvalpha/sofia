@@ -1,26 +1,16 @@
 import Vue from 'vue/dist/vue.esm';
-import TurbolinksAdapter from 'vue-turbolinks';
-import VueResource from 'vue-resource';
-import axios from 'axios';
 
 import FlashNotification from '../components/FlashNotification.vue';
 import UserSelection from '../components/orderscreen/UserSelection.vue';
 import ActivityOrders from '../components/orderscreen/ActivityOrders.vue';
 
-Vue.use(TurbolinksAdapter);
-Vue.use(VueResource);
-
-document.addEventListener('turbolinks:load', () => {
-  const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-  Vue.http.headers.common['X-CSRF-TOKEN'] = token;
-  axios.defaults.headers.common['X-CSRF-Token'] = token;
-
-  var element = document.getElementById('order-screen');
+document.addEventListener('turbo:load', () => {
+  const element = document.getElementById('order-screen');
   if (element != null) {
-    var users = JSON.parse(element.dataset.users);
-    var productPrices = JSON.parse(element.dataset.productPrices);
-    var activity = JSON.parse(element.dataset.activity);
-    var flashes = JSON.parse(element.dataset.flashes);
+    const users = JSON.parse(element.dataset.users);
+    const productPrices = JSON.parse(element.dataset.productPrices);
+    const activity = JSON.parse(element.dataset.activity);
+    const flashes = JSON.parse(element.dataset.flashes);
 
     window.flash = function(message, actionText, type) {
       const event = new CustomEvent('flash', { detail: { message: message, actionText: actionText, type: type } } );
