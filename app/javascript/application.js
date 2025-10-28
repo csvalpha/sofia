@@ -1,4 +1,4 @@
-import { Turbo } from "@hotwired/turbo-rails";
+import { Turbo } from '@hotwired/turbo-rails';
 Turbo.start();
 
 import Vue from 'vue/dist/vue.esm';

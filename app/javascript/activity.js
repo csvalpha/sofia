@@ -1,7 +1,6 @@
 import Vue from 'vue/dist/vue.esm';
 
 import ProductTotals from './components/activity/ProductTotals.vue';
-import Tab from 'bootstrap/js/dist/tab';
 
 let vueInstance = null;
 

@@ -51,10 +51,6 @@ module.exports = {
       {
         test: /\.(woff|woff2|eot|ttf|otf|svg)$/i,
         type: 'asset/resource',
-        generator: {
-          // This will copy the fonts to a 'webfonts' subfolder in app/assets/builds
-          filename: 'webfonts/[name][ext]'
-        }
       }
     ],
   },
