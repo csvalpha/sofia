@@ -45,14 +45,14 @@ document.addEventListener('turbo:load', () => {
         },
         addRow() {
           const invoiceRowContainer = document.getElementById('invoice_row');
-          const lastRow = invoiceRowContainer.lastChild;
+          const lastRow = invoiceRowContainer.lastElementChild;
           const newRow = lastRow.cloneNode(true);
 
           invoiceRowContainer.appendChild(newRow);
-          newRow.childNodes.forEach((fieldWrapper) => {
+          Array.from(newRow.children).forEach((fieldWrapper) => {
             let newIndex = -1;
-            if (fieldWrapper.nodeType === Node.ELEMENT_NODE && fieldWrapper.firstChild) {
-              const nameAttr = fieldWrapper.firstChild.name;
+            if (fieldWrapper.firstElementChild) {
+              const nameAttr = fieldWrapper.firstElementChild.name;
               if (nameAttr) {
                 if (newIndex === -1) {
                   const match = nameAttr.match(/invoice\[rows_attributes\]\[(\d+)\]/);
@@ -61,8 +61,8 @@ document.addEventListener('turbo:load', () => {
                   }
                 }
                 if (newIndex !== -1) {
-                  fieldWrapper.firstChild.name = nameAttr.replace(/\[\d+\]/g, '[' + newIndex + ']');
-                  fieldWrapper.firstChild.value = '';
+                  fieldWrapper.firstElementChild.name = nameAttr.replace(/\[\d+\]/g, '[' + newIndex + ']');
+                  fieldWrapper.firstElementChild.value = '';
                 }
               }
             }

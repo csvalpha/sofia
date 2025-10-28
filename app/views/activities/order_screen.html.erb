@@ -20,11 +20,11 @@
       <li class="header-nav-item header-nav-home">
         <span @click="payWithCash ? payWithCash = false : (payWithPin ? payWithPin = false : selectedUser = null)"
               class="user-details-close" v-if="selectedUser || payWithCash || payWithPin">
-          <%= fa_icon 'chevron-left' %>
+          <i class="fas fa-chevron-left"></i>
           </span>
         <span v-else="">
           <%= link_to @activity do %>
-          <%= fa_icon 'home' %>
+            <i class="fas fa-home"></i>
           <% end %>
         </span>
       </li>
@@ -40,10 +40,10 @@
     <div class="row pull-right g-0" style="flex-direction: row-reverse">
       <button type="button" class="btn btn-outline-secondary m-3 w-auto" @click="keepUserSelected = !keepUserSelected" >
         <span v-if="keepUserSelected">
-          <%= fa_icon 'check-square lg', class: 'me-1' %>
+          <i class="fas fa-square-check fa-lg me-1"></i>
         </span>
         <span v-if="!keepUserSelected">
-          <%= fa_icon 'square lg', class: 'me-1' %>
+          <i class="far fa-square fa-lg me-1"></i>
         </span>
         <span>
           Persoon onthouden
@@ -66,11 +66,11 @@
         <template v-for="(orderRow, index) in orderRows">
           <div class="orders-rows-row row py-2">
             <div class="orders-rows-row-count col-3 px-1 px-md-2 px-lg-3">
-              <%= fa_icon 'plus-square-o lg', class: 'orders-rows-row-count-icon', '@click': 'increaseRowAmount(orderRow)' %>
+              <i class="far fa-square-plus fa-lg orders-rows-row-count-icon" @click="increaseRowAmount(orderRow)"></i>
               <div>
                 <%= '{{orderRow.amount}}' %>
               </div>
-              <%= fa_icon('minus-square-o lg', class: 'orders-rows-row-count-icon', '@click': 'decreaseRowAmount(orderRow)') %>
+              <i class="far fa-square-minus fa-lg orders-rows-row-count-icon" @click="decreaseRowAmount(orderRow)"></i>
             </div>
             <div class="orders-rows-row-product-name col-6">
               {{orderRow.productPrice.product.name}}
@@ -80,7 +80,7 @@
                 {{doubleToCurrency(orderRow.productPrice.price * orderRow.amount)}}
               </span>
               <span @click="dropOrderRow(index)" class="order-rows-row-remove ms-1">
-                <%= fa_icon 'times-circle lg' %>
+                <i class="far fa-circle-xmark fa-lg"></i>
               </span>
             </div>
           </div>
@@ -117,7 +117,7 @@
           </button>
           <button type="button" class="btn btn-dark" :disabled="orderConfirmButtonDisabled"
                   @click="confirmOrder(false)">
-            <%= fa_icon 'money' %>
+            <i class="fas fa-money-bill"></i>
           </button>
         </div>
 
@@ -132,7 +132,7 @@
           <small v-if="showOrderWarning">
             <span v-if="showCannotOrderWarning" class="d-block">
               <span>
-                <%= fa_icon 'exclamation-triangle ' %>
+                <i class="fas fa-triangle-exclamation"></i>
               </span>
               <span>
                 {{selectedUser.name}} staat <b>{{doubleToCurrency(-selectedUser.credit)}}</b> negatief en moet eerst inleggen!
@@ -140,7 +140,7 @@
             </span>
             <span v-else-if="showInsufficientCreditWarning" class="d-block">
               <span>
-                <%= fa_icon 'exclamation-triangle ' %>
+                <i class="fas fa-triangle-exclamation"></i>
               </span>
               <span>
                 {{selectedUser.name}} staat <b>{{doubleToCurrency(-selectedUser.credit)}}</b> negatief!
@@ -148,7 +148,7 @@
             </span>
             <span v-if="showAgeWarning" class="d-block">
               <span>
-                <%= fa_icon 'exclamation-triangle ' %>
+                <i class="fas fa-triangle-exclamation"></i>
               </span>
               <span>
                 {{selectedUser.name}} is minderjarig!

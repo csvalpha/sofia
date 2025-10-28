@@ -11,6 +11,12 @@ import WebFont from 'webfontloader';
 
 Vue.use(VueResource);
 
+WebFont.load({
+  google: {
+      families: ['Roboto:300,400,500']
+  }
+  });
+
 document.addEventListener('turbo:load', () => {
   const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
@@ -18,12 +24,4 @@ document.addEventListener('turbo:load', () => {
     Vue.http.headers.common['X-CSRF-TOKEN'] = csrfToken;
     axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
   }
-
-  /* eslint-disable no-undef */
-  WebFont.load({
-  google: {
-      families: ['Roboto:300,400,500']
-  }
-  });
-  /* eslint-enable no-undef */
 });

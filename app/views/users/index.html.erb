@@ -14,7 +14,7 @@
       <h3>Handmatig aangemaakte gebruikers</h3>
       <% if policy(User).create? %>
         <button class="btn btn-sm btn-primary" data-bs-target="#edit_user_modal" data-bs-toggle="modal" role="button">
-          <%= fa_icon 'plus' %>
+          <i class="fas fa-plus"></i>
           <span class="d-none d-md-inline ms-1">
             Nieuwe gebruiker
           </span>
@@ -28,7 +28,7 @@
       <% if policy(User).refresh_user_list? %>
         <span>
           <%= link_to refresh_user_list_users_path, class: 'btn btn-primary btn-sm me-1' do %>
-            <%= fa_icon 'refresh' %>
+            <i class="fas fa-arrows-rotate"></i>
             <span class="d-none d-md-inline ms-1">Synchroniseer gebruikers</span>
           <% end %>
         </span>

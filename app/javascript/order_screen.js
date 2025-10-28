@@ -212,10 +212,10 @@ document.addEventListener('turbo:load', () => {
         },
 
         startSumupPayment(orderId, orderTotal) {
-          let affilateKey = element.dataset.sumupKey;
+          let affiliateKey = element.dataset.sumupKey;
           let callback = element.dataset.sumupCallback;
           
-          let sumupUrl = `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&currency=EUR&title=Bestelling ${element.dataset.siteName}&skip-screen-success=true&foreign-tx-id=${orderId}`;
+          let sumupUrl = `sumupmerchant://pay/1.0?affiliate-key=${affiliateKey}&currency=EUR&title=Bestelling ${element.dataset.siteName}&skip-screen-success=true&foreign-tx-id=${orderId}`;
           if (this.isIos) {
             sumupUrl += `&amount=${orderTotal}&callbacksuccess=${callback}&callbackfail=${callback}`;
           } else {
@@ -315,12 +315,19 @@ document.addEventListener('turbo:load', () => {
         };
       },
       methods: {
+        isFormInvalid() {
+          const formValid = document.getElementById('credit-mutation-modal-form').checkValidity();
+          const hasUser = !!app.selectedUser;
+          const hasAmount = !!this.creditMutationAmount;
+          const hasDescription = !!this.creditMutationDescription;
+          return !formValid || !hasUser || !hasAmount || !hasDescription;
+        },
+
         saveCreditMutation() {
           this.isSubmitting = true;
 
-          this.creditMutationFormInvalid = (!document.getElementById('credit-mutation-modal-form').checkValidity() 
-            || !app.selectedUser || !this.creditMutationAmount || !this.creditMutationDescription);
-
+          this.creditMutationFormInvalid = this.isFormInvalid();
+          
           if (this.creditMutationFormInvalid) {
             this.isSubmitting = false;
             return;

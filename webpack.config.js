@@ -17,7 +17,7 @@ const entries = fs.readdirSync(javascriptsDir)
 
 module.exports = {
   mode: "production",
-  devtool: "source-map",
+  devtool: process.env.NODE_ENV === "production" ? "hidden-source-map" : "source-map",
   // Use our dynamically generated entries object
   entry: entries,
   output: {
@@ -46,6 +46,14 @@ module.exports = {
       {
          test: /\.css$/,
          use: ['vue-style-loader', 'css-loader']
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf|svg)$/i,
+        type: 'asset/resource',
+        generator: {
+          // This will copy the fonts to a 'webfonts' subfolder in app/assets/builds
+          filename: 'webfonts/[name][ext]'
+        }
       }
     ],
   },

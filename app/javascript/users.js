@@ -1,6 +1,15 @@
 import Vue from 'vue/dist/vue.esm';
 import UsersTable from './components/user/UsersTable.vue';
 
+let vueInstance = null;
+
+document.addEventListener('turbo:before-cache', () => {
+  if (vueInstance) {
+    vueInstance.$destroy();
+    vueInstance = null;
+  }
+});
+
 document.addEventListener('turbo:load', () => {
   const element = document.getElementById('users-index');
   if (element !== null) {
@@ -8,7 +17,7 @@ document.addEventListener('turbo:load', () => {
     const amber_users = JSON.parse(element.dataset.amberUsers);
     const inactive_users = JSON.parse(element.dataset.inactiveUsers);
 
-    new Vue({
+    vueInstance = new Vue({
       el: element,
       data: () => ({
         manual_users,
