@@ -16,7 +16,7 @@ const entries = fs.readdirSync(javascriptsDir)
   }, {});
 
 module.exports = {
-  mode: "production",
+  mode: process.env.NODE_ENV || "development",
   devtool: process.env.NODE_ENV === "production" ? "hidden-source-map" : "source-map",
   // Use our dynamically generated entries object
   entry: entries,
@@ -64,8 +64,5 @@ module.exports = {
     }
   },
   optimization: {
-    splitChunks: {
-      chunks: 'all',
-    },
   },
 };
