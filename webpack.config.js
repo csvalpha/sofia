@@ -55,4 +55,9 @@ module.exports = {
       vue$: 'vue/dist/vue.esm.js'
     }
   },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
 };

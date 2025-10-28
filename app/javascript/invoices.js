@@ -1,6 +1,6 @@
 import Vue from 'vue/dist/vue.esm';
 
-import UserInput from '../components/UserInput.vue';
+import UserInput from './components/UserInput.vue';
 import moment from 'moment';
 
 document.addEventListener('turbo:load', () => {

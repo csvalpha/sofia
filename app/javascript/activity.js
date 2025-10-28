@@ -1,6 +1,6 @@
 import Vue from 'vue/dist/vue.esm';
 
-import ProductTotals from '../components/activity/ProductTotals.vue';
+import ProductTotals from './components/activity/ProductTotals.vue';
 
 document.addEventListener('turbo:load', () => {
   const element = document.getElementById('activity');

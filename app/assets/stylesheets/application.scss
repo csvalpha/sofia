@@ -1,6 +1,9 @@
+@import 'bootstrap/scss/bootstrap';
 @import 'theme_sofia';
-@import 'bootstrap';
-@import 'font-awesome';
+
+@import '@fortawesome/fontawesome-free/scss/fontawesome';
+@import '@fortawesome/fontawesome-free/scss/solid';
+@import '@fortawesome/fontawesome-free/scss/brands';
 
 @import 'order_screen';
 @import 'price_lists';

@@ -1,6 +1,6 @@
 import Vue from 'vue/dist/vue.esm';
 
-import OrderHistory from '../components/user/OrderHistory.vue';
+import OrderHistory from './components/user/OrderHistory.vue';
 
 
 document.addEventListener('turbo:load', () => {

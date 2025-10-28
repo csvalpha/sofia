@@ -1,5 +1,5 @@
 import Vue from 'vue/dist/vue.esm';
-import UsersTable from '../components/user/UsersTable.vue';
+import UsersTable from './components/user/UsersTable.vue';
 
 document.addEventListener('turbo:load', () => {
   const element = document.getElementById('users-index');

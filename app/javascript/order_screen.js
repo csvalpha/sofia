@@ -1,8 +1,8 @@
 import Vue from 'vue/dist/vue.esm';
 
-import FlashNotification from '../components/FlashNotification.vue';
-import UserSelection from '../components/orderscreen/UserSelection.vue';
-import ActivityOrders from '../components/orderscreen/ActivityOrders.vue';
+import FlashNotification from './components/FlashNotification.vue';
+import UserSelection from './components/orderscreen/UserSelection.vue';
+import ActivityOrders from './components/orderscreen/ActivityOrders.vue';
 
 document.addEventListener('turbo:load', () => {
   const element = document.getElementById('order-screen');
