@@ -1,3 +1,4 @@
+/* eslint-env node */
 const path = require("path");
 const fs = require("fs");
 const webpack = require("webpack");
@@ -44,8 +45,8 @@ module.exports = {
         use: ["babel-loader"],
       },
       {
-         test: /\.css$/,
-         use: ['vue-style-loader', 'css-loader']
+        test: /\.css$/,
+        use: ['vue-style-loader', 'css-loader']
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf|svg)$/i,

@@ -3,11 +3,20 @@ import Vue from 'vue/dist/vue.esm';
 import UserInput from './components/UserInput.vue';
 import moment from 'moment';
 
+let vueInstance = null;
+
+document.addEventListener('turbo:before-cache', () => {
+  if (vueInstance) {
+    vueInstance.$destroy();
+    vueInstance = null;
+  }
+});
+
 document.addEventListener('turbo:load', () => {
   const element = document.getElementById('new_invoice_modal');
   if (element != null) {
     const activities = JSON.parse(element.dataset.activities);
-    new Vue({
+    vueInstance = new Vue({
       el: element,
       components: {
         UserInput

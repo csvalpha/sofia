@@ -13,9 +13,9 @@ Vue.use(VueResource);
 
 WebFont.load({
   google: {
-      families: ['Roboto:300,400,500']
+    families: ['Roboto:300,400,500']
   }
-  });
+});
 
 document.addEventListener('turbo:load', () => {
   const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
