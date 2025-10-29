@@ -7,7 +7,9 @@ import axios from 'axios';
 
 import 'jquery';
 import 'bootstrap';
+
 import WebFont from 'webfontloader';
+import '@fortawesome/fontawesome-free/css/all.css';
 
 Vue.use(VueResource);
 
