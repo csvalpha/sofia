@@ -38,7 +38,7 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
     age
   end
 
-  def minor?
+  def minor
     return false unless age
 
     age < 18
@@ -126,7 +126,7 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def self.orderscreen_json_includes
-    %i[credit avatar_thumb_or_default_url minor? insufficient_credit can_order]
+    %i[credit avatar_thumb_or_default_url minor insufficient_credit can_order]
   end
 
   private
