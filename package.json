@@ -36,7 +36,7 @@
     "webpack-cli": "^4.10.0"
   },
   "devDependencies": {
-    "eslint": "^8.57.1",
+    "eslint": "^9.39.0",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-vue": "^9.33.0",
     "sass-lint": "^1.13.1",
