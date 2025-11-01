@@ -11,8 +11,8 @@
           </tr> 
         </thead>
         <tbody>
-          <template v-for="order in orders">
-            <tr :key="order.id">
+          <template v-for="order in orders" :key="order.id">
+            <tr>
               <th class="ps-4">{{ order.id }}</th>
               <td>{{ formatDate(order.created_at) }}</td>
               <td :class="order.user ? '' : 'fst-italic'">
@@ -27,7 +27,7 @@
                 </span>
               </td>
             </tr>
-            <tr v-if="order.detailsShowing" :key="order.id + '-details'">
+            <tr v-if="order.detailsShowing">
               <td colspan="4" role="cell">
                 <product-table @updateordertotal="updateOrderTotal" editable :order="order" :activity="activity" />
               </td>
