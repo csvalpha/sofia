@@ -168,7 +168,10 @@ document.addEventListener('turbo:load', () => {
             }
 
             if (user) {
-              this.$set(this.users, this.users.indexOf(this.selectedUser), response.data.user);
+              const index = this.users.findIndex((candidate) => candidate.id === user.id);
+              if (index !== -1) {
+                this.$set(this.users, index, response.data.user);
+            }
             }
 
             this.sendFlash('Bestelling geplaatst.', additionalInfo, 'success');
@@ -346,8 +349,10 @@ document.addEventListener('turbo:load', () => {
               amount: this.creditMutationAmount
             }
           }).then((response) => {
-            app.$set(app.users, app.users.indexOf(app.selectedUser), response.data.user);
-
+            const index = app.users.findIndex((candidate) => candidate.id === response.data.user.id);
+            if (index !== -1) {
+              app.$set(app.users, index, response.data.user);
+            }
             if(!app.keepUserSelected && app.orderRows.length === 0){
               app.setUser(null);
             } else {
