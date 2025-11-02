@@ -77,7 +77,7 @@
           <% end %>
         </div>
         <div class="navbar-text small">
-          <%= link_to '(uitloggen)', destroy_user_session_path, class: 'ms-1', method: :delete %>
+          <%= link_to '(uitloggen)', destroy_user_session_path, class: 'ms-1', data: { turbo_method: :delete }%>
         </div>
       <% end %>
     </div>
