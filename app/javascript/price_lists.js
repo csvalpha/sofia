@@ -22,7 +22,7 @@ document.addEventListener('turbo:load', () => {
     new Vue({
       el: element,
       data: () => {
-        return { priceLists: priceLists, products: products, showArchived: false };
+        return { priceLists: priceLists, products: products, showArchived: false, errors: [] };
       },
       computed: {
         filteredPriceLists: function() {
