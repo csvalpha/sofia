@@ -193,20 +193,20 @@ document.addEventListener('turbo:load', () => {
         },
 
         handleXHRError(error) {
-          if (error.status == 500) {
+          if (error.response?.status === 500) {
             this.sendFlash('Server error!', 'Herlaad de pagina', 'error');
 
             try {
-              throw new Error(error.body.text);
+              throw new Error(JSON.stringify(error.response.data));
             } catch(e) {
               /* eslint-disable no-undef */
               Sentry.captureException(e);
               /* eslint-enable no-undef */
             }
-          } else if (error.status == 422) {
+          } else if (error.response?.status === 422) {
             this.sendFlash('Error bij het opslaan!', 'Probeer het opnieuw', 'warning');
           } else {
-            this.sendFlash(`Error ${error.status}?!🤔`, 'Herlaad de pagina', 'info');
+            this.sendFlash(`Error ${error.response?.status}?!🤔`, 'Herlaad de pagina', 'info');
           }
         },
 

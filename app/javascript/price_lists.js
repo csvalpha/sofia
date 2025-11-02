@@ -31,11 +31,16 @@ document.addEventListener('turbo:load', () => {
           }
           const price = product.product_prices.find(p => (p.product_id === product.id && p.price_list_id === priceList.id));
 
-          return price || product.product_prices.push({
+          if (price) {
+            return price;
+          }
+          const newPrice = {
             product_id: product.id,
             price_list_id: priceList.id,
             price: null
-          });
+          };
+          product.product_prices.push(newPrice);
+          return newPrice;
         },
 
         newProduct () {
@@ -45,7 +50,8 @@ document.addEventListener('turbo:load', () => {
             editing: true,
             product_prices: [],
           };
-          return this.products.push(newProduct);
+          this.products.push(newProduct);
+          return newProduct;
         },
 
         saveProduct: function(product) {
@@ -129,7 +135,6 @@ document.addEventListener('turbo:load', () => {
             const index = this.products.indexOf(product);
             this.products.splice(index, 1);
           }
-          return this.products;
         },
 
         archivePriceList: function(priceList) {
