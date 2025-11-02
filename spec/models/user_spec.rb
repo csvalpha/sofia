@@ -164,21 +164,21 @@ RSpec.describe User do
     end
   end
 
-  describe '#minor?' do
+  describe '#minor' do
     context 'when without age' do
-      it { expect(user.minor?).to be false }
+      it { expect(user.minor).to be false }
     end
 
     context 'when 18 or older' do
       let(:user) { build(:user, birthday: 18.years.ago - 1.day) }
 
-      it { expect(user.minor?).to be false }
+      it { expect(user.minor).to be false }
     end
 
     context 'when younger than 18' do
       let(:user) { build(:user, birthday: (18.years.ago + 1.day)) }
 
-      it { expect(user.minor?).to be true }
+      it { expect(user.minor).to be true }
     end
   end
 
