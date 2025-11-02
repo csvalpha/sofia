@@ -56,7 +56,7 @@ document.addEventListener('turbo:load', () => {
           if (user !== null) {
             // Reload user to get latest credit balance
             axios.get(`/users/${user.id}/json?activity_id=${this.activity.id}`).then((response) => {
-             const refreshedUser = response.data;
+              const refreshedUser = response.data;
               const index = this.users.findIndex((candidate) => candidate.id === refreshedUser.id);
               if (index !== -1) {
                 this.$set(this.users, index, refreshedUser);
@@ -217,8 +217,8 @@ document.addEventListener('turbo:load', () => {
         },
 
         startSumupPayment(orderId, orderTotal) {
-          let affiliateKey = element.dataset.sumupKey;
-          let callback = element.dataset.sumupCallback;
+          const affiliateKey = element.dataset.sumupKey;
+          const callback = element.dataset.sumupCallback;
           
           let sumupUrl = `sumupmerchant://pay/1.0?affiliate-key=${affiliateKey}&currency=EUR&title=Bestelling ${element.dataset.siteName}&skip-screen-success=true&foreign-tx-id=${orderId}`;
           if (this.isIos) {

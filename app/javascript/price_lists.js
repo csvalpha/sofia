@@ -57,7 +57,7 @@ document.addEventListener('turbo:load', () => {
           const sanitizedProduct = this.sanitizeProductInput(product);
           if (sanitizedProduct.id) { // Existing product
             axios.put(`/products/${sanitizedProduct.id}.json`, { product: sanitizedProduct }).then( (response) => {
-              let newProduct = response.data;
+              const newProduct = response.data;
               newProduct.editing = false;
 
               this.$set(this.products, this.products.indexOf(product), newProduct);
@@ -69,7 +69,7 @@ document.addEventListener('turbo:load', () => {
               const index = this.products.indexOf(product);
               this.products.splice(index, 1);
 
-              let newProduct = response.data;
+              const newProduct = response.data;
               newProduct.editing = false;
 
               this.products.push(newProduct);
