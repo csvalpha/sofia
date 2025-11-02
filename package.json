@@ -35,7 +35,6 @@
     "sass-lint": "^1.13.1",
     "vue": "^2.7.16",
     "vue-loader": "^15.11.1",
-    "vue-resource": "^1.5.3",
     "vue-template-compiler": "^2.7.16",
     "webfontloader": "^1.6.28",
     "webpack": "^5.102.1",

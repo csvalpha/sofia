@@ -55,7 +55,7 @@ document.addEventListener('turbo:load', () => {
           }
           const sanitizedProduct = this.sanitizeProductInput(product);
           if (sanitizedProduct.id) { // Existing product
-            this.$http.put(`/products/${sanitizedProduct.id}.json`, { product: sanitizedProduct }).then( (response) => {
+            axios.put(`/products/${sanitizedProduct.id}.json`, { product: sanitizedProduct }).then( (response) => {
               let newProduct = response.data;
               newProduct.editing = false;
 
@@ -64,7 +64,7 @@ document.addEventListener('turbo:load', () => {
               this.errors = response.data.errors;
             });
           } else {
-            this.$http.post('/products.json', { product: sanitizedProduct }).then( (response) => {
+            axios.post('/products.json', { product: sanitizedProduct }).then( (response) => {
               const index = this.products.indexOf(product);
               this.products.splice(index, 1);
 
@@ -132,7 +132,7 @@ document.addEventListener('turbo:load', () => {
         },
 
         archivePriceList: function(priceList) {
-          this.$http.post(`/price_lists/${priceList.id}/archive`, {}).then((response) => {
+          axios.post(`/price_lists/${priceList.id}/archive`, {}).then((response) => {
             priceList.archived_at = response.data;
           }, (response) => {
             this.errors = response.data.errors;
@@ -140,7 +140,7 @@ document.addEventListener('turbo:load', () => {
         },
 
         unarchivePriceList: function(priceList) {
-          this.$http.post(`/price_lists/${priceList.id}/unarchive`, {}).then((response) => {
+          axios.post(`/price_lists/${priceList.id}/unarchive`, {}).then((response) => {
             priceList.archived_at = response.data;
           }, (response) => {
             this.errors = response.data.errors;
