@@ -1,4 +1,5 @@
 import Vue from 'vue/dist/vue.esm';
+import axios from 'axios';
 
 import FlashNotification from './components/FlashNotification.vue';
 import UserSelection from './components/orderscreen/UserSelection.vue';

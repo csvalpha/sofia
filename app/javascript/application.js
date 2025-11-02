@@ -1,7 +1,6 @@
 import { Turbo } from '@hotwired/turbo-rails';
 Turbo.start();
 
-import Vue from 'vue/dist/vue.esm';
 import axios from 'axios';
 
 import 'jquery';
