@@ -62,13 +62,13 @@ document.addEventListener('turbo:load', () => {
           }
           const sanitizedProduct = this.sanitizeProductInput(product);
           if (sanitizedProduct.id) { // Existing product
-            axios.put(`/products/${sanitizedProduct.id}.json`, { product: sanitizedProduct }).then( (response) => {
+            axios.put(`/products/${sanitizedProduct.id}.json`, { product: sanitizedProduct }).then((response) => {
               const newProduct = response.data;
               newProduct.editing = false;
 
               this.$set(this.products, this.products.indexOf(product), newProduct);
-            }, (response) => {
-              this.errors = response.data.errors;
+            }).catch((error) => {
+              this.errors = error.response?.data?.errors || ['An error occurred'];
             });
           } else {
             axios.post('/products.json', { product: sanitizedProduct }).then( (response) => {
@@ -79,10 +79,9 @@ document.addEventListener('turbo:load', () => {
               newProduct.editing = false;
 
               this.products.push(newProduct);
-            }, (response) => {
-              this.errors = response.data.errors;
-            }
-            );
+            }).catch((error) => {
+              this.errors = error.response?.data?.errors || ['An error occurred'];
+            });
           }
         },
 
@@ -140,16 +139,16 @@ document.addEventListener('turbo:load', () => {
         archivePriceList: function(priceList) {
           axios.post(`/price_lists/${priceList.id}/archive`, {}).then((response) => {
             priceList.archived_at = response.data;
-          }, (response) => {
-            this.errors = response.data.errors;
+          }).catch((error) => {
+            this.errors = error.response?.data?.errors || ['An error occurred'];
           });
         },
 
         unarchivePriceList: function(priceList) {
           axios.post(`/price_lists/${priceList.id}/unarchive`, {}).then((response) => {
             priceList.archived_at = response.data;
-          }, (response) => {
-            this.errors = response.data.errors;
+          }).catch((error) => {
+            this.errors = error.response?.data?.errors || ['An error occurred'];
           });
         },
 
