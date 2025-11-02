@@ -200,7 +200,7 @@ jobs:
           SENTRY_PROJECT: ${{ env.PROJECT_NAME }}
         with:
           environment: ${{ needs.metadata.outputs.stage }}
-          version: ${{ needs.merge.outputs.sha }}
+          release: ${{ needs.merge.outputs.sha }}
           set_commits: skip
 
       - name: Finish deployment
