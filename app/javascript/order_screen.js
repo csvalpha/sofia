@@ -56,12 +56,16 @@ document.addEventListener('turbo:load', () => {
           if (user !== null) {
             // Reload user to get latest credit balance
             axios.get(`/users/${user.id}/json?activity_id=${this.activity.id}`).then((response) => {
-              const user = response.data;
-              this.$set(this.users, this.users.indexOf(user), user);
+             const refreshedUser = response.data;
+              const index = this.users.findIndex((candidate) => candidate.id === refreshedUser.id);
+              if (index !== -1) {
+                this.$set(this.users, index, refreshedUser);
+              } else {
+                this.users.push(refreshedUser);
+              }
 
-              // Selected user might have changed in the meantime
-              if (this.selectedUser && this.selectedUser.id == user.id) {
-                this.selectedUser = user;
+              if (this.selectedUser && this.selectedUser.id == refreshedUser.id) {
+                this.selectedUser = refreshedUser;
               }
             }, (response) => {
               this.handleXHRError(response);
