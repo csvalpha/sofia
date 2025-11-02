@@ -15,10 +15,17 @@ WebFont.load({
   }
 });
 
-document.addEventListener('turbo:load', () => {
+axios.interceptors.request.use((config) => {
   const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-
   if (csrfToken) {
-    axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
+    config.headers['X-CSRF-Token'] = csrfToken;
   }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
+
+
+document.addEventListener('turbo:load', () => {
+ 
 });

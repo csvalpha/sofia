@@ -8,6 +8,16 @@ import ActivityOrders from './components/orderscreen/ActivityOrders.vue';
 document.addEventListener('turbo:load', () => {
   const element = document.getElementById('order-screen');
   if (element != null) {
+    axios.interceptors.request.use((config) => {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+      if (csrfToken) {
+        config.headers['X-CSRF-Token'] = csrfToken;
+      }
+      return config;
+    }, (error) => {
+      return Promise.reject(error);
+    });
+
     const users = JSON.parse(element.dataset.users);
     const productPrices = JSON.parse(element.dataset.productPrices);
     const activity = JSON.parse(element.dataset.activity);
@@ -171,7 +181,7 @@ document.addEventListener('turbo:load', () => {
               const index = this.users.findIndex((candidate) => candidate.id === user.id);
               if (index !== -1) {
                 this.$set(this.users, index, response.data.user);
-            }
+              }
             }
 
             this.sendFlash('Bestelling geplaatst.', additionalInfo, 'success');

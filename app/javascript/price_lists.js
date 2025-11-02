@@ -4,6 +4,15 @@ import axios from 'axios';
 document.addEventListener('turbo:load', () => {
   const element = document.getElementById('pricelists-container');
   if (element != null) {
+    axios.interceptors.request.use((config) => {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+      if (csrfToken) {
+        config.headers['X-CSRF-Token'] = csrfToken;
+      }
+      return config;
+    }, (error) => {
+      return Promise.reject(error);
+    });
     const priceLists = JSON.parse(element.dataset.priceLists);
     const products = JSON.parse(element.dataset.products);
 
