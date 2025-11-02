@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "stylelint-config-standard-scss",
+    "stylelint-config-recess-order"
+  ],
+  "rules": {
+    "indentation": 2,
+    "selector-no-qualifying-element": true,
+    "selector-list-comma-newline-after": "always",
+    "number-leading-zero": "always",
+    "number-no-trailing-zeros": true,
+    "string-quotes": "single"
+  },
+  "customSyntax": "postcss-scss"
+}

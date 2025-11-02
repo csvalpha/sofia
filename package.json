@@ -3,6 +3,8 @@
   "private": true,
   "scripts": {
     "lint": "eslint 'app/javascript/**/*.{js,vue}'",
+    "lint:styles": "stylelint 'app/**/*.s+(a|c)ss' 'app/**/*.vue' --ignore-path .gitignore",
+    "lint:styles:fix": "stylelint 'app/**/*.s+(a|c)ss' 'app/**/*.vue' --ignore-path .gitignore --fix",
     "build": "webpack --config webpack.config.js",
     "watch": "webpack --config webpack.config.js --watch",
     "build:css": "sass ./app/assets/stylesheets/application.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules"
@@ -49,7 +51,11 @@
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-import": "^16.1.1",
     "postcss-preset-env": "^10.4.0",
-    "sass-lint": "^1.13.1",
+    "postcss-scss": "^4.0.9",
+    "stylelint": "^16.25.0",
+    "stylelint-config-recess-order": "^7.4.0",
+    "stylelint-config-standard-scss": "^16.0.0",
+    "stylelint-order": "^7.0.0",
     "vue-eslint-parser": "^10.2.0",
     "vue-style-loader": "^4.1.3"
   },
