@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_26_202155) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_13_233761) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -89,6 +89,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_26_202155) do
     t.bigint "created_by_id"
     t.boolean "paid_with_cash", default: false, null: false
     t.boolean "paid_with_pin", default: false, null: false
+    t.decimal "order_total", precision: 8, scale: 2
     t.index ["activity_id"], name: "index_orders_on_activity_id"
     t.index ["created_by_id"], name: "index_orders_on_created_by_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
