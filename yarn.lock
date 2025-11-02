@@ -1712,7 +1712,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/js@npm:9.39.0":
+"@eslint/js@npm:9.39.0, @eslint/js@npm:^9.39.0":
   version: 9.39.0
   resolution: "@eslint/js@npm:9.39.0"
   checksum: e7453a8634e38b0c24d0f3d233c9611122d0cf258de47f9b7b8675719749a6c5d9c1a76954eddbf1a7acac732a95e85be0a62ded7cf088f06c5e7d39116653b7
@@ -4611,6 +4611,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"globals@npm:^16.5.0":
+  version: 16.5.0
+  resolution: "globals@npm:16.5.0"
+  checksum: e0363245cfc6e36ac6bf940415160a05d66e7985fa3856d5383ad49292b6d249d80fd03759e09d6491109648a121849b23b77c7391a11862923e6995268a7cd6
+  languageName: node
+  linkType: hard
+
 "globals@npm:^9.2.0":
   version: 9.18.0
   resolution: "globals@npm:9.18.0"
@@ -7330,6 +7337,8 @@ __metadata:
     "@babel/plugin-transform-runtime": ^7.28.5
     "@babel/preset-env": ^7.28.5
     "@babel/runtime": ^7.28.4
+    "@eslint/eslintrc": ^3.3.1
+    "@eslint/js": ^9.39.0
     "@fortawesome/fontawesome-free": ^7.1.0
     "@hotwired/turbo-rails": ^8.0.20
     "@popperjs/core": ^2.11.8
@@ -7344,6 +7353,7 @@ __metadata:
     eslint: ^9.39.0
     eslint-plugin-vue: ^9.33.0
     eslint-webpack-plugin: ^5.0.2
+    globals: ^16.5.0
     jquery: ^3.7.1
     moment: ^2.30.1
     popper.js: ^1.16.1

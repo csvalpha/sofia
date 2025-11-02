@@ -39,11 +39,11 @@ module.exports = {
       formatter: 'stylish', // Use the 'stylish' formatter (or any other you prefer)
       emitError: true, // Report ESLint errors as webpack errors
       emitWarning: true, // Report ESLint warnings as webpack warnings
-      failOnError: true, // Make the build fail on ESLint errors
+      failOnError: process.env.NODE_ENV === "production", // Make the build fail on ESLint errors
       cache: true, // Enable caching for faster linting
       cacheLocation: path.resolve(__dirname, 'node_modules/.cache/.eslintcache'), // Custom cache location
       fix: false, // Set to true to automatically fix linting issues (use with caution in CI)
-      lintDirtyModulesOnly: false, // Only lint changed files (set to true for faster incremental builds)
+      lintDirtyModulesOnly: process.env.NODE_ENV !== "production", // Only lint changed files (set to true for faster incremental builds)
     }),
   ],
   module: {
@@ -72,7 +72,5 @@ module.exports = {
     alias: {
       vue$: 'vue/dist/vue.esm.js'
     }
-  },
-  optimization: {
   },
 };
