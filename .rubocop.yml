@@ -6,7 +6,7 @@ plugins:
   - rubocop-rspec_rails
 
 AllCops:
-  TargetRailsVersion: 7.1
+  TargetRailsVersion: 7.2
   TargetRubyVersion: 3.3
   Exclude:
     - 'bin/**/*'
@@ -101,6 +101,9 @@ Style/StringMethods:
   Enabled: true
 
 Naming/MemoizedInstanceVariableName:
+  Enabled: false
+
+Naming/PredicateMethod:
   Enabled: false
 
 RSpec/SpecFilePathFormat:
