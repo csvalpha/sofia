@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const webpack = require("webpack");
 const { VueLoaderPlugin } = require("vue-loader");
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 // Path to your javascript folder
 const javascriptsDir = path.resolve(__dirname, "app/javascript");
@@ -32,6 +33,18 @@ module.exports = {
       maxChunks: 1,
     }),
     new VueLoaderPlugin(),
+    new ESLintPlugin({
+      extensions: ['js', 'jsx', 'vue'], // Specify file extensions to check (including .vue for your project)
+      exclude: ['node_modules'], // Directories to exclude (defaults to node_modules)
+      formatter: 'stylish', // Use the 'stylish' formatter (or any other you prefer)
+      emitError: true, // Report ESLint errors as webpack errors
+      emitWarning: true, // Report ESLint warnings as webpack warnings
+      failOnError: true, // Make the build fail on ESLint errors
+      cache: true, // Enable caching for faster linting
+      cacheLocation: path.resolve(__dirname, 'node_modules/.cache/.eslintcache'), // Custom cache location
+      fix: false, // Set to true to automatically fix linting issues (use with caution in CI)
+      lintDirtyModulesOnly: false, // Only lint changed files (set to true for faster incremental builds)
+    }),
   ],
   module: {
     rules: [
