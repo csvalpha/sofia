@@ -4,12 +4,14 @@
     "stylelint-config-recess-order"
   ],
   "rules": {
-    "indentation": 2,
-    "selector-no-qualifying-element": true,
-    "selector-list-comma-newline-after": "always",
-    "number-leading-zero": "always",
-    "number-no-trailing-zeros": true,
-    "string-quotes": "single"
+    "selector-no-qualifying-type": [true, {
+      "ignore" : ["attribute", "class", "id"]
+    }]
   },
-  "customSyntax": "postcss-scss"
+  "overrides": [
+    {
+      "files": ["**/*.vue"],
+      "customSyntax": "postcss-html"
+    }
+  ]
 }

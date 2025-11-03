@@ -4,74 +4,20 @@
 
 .order-screen {
   display: grid;
-
+  grid-template-rows: [header-start] 80px [header-end user-details-start product-grid-start orders-start order-grid-start] 1fr [user-details-end orders-end product-grid-end order-grid-end];
+  grid-template-columns: [header-start orders-start user-details-start] minmax(35%, 340px) [user-details-end orders-end product-grid-start order-grid-start] 1fr [header-end product-grid-end order-grid-end];
   width: 100vw;
   height: 100vh;
-
-  grid-template-columns: [header-start orders-start user-details-start] minmax(35%, 340px) [user-details-end orders-end product-grid-start order-grid-start] 1fr [header-end product-grid-end order-grid-end];
-  grid-template-rows: [header-start] 80px [header-end user-details-start product-grid-start orders-start order-grid-start] 1fr [user-details-end orders-end product-grid-end order-grid-end];
-
-  .header {
-    display: flex;
-
-    flex-flow: row nowrap;
-    justify-content: space-between;
-    z-index: 10;
-
-    box-shadow: 0 1px 4px $transparent-200;
-    background-color: $gray-100;
-
-    color: $font-color-dark;
-
-    grid-area: header;
-  }
-
-  .header-nav {
-    display: flex;
-    flex: 1;
-
-    flex-flow: row nowrap;
-    align-items: center;
-    align-self: flex-start;
-    justify-content: start;
-
-    margin: 0;
-    padding: 0;
-
-    height: 100%;
-
-    list-style: none;
-
-    line-height: 20pt;
-    font-size: $font-size-xl;
-  }
-
-  .header-nav-item {
-    padding: 0 1rem;
-  }
-
-  .header-nav-home {
-    a {
-      i {
-        padding: 0;
-        padding-left: 1rem;
-        color: $gray-600;
-      }
-    }
-  }
 
   .flash {
     display: flex;
     align-self: flex-end;
-
-    background-color: $gray-800;
     height: 100%;
-
-    vertical-align: middle;
-    text-align: center;
-
-    color: $font-color-light;
     font-size: $font-size-lg;
+    vertical-align: middle;
+    color: $font-color-light;
+    text-align: center;
+    background-color: $gray-800;
   }
 
   .flash-text {
@@ -115,28 +61,75 @@
     color: inherit;
   }
 
+  .orders-rows-row-count {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    i {
+      color: $font-color-medium;
+    }
+  }
+
+  .header {
+    z-index: 10;
+    display: flex;
+    flex-flow: row nowrap;
+    grid-area: header;
+    justify-content: space-between;
+    color: $font-color-dark;
+    background-color: $gray-100;
+    box-shadow: 0 1px 4px $transparent-200;
+  }
+
+  .header-nav {
+    display: flex;
+    flex: 1;
+    flex-flow: row nowrap;
+    align-items: center;
+    align-self: flex-start;
+    justify-content: start;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    font-size: $font-size-xl;
+    line-height: 20pt;
+    list-style: none;
+  }
+
+  .header-nav-item {
+    padding: 0 1rem;
+  }
+
+  .header-nav-home {
+    a {
+      i {
+        padding: 0;
+        padding-left: 1rem;
+        color: $gray-600;
+      }
+    }
+  }
+
   .side-panel {
+    z-index: 4;
     display: flex;
     flex-flow: column nowrap;
+    grid-area: user-details;
     align-items: stretch;
     justify-content: flex-start;
-
-    z-index: 4;
-
+    overflow-y: auto;
+    color: $font-color-dark;
+    background-color: $gray-200;
     border-right: 2px solid $gray-400;
     box-shadow: 2px 0 4px -2px $transparent-200;
-    background-color: $gray-200;
-    color: $font-color-dark;
-    overflow-y: auto;
-
-    grid-area: user-details;
   }
 
   .user-details {
+    z-index: 5;
     display: flex;
     flex-flow: column nowrap;
-
-    z-index: 5;
     overflow-y: auto;
 
     .highlight {
@@ -145,19 +138,16 @@
   }
 
   .user-details-search {
-    flex-shrink: 0;
-
     z-index: 6;
-
-    border-bottom: 1px solid $gray-400;
+    flex-shrink: 0;
     padding: 1.5rem;
+    border-bottom: 1px solid $gray-400;
   }
 
   .user-details-seperator {
-    text-align: center;
-
-    color: $font-color-medium;
     font-size: $font-size-lg;
+    color: $font-color-medium;
+    text-align: center;
   }
 
   .user-details-cash-button {
@@ -177,22 +167,19 @@
   }
 
   .user-details-suggestions {
+    z-index: 6;
     display: flex;
     flex-flow: column nowrap;
-
-    z-index: 6;
     overflow-y: auto;
   }
 
   .user-details-user {
     z-index: 6;
-
     border-bottom: 1px solid $gray-400;
   }
 
   .user-details-suggestions-user {
     flex-shrink: 0;
-
     border-bottom: 1px solid $gray-400;
 
     &.highlight,
@@ -202,11 +189,10 @@
   }
 
   .orders {
-    display: flex;
-    flex-flow: column nowrap;
-    flex-grow: 1;
-
     z-index: 5;
+    display: flex;
+    flex-grow: 1;
+    flex-flow: column nowrap;
 
     & > * {
       flex: 0 1 auto;
@@ -224,24 +210,11 @@
 
   .orders-rows-row {
     align-items: center;
-
-    border-top: 1px solid $gray-400;
-
     font-size: $font-size-lg;
+    border-top: 1px solid $gray-400;
 
     &:last-child {
       border-bottom: 1px solid $gray-400;
-    }
-  }
-
-  .orders-rows-row-count {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-
-    i {
-      color: $font-color-medium;
     }
   }
 
@@ -254,23 +227,20 @@
   }
 
   .orders-confirmation {
-    padding: 1rem;
     width: 100%;
-
-    color: $font-color-light;
+    padding: 1rem;
     font-size: $font-size-lg;
+    color: $font-color-light;
   }
 
   .product-grid {
     display: grid;
-    justify-content: flex-start;
-
-    background-color: $gray-400;
-
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: auto;
-    grid-gap: 2px;
     grid-area: product-grid;
+    grid-template-rows: auto;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    justify-content: flex-start;
+    background-color: $gray-400;
   }
 
   .product-grid-product {
@@ -278,7 +248,6 @@
     flex-flow: column nowrap;
     align-items: center;
     justify-content: center;
-
     background-color: $gray-100;
 
     &:hover {
@@ -295,9 +264,9 @@
   }
 
   .product-grid-product-name {
-    text-align: center;
-    color: $font-color-dark;
     font-size: $font-size-lg;
+    color: $font-color-dark;
+    text-align: center;
   }
 
   .fa-circle-lighter {
