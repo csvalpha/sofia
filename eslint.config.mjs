@@ -9,8 +9,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const compat = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: eslintjs.configs.recommended,
+  baseDirectory: __dirname,
+  recommendedConfig: eslintjs.configs.recommended,
 });
 
 export default [
@@ -27,18 +27,7 @@ export default [
       },
       ecmaVersion: 2020,
       sourceType: "module",
-      // Pass the directly imported parser module
       parser: vueEslintParser,
-      parserOptions: {
-        ecmaVersion: 2020,
-        sourceType: "module",
-        // If you need a specific JS parser for the <script> tags within .vue files,
-        // you would configure it here under 'parser'. For example:
-        // parser: "@babel/eslint-parser",
-        // If you use 'vue-eslint-parser' alone, it usually handles the JS parsing
-        // internally, but depending on your setup, you might need a secondary parser.
-        // For now, let's keep it simple.
-      },
     },
     rules: {
       indent: ["error", 2],
