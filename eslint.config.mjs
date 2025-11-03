@@ -3,7 +3,6 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { FlatCompat } from "@eslint/eslintrc";
 import eslintjs from "@eslint/js";
-import vueEslintParser from "vue-eslint-parser"; // Import the parser directly
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,6 +13,17 @@ const compat = new FlatCompat({
 });
 
 export default [
+    {
+    ignores: [
+      "app/assets/builds/",
+      "node_modules/",
+      "public/packs/",
+      "public/assets/",
+      "vendor/",
+      "tmp/",
+      "log/",
+    ],
+  },
   ...compat.extends(
     "plugin:vue/essential",
     "eslint:recommended"
@@ -27,7 +37,6 @@ export default [
       },
       ecmaVersion: 2020,
       sourceType: "module",
-      parser: vueEslintParser,
     },
     rules: {
       indent: ["error", 2],

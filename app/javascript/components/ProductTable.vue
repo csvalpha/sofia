@@ -18,10 +18,10 @@
       <div class="col-sm-2 text-end">
         <template v-if="editable && orderRow.editing">
           <i @click="increaseProductCount(orderRow)"
-            class="fa fa-plus-square-o order-history-item-count"></i>
+            class="far fa-square-plus order-history-item-count"></i>
           <span class="px-2">{{orderRow.product_count}}</span>
           <i @click="decreaseProductCount(orderRow)"
-            class="fa fa-minus-square-o order-history-item-count"></i>
+            class="far fa-square-minus order-history-item-count"></i>
         </template>
         <template v-else>
           {{orderRow.product_count}}
@@ -33,8 +33,8 @@
       <div :class="['col-sm-2 text-end', editable ? 'pe-1' : 'pe-3']">
         {{doubleToCurrency(orderRow.product_count * orderRow.price_per_product)}}
         <template v-if="editable">
-          <i v-if="orderRow.editing" @click="saveOrderRow(orderRow)" class="fa fa-save ps-3"></i>
-          <i v-else @click="editOrderRow(orderRow)" class="order-history-item-edit fa fa-pencil ps-3"></i>
+          <i v-if="orderRow.editing" @click="saveOrderRow(orderRow)" class="fas fa-floppy-disk ps-3"></i>
+          <i v-else @click="editOrderRow(orderRow)" class="order-history-item-edit fas fa-pencil ps-3"></i>
         </template>
       </div>
     </div>
