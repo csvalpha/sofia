@@ -73,21 +73,24 @@ export default {
     },
 
     saveOrderRow(orderRow) {
-      const newOrder = {
+      const orderData = {
         order_rows_attributes: [ {
           id: orderRow.id,
           product_count: orderRow.product_count,
         } ]
       };
 
-      if (this.activity.id) newOrder.activity_id = this.activity.id;
+      const payload = {
+        order: orderData
+      };
 
-      axios.patch(`/orders/${this.order.id}`, newOrder).then((response) => {
+      axios.patch(`/orders/${this.order.id}`, payload).then((response) => {
         const updatedOrder = response.data;
 
         this.$emit('updateordertotal', this.order, updatedOrder.order_total);
 
         orderRow.editing = false;
+        this.$set(this.orderRowErrors, orderRow.id, null);
       }, (error) => {
         let errorMessage = 'Er is iets misgegaan bij het opslaan van deze rij';
         if (error.response && error.response.data['order_rows.product_count']) {
