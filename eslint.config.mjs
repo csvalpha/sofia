@@ -1,4 +1,3 @@
-import { defineConfig } from "eslint/config";
 import globals from "globals";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -14,7 +13,7 @@ const compat = new FlatCompat({
     recommendedConfig: eslintjs.configs.recommended,
 });
 
-export default defineConfig([
+export default [
   ...compat.extends(
     "plugin:vue/essential",
     "eslint:recommended"
@@ -48,4 +47,4 @@ export default defineConfig([
       semi: ["error", "always"],
     },
   },
-]);
+];
