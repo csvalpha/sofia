@@ -75,6 +75,7 @@ export default {
 
   methods: {
     activityProvider() {
+      this.isLoading = true;
       let promise = axios.get('/users/'+this.user.id+'/activities');
 
       promise.then((response) => {
@@ -84,8 +85,11 @@ export default {
           activity.toggleDetails = (() => activity.detailsShowing = !activity.detailsShowing);
         });
         this.activities = activities;
+        this.isLoading = false;
       }, () => {
+        console.error('Failed to fetch order history');
         this.activities = [];
+        this.isLoading = false;
       });
     },
 

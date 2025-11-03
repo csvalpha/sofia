@@ -13,7 +13,7 @@ const compat = new FlatCompat({
 });
 
 export default [
-    {
+  {
     ignores: [
       "app/assets/builds/",
       "node_modules/",
