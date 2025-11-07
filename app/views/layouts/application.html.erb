@@ -31,9 +31,7 @@
           environment: '<%= Rails.env %>',
           release: '<%= ENV['BUILD_HASH'] %>'
         });
-        Sentry.configureScope(function (scope) {
-          scope.setUser({ id: <%= current_user&.id.to_json %> });
-        });
+        Sentry.setUser({ id: <%= current_user&.id.to_json %> });
       </script>
     <% end %>
 
