@@ -25,7 +25,7 @@ gem 'pg', '~> 1.6.2'
 gem 'puma', '~> 6.6.1'
 gem 'pundit', '~> 2.5.2'
 gem 'rack-attack', '~> 6.8.0'
-gem 'rails', '~> 7.2.2', '>= 7.2.2.2'
+gem 'rails', '~> 7.2.3'
 gem 'rails-i18n', '~> 7.0.10'
 gem 'redis-rails', '~> 5.0.2'
 gem 'rest-client', '~> 2.1.0'
@@ -33,7 +33,7 @@ gem 'sassc-rails', '~> 2.1.2'
 gem 'sentry-rails', '~> 5.28', '>= 5.28.1'
 gem 'sentry-ruby', '~> 5.28', '>= 5.28.1'
 gem 'sentry-sidekiq', '~> 5.28', '>= 5.28.1'
-gem 'sidekiq', '~> 8.0.8'
+gem 'sidekiq', '~> 8.0.9'
 gem 'sidekiq-scheduler', '~> 6.0.1'
 gem 'simple_form', '~> 5.4.0'
 gem 'turbolinks', '~> 5.2.1'
@@ -46,10 +46,10 @@ gem 'wkhtmltopdf-binary', '~> 0.12.6.10'
 group :development, :test do
   gem 'awesome_print', '~> 1.9.2'
   gem 'better_errors', '~> 2.10.1'
-  gem 'brakeman', '~> 7.1.0', require: false
+  gem 'brakeman', '~> 7.1.1', require: false
   gem 'bullet', '~> 8.1'
   gem 'colorize', '~> 1.1.0'
-  gem 'database_consistency', '~> 2.0.6'
+  gem 'database_consistency', '~> 2.0.7'
   gem 'dotenv-rails', '~> 3.1.8'
   gem 'guard-livereload', '~> 2.5.2'
   gem 'guard-rspec', '~> 4.7.3', require: false
@@ -72,7 +72,7 @@ end
 
 group :test do
   gem 'rails-controller-testing', '~> 1.0.5'
-  gem 'rubocop', '~> 1.81.6', require: false
+  gem 'rubocop', '~> 1.81.7', require: false
   gem 'rubocop-factory_bot', '~> 2.27.1', require: false
   gem 'rubocop-performance', '~> 1.26', '>= 1.26.1', require: false
   gem 'rubocop-rails', '~> 2.33', '>= 2.33.4', require: false
