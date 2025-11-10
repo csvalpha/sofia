@@ -17,7 +17,7 @@
     "axios": "^1.4.0",
     "babel-loader": "^8.4.1",
     "bootstrap": "^5.3.8",
-    "caniuse-lite": "^1.0.30001753",
+    "caniuse-lite": "^1.0.30001754",
     "core-js": "3.46.0",
     "css-loader": "^6.11.0",
     "jquery": "^3.7.1",
