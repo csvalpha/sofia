@@ -24,6 +24,7 @@ Rails/UnknownEnv:
   Environments:
     - production
     - luxproduction
+    - eurosproduction
     - development
     - test
     - staging
