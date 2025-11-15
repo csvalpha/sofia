@@ -89,7 +89,7 @@ class OrdersController < ApplicationController
   end
 
   def permitted_attributes_on_update
-    params.require(:order).permit(order_rows_attributes: %i[id product_count])
+    params.require(:order).permit(:id, order_rows_attributes: %i[id product_count])
   end
 
   def proper_json

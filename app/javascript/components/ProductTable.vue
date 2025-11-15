@@ -74,6 +74,7 @@ export default {
 
     saveOrderRow(orderRow) {
       const orderData = {
+        id: this.order.id,
         order_rows_attributes: [ {
           id: orderRow.id,
           product_count: orderRow.product_count,
