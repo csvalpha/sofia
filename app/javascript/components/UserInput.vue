@@ -19,8 +19,6 @@
 </template>
 
 <script>
-import axios from 'axios';
-
 export default {
   props: {
     name: {
@@ -83,7 +81,7 @@ export default {
       if (this.query.length < 2) {
         return;
       }
-      axios.post('/users/search.json', { query: this.query }).then( (response) => {
+      this.$http.post('/users/search.json', { query: this.query }).then( (response) => {
         response.data.forEach((a) => {
           this.suggestions.push(a);
         });
