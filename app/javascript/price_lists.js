@@ -1,18 +1,8 @@
 import Vue from 'vue/dist/vue.esm';
-import axios from 'axios';
 
 document.addEventListener('turbo:load', () => {
   const element = document.getElementById('pricelists-container');
   if (element != null) {
-    axios.interceptors.request.use((config) => {
-      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-      if (csrfToken) {
-        config.headers['X-CSRF-Token'] = csrfToken;
-      }
-      return config;
-    }, (error) => {
-      return Promise.reject(error);
-    });
     const priceLists = JSON.parse(element.dataset.priceLists);
     const products = JSON.parse(element.dataset.products);
 
@@ -71,25 +61,25 @@ document.addEventListener('turbo:load', () => {
           }
           const sanitizedProduct = this.sanitizeProductInput(product);
           if (sanitizedProduct.id) { // Existing product
-            axios.put(`/products/${sanitizedProduct.id}.json`, { product: sanitizedProduct }).then((response) => {
-              const newProduct = response.data;
+            this.$http.put(`/products/${sanitizedProduct.id}.json`, { product: sanitizedProduct }).then((response) => {
+              const newProduct = response.body;
               newProduct.editing = false;
 
               this.$set(this.products, this.products.indexOf(product), newProduct);
             }).catch((error) => {
-              this.errors = error.response?.data?.errors || ['An error occurred'];
+              this.errors = error.response?.body?.errors || ['An error occurred'];
             });
           } else {
-            axios.post('/products.json', { product: sanitizedProduct }).then( (response) => {
+            this.$http.post('/products.json', { product: sanitizedProduct }).then( (response) => {
               const index = this.products.indexOf(product);
               this.products.splice(index, 1);
 
-              const newProduct = response.data;
+              const newProduct = response.body;
               newProduct.editing = false;
 
               this.products.push(newProduct);
             }).catch((error) => {
-              this.errors = error.response?.data?.errors || ['An error occurred'];
+              this.errors = error.response?.body?.errors || ['An error occurred'];
             });
           }
         },
@@ -146,18 +136,18 @@ document.addEventListener('turbo:load', () => {
         },
 
         archivePriceList: function(priceList) {
-          axios.post(`/price_lists/${priceList.id}/archive`, {}).then((response) => {
-            priceList.archived_at = response.data;
+          this.$http.post(`/price_lists/${priceList.id}/archive`, {}).then((response) => {
+            priceList.archived_at = response.body;
           }).catch((error) => {
-            this.errors = error.response?.data?.errors || ['An error occurred'];
+            this.errors = error.response?.body?.errors || ['An error occurred'];
           });
         },
 
         unarchivePriceList: function(priceList) {
-          axios.post(`/price_lists/${priceList.id}/unarchive`, {}).then((response) => {
-            priceList.archived_at = response.data;
+          this.$http.post(`/price_lists/${priceList.id}/unarchive`, {}).then((response) => {
+            priceList.archived_at = response.body;
           }).catch((error) => {
-            this.errors = error.response?.data?.errors || ['An error occurred'];
+            this.errors = error.response?.body?.errors || ['An error occurred'];
           });
         },
 
