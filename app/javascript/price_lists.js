@@ -62,19 +62,19 @@ document.addEventListener('turbo:load', () => {
           const sanitizedProduct = this.sanitizeProductInput(product);
           if (sanitizedProduct.id) { // Existing product
             this.$http.put(`/products/${sanitizedProduct.id}.json`, { product: sanitizedProduct }).then((response) => {
-              const newProduct = response.body;
+              const newProduct = response.data;
               newProduct.editing = false;
 
               this.$set(this.products, this.products.indexOf(product), newProduct);
             }).catch((error) => {
-              this.errors = error.response?.body?.errors || ['An error occurred'];
+              this.errors = error.response?.data?.errors || ['An error occurred'];
             });
           } else {
             this.$http.post('/products.json', { product: sanitizedProduct }).then( (response) => {
               const index = this.products.indexOf(product);
               this.products.splice(index, 1);
 
-              const newProduct = response.body;
+              const newProduct = response.data;
               newProduct.editing = false;
 
               this.products.push(newProduct);
@@ -137,17 +137,17 @@ document.addEventListener('turbo:load', () => {
 
         archivePriceList: function(priceList) {
           this.$http.post(`/price_lists/${priceList.id}/archive`, {}).then((response) => {
-            priceList.archived_at = response.body;
+            priceList.archived_at = response.data;
           }).catch((error) => {
-            this.errors = error.response?.body?.errors || ['An error occurred'];
+            this.errors = error.response?.data?.errors || ['An error occurred'];
           });
         },
 
         unarchivePriceList: function(priceList) {
           this.$http.post(`/price_lists/${priceList.id}/unarchive`, {}).then((response) => {
-            priceList.archived_at = response.body;
+            priceList.archived_at = response.data;
           }).catch((error) => {
-            this.errors = error.response?.body?.errors || ['An error occurred'];
+            this.errors = error.response?.data?.errors || ['An error occurred'];
           });
         },
 
