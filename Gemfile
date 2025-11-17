@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'bcrypt', '~> 3.1.20'
-gem 'bootsnap', '~> 1.18.6'
+gem 'bootsnap', '~> 1.19.0'
 gem 'browser', '~> 6.2.0'
 gem 'devise', '~>4.9.4'
 gem 'devise-i18n', '~>1.15.0'
@@ -49,7 +49,7 @@ group :development, :test do
   gem 'brakeman', '~> 7.1.1', require: false
   gem 'bullet', '~> 8.1'
   gem 'colorize', '~> 1.1.0'
-  gem 'database_consistency', '~> 2.0.7'
+  gem 'database_consistency', '~> 2.0.8'
   gem 'dotenv-rails', '~> 3.1.8'
   gem 'guard-livereload', '~> 2.5.2'
   gem 'guard-rspec', '~> 4.7.3', require: false
@@ -73,11 +73,11 @@ end
 group :test do
   gem 'rails-controller-testing', '~> 1.0.5'
   gem 'rubocop', '~> 1.81.7', require: false
-  gem 'rubocop-factory_bot', '~> 2.27.1', require: false
+  gem 'rubocop-factory_bot', '~> 2.28.0', require: false
   gem 'rubocop-performance', '~> 1.26', '>= 1.26.1', require: false
-  gem 'rubocop-rails', '~> 2.33', '>= 2.33.4', require: false
-  gem 'rubocop-rspec', '~> 3.7', require: false
-  gem 'rubocop-rspec_rails', '~> 2.31', require: false
+  gem 'rubocop-rails', '~> 2.34', require: false
+  gem 'rubocop-rspec', '~> 3.8', require: false
+  gem 'rubocop-rspec_rails', '~> 2.32', require: false
   gem 'simplecov', '~> 0.22.0', require: false
   gem 'simplecov-lcov', '~> 0.9.0', require: false
   gem 'terminal-notifier-guard', '~> 1.7.0'
