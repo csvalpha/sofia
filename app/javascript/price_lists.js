@@ -1,6 +1,10 @@
 import Vue from 'vue/dist/vue.esm';
+import VueResource from 'vue-resource';
+
+Vue.use(VueResource);
 
 document.addEventListener('turbo:load', () => {
+  Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
   const element = document.getElementById('pricelists-container');
   if (element != null) {
     const priceLists = JSON.parse(element.dataset.priceLists);

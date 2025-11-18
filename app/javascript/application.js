@@ -19,11 +19,4 @@ WebFont.load({
   }
 });
 
-document.addEventListener('turbo:load', () => {
-  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-
-  if (csrfToken) {
-    Vue.http.headers.common['X-CSRF-TOKEN'] = csrfToken;
-    axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
-  }
-});
+document.addEventListener('turbo:load', () => {});
