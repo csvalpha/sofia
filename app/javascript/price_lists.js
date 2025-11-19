@@ -141,17 +141,17 @@ document.addEventListener('turbo:load', () => {
 
         archivePriceList: function(priceList) {
           this.$http.post(`/price_lists/${priceList.id}/archive`, {}).then((response) => {
-            priceList.archived_at = response.data;
+            priceList.archived_at = response.body;
           }).catch((error) => {
-            this.errors = error.response?.data?.errors || ['An error occurred'];
+            this.errors = error.response?.body?.errors || ['An error occurred'];
           });
         },
 
         unarchivePriceList: function(priceList) {
           this.$http.post(`/price_lists/${priceList.id}/unarchive`, {}).then((response) => {
-            priceList.archived_at = response.data;
+            priceList.archived_at = response.body;
           }).catch((error) => {
-            this.errors = error.response?.data?.errors || ['An error occurred'];
+            this.errors = error.response?.body?.errors || ['An error occurred'];
           });
         },
 

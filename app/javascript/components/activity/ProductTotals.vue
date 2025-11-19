@@ -83,7 +83,7 @@ export default {
         this.isLoading = false;
       }).catch((error) => {
         this.isLoading = false;
-        console.error(error);
+        console.error('Er is iets misgegaan bij het opslaan van deze rij', error);
       });
     },
     doubleToCurrency(price) {

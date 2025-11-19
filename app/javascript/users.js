@@ -12,23 +12,30 @@ document.addEventListener('turbo:before-cache', () => {
 });
 
 document.addEventListener('turbo:load', () => {
-  axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  const csrfToken = document.querySelector('meta[name="csrf-token"]');
+  if (csrfToken) {
+    axios.defaults.headers.common['X-CSRF-Token'] = csrfToken.getAttribute('content');
+  }
   const element = document.getElementById('users-index');
   if (element !== null) {
-    const manual_users = JSON.parse(element.dataset.manualUsers);
-    const amber_users = JSON.parse(element.dataset.amberUsers);
-    const inactive_users = JSON.parse(element.dataset.inactiveUsers);
+    try {
+      const manual_users = JSON.parse(element.dataset.manualUsers);
+      const amber_users = JSON.parse(element.dataset.amberUsers);
+      const inactive_users = JSON.parse(element.dataset.inactiveUsers);
 
-    vueInstance = new Vue({
-      el: element,
-      data: () => ({
-        manual_users,
-        amber_users,
-        inactive_users
-      }),
-      components: {
-        UsersTable
-      },
-    });
+      vueInstance = new Vue({
+        el: element,
+        data: () => ({
+          manual_users,
+          amber_users,
+          inactive_users
+        }),
+        components: {
+          UsersTable
+        },
+      });
+    } catch (error) {
+      console.error('Failed to initialize users table:', error);
+    }
   }
 });
