@@ -66,19 +66,19 @@ document.addEventListener('turbo:load', () => {
           const sanitizedProduct = this.sanitizeProductInput(product);
           if (sanitizedProduct.id) { // Existing product
             this.$http.put(`/products/${sanitizedProduct.id}.json`, { product: sanitizedProduct }).then((response) => {
-              const newProduct = response.data;
+              const newProduct = response.body;
               newProduct.editing = false;
 
               this.$set(this.products, this.products.indexOf(product), newProduct);
             }).catch((error) => {
-              this.errors = error.response?.data?.errors || ['An error occurred'];
+              this.errors = error.response?.body?.errors || ['An error occurred'];
             });
           } else {
             this.$http.post('/products.json', { product: sanitizedProduct }).then( (response) => {
               const index = this.products.indexOf(product);
               this.products.splice(index, 1);
 
-              const newProduct = response.data;
+              const newProduct = response.body;
               newProduct.editing = false;
 
               this.products.push(newProduct);
