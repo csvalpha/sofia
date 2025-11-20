@@ -1,6 +1,7 @@
 import Vue from 'vue/dist/vue.esm';
 import VueResource from 'vue-resource';
 import axios from 'axios';
+import bootstrap from 'bootstrap';
 
 import FlashNotification from './components/FlashNotification.vue';
 import UserSelection from './components/orderscreen/UserSelection.vue';
@@ -367,7 +368,9 @@ document.addEventListener('turbo:load', () => {
             }
 
             /* eslint-disable no-undef */
+            setTimeout(() => {
             bootstrap.Modal.getOrCreateInstance('#credit-mutation-modal').hide();
+          }, 0);
 
             this.creditMutationAmount = null;
             this.creditMutationDescription = 'Inleg contant';
