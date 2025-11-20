@@ -1,7 +1,7 @@
 import Vue from 'vue/dist/vue.esm';
 import VueResource from 'vue-resource';
 import axios from 'axios';
-import bootstrap from 'bootstrap';
+import * as bootstrap from 'bootstrap';
 
 import FlashNotification from './components/FlashNotification.vue';
 import UserSelection from './components/orderscreen/UserSelection.vue';
@@ -356,10 +356,7 @@ document.addEventListener('turbo:load', () => {
               amount: this.creditMutationAmount
             }
           }).then((response) => {
-            const index = app.users.findIndex((candidate) => candidate.id === response.body.user.id);
-            if (index !== -1) {
-              app.$set(app.users, index, response.body.user);
-            }
+            app.$set(app.users, app.users.indexOf(app.selectedUser), response.body.user);
             if(!app.keepUserSelected && app.orderRows.length === 0){
               app.setUser(null);
             } else {
@@ -368,9 +365,8 @@ document.addEventListener('turbo:load', () => {
             }
 
             /* eslint-disable no-undef */
-          setTimeout(() => {
-            bootstrap.Modal.getOrCreateInstance('#credit-mutation-modal').hide();
-          }, 0);
+          bootstrap.Modal.getOrCreateInstance('#credit-mutation-modal').hide();
+
 
             this.creditMutationAmount = null;
             this.creditMutationDescription = 'Inleg contant';
