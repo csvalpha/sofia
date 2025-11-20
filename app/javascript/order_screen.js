@@ -368,7 +368,7 @@ document.addEventListener('turbo:load', () => {
             }
 
             /* eslint-disable no-undef */
-            setTimeout(() => {
+          setTimeout(() => {
             bootstrap.Modal.getOrCreateInstance('#credit-mutation-modal').hide();
           }, 0);
 
