@@ -1,7 +1,5 @@
+@import 'bootstrap/scss/bootstrap';
 @import 'theme_sofia';
-@import 'bootstrap';
-@import 'font-awesome';
-
 @import 'order_screen';
 @import 'price_lists';
 
@@ -29,16 +27,16 @@ a {
 
 .slide-fade-enter,
 .slide-fade-leave-to {
-  transform: translateX(10px);
   opacity: 0;
+  transform: translateX(10px);
 }
 
 // Source: jsfiddle.net/mwj2tagh
 .fa-plus18 {
-  text-align: center;
-  font-family: 'helvetica neue', Helvetica, Arial, Sans-Serif;
+  font-family: 'helvetica neue', Helvetica, Arial, sans-serif;
   font-size: 80%;
   font-weight: bold;
+  text-align: center;
 
   &::before {
     content: '18+';
@@ -80,10 +78,10 @@ a {
 .footer {
   position: absolute;
   bottom: 0;
-  background-color: $gray-400;
   width: 100%;
   height: 48px;
   line-height: 48px;
+  background-color: $gray-400;
 }
 
 .footer-padding {

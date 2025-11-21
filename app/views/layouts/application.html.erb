@@ -2,21 +2,15 @@
 <html>
   <head>
     <title><%= yield(:title) %>  </title>
-
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-
-    <%= javascript_pack_tag 'activities', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'price_lists', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'payment_add', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'credit_mutations', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'user', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'order_screen', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'users', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'activity', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'invoices', 'data-turbolinks-track': 'reload' %>
-
     <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport"/>
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+
+    <%= yield(:head) %>
 
     <% if Rails.application.config.x.sentry_dsn %>
       <script
@@ -34,10 +28,6 @@
         Sentry.setUser({ id: <%= current_user&.id.to_json %> });
       </script>
     <% end %>
-
-
-
-    <%= csrf_meta_tags %>
 
   </head>
   <body>

@@ -10,7 +10,7 @@
         Log in with a <%= Rails.application.config.x.site_association %> account.
       </p>
       <div class="d-grid">
-        <%= link_to("Sign in with #{Rails.application.config.x.site_association}", user_amber_oauth2_omniauth_authorize_path, class: 'btn btn-primary', method: :post) %>
+        <%= link_to "Sign in with #{Rails.application.config.x.site_association}", user_amber_oauth2_omniauth_authorize_path, class: 'btn btn-primary', data: { turbo_method: :post } %>
       </div>
     </div>
   </div>
