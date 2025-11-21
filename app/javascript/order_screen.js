@@ -122,7 +122,6 @@ document.addEventListener('turbo:load', () => {
           if (!this.selectedUser || this.selectedUser.can_order) {
             this.confirmOrder();
           } else {
-            /* eslint-disable no-undef */
             bootstrap.Modal.getOrCreateInstance('#cannot-order-modal').show();
           }
         },
@@ -203,20 +202,20 @@ document.addEventListener('turbo:load', () => {
         },
 
         handleXHRError(error) {
-          if (error.response?.status === 500) {
+          if (error.status === 500) {
             this.sendFlash('Server error!', 'Herlaad de pagina', 'error');
 
             try {
-              throw new Error(JSON.stringify(error.response.body));
+              throw new Error(JSON.stringify(error.body));
             } catch(e) {
               /* eslint-disable no-undef */
               Sentry.captureException(e);
               /* eslint-enable no-undef */
             }
-          } else if (error.response?.status === 422) {
+          } else if (error.status === 422) {
             this.sendFlash('Error bij het opslaan!', 'Probeer het opnieuw', 'warning');
           } else {
-            this.sendFlash(`Error ${error.response?.status}?!🤔`, 'Herlaad de pagina', 'info');
+            this.sendFlash(`Error ${error.status}?!🤔`, 'Herlaad de pagina', 'info');
           }
         },
 
@@ -241,7 +240,6 @@ document.addEventListener('turbo:load', () => {
         },
 
         deleteOrder(orderId) {
-          /* eslint-disable no-undef */
           bootstrap.Modal.getOrCreateInstance('#sumup-error-order-modal').hide();
 
           this.$http.delete(`/orders/${orderId}`).then(() => {
@@ -349,7 +347,10 @@ document.addEventListener('turbo:load', () => {
               amount: this.creditMutationAmount
             }
           }).then((response) => {
-            app.$set(app.users, app.users.indexOf(app.selectedUser), response.body.user);
+            const index = app.users.findIndex((candidate) => candidate.id === response.body.user.id);
+            if (index !== -1) {
+              app.$set(app.users, index, response.body.user);
+            }
             if(!app.keepUserSelected && app.orderRows.length === 0){
               app.setUser(null);
             } else {
@@ -357,8 +358,7 @@ document.addEventListener('turbo:load', () => {
               app.setUser(response.body.user);
             }
 
-            /* eslint-disable no-undef */
-          bootstrap.Modal.getOrCreateInstance('#credit-mutation-modal').hide();
+            bootstrap.Modal.getOrCreateInstance('#credit-mutation-modal').hide();
 
 
             this.creditMutationAmount = null;
@@ -394,14 +394,12 @@ document.addEventListener('turbo:load', () => {
       el: document.getElementById('sumup-error-order-modal'),
       methods: {
         deleteOrder(orderId) {
-          /* eslint-disable no-undef */
           bootstrap.Modal.getOrCreateInstance('#sumup-error-order-modal').hide();
 
           app.deleteOrder(orderId);
         },
 
         startSumupPayment(orderId, orderTotal) {
-          /* eslint-disable no-undef */
           bootstrap.Modal.getOrCreateInstance('#sumup-error-order-modal').hide();
 
           app.startSumupPayment(orderId, orderTotal);
@@ -409,7 +407,6 @@ document.addEventListener('turbo:load', () => {
       },
       mounted() {
         if (document.getElementById('sumup-error-order-modal')) {
-          /* eslint-disable no-undef */
           bootstrap.Modal.getOrCreateInstance('#sumup-error-order-modal').show();
         }
       },
