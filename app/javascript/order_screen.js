@@ -177,6 +177,8 @@ document.addEventListener('turbo:load', () => {
               const index = this.users.findIndex((candidate) => candidate.id === user.id);
               if (index !== -1) {
                 this.$set(this.users, index, response.body.user);
+                } else {
+                this.users.push(response.body.user);
               }
             }
 
@@ -350,6 +352,8 @@ document.addEventListener('turbo:load', () => {
             const index = app.users.findIndex((candidate) => candidate.id === response.body.user.id);
             if (index !== -1) {
               app.$set(app.users, index, response.body.user);
+            } else {
+              app.users.push(response.body.user);
             }
             if(!app.keepUserSelected && app.orderRows.length === 0){
               app.setUser(null);

@@ -77,7 +77,7 @@ export default {
       }
 
       this.$http.post('/users/search.json', { query: this.query }).then( (response) => {
-        let results = response.data;
+        let results = response.body || [];
 
         if (this.includePin && 'gepind'.indexOf(this.query.toLowerCase()) >= 0) {
           results.push({ name: 'Gepind', paid_with_pin: true });
