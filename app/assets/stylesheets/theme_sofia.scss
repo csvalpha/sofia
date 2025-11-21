@@ -1,8 +1,7 @@
 
 // Basic colors
-$brand-primary:   #e8df0c;
+$brand-primary: #e8df0c;
 $brand-secondary: #00a5b5;
-
 $gray-100: #f8f9fa;
 $gray-200: #e9ecef;
 $gray-300: #dee2e6;
@@ -14,24 +13,21 @@ $gray-800: #343a40;
 $gray-900: #212529;
 
 // Transparent blacks
-$transparent-200: rgba(0, 0, 0, .2);
-$transparent-800: rgba(0, 0, 0, .8);
+$transparent-200: rgb(0 0 0 / 20%);
+$transparent-800: rgb(0 0 0 / 80%);
 
 // Typography
-$font-family-sans-serif: Roboto, 'Helvetica Neue', Arial, sans-serif;
-
-$font-size-base:       .93rem;
-$font-size-xl:         ($font-size-base * 2);
-
-$font-color-light:     $gray-100;
-$font-color-medium:    $gray-600;
-$font-color-dark:      $gray-800;
-
+$font-family-sans-serif: roboto, 'Helvetica Neue', arial, sans-serif;
+$font-size-base: .93rem;
+$font-size-xl: ($font-size-base * 2);
+$font-color-light: $gray-100;
+$font-color-medium: $gray-600;
+$font-color-dark: $gray-800;
 $alpha-primary: #ff0;
 
 // Basic layout
-$body-bg:              $gray-100;
-$body-color:           $font-color-dark;
+$body-bg: $gray-100;
+$body-color: $font-color-dark;
 
 // Custom stuff
 .table-header-rotated {
@@ -40,8 +36,8 @@ $body-color:           $font-color-dark;
     white-space: nowrap;
 
     > div {
-      transform: translate(-9px, 0) rotate(-45deg);
       width: 30px;
+      transform: translate(-9px, 0) rotate(-45deg);
     }
 
     > div > a {
@@ -51,10 +47,10 @@ $body-color:           $font-color-dark;
 
   .sofia-header {
     margin-bottom: .5rem;
-    line-height: 1.2;
-    color: inherit;
     font-family: inherit;
     font-size: 2.5rem;
     font-weight: 500;
+    line-height: 1.2;
+    color: inherit;
   }
 }

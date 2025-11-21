@@ -24,7 +24,7 @@
           </h3>
 
           <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#credit-mutation-modal">
-            <i class="fa fa-money me-1"></i>
+            <i class="fa fa-money-bill me-1"></i>
             Geld inleggen
           </button>
         </div>
@@ -37,7 +37,7 @@
       <div class="row justify-content-end">
         <div class="col-10 d-flex flex-column align-items-center" v-if="payWithCash">
           <h1 class="display-3 py-2">
-            <i class="fa fa-money fa-lg"></i>
+            <i class="fa fa-money-bill fa-lg"></i>
           </h1>
 
           <h4 class="fw-light text-center">
@@ -68,7 +68,7 @@
              @keyup.up="decreaseHighlightedUserIndex" @keyup.down="increaseHighlightedUserIndex" autofocus>
 
       <button class="btn btn-secondary mt-3 me-1" @click="selectCash">
-        <i class="fa fa-money me-1"></i>
+        <i class="fa fa-money-bill me-1"></i>
         Betaal contant
       </button>
       <button class="btn btn-secondary mt-3" @click="selectPin">
