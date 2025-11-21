@@ -330,18 +330,11 @@ document.addEventListener('turbo:load', () => {
         };
       },
       methods: {
-        isFormInvalid() {
-          const formValid = document.getElementById('credit-mutation-modal-form').checkValidity();
-          const hasUser = !!app.selectedUser;
-          const hasAmount = !!this.creditMutationAmount;
-          const hasDescription = !!this.creditMutationDescription;
-          return !formValid || !hasUser || !hasAmount || !hasDescription;
-        },
-
         saveCreditMutation() {
           this.isSubmitting = true;
 
-          this.creditMutationFormInvalid = this.isFormInvalid();
+          this.creditMutationFormInvalid = (!document.getElementById('credit-mutation-modal-form').checkValidity() 
+          || !app.selectedUser || !this.creditMutationAmount || !this.creditMutationDescription);
           
           if (this.creditMutationFormInvalid) {
             this.isSubmitting = false;
