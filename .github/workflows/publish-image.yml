@@ -81,7 +81,7 @@ jobs:
         env:
           IMAGE_NAME: ${{ fromJSON(steps.build_push_image.outputs.metadata)['image.name'] }}
         run: |
-          docker cp "$(docker create "$IMAGE_NAME")":/app/public/packs/js/. sourcemaps
+          docker cp "$(docker create "$IMAGE_NAME")":/app/public/assets/. sourcemaps
 
       - name: Create Sentry release
         if: ${{ !(github.event_name == 'workflow_dispatch' && github.workflow == 'Publish Image') }}
@@ -94,7 +94,7 @@ jobs:
           finalize: false
           sourcemaps: sourcemaps
           version: ${{ inputs.sha }}
-          url_prefix: ~/packs/js/
+          url_prefix: ~/assets
 
   update_check_run:
     name: Update Check Run

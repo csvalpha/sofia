@@ -17,7 +17,6 @@ export default [
     ignores: [
       "app/assets/builds/",
       "node_modules/",
-      "public/packs/",
       "public/assets/",
       "vendor/",
       "tmp/",
