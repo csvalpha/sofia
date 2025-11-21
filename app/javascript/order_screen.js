@@ -177,7 +177,7 @@ document.addEventListener('turbo:load', () => {
               const index = this.users.findIndex((candidate) => candidate.id === user.id);
               if (index !== -1) {
                 this.$set(this.users, index, response.body.user);
-                } else {
+              } else {
                 this.users.push(response.body.user);
               }
             }
