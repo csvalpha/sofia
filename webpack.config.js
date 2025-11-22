@@ -23,10 +23,11 @@ module.exports = {
   // Use our dynamically generated entries object
   entry: entries,
   output: {
-    // [name] will be replaced by the key from the entry object (e.g., 'activities', 'price_lists')
     filename: "[name].js",
     sourceMapFilename: "[name].js.map",
     path: path.resolve(__dirname, "app/assets/builds"),
+    // emit original names so Sprockets can add the single fingerprint
+    assetModuleFilename: "[name][ext]"
   },
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({
