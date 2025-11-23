@@ -23,7 +23,15 @@
               <td class="text-end">
                 <span>
                   {{ doubleToCurrency(order.order_total) }}
-                  <i @click.stop="order.toggleDetails()" :class="['order-history-details-expand', 'fa', 'fa-lg', 'ps-2', 'pe-1', order.detailsShowing ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down']"></i>
+                  <i @click.stop="order.toggleDetails()"
+                    :class="[
+                      'order-history-details-expand',
+                      'fa-lg',
+                      'ps-2',
+                      'pe-1',
+                      'fas',
+                      order.detailsShowing ? 'fa-circle-chevron-up' : 'fa-circle-chevron-down'
+                    ]"></i>
                 </span>
               </td>
             </tr>

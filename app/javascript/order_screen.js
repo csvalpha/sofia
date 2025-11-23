@@ -1,26 +1,24 @@
 import Vue from 'vue/dist/vue.esm';
-import TurbolinksAdapter from 'vue-turbolinks';
 import VueResource from 'vue-resource';
 import axios from 'axios';
+import * as bootstrap from 'bootstrap';
 
-import FlashNotification from '../components/FlashNotification.vue';
-import UserSelection from '../components/orderscreen/UserSelection.vue';
-import ActivityOrders from '../components/orderscreen/ActivityOrders.vue';
+import FlashNotification from './components/FlashNotification.vue';
+import UserSelection from './components/orderscreen/UserSelection.vue';
+import ActivityOrders from './components/orderscreen/ActivityOrders.vue';
 
-Vue.use(TurbolinksAdapter);
 Vue.use(VueResource);
 
-document.addEventListener('turbolinks:load', () => {
+document.addEventListener('turbo:load', () => {
   const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
   Vue.http.headers.common['X-CSRF-TOKEN'] = token;
   axios.defaults.headers.common['X-CSRF-Token'] = token;
-
-  var element = document.getElementById('order-screen');
+  const element = document.getElementById('order-screen');
   if (element != null) {
-    var users = JSON.parse(element.dataset.users);
-    var productPrices = JSON.parse(element.dataset.productPrices);
-    var activity = JSON.parse(element.dataset.activity);
-    var flashes = JSON.parse(element.dataset.flashes);
+    const users = JSON.parse(element.dataset.users);
+    const productPrices = JSON.parse(element.dataset.productPrices);
+    const activity = JSON.parse(element.dataset.activity);
+    const flashes = JSON.parse(element.dataset.flashes);
 
     window.flash = function(message, actionText, type) {
       const event = new CustomEvent('flash', { detail: { message: message, actionText: actionText, type: type } } );
@@ -65,12 +63,16 @@ document.addEventListener('turbolinks:load', () => {
           if (user !== null) {
             // Reload user to get latest credit balance
             this.$http.get(`/users/${user.id}/json?activity_id=${this.activity.id}`).then((response) => {
-              const user = response.body;
-              this.$set(this.users, this.users.indexOf(user), user);
+              const refreshedUser = response.body;
+              const index = this.users.findIndex((candidate) => candidate.id === refreshedUser.id);
+              if (index !== -1) {
+                this.$set(this.users, index, refreshedUser);
+              } else {
+                this.users.push(refreshedUser);
+              }
 
-              // Selected user might have changed in the meantime
-              if (this.selectedUser && this.selectedUser.id == user.id) {
-                this.selectedUser = user;
+              if (this.selectedUser && this.selectedUser.id == refreshedUser.id) {
+                this.selectedUser = refreshedUser;
               }
             }, (response) => {
               this.handleXHRError(response);
@@ -120,7 +122,6 @@ document.addEventListener('turbolinks:load', () => {
           if (!this.selectedUser || this.selectedUser.can_order) {
             this.confirmOrder();
           } else {
-            /* eslint-disable no-undef */
             bootstrap.Modal.getOrCreateInstance('#cannot-order-modal').show();
           }
         },
@@ -173,7 +174,12 @@ document.addEventListener('turbolinks:load', () => {
             }
 
             if (user) {
-              this.$set(this.users, this.users.indexOf(this.selectedUser), response.body.user);
+              const index = this.users.findIndex((candidate) => candidate.id === user.id);
+              if (index !== -1) {
+                this.$set(this.users, index, response.body.user);
+              } else {
+                this.users.push(response.body.user);
+              }
             }
 
             this.sendFlash('Bestelling geplaatst.', additionalInfo, 'success');
@@ -198,17 +204,17 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         handleXHRError(error) {
-          if (error.status == 500) {
+          if (error.status === 500) {
             this.sendFlash('Server error!', 'Herlaad de pagina', 'error');
 
             try {
-              throw new Error(error.body.text);
+              throw new Error(JSON.stringify(error.body));
             } catch(e) {
               /* eslint-disable no-undef */
               Sentry.captureException(e);
               /* eslint-enable no-undef */
             }
-          } else if (error.status == 422) {
+          } else if (error.status === 422) {
             this.sendFlash('Error bij het opslaan!', 'Probeer het opnieuw', 'warning');
           } else {
             this.sendFlash(`Error ${error.status}?!🤔`, 'Herlaad de pagina', 'info');
@@ -222,10 +228,10 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         startSumupPayment(orderId, orderTotal) {
-          let affilateKey = element.dataset.sumupKey;
-          let callback = element.dataset.sumupCallback;
+          const affiliateKey = element.dataset.sumupKey;
+          const callback = element.dataset.sumupCallback;
           
-          let sumupUrl = `sumupmerchant://pay/1.0?affiliate-key=${affilateKey}&currency=EUR&title=Bestelling ${element.dataset.siteName}&skip-screen-success=true&foreign-tx-id=${orderId}`;
+          let sumupUrl = `sumupmerchant://pay/1.0?affiliate-key=${affiliateKey}&currency=EUR&title=Bestelling ${element.dataset.siteName}&skip-screen-success=true&foreign-tx-id=${orderId}`;
           if (this.isIos) {
             sumupUrl += `&amount=${orderTotal}&callbacksuccess=${callback}&callbackfail=${callback}`;
           } else {
@@ -236,7 +242,6 @@ document.addEventListener('turbolinks:load', () => {
         },
 
         deleteOrder(orderId) {
-          /* eslint-disable no-undef */
           bootstrap.Modal.getOrCreateInstance('#sumup-error-order-modal').hide();
 
           this.$http.delete(`/orders/${orderId}`).then(() => {
@@ -329,8 +334,8 @@ document.addEventListener('turbolinks:load', () => {
           this.isSubmitting = true;
 
           this.creditMutationFormInvalid = (!document.getElementById('credit-mutation-modal-form').checkValidity() 
-            || !app.selectedUser || !this.creditMutationAmount || !this.creditMutationDescription);
-
+          || !app.selectedUser || !this.creditMutationAmount || !this.creditMutationDescription);
+          
           if (this.creditMutationFormInvalid) {
             this.isSubmitting = false;
             return;
@@ -344,8 +349,12 @@ document.addEventListener('turbolinks:load', () => {
               amount: this.creditMutationAmount
             }
           }).then((response) => {
-            app.$set(app.users, app.users.indexOf(app.selectedUser), response.body.user);
-
+            const index = app.users.findIndex((candidate) => candidate.id === response.body.user.id);
+            if (index !== -1) {
+              app.$set(app.users, index, response.body.user);
+            } else {
+              app.users.push(response.body.user);
+            }
             if(!app.keepUserSelected && app.orderRows.length === 0){
               app.setUser(null);
             } else {
@@ -353,8 +362,8 @@ document.addEventListener('turbolinks:load', () => {
               app.setUser(response.body.user);
             }
 
-            /* eslint-disable no-undef */
             bootstrap.Modal.getOrCreateInstance('#credit-mutation-modal').hide();
+
 
             this.creditMutationAmount = null;
             this.creditMutationDescription = 'Inleg contant';
@@ -389,14 +398,12 @@ document.addEventListener('turbolinks:load', () => {
       el: document.getElementById('sumup-error-order-modal'),
       methods: {
         deleteOrder(orderId) {
-          /* eslint-disable no-undef */
           bootstrap.Modal.getOrCreateInstance('#sumup-error-order-modal').hide();
 
           app.deleteOrder(orderId);
         },
 
         startSumupPayment(orderId, orderTotal) {
-          /* eslint-disable no-undef */
           bootstrap.Modal.getOrCreateInstance('#sumup-error-order-modal').hide();
 
           app.startSumupPayment(orderId, orderTotal);
@@ -404,7 +411,6 @@ document.addEventListener('turbolinks:load', () => {
       },
       mounted() {
         if (document.getElementById('sumup-error-order-modal')) {
-          /* eslint-disable no-undef */
           bootstrap.Modal.getOrCreateInstance('#sumup-error-order-modal').show();
         }
       },

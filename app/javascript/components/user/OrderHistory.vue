@@ -17,7 +17,15 @@
               <td class="text-end">
                 <span>
                   {{ doubleToCurrency(activity.order_total) }}
-                  <i @click.stop="activity.toggleDetails()" :class="['order-history-details-expand', 'fa', 'fa-lg', 'ps-2', 'pe-1', activity.detailsShowing ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down']"></i>
+                  <i @click.stop="activity.toggleDetails()"
+                    :class="[
+                      'order-history-details-expand',
+                      'fa-lg',
+                      'ps-2',
+                      'pe-1',
+                      'fas',
+                      activity.detailsShowing ? 'fa-circle-chevron-up' : 'fa-circle-chevron-down'
+                    ]"></i>
                 </span>
               </td>
             </tr>
@@ -67,6 +75,7 @@ export default {
 
   methods: {
     activityProvider() {
+      this.isLoading = true;
       let promise = axios.get('/users/'+this.user.id+'/activities');
 
       promise.then((response) => {
@@ -76,8 +85,11 @@ export default {
           activity.toggleDetails = (() => activity.detailsShowing = !activity.detailsShowing);
         });
         this.activities = activities;
+        this.isLoading = false;
       }, () => {
+        console.error('Failed to fetch order history');
         this.activities = [];
+        this.isLoading = false;
       });
     },
 
