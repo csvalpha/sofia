@@ -58,12 +58,12 @@ Role.create(role_type: :main_bartender, group_uid: 6)
 ## Testing & Linting
 
 To Run the test locally the following command can be used 
-```
+```bash
 bundle exec rspec
 ```
 
 To run the linting locally you can use the following commands 
-```
+```bash
 yarn lint
 yarn run sass-lint -v -q
 bundle exec rubocop
@@ -72,15 +72,15 @@ bundle exec rubocop
 
 When migrations are executed on master and everthing worked they can be archived with the following command.
 
-```
+```bash
 bundle exec rails db:migrate:archive
 ```
 
-##  Updating Fonts
+## Updating Fonts
 
 When fonts need to be updated, they can be copied from the node_modules folder to assets/fonts with the following command.
 
-```
+```bash
 yarn update:font
 ```
 
