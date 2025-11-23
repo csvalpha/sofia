@@ -1,0 +1,12 @@
+// FontAwesome font-face for Rails asset pipeline
+// Place your fa-solid-900.woff2 and related files in app/assets/fonts/
+
+@font-face {
+  font-family: 'FontAwesome';
+  src: font-url('fa-solid-900.woff2') format('woff2'),
+       font-url('fa-solid-900.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+}
+
+// Add more font-face rules if you use other FontAwesome weights/styles

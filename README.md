@@ -74,6 +74,12 @@ When migrations are executed on master and everthing worked they can be archived
 
     bundle exec rails db:migrate:archive
 
+## updating fonts
+
+When Fonts need to be updated, they can be copied form the nodemodules folder to assests:fonts with the following command.
+
+    yarn:postinstall
+
 ## Deploying
 
 Deploying procedure is the same as for the AMBER project.

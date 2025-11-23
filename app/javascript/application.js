@@ -5,7 +5,6 @@ import 'jquery';
 import 'bootstrap';
 
 import WebFont from 'webfontloader';
-import '@fortawesome/fontawesome-free/css/all.css';
 
 WebFont.load({
   google: {
