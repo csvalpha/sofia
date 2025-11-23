@@ -81,7 +81,7 @@ bundle exec rails db:migrate:archive
 When fonts need to be updated, they can be copied from the node_modules folder to assets/fonts with the following command.
 
 ```
-yarn postinstall
+yarn update:font
 ```
 
 ## Deploying

@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# Copies FontAwesome font files from node_modules to app/assets/fonts for Rails asset pipeline
+# Copies FontAwesome font files from node_modules to public/webfonts
 
 require 'fileutils'
 
@@ -14,7 +14,7 @@ end
 FileUtils.mkdir_p(dest)
 
 # Copy all font files
-font_exts = %w[.woff2 .woff .ttf .eot .svg]
+font_exts = %w[.woff2 .woff .ttf .eot]
 Dir.entries(source).each do |file|
   next unless font_exts.include?(File.extname(file))
   FileUtils.cp(File.join(source, file), File.join(dest, file))
