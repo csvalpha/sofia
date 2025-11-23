@@ -81,7 +81,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_13_233761) do
   end
 
   create_table "orders", force: :cascade do |t|
-    t.decimal "order_total", precision: 8, scale: 2
     t.bigint "activity_id", null: false
     t.bigint "user_id"
     t.datetime "deleted_at"
@@ -90,6 +89,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_13_233761) do
     t.bigint "created_by_id"
     t.boolean "paid_with_cash", default: false, null: false
     t.boolean "paid_with_pin", default: false, null: false
+    t.decimal "order_total", precision: 8, scale: 2
     t.index ["activity_id"], name: "index_orders_on_activity_id"
     t.index ["created_by_id"], name: "index_orders_on_created_by_id"
     t.index ["user_id"], name: "index_orders_on_user_id"

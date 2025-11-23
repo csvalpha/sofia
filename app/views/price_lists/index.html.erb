@@ -1,4 +1,7 @@
 <% content_for :title, "Prijslijsten - #{Rails.application.config.x.site_name}" %>
+<% content_for :head do %>
+  <%= javascript_include_tag "price_lists", "data-turbo-track": "reload", defer: true %>
+<% end %>
 <% content_for :modal do %>
   <%= render 'modal' %>
 <% end %>
@@ -16,7 +19,7 @@
         </span>
         <% if policy(PriceList).create? %>
           <button class="btn btn-sm btn-primary" data-bs-target="#editPriceListModal" data-bs-toggle="modal" role="button">
-            <%= fa_icon 'plus', class: 'me-1' %>
+            <i class="fas fa-plus me-1"></i>
             Nieuwe prijslijst
           </button>
         <% end %>
@@ -25,11 +28,11 @@
         <div class="form-check">
           <input class="form-check-input" type="checkbox" id="show-archived-check" v-model="showArchived">
           <label class="form-check-label" for="show-archived-check">
-            Laat gearchieveerde prijslijsten zien 
+            Laat gearchiveerde prijslijsten zien
           </label>
         </div>
       <% end %>
-      
+
       <table id='price-lists-table' class='price-lists-table table table-striped overflow-scroll mw-100 mx-auto d-block pe-2'>
         <thead class="table-header-rotated products">
         <tr>
@@ -52,15 +55,15 @@
           <template v-if="product.editing">
             <td class="products-cancel-edit" v-on:click="cancelEditProduct(product)">
               <span title="Cancel" v-if="product.id">
-                <%= fa_icon 'undo lg' %>
+                <i class="fas fa-arrow-rotate-left fa-lg"></i>
               </span>
               <span title="Remove" v-else="">
-                <%= fa_icon 'times lg' %>
+                <i class="fas fa-xmark fa-lg"></i>
               </span>
             </td>
             <td class="products-new products-name">
               <div class="d-flex">
-                <input class="form-control flex-grow-1" placeholder="Productnaam" type="text" v-model="product.name" :disabled="product.id"/>
+                <input class="form-control flex-grow-1" placeholder="Productnaam" type="text" v-model="product.name">
               </div>
             </td>
             <td class="products-new products-category">
@@ -83,7 +86,7 @@
             </td>
             <td class="products-save-new" v-on:click="saveProduct(product)">
             <span class="btn btn-primary">
-              <%= fa_icon 'floppy-o lg' %>
+              <i class="far fa-floppy-disk fa-lg"></i>
             </span></td>
           </template>
           <template v-else="">
@@ -97,7 +100,7 @@
             </td>
             <td class="products-new-edit-button" v-if="<%= policy(Product).update? %> && filteredPriceLists.length > 0">
               <button class="btn btn-sm btn-outline-secondary" v-on:click="editProduct(product)">
-                <%= fa_icon 'pencil' %>
+                <i class="fas fa-pencil"></i>
               </button>
             </td>
           </template>
@@ -108,17 +111,17 @@
               <% if policy(Product).create? %>
                 <button class="btn btn-secondary btn-sm products-button-new" v-on:click.prevent="newProduct">
                   Voeg een nieuw product toe
-                  <%= fa_icon 'plus-square', class: 'ps-2' %>
+                  <i class="fas fa-square-plus ps-2"></i>
                 </button>
               <% end %>
             </div>
           </td>
           <td class="products-archive-button center-text" v-for="priceList in filteredPriceLists">
             <button class="btn btn-sm btn-outline-secondary" v-if="<%= policy(PriceList).unarchive? %> && priceList.archived_at" v-on:click="unarchivePriceList(priceList)">
-              <%= fa_icon 'repeat' %>
+              <i class="fas fa-repeat"></i>
             </button>
             <button class="btn btn-sm btn-outline-secondary" v-else-if="<%= policy(PriceList).archive? %>" v-on:click="archivePriceList(priceList)">
-              <%= fa_icon 'archive' %>
+              <i class="fas fa-archive"></i>
             </button>
             <div></div>
           </td>

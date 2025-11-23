@@ -1,17 +1,14 @@
 import Vue from 'vue/dist/vue.esm';
-import TurbolinksAdapter from 'vue-turbolinks';
 import VueResource from 'vue-resource';
 
-Vue.use(TurbolinksAdapter);
 Vue.use(VueResource);
 
-document.addEventListener('turbolinks:load', () => {
+document.addEventListener('turbo:load', () => {
   Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-  var element = document.getElementById('pricelists-container');
+  const element = document.getElementById('pricelists-container');
   if (element != null) {
-    var priceLists = JSON.parse(element.dataset.priceLists);
-    var products = JSON.parse(element.dataset.products);
+    const priceLists = JSON.parse(element.dataset.priceLists);
+    const products = JSON.parse(element.dataset.products);
 
     // Make sure property exists before Vue sees the data
     products.forEach(p => p.editing = false);
@@ -19,14 +16,14 @@ document.addEventListener('turbolinks:load', () => {
     new Vue({
       el: element,
       data: () => {
-        return { priceLists: priceLists, products: products, showArchived: false };
+        return { priceLists: priceLists, products: products, showArchived: false, errors: [] };
       },
       computed: {
         filteredPriceLists: function() {
           if (this.showArchived) {
-            return priceLists;
+            return this.priceLists;
           } else {
-            return priceLists.filter(priceList => !priceList.archived_at);
+            return this.priceLists.filter(priceList => !priceList.archived_at);
           }
         }
       },
@@ -35,49 +32,59 @@ document.addEventListener('turbolinks:load', () => {
           if (!product || !product.product_prices) {
             return { price: null };
           }
-          var price = product.product_prices.find(p => (p.product_id === product.id && p.price_list_id === priceList.id));
+          const price = product.product_prices.find(p => (p.product_id === product.id && p.price_list_id === priceList.id));
 
-          return price || product.product_prices.push({
+          if (price) {
+            return price;
+          }
+          const newPrice = {
             product_id: product.id,
             price_list_id: priceList.id,
             price: null
-          });
+          };
+          product.product_prices.push(newPrice);
+          return newPrice;
         },
 
         newProduct () {
-          var newProduct = {
+          const newProduct = {
             name: '',
             category: 0,
             editing: true,
             product_prices: [],
           };
-          return products.push(newProduct);
+          this.products.push(newProduct);
+          return newProduct;
         },
 
         saveProduct: function(product) {
+          if (product.id && product._beforeEditingCache.name !== product.name) {
+            if (!confirm('Weet je zeker dat je de productnaam wilt wijzigen? Pas hier mee op want dit kan problemen geven in bestaande orders. Als je twijfelt, maak dan een nieuw product aan in plaats van het bestaande te hernoemen.')) {
+              return;
+            }
+          }
           const sanitizedProduct = this.sanitizeProductInput(product);
           if (sanitizedProduct.id) { // Existing product
-            this.$http.put(`/products/${sanitizedProduct.id}.json`, { product: sanitizedProduct }).then( (response) => {
-              var newProduct = response.data;
+            this.$http.put(`/products/${sanitizedProduct.id}.json`, { product: sanitizedProduct }).then((response) => {
+              const newProduct = response.body;
               newProduct.editing = false;
 
               this.$set(this.products, this.products.indexOf(product), newProduct);
-            }, (response) => {
-              this.errors = response.data.errors;
+            }).catch((error) => {
+              this.errors = error.response?.body?.errors || ['An error occurred'];
             });
           } else {
             this.$http.post('/products.json', { product: sanitizedProduct }).then( (response) => {
-              var index = this.products.indexOf(product);
+              const index = this.products.indexOf(product);
               this.products.splice(index, 1);
 
-              var newProduct = response.data;
+              const newProduct = response.body;
               newProduct.editing = false;
 
               this.products.push(newProduct);
-            }, (response) => {
-              this.errors = response.data.errors;
-            }
-            );
+            }).catch((error) => {
+              this.errors = error.response?.body?.errors || ['An error occurred'];
+            });
           }
         },
 
@@ -127,25 +134,24 @@ document.addEventListener('turbolinks:load', () => {
 
             product.editing = false;
           } else {
-            var index = this.products.indexOf(product);
+            const index = this.products.indexOf(product);
             this.products.splice(index, 1);
           }
-          return products;
         },
 
         archivePriceList: function(priceList) {
           this.$http.post(`/price_lists/${priceList.id}/archive`, {}).then((response) => {
-            priceList.archived_at = response.data;
-          }, (response) => {
-            this.errors = response.data.errors;
+            priceList.archived_at = response.body;
+          }).catch((error) => {
+            this.errors = error.response?.body?.errors || ['An error occurred'];
           });
         },
 
         unarchivePriceList: function(priceList) {
           this.$http.post(`/price_lists/${priceList.id}/unarchive`, {}).then((response) => {
-            priceList.archived_at = response.data;
-          }, (response) => {
-            this.errors = response.data.errors;
+            priceList.archived_at = response.body;
+          }).catch((error) => {
+            this.errors = error.response?.body?.errors || ['An error occurred'];
           });
         },
 
