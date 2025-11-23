@@ -5,7 +5,7 @@ require 'fileutils'
 
 # Source and destination directories
 source = File.expand_path('../node_modules/@fortawesome/fontawesome-free/webfonts', __dir__)
-dest   = File.expand_path('../app/assets/fonts', __dir__)
+dest   = File.expand_path('../public/webfonts', __dir__)
 
 unless Dir.exist?(source)
   abort "Source directory not found: #{source}\nDid you run 'yarn install' or 'npm install'?"
