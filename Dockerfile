@@ -44,15 +44,7 @@ COPY . /app/
 
 # Precompile assets after copying app because whole Rails pipeline is needed.
 RUN if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ] || [ "$RAILS_ENV" = 'luxproduction' ]; then \
-    SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile; \
-    # create short-name copies like "abcdef-....woff2" -> "abcdef.woff2" for fonts and other assets
-    bash -lc 'for f in public/assets/*-*.*; do \
-      [ -f \"$f\" ] || continue; \
-      base=$(basename \"$f\"); \
-      ext=\"${base##*.}\"; \
-      short=\"${base%%-*}.${ext}\"; \
-      if [ ! -e \"public/assets/$short\" ]; then cp --preserve=mode,timestamps \"$f\" \"public/assets/$short\"; fi; \
-    done'; \
+    SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile;
   else \
     echo "Skipping assets:precompile"; \
   fi
