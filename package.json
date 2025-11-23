@@ -23,7 +23,7 @@
     "@popperjs/core": "^2.11.8",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.4.0",
-    "babel-loader": "^8.4.1",
+    "babel-loader": "^9.2.1",
     "babel-plugin-macros": "^3.1.0",
     "bootstrap": "^5.3.8",
     "caniuse-lite": "^1.0.30001754",
