@@ -72,13 +72,17 @@ bundle exec rubocop
 
 When migrations are executed on master and everthing worked they can be archived with the following command.
 
-    bundle exec rails db:migrate:archive
+```
+bundle exec rails db:migrate:archive
+```
 
-## updating fonts
+##  Updating Fonts
 
-When Fonts need to be updated, they can be copied form the nodemodules folder to assests:fonts with the following command.
+When fonts need to be updated, they can be copied from the node_modules folder to assets/fonts with the following command.
 
-    yarn:postinstall
+```
+yarn postinstall
+```
 
 ## Deploying
 
