@@ -20,7 +20,7 @@ if [ "${TYPE}" = "lint" ] || [ "${TYPE}" = "" ]; then
   echo "--- :eslint: Yarn lint"
   yarn install # Why do I need to do this again? This was done in Dockerfile, rite?
   yarn lint
-  yarn run sass-lint -v -q
+  yarn lint:styles
 fi
 
 if [ "${TYPE}" = "spec" ] || [ "${TYPE}" = "" ]; then

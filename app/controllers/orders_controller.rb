@@ -39,7 +39,7 @@ class OrdersController < ApplicationController
   end
 
   def update
-    @order = Order.find(permitted_attributes_on_update[:id])
+    @order = Order.find(params[:id])
 
     authorize @order
 
@@ -89,7 +89,7 @@ class OrdersController < ApplicationController
   end
 
   def permitted_attributes_on_update
-    params.permit(:id, order_rows_attributes: %i[id product_count])
+    params.require(:order).permit(:id, order_rows_attributes: %i[id product_count])
   end
 
   def proper_json
