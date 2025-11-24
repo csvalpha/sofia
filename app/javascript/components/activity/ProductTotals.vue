@@ -77,10 +77,13 @@ export default {
       this.isLoading = true;
 
       let params = {user: this.user.id, paid_with_cash: this.user.paid_with_cash, paid_with_pin: this.user.paid_with_pin};
-      this.$http.get('/activities/'+this.activity+'/product_totals', { params }).then((response) => {
+      this.$http.get(`/activities/${this.activity}/product_totals`, { params }).then((response) => {
         this.orderTotals = response.body;
         this.totalAmount = this.orderTotals.reduce((a, b) => a + parseFloat(b.price), 0.0);
         this.isLoading = false;
+      }).catch((error) => {
+        this.isLoading = false;
+        console.error('Er is iets misgegaan bij het ophalen van de producttotalen', error);
       });
     },
     doubleToCurrency(price) {
