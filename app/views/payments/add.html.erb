@@ -10,7 +10,7 @@
           Saldo opwaarderen voor <%= @user.name %>
         </h1>
 
-        <%= simple_form_for(@payment, wrapper: :horizontal_form) do |f| %>
+        <%= simple_form_for(@payment, wrapper: :horizontal_form, html: { data: { turbo: "false" } }) do |f| %>
           <div class="col-12">
             <p>
               Voer hier het bedrag in dat je wilt inleggen. Hierna zal je worden doorgestuurd naar de betaalomgeving.
