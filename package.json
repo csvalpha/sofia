@@ -22,7 +22,7 @@
     "@hotwired/turbo-rails": "^8.0.20",
     "@popperjs/core": "^2.11.8",
     "autosuggest-highlight": "^3.3.4",
-    "axios": "^1.4.0",
+    "axios": "^1.13.2",
     "babel-loader": "^10.0.0",
     "babel-plugin-macros": "^3.1.0",
     "bootstrap": "^5.3.8",

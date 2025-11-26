@@ -2776,7 +2776,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.4.0":
+"axios@npm:^1.13.2":
   version: 1.13.2
   resolution: "axios@npm:1.13.2"
   dependencies:
@@ -6250,7 +6250,7 @@ __metadata:
     "@hotwired/turbo-rails": "npm:^8.0.20"
     "@popperjs/core": "npm:^2.11.8"
     autosuggest-highlight: "npm:^3.3.4"
-    axios: "npm:^1.4.0"
+    axios: "npm:^1.13.2"
     babel-loader: "npm:^10.0.0"
     babel-plugin-macros: "npm:^3.1.0"
     bootstrap: "npm:^5.3.8"
