@@ -19,16 +19,19 @@ document.addEventListener('turbo:load', () => {
   const element = document.getElementById('users-index');
   if (element !== null) {
     try {
-      const manual_users = JSON.parse(element.dataset.manualUsers);
-      const amber_users = JSON.parse(element.dataset.amberUsers);
-      const inactive_users = JSON.parse(element.dataset.inactiveUsers);
-
+      var manual_users = JSON.parse(element.dataset.manualUsers);
+      var sofia_account_users = JSON.parse(element.dataset.sofiaAccountUsers);
+      var amber_users = JSON.parse(element.dataset.amberUsers);
+      var not_activated_users = JSON.parse(element.dataset.notActivatedUsers);
+      var deactivated_users = JSON.parse(element.dataset.deactivatedUsers);
       vueInstance = new Vue({
         el: element,
         data: () => ({
           manual_users,
+          sofia_account_users,
           amber_users,
-          inactive_users
+          not_activated_users,
+          deactivated_users
         }),
         components: {
           UsersTable

@@ -24,7 +24,7 @@
     </div>
     <users-table :users="manual_users" class="mb-5"></users-table>
 
-    <% if Rails.application.config.x.site_association == 'C.S.V. Alpha' %>
+    <% if Rails.application.config.x.amber_api_url.present? %>
       <div class="d-flex justify-content-between align-items-center">
         <h3><%= Rails.application.config.x.site_association %> gebruikers</h3>
         <% if policy(User).refresh_user_list? %>

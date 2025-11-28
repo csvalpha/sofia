@@ -6,7 +6,7 @@
       </h3>
     </div>
     <ul class="list-group list-group-flush">
-      <% if Rails.application.config.x.site_association == 'C.S.V. Alpha' %>
+      <% if Rails.application.config.x.amber_api_url.present? %>
         <li class="list-group-item">
           <p class="card-text mt-2">
             Log in met een <%= Rails.application.config.x.site_association %> account.
