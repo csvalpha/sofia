@@ -109,8 +109,6 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     users_not_in_json = User.active.in_amber.where.not(uid: users_json.pluck('id')).where.not(name: 'Streepsysteem Flux')
     users_not_in_json.each(&:archive!)
 
-    send_slack_users_refresh_notification
-
     redirect_to users_path
   end
 
@@ -163,15 +161,6 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
   end
 
   private
-
-  def send_slack_users_refresh_notification
-    return unless Rails.env.production? || Rails.env.staging? || Rails.env.luxproduction?
-
-    # :nocov:
-    SlackMessageJob.perform_later("User ##{current_user.id} (#{current_user.name}) " \
-                                  "is importing users from Amber (#{Rails.application.config.x.amber_api_host})")
-    # :nocov:
-  end
 
   def users_json
     JSON.parse(RestClient.get("#{Rails.application.config.x.amber_api_url}/api/v1/users?filter[group]=Leden",

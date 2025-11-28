@@ -1,5 +1,5 @@
 class Role < ApplicationRecord
-  enum role_type: { treasurer: 0, main_bartender: 1, renting_manager: 2 }
+  enum :role_type, { treasurer: 0, main_bartender: 1, renting_manager: 2 }
 
   validates :role_type, presence: true
   has_many :roles_users, class_name: 'RolesUsers', dependent: :destroy

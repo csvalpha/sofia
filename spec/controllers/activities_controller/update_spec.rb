@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ActivitiesController, type: :controller do
+describe ActivitiesController do
   describe 'PUT update' do
     let(:activity) do
       create(:activity, price_list: create(:price_list))

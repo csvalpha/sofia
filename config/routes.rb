@@ -83,6 +83,7 @@ Rails.application.routes.draw do
 
   get '/403', to: 'errors#forbidden'
   get '/404', to: 'errors#not_found'
-  get '/422', to: 'errors#unacceptable'
+  get '/406', to: 'errors#unacceptable'
+  get '/422', to: 'errors#unprocessable_entity'
   get '/500', to: 'errors#internal_server_error'
 end

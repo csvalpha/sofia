@@ -12,7 +12,7 @@
             Log in met een <%= Rails.application.config.x.site_association %> account.
           </p>
           <div class="d-grid mb-2">
-            <%= link_to("Log in met #{Rails.application.config.x.site_association}", user_amber_oauth2_omniauth_authorize_path, class: 'btn btn-primary', method: :post) %>
+            <%= button_to "Log in met #{Rails.application.config.x.site_association}", user_amber_oauth2_omniauth_authorize_path, class: 'btn btn-primary btn-login', data: { turbo: "false" } %>
           </div>
         </li>
         <li class="list-group-item text-center bg-light">

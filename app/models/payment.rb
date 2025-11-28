@@ -6,7 +6,7 @@ class Payment < ApplicationRecord
     undef_method :open
   end
   # See: https://docs.mollie.com/payments/status-changes
-  enum status: { open: 0, pending: 1, paid: 2, failed: 3, canceled: 4, expired: 5 }
+  enum :status, { open: 0, pending: 1, paid: 2, failed: 3, canceled: 4, expired: 5 }
   COMPLETE_STATUSES = %w[paid failed canceled expired].freeze
 
   belongs_to :user, optional: true

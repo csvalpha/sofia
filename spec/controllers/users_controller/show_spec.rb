@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe UsersController, type: :controller do
+describe UsersController do
   describe 'GET show' do
     let(:amber) { create(:user, :from_amber) }
     let(:sofia) { create(:user, :sofia_account) }

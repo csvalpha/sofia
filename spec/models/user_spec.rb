@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe User, type: :model do
+RSpec.describe User do
   subject(:user) { build_stubbed(:user) }
 
   describe '#valid' do
@@ -164,7 +164,7 @@ RSpec.describe User, type: :model do
         create(:roles_users, role:, user:)
       end
 
-      it { expect(user.roles).to match_array [role] }
+      it { expect(user.roles).to contain_exactly(role) }
     end
 
     context 'when with a destroyed role' do
@@ -178,7 +178,7 @@ RSpec.describe User, type: :model do
         roles_users.destroy
       end
 
-      it { expect(user.roles).not_to match_array [role] }
+      it { expect(user.roles).not_to contain_exactly(role) }
     end
   end
 

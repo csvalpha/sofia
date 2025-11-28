@@ -25,12 +25,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         with:
           ref: ${{ inputs.sha }}
 
       - name: Build test image
-        uses: guidojw/actions/build-docker-image@3ad963828827110a6b716a011f242bf01fdf1db4 # v1.4.7
+        uses: guidojw/actions/build-docker-image@93f79307970f9904f178fa99c97bf02f5bc955c9 # v2.0.0
         with:
           file: Dockerfile
           build-args: |
@@ -56,7 +56,7 @@ jobs:
           - 5432:5432
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         with:
           ref: ${{ inputs.sha }}
 
@@ -68,10 +68,10 @@ jobs:
 
       - name: Download actionlint
         run: |
-          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash) 1.7.7
+          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash) 1.7.9
 
       - name: Load test image
-        uses: guidojw/actions/load-docker-image@3ad963828827110a6b716a011f242bf01fdf1db4 # v1.4.7
+        uses: guidojw/actions/load-docker-image@93f79307970f9904f178fa99c97bf02f5bc955c9 # v2.0.0
         with:
           name: app
 
@@ -111,7 +111,7 @@ jobs:
           - 5432:5432
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         with:
           ref: ${{ inputs.sha }}
 
@@ -120,7 +120,7 @@ jobs:
           echo '::add-matcher::.github/problem-matchers/rspec.json'
 
       - name: Load test image
-        uses: guidojw/actions/load-docker-image@3ad963828827110a6b716a011f242bf01fdf1db4 # v1.4.7
+        uses: guidojw/actions/load-docker-image@93f79307970f9904f178fa99c97bf02f5bc955c9 # v2.0.0
         with:
           name: app
 
@@ -141,14 +141,14 @@ jobs:
 
       - name: Upload coverage report to Codecov
         if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@13ce06bfc6bbe3ecf90edbbf1bc32fe5978ca1d3 # v5.3.1
+        uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
         with:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Upload coverage report artifact
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: coverage
           path: coverage/

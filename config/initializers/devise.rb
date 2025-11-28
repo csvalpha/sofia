@@ -10,7 +10,7 @@ Devise.setup do |config|
   config.sign_out_via = :delete
 
   # ==> OmniAuth
-  require 'omniauth_strategies'
+  require_dependency Rails.root.join('config', 'initializers', 'omniauth_strategies', 'amber_oauth2.rb')
 
   config.omniauth :amber_oauth2, Rails.application.config.x.amber_client_id,
                   Rails.application.config.x.amber_client_secret

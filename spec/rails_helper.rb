@@ -5,7 +5,9 @@ require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../config/environment', __dir__)
 # Prevent database truncation if the environment is production
+# rubocop:disable Rails/Exit
 abort('The Rails environment is running in production mode!') if Rails.env.production? || Rails.env.staging? || Rails.env.luxproduction?
+# rubocop:enable Rails/Exit
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 
@@ -22,7 +24,7 @@ require 'rspec/rails'
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
-Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }
+Rails.root.glob('spec/support/**/*.rb').each { |f| require f }
 
 # Checks for pending migration and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
@@ -34,7 +36,7 @@ RSpec.configure do |config|
   config.include DeviseHelper, type: :request
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = Rails.root.join('spec', 'fixtures')
+  config.fixture_paths = Rails.root.join('spec', 'fixtures')
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false

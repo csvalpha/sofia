@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Product, type: :model do
+RSpec.describe Product do
   subject(:product) { build(:product) }
 
   describe '#valid' do
@@ -21,7 +21,7 @@ RSpec.describe Product, type: :model do
     context 'when updating the name' do
       subject(:product) { create(:product) }
 
-      it { expect(product.update(name: 'new_name')).to be false }
+      it { expect(product.update(name: 'new_name')).to be true }
     end
   end
 

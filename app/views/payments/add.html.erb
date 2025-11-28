@@ -1,5 +1,7 @@
 <% content_for :title, "Saldo opwaarderen voor #{@user.name} - #{Rails.application.config.x.site_name}" %>
-
+<% content_for :head do %>
+  <%= javascript_include_tag "payment_add", "data-turbo-track": "reload", defer: true %>
+<% end %>
 <%= content_tag :div, id: 'payment-add', class: 'container footer-padding', data: {user_credit: @user.credit, payment_amount: @payment.amount} do %>
   <div class="container footer-padding">
     <div class="row py-4">
@@ -8,11 +10,11 @@
           Saldo opwaarderen voor <%= @user.name %>
         </h1>
 
-        <%= simple_form_for(@payment, wrapper: :horizontal_form) do |f| %>
+        <%= simple_form_for(@payment, wrapper: :horizontal_form, html: { data: { turbo: "false" } }) do |f| %>
           <div class="col-12">
             <p>
               Voer hier het bedrag in dat je wilt inleggen. Hierna zal je worden doorgestuurd naar de betaalomgeving.
-              Let op: Het bedrag moet gescheiden worden door een punt. Gebruik geen komma!
+              Let op: Het bedrag moet gescheiden worden door een punt.
             </p>
             <%= f.input :amount, as: :float, input_html: {"v-model": "paymentAmount"}, required: true, label: 'Bedrag'  %>
           </div>
@@ -25,7 +27,7 @@
 
           <div class="col-md-4 col-sm-8 col-12 offset-md-8 offset-sm-4" v-if="!amountValid()">
             <div class="alert alert-danger">
-              U heeft een incorrect getal ingevoerd.
+              U heeft een incorrect getal ingevoerd. Het minimale inleg bedrag is €21,80.
             </div>
           </div>
 

@@ -34,19 +34,19 @@ class OrdersController < ApplicationController
       order_data.user.current_activity = order_data.activity unless order_data.user.nil?
       render json: order_data.as_json(include: json_includes)
     else
-      render json: @order.errors, status: :unprocessable_entity
+      render json: @order.errors, status: :unprocessable_content
     end
   end
 
   def update
-    @order = Order.find(permitted_attributes_on_update[:id])
+    @order = Order.find(params[:id])
 
     authorize @order
 
     if @order.update(permitted_attributes_on_update)
       render json: @order.to_json(proper_json)
     else
-      render json: @order.errors, status: :unprocessable_entity
+      render json: @order.errors, status: :unprocessable_content
     end
   end
 
@@ -89,7 +89,7 @@ class OrdersController < ApplicationController
   end
 
   def permitted_attributes_on_update
-    params.permit(:id, order_rows_attributes: %i[id product_count])
+    params.require(:order).permit(:id, order_rows_attributes: %i[id product_count])
   end
 
   def proper_json

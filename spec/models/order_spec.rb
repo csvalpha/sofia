@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Order, type: :model do
+RSpec.describe Order do
   subject(:order) { build_stubbed(:order) }
 
   describe '#valid' do

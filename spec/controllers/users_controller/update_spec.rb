@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe UsersController, type: :controller do
+describe UsersController do
   describe 'PUT update' do
     let(:user) do
       create(:user, :manual)

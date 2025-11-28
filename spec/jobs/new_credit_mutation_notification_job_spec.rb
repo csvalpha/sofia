@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe NewCreditMutationNotificationJob, type: :job do
+RSpec.describe NewCreditMutationNotificationJob do
   describe '#perform' do
     let(:user) { create(:user, name: 'Buddy Normal', email: 'bahamas@example.com') }
     let(:emails) { ActionMailer::Base.deliveries }

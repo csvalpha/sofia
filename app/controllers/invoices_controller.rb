@@ -1,5 +1,6 @@
 class InvoicesController < ApplicationController
   include ApplicationHelper
+
   before_action :authenticate_user!, except: %w[show pay]
   after_action :verify_authorized, except: %w[show pay]
 
