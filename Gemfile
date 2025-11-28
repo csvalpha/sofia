@@ -18,7 +18,7 @@ gem 'net-imap', require: false
 gem 'net-pop', require: false
 gem 'net-smtp', require: false
 gem 'omniauth', '~> 2.1.2'
-gem 'omniauth-identity', '~> 3.0', '>= 3.0.9'
+gem 'omniauth-identity', '~> 3.1', '>= 3.1.2'
 gem 'omniauth-oauth2', '~> 1.8.0'
 gem 'omniauth-rails_csrf_protection', '~> 1.0', '>= 1.0.2'
 gem 'paper_trail', '~> 16.0.0'
