@@ -25,8 +25,7 @@ describe SofiaAccountsController do
       end
 
       it 'shows success message and sends email' do # rubocop:disable RSpec/ExampleLength
-        expect(UserMailer).to send_email(:new_activation_link_email, :deliver_later, user)
-        request
+        expect { request }.to have_enqueued_mail(UserMailer, :new_activation_link_email).with(user)
         expect(assigns(:message)).to eq 'Er is een nieuwe activatielink voor uw account verstuurd naar uw emailadres.'
         user.reload
         expect(user.activation_token).not_to be_nil

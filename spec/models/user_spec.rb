@@ -565,8 +565,7 @@ RSpec.describe User do
       end
 
       it do
-        expect(UserMailer).to send_email(:account_creation_email, :deliver_later, user)
-        user.save
+        expect { user.save }.to have_enqueued_mail(UserMailer, :account_creation_email).with(user)
       end
     end
 
