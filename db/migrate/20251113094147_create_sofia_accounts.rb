@@ -1,9 +1,9 @@
 class CreateSofiaAccounts < ActiveRecord::Migration[7.2]
   def change
     create_table :sofia_accounts do |t|
-      t.string :username, unique: true, null: false
+      t.string :username, null: false
       t.string :password_digest, null: false
-      t.references :user, null: false, unique: true
+      t.references :user, null: false, foreign_key: true
       t.string :otp_secret_key, null: false
       t.boolean :otp_enabled, default: false, null: false
 

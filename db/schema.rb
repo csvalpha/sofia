@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_13_233761) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_13_094147) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -138,12 +138,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_13_233761) do
   end
 
   create_table "roles", force: :cascade do |t|
-    t.integer "group_uid", null: false
+    t.integer "group_uid"
     t.datetime "deleted_at", precision: nil
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.integer "role_type"
-     t.index ["role_type", "group_uid"], name: "index_roles_on_role_type_and_group_uid", unique: true
   end
 
   create_table "roles_users", force: :cascade do |t|
@@ -157,6 +156,19 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_13_233761) do
     t.index ["user_id"], name: "index_roles_users_on_user_id"
   end
 
+  create_table "sofia_accounts", force: :cascade do |t|
+    t.string "username", null: false
+    t.string "password_digest", null: false
+    t.bigint "user_id", null: false
+    t.string "otp_secret_key", null: false
+    t.boolean "otp_enabled", default: false, null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_sofia_accounts_on_user_id"
+    t.index ["username"], name: "index_sofia_accounts_on_username", unique: true
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "deleted_at", precision: nil
     t.datetime "created_at", precision: nil, null: false
@@ -168,6 +180,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_13_233761) do
     t.string "email"
     t.date "birthday"
     t.boolean "deactivated", default: false, null: false
+    t.string "activation_token"
+    t.datetime "activation_token_valid_till"
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
@@ -185,4 +199,5 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_13_233761) do
   add_foreign_key "activities", "users", column: "locked_by_id"
   add_foreign_key "credit_mutations", "users", column: "created_by_id"
   add_foreign_key "orders", "users", column: "created_by_id"
+  add_foreign_key "sofia_accounts", "users"
 end
