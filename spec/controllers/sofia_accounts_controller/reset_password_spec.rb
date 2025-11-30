@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe SofiaAccountsController, type: :controller do
+describe SofiaAccountsController do
   describe 'PATCH reset_password' do
     let(:user) do
       create(:user, :sofia_account, activation_token: SecureRandom.urlsafe_base64, activation_token_valid_till: 5.days.from_now)

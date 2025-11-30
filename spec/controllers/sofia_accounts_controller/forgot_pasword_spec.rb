@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe SofiaAccountsController, type: :controller do
+describe SofiaAccountsController do
   describe 'POST forgot_password' do
     let(:user) { create(:user, :sofia_account) }
     let(:sofia_account) { create(:sofia_account, user:) }

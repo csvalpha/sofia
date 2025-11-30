@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe SofiaAccount, type: :model do
+RSpec.describe SofiaAccount do
   subject(:sofia_account) do
     build_stubbed(:sofia_account, user: build_stubbed(:user, activation_token: SecureRandom.urlsafe_base64), password: 'password1234')
   end

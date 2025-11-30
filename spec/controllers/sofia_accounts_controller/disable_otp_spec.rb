@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe SofiaAccountsController, type: :controller do
+describe SofiaAccountsController do
   describe 'PATCH disable_otp' do
     let(:sofia_account) do
       create(:sofia_account, otp_enabled: true)

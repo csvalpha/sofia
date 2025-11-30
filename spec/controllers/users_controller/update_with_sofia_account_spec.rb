@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe UsersController, type: :controller do
+describe UsersController do
   describe 'PATCH update_with_sofia_account' do
     let(:user) { create(:user, :sofia_account, name: 'Old name') }
     let(:sofia_account) { create(:sofia_account, user:, username: 'Old username') }

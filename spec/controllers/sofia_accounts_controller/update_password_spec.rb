@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe SofiaAccountsController, type: :controller do
+describe SofiaAccountsController do
   describe 'PATCH update_password' do
     let(:sofia_account) do
       create(:sofia_account, password: 'password1234', password_confirmation: 'password1234')

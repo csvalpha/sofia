@@ -17,10 +17,10 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   scope :in_amber, -> { where(provider: 'amber_oauth2') }
   scope :sofia_account, -> { where(provider: 'sofia_account') }
   scope :manual, -> { where(provider: nil) }
-  scope :active, (lambda {
+  scope :active, lambda {
     where(deactivated: false).where('(provider IS NULL OR provider != ?) OR
                                      (provider = ? AND id IN (?))', 'sofia_account', 'sofia_account', SofiaAccount.select('user_id'))
-  })
+  }
   scope :not_activated, -> { where(deactivated: false, provider: 'sofia_account').where.not(id: SofiaAccount.select('user_id')) }
   scope :deactivated, -> { where(deactivated: true) }
   scope :treasurer, -> { joins(:roles).merge(Role.treasurer) }
