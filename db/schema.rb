@@ -160,7 +160,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_13_094147) do
     t.string "username", null: false
     t.string "password_digest", null: false
     t.bigint "user_id", null: false
-    t.string "otp_secret_key", null: false
+    t.string "otp_secret_key"
     t.boolean "otp_enabled", default: false, null: false
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
@@ -186,7 +186,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_13_094147) do
   end
 
   create_table "versions", force: :cascade do |t|
-    t.string "item_type"
+    t.string "item_type", null: false
     t.integer "item_id", null: false
     t.string "event", null: false
     t.string "whodunnit"
