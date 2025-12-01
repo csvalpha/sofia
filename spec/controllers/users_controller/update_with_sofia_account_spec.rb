@@ -3,21 +3,27 @@ require 'rails_helper'
 describe UsersController do
   describe 'PATCH update_with_sofia_account' do
     context 'when the user already has a Sofia account' do
-      let(:user) { create(:user, :sofia_account, name: 'Old name') }
-      let(:sofia_account) { create(:sofia_account, user:, username: 'Old username') }
+      let(:user) { create(:user, name: 'Old name') }
+      let!(:sofia_account) { create(:sofia_account, user:, username: 'Old username') }
+      let(:request_params) do
+        {
+          id: user.id,
+          user: {
+            name: 'New name',
+            sofia_account_attributes: { id: sofia_account.id, username: 'New username' }
+          }
+        }
+      end
       let(:request) do
-        patch :update_with_sofia_account,
-              params: { id: user.id, user: user.attributes.merge({ sofia_account_attributes: sofia_account.attributes }) }
+        patch :update_with_sofia_account, params: request_params
+        response
       end
 
       before do
-        user
-        sofia_account
         sign_in action_user
-        user.sofia_account.username = 'New username'
-        user.name = 'New name'
         request
         user.reload
+        sofia_account.reload
       end
 
       describe 'when as user themselves' do
