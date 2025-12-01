@@ -491,7 +491,7 @@ RSpec.describe User do
 
       it do
         expect(user.activation_token_valid_till).not_to be_nil
-        expect(user.activation_token_valid_till.day).to eq 5.days.from_now.day
+        expect(user.activation_token_valid_till).to be_within(1.minute).of(5.days.from_now)
       end
     end
 

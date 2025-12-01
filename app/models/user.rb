@@ -96,7 +96,7 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def update_role(groups)
-    return unless User.in_amber.exists?(id)
+    return unless provider == 'amber_oauth2'
 
     roles_to_have = Role.where(group_uid: groups)
     roles_users_to_have = roles_to_have.map { |role| RolesUsers.find_or_create_by(role:, user: self) }
@@ -107,7 +107,7 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def archive!
     attributes.each_key do |attribute|
-      self[attribute] = nil unless %w[deleted_at updated_at created_at provider sofia_account id uid].include? attribute
+      self[attribute] = nil unless %w[deleted_at updated_at created_at provider id uid].include? attribute
     end
     self.name = "Gearchiveerde gebruiker #{id}"
     self.deactivated = true

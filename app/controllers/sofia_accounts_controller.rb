@@ -82,9 +82,11 @@ class SofiaAccountsController < ApplicationController # rubocop:disable Metrics/
     @sofia_account = SofiaAccount.find(params[:id])
     authorize @sofia_account
 
-    @sofia_account.update(otp_enabled: false)
-
-    redirect_to user_path(@sofia_account.user_id)
+    if @sofia_account.update(otp_enabled: false)
+      redirect_to user_path(@sofia_account.user_id), flash: { success: 'Two-factor-authenticatie uitgezet.' }
+    else
+      redirect_to user_path(@sofia_account.user_id), flash: { error: 'Two-factor-authenticatie uitzetten mislukt.' }
+    end
   end
 
   def activate_account

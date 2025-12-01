@@ -7,15 +7,13 @@ describe UsersController do
       let(:sofia_account) { create(:sofia_account, user:, username: 'Old username') }
       let(:request) do
         patch :update_with_sofia_account,
-              params: { id: user.id, user: user.attributes.merge({ sofia_account_attributes: sofia_account.attributes }) }
+              params: { id: user.id, user: { sofia_account_attributes: { username: 'New username' } } }
       end
 
       before do
         user
         sofia_account
         sign_in action_user
-        user.sofia_account.username = 'New username'
-        user.name = 'New name'
         request
         user.reload
       end

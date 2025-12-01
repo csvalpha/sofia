@@ -9,6 +9,7 @@ class UserMailer < ApplicationMailer
 
   def forgot_password_email(user)
     @user = user
+    raise ArgumentError, "User must have a SofiaAccount" unless user.sofia_account
     @username = user.sofia_account.username
     @reset_password_url = user.sofia_account.reset_password_url(@user.activation_token)
     @forgot_password_url = SofiaAccount.forgot_password_url

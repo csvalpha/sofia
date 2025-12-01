@@ -18,6 +18,7 @@ describe SofiaAccountsController do
 
       it 'updates sofia_account' do
         expect(response).to have_http_status :found
+        expect(response).to redirect_to(user_path(sofia_account.user))
         expect(sofia_account.otp_enabled).to be false
       end
     end

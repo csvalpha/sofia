@@ -9,7 +9,7 @@
             <div class="col-12 text-center">
               <div class="alert alert-dismissible fade show <%= flash_class key %>" role="alert">
                 <% if html_key %>
-                  <%= trusted_html.html_safe %>
+                  <%= trusted_html %>
                 <% else %>
                   <%= value %>
                 <% end %>
