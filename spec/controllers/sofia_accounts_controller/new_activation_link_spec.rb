@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe SofiaAccountsController do
   describe 'GET new_activation_link' do
+    let(:generic_message) { 'Er is een activatielink verzonden als het account bestaat.' }
     let(:user) do
       create(:user, :sofia_account, activation_token: SecureRandom.urlsafe_base64, activation_token_valid_till: 5.days.from_now)
     end
@@ -24,9 +25,9 @@ describe SofiaAccountsController do
         clear_enqueued_jobs
       end
 
-      it 'shows success message and sends email' do # rubocop:disable RSpec/ExampleLength
+      it 'shows generic message and sends email' do
         expect { request }.to have_enqueued_mail(UserMailer, :new_activation_link_email).with(user)
-        expect(assigns(:message)).to eq 'Er is een nieuwe activatielink voor uw account verstuurd naar uw emailadres.'
+        expect(assigns(:message)).to eq generic_message
         user.reload
         expect(user.activation_token).not_to be_nil
         expect(user.activation_token_valid_till).not_to be_nil
@@ -40,13 +41,13 @@ describe SofiaAccountsController do
         user.update(email: nil)
         old_user
         clear_enqueued_jobs
-        request
       end
 
-      it 'shows error message and does not send email' do
+      it 'shows generic message and does not send email' do
+        expect { request }.not_to have_enqueued_mail(UserMailer, :new_activation_link_email)
+        expect(assigns(:message)).to eq generic_message
+        user.reload
         expect(user.dup.attributes).to eq old_user.attributes
-        expect(assigns(:message)).to match(/uw account heeft geen emailadres/)
-        expect(enqueued_jobs.size).to eq(0)
       end
     end
 
@@ -57,13 +58,13 @@ describe SofiaAccountsController do
         request_params[:user_id] = nil
         old_user
         clear_enqueued_jobs
-        request
       end
 
       it 'shows error message and does not send email' do
-        expect(user.dup.attributes).to eq old_user.attributes
+        expect { request }.not_to have_enqueued_mail(UserMailer, :new_activation_link_email)
         expect(assigns(:message)).to match(/gebruikers-id is niet aanwezig/)
-        expect(enqueued_jobs.size).to eq(0)
+        user.reload
+        expect(user.dup.attributes).to eq old_user.attributes
       end
     end
 
@@ -74,13 +75,13 @@ describe SofiaAccountsController do
         user.update(sofia_account: create(:sofia_account, user:))
         old_user
         clear_enqueued_jobs
-        request
       end
 
-      it 'shows error message and does not send email' do
+      it 'shows generic message and does not send email' do
+        expect { request }.not_to have_enqueued_mail(UserMailer, :new_activation_link_email)
+        expect(assigns(:message)).to eq generic_message
+        user.reload
         expect(user.dup.attributes).to eq old_user.attributes
-        expect(assigns(:message)).to match(/uw account is al geactiveerd/)
-        expect(enqueued_jobs.size).to eq(0)
       end
     end
 
@@ -88,16 +89,16 @@ describe SofiaAccountsController do
       let(:old_user) { user.dup }
 
       before do
-        request_params[:user_id] = User.count + 1
+        request_params[:user_id] = User.maximum(:id).to_i + 1
         old_user
         clear_enqueued_jobs
-        request
       end
 
-      it 'shows error message and does not send email' do
+      it 'shows generic message and does not send email' do
+        expect { request }.not_to have_enqueued_mail(UserMailer, :new_activation_link_email)
+        expect(assigns(:message)).to eq generic_message
+        user.reload
         expect(user.dup.attributes).to eq old_user.attributes
-        expect(assigns(:message)).to match(/uw account bestaat niet/)
-        expect(enqueued_jobs.size).to eq(0)
       end
     end
 
@@ -108,13 +109,13 @@ describe SofiaAccountsController do
         user.update(deactivated: true)
         old_user
         clear_enqueued_jobs
-        request
       end
 
-      it 'shows error message and does not send email' do
+      it 'shows generic message and does not send email' do
+        expect { request }.not_to have_enqueued_mail(UserMailer, :new_activation_link_email)
+        expect(assigns(:message)).to eq generic_message
+        user.reload
         expect(user.dup.attributes).to eq old_user.attributes
-        expect(assigns(:message)).to match(/uw account is gedeactiveerd/)
-        expect(enqueued_jobs.size).to eq(0)
       end
     end
   end

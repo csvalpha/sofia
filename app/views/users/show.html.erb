@@ -74,7 +74,9 @@
           <%= fa_icon 'sliders', class: 'me-1' %>
           Instellingen
         </button>
-      <% elsif current_user.treasurer? %>
+      <% end %>
+
+      <% if current_user.treasurer? %>
         <button class="btn btn-sm btn-primary pull-right ms-2" data-bs-target="#edit_user_modal" data-bs-toggle="modal" role="button">
           <i class="fas fa-pencil me-1"></i>
           Gebruiker wijzigen

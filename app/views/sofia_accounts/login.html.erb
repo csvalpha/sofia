@@ -95,12 +95,20 @@ async function authenticate_otp() {
       'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
     }
   });
-  const json = await response.json();
-  if (json.login_success) {
-    window.location.replace(json.redirect_url);
+  const contentType = response.headers.get('Content-Type') || '';
+
+  if (contentType.includes("application/json")) {
+    const json = await response.json();
+    if (json.login_success) {
+      window.location.replace(json.redirect_url);
+    } else {
+      // authentication code is wrong
+      document.querySelector("#authenticate_flash_message").textContent = json.error_message;
+      document.querySelector("#authenticate_flash_holder").classList.remove('d-none');
+    }
   } else {
-    // authentication code is wrong
-    document.querySelector("#authenticate_flash_message").textContent = json.error_message;
+    // Non-JSON response indicates an error
+    document.querySelector("#authenticate_flash_message").textContent = "Authenticatie mislukt door een error. Herlaad de pagina en probeer het nog een keer. Werkt het na een paar keer proberen nog steeds niet? Neem dan contact op met de ICT-commissie.";
     document.querySelector("#authenticate_flash_holder").classList.remove('d-none');
   }
 }

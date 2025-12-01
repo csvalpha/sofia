@@ -24,6 +24,6 @@ class UserPolicy < ApplicationPolicy
   end
 
   def update_with_sofia_account?
-    record == user && User.active.sofia_account.exists?(id: record)
+    record == user
   end
 end

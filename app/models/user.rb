@@ -39,11 +39,11 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   after_save do
     age
-    archive! if deactivated && (new_record? || deactivated_previously_changed?(from: false, to: true))
+    archive! if saved_change_to_deactivated?(from: false, to: true)
   end
 
   after_create do
-    UserMailer.account_creation_email(self).deliver_later if User.sofia_account.exists?(id:)
+    UserMailer.account_creation_email(self).deliver_later if provider == 'sofia_account'
   end
 
   def credit
@@ -131,7 +131,9 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def self.from_omniauth_inspect(auth)
-    sofia_account = SofiaAccount.find(auth.uid)
+    sofia_account = SofiaAccount.find_by(id: auth.uid)
+    return nil unless sofia_account
+
     sofia_account.user
   end
 

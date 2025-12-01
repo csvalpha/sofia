@@ -60,7 +60,6 @@ describe SofiaAccountsController do
       end
 
       it 'redirects after create' do
-        request
         expect(response).to be_redirect
       end
     end
@@ -304,7 +303,7 @@ describe SofiaAccountsController do
       let(:old_user) { user.dup }
 
       before do
-        request_params[:user_id] = User.count
+        request_params[:user_id] = User.maximum(:id).to_i + 1
         old_user
         request
         user.reload

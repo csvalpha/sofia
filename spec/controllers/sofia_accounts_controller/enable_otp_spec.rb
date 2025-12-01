@@ -12,19 +12,19 @@ describe SofiaAccountsController do
         verification_code: sofia_account.otp_code
       }
     end
-    let(:request) do
+    let(:perform_request) do
       patch :enable_otp, params: request_params
     end
 
     describe 'when as sofia_account owner' do
       before do
         sign_in user
-        request
+        perform_request
         sofia_account.reload
       end
 
       it 'updates sofia_account' do
-        expect(request.status).to eq 302
+        expect(response).to have_http_status :found
         expect(sofia_account.otp_enabled).to be true
       end
     end
@@ -32,12 +32,12 @@ describe SofiaAccountsController do
     describe 'when as other user' do
       before do
         sign_in create(:user)
-        request
+        perform_request
         sofia_account.reload
       end
 
       it 'does not update sofia_account' do
-        expect(request.status).to eq 403
+        expect(response).to have_http_status :forbidden
         expect(sofia_account.otp_enabled).to be false
       end
     end
@@ -45,12 +45,12 @@ describe SofiaAccountsController do
     describe 'when as main-bartender' do
       before do
         sign_in create(:user, :main_bartender)
-        request
+        perform_request
         sofia_account.reload
       end
 
       it 'does not update sofia_account' do
-        expect(request.status).to eq 403
+        expect(response).to have_http_status :forbidden
         expect(sofia_account.otp_enabled).to be false
       end
     end
@@ -58,12 +58,12 @@ describe SofiaAccountsController do
     describe 'when as treasurer' do
       before do
         sign_in create(:user, :treasurer)
-        request
+        perform_request
         sofia_account.reload
       end
 
       it 'does not update sofia_account' do
-        expect(request.status).to eq 403
+        expect(response).to have_http_status :forbidden
         expect(sofia_account.otp_enabled).to be false
       end
     end
@@ -72,27 +72,27 @@ describe SofiaAccountsController do
       before do
         request_params[:verification_code] = nil
         sign_in user
-        request
+        perform_request
         sofia_account.reload
       end
 
       it 'does not update sofia_account' do
-        expect(request.status).to eq 302
+        expect(response).to have_http_status :found
         expect(sofia_account.otp_enabled).to be false
         expect(flash[:error]).to match(/de verificatie token is niet aanwezig/)
       end
     end
 
-    describe 'with wrong verication_code' do
+    describe 'with wrong verification_code' do
       before do
         request_params[:verification_code] = SecureRandom.urlsafe_base64
         sign_in user
-        request
+        perform_request
         sofia_account.reload
       end
 
       it 'does not update sofia_account' do
-        expect(request.status).to eq 302
+        expect(response).to have_http_status :found
         expect(sofia_account.otp_enabled).to be false
         expect(flash[:error]).to match(/de verificatie token is ongeldig/)
       end

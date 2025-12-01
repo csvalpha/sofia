@@ -3,10 +3,16 @@
     <div class="row">
       <div class="col-12 col-md-6 mx-auto">
         <% flash.each do |key, value| %>
+          <% html_key = key.to_s.end_with?("_html") %>
+          <% trusted_html = html_key ? sanitize(value) : nil %>
           <div class="row">
             <div class="col-12 text-center">
               <div class="alert alert-dismissible fade show <%= flash_class key %>" role="alert">
-                <%= value.html_safe %>
+                <% if html_key %>
+                  <%= trusted_html.html_safe %>
+                <% else %>
+                  <%= value %>
+                <% end %>
                 <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"/>
               </div>
             </div>

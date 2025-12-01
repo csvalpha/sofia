@@ -10,7 +10,7 @@ describe SofiaAccountsController do
       {
         id: sofia_account.id,
         sofia_account: {
-          old_password: sofia_account.password,
+          old_password: 'password1234',
           password: 'new_password1234',
           password_confirmation: 'new_password1234'
         }

@@ -5,19 +5,19 @@ describe SofiaAccountsController do
     let(:sofia_account) do
       create(:sofia_account, otp_enabled: true)
     end
-    let(:request) do
+    let(:perform_request) do
       patch :disable_otp, params: { id: sofia_account.id }
     end
 
     describe 'when as sofia_account owner' do
       before do
         sign_in sofia_account.user
-        request
+        perform_request
         sofia_account.reload
       end
 
       it 'updates sofia_account' do
-        expect(request.status).to eq 302
+        expect(response).to have_http_status :found
         expect(sofia_account.otp_enabled).to be false
       end
     end
@@ -25,12 +25,12 @@ describe SofiaAccountsController do
     describe 'when as other user' do
       before do
         sign_in create(:user)
-        request
+        perform_request
         sofia_account.reload
       end
 
       it 'does not update sofia_account' do
-        expect(request.status).to eq 403
+        expect(response).to have_http_status :forbidden
         expect(sofia_account.otp_enabled).to be true
       end
     end
@@ -38,12 +38,12 @@ describe SofiaAccountsController do
     describe 'when as main-bartender' do
       before do
         sign_in create(:user, :main_bartender)
-        request
+        perform_request
         sofia_account.reload
       end
 
       it 'does not update sofia_account' do
-        expect(request.status).to eq 403
+        expect(response).to have_http_status :forbidden
         expect(sofia_account.otp_enabled).to be true
       end
     end
@@ -51,12 +51,12 @@ describe SofiaAccountsController do
     describe 'when as treasurer' do
       before do
         sign_in create(:user, :treasurer)
-        request
+        perform_request
         sofia_account.reload
       end
 
       it 'does not update sofia_account' do
-        expect(request.status).to eq 403
+        expect(response).to have_http_status :forbidden
         expect(sofia_account.otp_enabled).to be true
       end
     end

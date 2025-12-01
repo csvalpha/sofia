@@ -15,7 +15,7 @@ Devise.setup do |config|
   config.omniauth :amber_oauth2, Rails.application.config.x.amber_client_id,
                   Rails.application.config.x.amber_client_secret
   config.omniauth :identity, model: SofiaAccount, fields: %i[username user_id],
-                             locate_conditions: ->(req) { { model.auth_key => req.params['auth_key'] } },
+                             locate_conditions: ->(req) { { SofiaAccount.auth_key => req.params['auth_key'] } },
                              on_login: lambda { |e|
                                          SofiaAccountsController.action(:omniauth_redirect_login).call(e)
                                        },

@@ -31,8 +31,6 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     @new_user = User.new
   end
 
-  include ActiveModel::OneTimePassword::InstanceMethodsOnActivation
-
   def show # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @user = User.includes(:credit_mutations, roles_users: :role).find(params[:id])
     authorize @user
@@ -148,6 +146,11 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     authorize @user
 
     @sofia_account = @user.sofia_account
+    unless @sofia_account
+      flash[:alert] = 'Nog geen Sofia-account geactiveerd.'
+      redirect_back_or_to @user
+      return
+    end
     authorize @sofia_account
 
     if @user.update(params.require(:user).permit(%i[email] + (current_user.treasurer? ? %i[name deactivated] : []),

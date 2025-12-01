@@ -59,7 +59,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
       error_message << if request.env['omniauth.error.type'].to_s == 'invalid_credentials'
                          ' De ingevulde gegevens zijn incorrect.'
                        else
-                         " #{request.env['omniauth.error.type']}"
+                         ' Er is een onverwachte fout opgetreden.'
                        end
     end
     render(json: { state: 'password_prompt', error_message: })

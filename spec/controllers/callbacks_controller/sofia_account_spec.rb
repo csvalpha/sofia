@@ -12,7 +12,7 @@ describe 'SofiaAccount login', type: :request do
     let(:request_params) do
       {
         auth_key: sofia_account.username,
-        password: sofia_account.password,
+        password: 'password1234',
         verification_code: sofia_account.otp_code
       }
     end
@@ -27,7 +27,7 @@ describe 'SofiaAccount login', type: :request do
       end
 
       it 'does not log in user' do
-        expect(signed_in?(nil)).to be true
+        expect(signed_in_user).to be_nil
       end
 
       it 'sends a json response' do

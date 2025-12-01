@@ -18,7 +18,7 @@ class CreateSofiaAccounts < ActiveRecord::Migration[7.2]
       t.datetime :activation_token_valid_till
     end
 
-    remove_index :roles, column: %i[role_type group_uid]
+    remove_index :roles, column: %i[role_type group_uid], unique: true
     change_column_null :roles, :group_uid, true, 999_999
   end
 end

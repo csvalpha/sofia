@@ -42,9 +42,9 @@ describe SofiaAccountsController do
         user.reload
       end
 
-      it 'shows error message and does not send email' do
+      it 'shows generic message and does not send email' do
         expect(user.dup.attributes).to eq old_user.attributes
-        expect(flash[:error]).to match(/uw account heeft geen emailadres/)
+        expect(flash[:success]).to eq 'Als dit account bestaat, is er een email verstuurd.'
         expect(enqueued_jobs.size).to eq(0)
       end
     end
@@ -78,9 +78,9 @@ describe SofiaAccountsController do
         user.reload
       end
 
-      it 'shows error message and does not send email' do
+      it 'shows generic message and does not send email' do
         expect(user.dup.attributes).to eq old_user.attributes
-        expect(flash[:error]).to match(/gebruikersnaam bestaat niet/)
+        expect(flash[:success]).to eq 'Als dit account bestaat, is er een email verstuurd.'
         expect(enqueued_jobs.size).to eq(0)
       end
     end
