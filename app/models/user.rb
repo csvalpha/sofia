@@ -1,5 +1,5 @@
 class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
-  devise :omniauthable, omniauth_providers: [:amber_oauth2]
+  devise :omniauthable, omniauth_providers: %i[amber_oauth2 identity]
   has_many :orders, dependent: :destroy
   has_many :order_rows, through: :orders, dependent: :destroy
   has_many :credit_mutations, dependent: :destroy
@@ -11,14 +11,40 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   validates :name, presence: true
   validates :uid, uniqueness: true, allow_blank: true
   validate :no_deactivation_when_nonzero_credit
+  validates :email, format: { with: Devise.email_regexp }, allow_blank: true
+  validates :email, presence: true, if: ->(user) { !user.deactivated && user.sofia_account.present? }
 
   scope :in_amber, -> { where(provider: 'amber_oauth2') }
+  scope :sofia_account, -> { where(provider: 'sofia_account') }
   scope :manual, -> { where(provider: nil) }
-  scope :active, -> { where(deactivated: false) }
-  scope :inactive, -> { where(deactivated: true) }
+  scope :active, lambda {
+    where(deactivated: false).where('(provider IS NULL OR provider != ?) OR
+                                     (provider = ? AND id IN (?))', 'sofia_account', 'sofia_account', SofiaAccount.select('user_id'))
+  }
+  scope :not_activated, -> { where(deactivated: false, provider: 'sofia_account').where.not(id: SofiaAccount.select('user_id')) }
+  scope :deactivated, -> { where(deactivated: true) }
   scope :treasurer, -> { joins(:roles).merge(Role.treasurer) }
 
+  has_one :sofia_account, dependent: :destroy
+  accepts_nested_attributes_for :sofia_account
+
   attr_accessor :current_activity
+
+  before_save do
+    if new_record? && provider == 'sofia_account'
+      self.activation_token = SecureRandom.urlsafe_base64
+      self.activation_token_valid_till = 5.days.from_now
+    end
+  end
+
+  after_save do
+    age
+    archive! if saved_change_to_deactivated?(from: false, to: true)
+  end
+
+  after_create do
+    UserMailer.account_creation_email(self).deliver_later if provider == 'sofia_account'
+  end
 
   def credit
     credit_mutations.sum('amount') - order_rows.sum('product_count * price_per_product')
@@ -70,6 +96,8 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def update_role(groups)
+    return unless provider == 'amber_oauth2'
+
     roles_to_have = Role.where(group_uid: groups)
     roles_users_to_have = roles_to_have.map { |role| RolesUsers.find_or_create_by(role:, user: self) }
 
@@ -100,6 +128,13 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
       birthday: auth[:info][:birthday]
     )
     user
+  end
+
+  def self.from_omniauth_inspect(auth)
+    sofia_account = SofiaAccount.find_by(id: auth.uid)
+    return nil unless sofia_account
+
+    sofia_account.user
   end
 
   # :nocov:

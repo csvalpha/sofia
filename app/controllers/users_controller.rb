@@ -3,32 +3,61 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
 
   after_action :verify_authorized
 
-  def index # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def index # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     authorize User
 
     @manual_users = User.manual.active.order(:name).select { |u| policy(u).show? }
     @amber_users = User.in_amber.active.order(:name).select { |u| policy(u).show? }
-    @inactive_users = User.inactive.order(:name).select { |u| policy(u).show? }
+    @sofia_account_users = User.sofia_account.active.order(:name).select { |u| policy(u).show? }
+    @not_activated_users = User.not_activated.order(:name).select { |u| policy(u).show? }
+    @deactivated_users = User.deactivated.order(:name).select { |u| policy(u).show? }
     @users_credits = User.calculate_credits
 
     @manual_users_json = @manual_users.as_json(only: %w[id name])
                                       .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
+    @sofia_account_users_json = @sofia_account_users.as_json(only: %w[id name])
+                                                    .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
+
     @amber_users_json = @amber_users.as_json(only: %w[id name])
                                     .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
-    @inactive_users_json = @inactive_users.as_json(only: %w[id name])
-                                          .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
+    @not_activated_users_json = @not_activated_users.as_json(only: %w[id name])
+                                                    .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
+
+    @deactivated_users_json = @deactivated_users.as_json(only: %w[id name])
+                                                .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
     @new_user = User.new
   end
 
-  def show
+  def show # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @user = User.includes(:credit_mutations, roles_users: :role).find(params[:id])
     authorize @user
 
     @user_json = @user.to_json(only: %i[id name deactivated])
     @new_mutation = CreditMutation.new(user: @user)
+
+    @sofia_account = SofiaAccount.find_by(user_id: @user.id)
+    if @sofia_account
+      qr_code = RQRCode::QRCode.new(@sofia_account.provisioning_uri(@sofia_account.username,
+                                                                    issuer: "Streepsysteem #{Rails.application.config.x.site_association}"))
+      @svg_qr_code = qr_code.as_svg(
+        color: '000',
+        shape_rendering: 'crispEdges',
+        module_size: 10,
+        standalone: true,
+        use_path: true,
+        viewbox: true,
+        svg_attributes: {
+          width: '100%',
+          height: 'auto',
+          class: 'qr-code'
+        }
+      )
+    else
+      @sofia_account = SofiaAccount.new
+    end
 
     @new_user = @user
   end
@@ -112,6 +141,28 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     render json: activities_hash
   end
 
+  def update_with_sofia_account # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    @user = User.find(params[:id])
+    authorize @user
+
+    @sofia_account = @user.sofia_account
+    unless @sofia_account
+      flash[:alert] = 'Nog geen Sofia-account geactiveerd.'
+      redirect_back_or_to @user
+      return
+    end
+    authorize @sofia_account
+
+    if @user.update(params.require(:user).permit(%i[email] + (current_user.treasurer? ? %i[name deactivated] : []),
+                                                 sofia_account_attributes: %i[id username]))
+      flash[:success] = 'Gegevens gewijzigd'
+    else
+      flash[:error] = "Gegevens wijzigen mislukt; #{@user.errors.full_messages.join(', ')}"
+    end
+
+    redirect_to @user
+  end
+
   private
 
   def users_json
@@ -134,6 +185,6 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
   end
 
   def permitted_attributes
-    params.require(:user).permit(%w[name email])
+    params.require(:user).permit(%w[name email provider])
   end
 end

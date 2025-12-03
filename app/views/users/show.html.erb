@@ -5,6 +5,7 @@
 <% content_for :modal do %>
   <%= render 'mutation_modal' %>
   <%= render 'modal' %>
+  <%= render 'edit_sofia_account_modal' %>
 <% end %>
 
 
@@ -68,6 +69,13 @@
           <% end %></tr>
         </tbody>
       </table>
+      <% if @sofia_account && policy(@sofia_account).update_with_sofia_account? %>
+        <button class="btn btn-sm btn-primary pull-right ms-2" data-bs-target="#edit_sofia_account_modal" data-bs-toggle="modal" role="button">
+          <%= fa_icon 'sliders', class: 'me-1' %>
+          Instellingen
+        </button>
+      <% end %>
+
       <% if current_user.treasurer? %>
         <button class="btn btn-sm btn-primary pull-right ms-2" data-bs-target="#edit_user_modal" data-bs-toggle="modal" role="button">
           <i class="fas fa-pencil me-1"></i>
@@ -107,7 +115,6 @@
               <%= content_tag :div, class: "alert mb-1 alert-#{@user.credit <= 0 ? 'danger' : 'info'}" do %>
                 <h4 class="alert-heading">
                   <%= @user.credit <= 0 ? 'Je staat rood!' : 'Inleggen' %>
-
                 </h4>
                 <p class="card-text">
                   <% if Rails.application.config.x.mollie_api_key.present? %>
@@ -116,18 +123,9 @@
                     Om je saldo aan te vullen kan je zelf geld overmaken.
                   <% end %>
                   <%= "Dat kan naar #{Rails.application.config.x.company_iban} t.n.v. #{Rails.application.config.x.company_name}" %>
-                  <%= 'onder vermelding van je naam en \'Inleg Zatladder\'.' %>
-
-                  <% if Rails.application.config.x.mollie_api_key.present? %>
-                    <%= link_to add_payments_path do %>
-                      <%= 'Klik hier om je saldo over te maken via iDEAL ' %>
-                    <% end %>
-                  <% end %>
-
                 </p>
-
-
-              <% end %></div>
+              <% end %>
+            </div>
             <div aria-labelledby="roleInfo-tab" class="tab-pane p-2" id="roleInfo" role="tabpanel">
               <button class="pull-right btn btn-sm btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#role-sync-description" aria-expanded="false" aria-controls="role-sync-description">
                 <i class="fas fa-circle-question"></i>
