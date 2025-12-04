@@ -19,7 +19,7 @@ class CreditMutationsController < ApplicationController
 
     respond_to do |format|
       if @mutation.save
-        NewCreditMutationNotificationJob.perform_later(@mutation) if Rails.env.production? || Rails.env.staging? || Rails.env.luxproduction?
+        NewCreditMutationNotificationJob.perform_later(@mutation) if Rails.env.production? || Rails.env.staging? || Rails.env.luxproduction? || Rails.env.euros?
         format.html { redirect_to which_redirect?, flash: { success: 'Inleg of mutatie aangemaakt' } }
         format.json do
           render json: @mutation, include: { user: { methods: User.orderscreen_json_includes } }

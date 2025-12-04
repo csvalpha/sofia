@@ -14,3 +14,6 @@ staging:
 
 luxproduction:
   <<: *production
+
+euros:
+  <<: *production

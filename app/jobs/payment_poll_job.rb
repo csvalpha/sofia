@@ -9,7 +9,7 @@ class PaymentPollJob < ApplicationJob
       # it will be checked again the next time this poll job runs
     end
 
-    return unless Rails.env.production? || Rails.env.staging? || Rails.env.luxproduction?
+    return unless Rails.env.production? || Rails.env.staging? || Rails.env.luxproduction? || Rails.env.euros?
 
     HealthCheckJob.perform_later('payment_poll')
   end
