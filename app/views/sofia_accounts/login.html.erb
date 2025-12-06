@@ -78,7 +78,8 @@ async function authenticate_login() {
     }
   });
 
-  if (response.headers.get('Content-Type').includes("application/json")) {
+  const contentType = response.headers.get('Content-Type') || '';
+  if (contentType.includes("application/json")) {
     const json = await response.json();
     document.querySelector("#authenticate_flash_holder").classList.add('d-none');
 
