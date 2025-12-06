@@ -7,7 +7,7 @@
           <div class="col-12 text-center">
             <div class="alert alert-dismissible fade show alert-danger" role="alert">
               <p class="mb-0" id="authenticate_flash_message"></p>
-              <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"></button>
+              <button aria-label="Close" class="btn-close" type="button" id="authenticate_flash_close_button"></button>
             </div>
           </div>
         </div>
@@ -46,6 +46,27 @@
 <% end %>
 
 <script>
+function showAuthenticateFlashMessage(message, { allowHtml = false } = {}) {
+  const holder = document.querySelector("#authenticate_flash_holder");
+  const messageElement = document.querySelector("#authenticate_flash_message");
+
+  if (!holder || !messageElement) {
+    return;
+  }
+
+  if (allowHtml) {
+    messageElement.innerHTML = message;
+  } else {
+    messageElement.textContent = message;
+  }
+
+  holder.classList.remove("d-none");
+}
+
+document.querySelector("#authenticate_flash_close_button")?.addEventListener("click", function() {
+  document.querySelector("#authenticate_flash_holder")?.classList.add("d-none");
+});
+
 async function authenticate_login() {
   var formData = new FormData(document.querySelector("#authentication_form"));
 
@@ -75,13 +96,11 @@ async function authenticate_login() {
     }
 
     if (json.error_message) {
-      document.querySelector("#authenticate_flash_message").textContent = json.error_message;
-      document.querySelector("#authenticate_flash_holder").classList.remove('d-none');
+      showAuthenticateFlashMessage(json.error_message);
     }
   } else {
     // we did not get json back, so that most likely means a CORS-related error or an error on the server-side
-    document.querySelector("#authenticate_flash_message").innerHTML = "Inloggen mislukt door een error. Herlaad de pagina en probeer het nog een keer. <br/><i>Werkt het na een paar keer proberen nog steeds niet? Neem dan contact op met de ICT-commissie.</i>";
-    document.querySelector("#authenticate_flash_holder").classList.remove('d-none');
+    showAuthenticateFlashMessage("Inloggen mislukt door een error. Herlaad de pagina en probeer het nog een keer. <br/><i>Werkt het na een paar keer proberen nog steeds niet? Neem dan contact op met de ICT-commissie.</i>", { allowHtml: true });
   }
 } 
 
@@ -103,13 +122,11 @@ async function authenticate_otp() {
       window.location.replace(json.redirect_url);
     } else {
       // authentication code is wrong
-      document.querySelector("#authenticate_flash_message").textContent = json.error_message;
-      document.querySelector("#authenticate_flash_holder").classList.remove('d-none');
+      showAuthenticateFlashMessage(json.error_message);
     }
   } else {
     // Non-JSON response indicates an error
-    document.querySelector("#authenticate_flash_message").textContent = "Authenticatie mislukt door een error. Herlaad de pagina en probeer het nog een keer. Werkt het na een paar keer proberen nog steeds niet? Neem dan contact op met de ICT-commissie.";
-    document.querySelector("#authenticate_flash_holder").classList.remove('d-none');
+    showAuthenticateFlashMessage("Authenticatie mislukt door een error. Herlaad de pagina en probeer het nog een keer. Werkt het na een paar keer proberen nog steeds niet? Neem dan contact op met de ICT-commissie.");
   }
 }
 </script>
