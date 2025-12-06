@@ -11,12 +11,6 @@ RSpec.describe Role do
 
       it { expect(role).not_to be_valid }
     end
-
-    context 'when without group_uid' do
-      subject(:role) { build_stubbed(:role, group_uid: nil) }
-
-      it { expect(role).not_to be_valid }
-    end
   end
 
   describe '#name' do

@@ -6,7 +6,9 @@ ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../config/environment', __dir__)
 # Prevent database truncation if the environment is production
 # rubocop:disable Rails/Exit
-abort('The Rails environment is running in production mode!') if Rails.env.production? || Rails.env.staging? || Rails.env.luxproduction?
+if Rails.env.production? || Rails.env.staging? || Rails.env.luxproduction? || Rails.env.euros?
+  abort('The Rails environment is running in production mode!')
+end
 # rubocop:enable Rails/Exit
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
@@ -33,6 +35,7 @@ ActiveRecord::Migration.maintain_test_schema!
 RSpec.configure do |config|
   config.include ActiveJob::TestHelper
   config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include DeviseHelper, type: :request
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = Rails.root.join('spec', 'fixtures')

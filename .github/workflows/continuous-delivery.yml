@@ -19,6 +19,7 @@ on:
         options:
           - csvalpha
           - luxadmosam
+          - euros
         default: 'csvalpha'
 
 concurrency:
@@ -40,9 +41,11 @@ jobs:
             echo 'This workflow can only be run on branches staging and master.'
             exit 1
           fi
-          if [ "$TARGET_ENV" == 'luxadmosam' ] && [ "$GITHUB_REF_NAME" != 'master' ]; then
-            echo 'Only the master branch can be deployed to Lux ad Mosam.'
-            exit 1
+          if [ "$TARGET_ENV" == 'luxadmosam' ] || [ "$TARGET_ENV" == 'euros' ]; then
+            if [ "$GITHUB_REF_NAME" != 'master' ]; then
+              echo 'Only the master branch can be deployed to external parties.'
+              exit 1
+            fi
           fi
 
   metadata:
@@ -74,6 +77,8 @@ jobs:
 
             if [ "$TARGET_ENV" == 'luxadmosam' ]; then
               echo 'stage=luxproduction' >> "$GITHUB_OUTPUT"
+            elif [ "$TARGET_ENV" == 'euros' ]; then
+              echo 'stage=euros' >> "$GITHUB_OUTPUT"
             else
               echo 'stage=production' >> "$GITHUB_OUTPUT"
             fi
@@ -159,6 +164,8 @@ jobs:
         run: |
           if [ "$TARGET_ENV" == 'luxadmosam' ] && [ "$GITHUB_REF_NAME" = 'master' ]; then
             echo 'environment_url=https://luxstreep.csvalpha.nl' >> "$GITHUB_OUTPUT"
+          elif [ "$TARGET_ENV" == 'euros' ] && [ "$GITHUB_REF_NAME" = 'master' ]; then
+            echo 'environment_url=https://euros.csvalpha.nl' >> "$GITHUB_OUTPUT"
           elif [ "$GITHUB_REF_NAME" = 'master' ]; then
             echo 'environment_url=https://streep.csvalpha.nl' >> "$GITHUB_OUTPUT"
           else

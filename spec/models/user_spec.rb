@@ -12,6 +12,12 @@ RSpec.describe User do
       it { expect(user).not_to be_valid }
     end
 
+    context 'when with invalid email' do
+      subject(:user) { build_stubbed(:user, email: 'not_an_valid_email') }
+
+      it { expect(user).not_to be_valid }
+    end
+
     context 'when deactivating with credit' do
       subject(:user) { create(:user, deactivated: true) }
 
@@ -38,6 +44,40 @@ RSpec.describe User do
       before { user }
 
       it { expect(described_class.in_amber).not_to include user }
+    end
+  end
+
+  describe '.sofia_account' do
+    context 'when sofia_account' do
+      subject(:user) { create(:user, :sofia_account) }
+
+      before { user }
+
+      it { expect(described_class.sofia_account).to include user }
+    end
+
+    context 'when not sofia_account' do
+      subject(:user) { create(:user, provider: 'another_provider') }
+
+      before { user }
+
+      it { expect(described_class.sofia_account).not_to include user }
+    end
+
+    context 'when without email' do
+      subject(:user) { build(:user, :sofia_account, email: nil) }
+
+      before { build(:sofia_account, user:) }
+
+      it { expect(user).not_to be_valid }
+    end
+
+    context 'when with valid email' do
+      subject(:user) { build(:user, :sofia_account, email: 'valid@email.com') }
+
+      before { build(:sofia_account, user:) }
+
+      it { expect(user).to be_valid }
     end
   end
 
@@ -75,19 +115,29 @@ RSpec.describe User do
     end
   end
 
-  describe '.active / .inactive' do
+  describe '.active / .deactivated / .not_activated' do
     context 'when active' do
       subject(:user) { create(:user) }
 
       it { expect(described_class.active).to include user }
-      it { expect(described_class.inactive).not_to include user }
+      it { expect(described_class.not_activated).not_to include user }
+      it { expect(described_class.deactivated).not_to include user }
     end
 
     context 'when deactivated' do
       subject(:user) { create(:user, deactivated: true) }
 
       it { expect(described_class.active).not_to include user }
-      it { expect(described_class.inactive).to include user }
+      it { expect(described_class.not_activated).not_to include user }
+      it { expect(described_class.deactivated).to include user }
+    end
+
+    context 'when not activated' do
+      subject(:user) { create(:user, :sofia_account) }
+
+      it { expect(described_class.active).not_to include user }
+      it { expect(described_class.not_activated).to include user }
+      it { expect(described_class.deactivated).not_to include user }
     end
   end
 
@@ -224,7 +274,7 @@ RSpec.describe User do
 
   describe '#update_role' do
     context 'when getting new roles' do
-      subject(:user) { create(:user) }
+      subject(:user) { create(:user, :from_amber) }
 
       let(:role) { create(:role) }
 
@@ -388,15 +438,32 @@ RSpec.describe User do
     end
   end
 
+  describe 'destroy' do
+    context 'with sofia_account' do
+      subject(:user) { create(:user, :sofia_account) }
+
+      before do
+        create(:sofia_account, user:)
+        user.destroy
+      end
+
+      it { expect(SofiaAccount.count).to eq 0 }
+    end
+  end
+
   describe '#archive!' do
-    context 'when archiving a user' do
-      subject(:user) { create(:user) }
+    context 'with sofia_account' do
+      subject(:user) { create(:user, :sofia_account) }
 
       let(:nil_attributes) do
         %w[avatar_thumb_url email birthday]
       end
 
-      before { user.archive! && user.reload }
+      before do
+        create(:sofia_account, user:)
+        user.archive!
+        user.reload
+      end
 
       it { expect(user.archive!).to be true }
       it { expect(user.name).to eq "Gearchiveerde gebruiker #{user.id}" }
@@ -405,11 +472,113 @@ RSpec.describe User do
       it { expect { user.archive! }.not_to(change(user, :id)) }
       it { expect { user.archive! }.not_to(change(user, :uid)) }
       it { expect { user.archive! }.not_to(change(user, :provider)) }
+      it { expect { user.archive! }.not_to(change(user, :sofia_account)) }
+      it { expect(SofiaAccount.count).to eq 1 }
 
       it do
         nil_attributes.each do |attribute|
           expect(user[attribute]).to be_nil
         end
+      end
+    end
+  end
+
+  describe '#before_save' do
+    context 'with sofia_account' do
+      subject(:user) { create(:user, :sofia_account) }
+
+      it { expect(user.activation_token).not_to be_nil }
+
+      it do
+        expect(user.activation_token_valid_till).not_to be_nil
+        expect(user.activation_token_valid_till).to be_within(1.minute).of(5.days.from_now)
+      end
+    end
+
+    context 'without sofia_account' do
+      subject(:user) { create(:user) }
+
+      it { expect(user.activation_token).to be_nil }
+      it { expect(user.activation_token_valid_till).to be_nil }
+    end
+  end
+
+  describe '#after_save' do
+    context 'when deactivated upon creation' do
+      subject(:user) { build(:user, deactivated: true) }
+
+      it do
+        expect(user).to receive(:archive!) # rubocop:disable RSpec/SubjectStub, RSpec/MessageSpies
+        user.save
+      end
+    end
+
+    context 'when deactivated after update' do
+      subject(:user) { create(:user, deactivated: false) }
+
+      before { user.deactivated = true }
+
+      it do
+        expect(user).to receive(:archive!) # rubocop:disable RSpec/SubjectStub, RSpec/MessageSpies
+        user.save
+      end
+    end
+
+    context 'when deactivated and not changed' do
+      subject(:user) { create(:user, deactivated: true) }
+
+      before { user.email = 'valid@email.com' }
+
+      it do
+        expect(user).not_to receive(:archive!) # rubocop:disable RSpec/SubjectStub, RSpec/MessageSpies
+        user.save
+      end
+    end
+
+    context 'when not deactivated upon creation' do
+      subject(:user) { build(:user, deactivated: false) }
+
+      it do
+        expect(user).not_to receive(:archive!) # rubocop:disable RSpec/SubjectStub, RSpec/MessageSpies
+        user.save
+      end
+    end
+
+    context 'when not deactivated after update' do
+      subject(:user) { create(:user, deactivated: true) }
+
+      before { user.deactivated = false }
+
+      it do
+        expect(user).not_to receive(:archive!) # rubocop:disable RSpec/SubjectStub, RSpec/MessageSpies
+        user.save
+      end
+    end
+  end
+
+  describe '#after_create' do
+    context 'with sofia_account' do
+      subject(:user) { build(:user, :sofia_account) }
+
+      after do
+        clear_enqueued_jobs
+      end
+
+      it do
+        expect { user.save }.to have_enqueued_mail(UserMailer, :account_creation_email).with(user)
+      end
+    end
+
+    context 'without sofia_account' do
+      subject(:user) { build(:user) }
+
+      after do
+        clear_enqueued_jobs
+      end
+
+      it do
+        expect(UserMailer).not_to receive(:account_creation_email) # rubocop:disable RSpec/MessageSpies
+        user.save
       end
     end
   end

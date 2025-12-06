@@ -4,12 +4,13 @@
 <% end %>
 <% content_for :modal do %>
   <%= render 'modal' %>
+  <%= render 'new_sofia_account_user_modal' %>
 <% end %>
 
 <div class="container footer-padding">
   <h1 class="my-4">Gebruikers</h1>
 
-  <%= content_tag :div, id: 'users-index', data: {manual_users: @manual_users_json, amber_users: @amber_users_json, inactive_users: @inactive_users_json} do %>
+  <%= content_tag :div, id: 'users-index', data: {manual_users: @manual_users_json, sofia_account_users: @sofia_account_users_json, amber_users: @amber_users_json, not_activated_users: @not_activated_users_json, deactivated_users: @deactivated_users_json} do %>
     <div class="d-flex justify-content-between align-items-center">
       <h3>Handmatig aangemaakte gebruikers</h3>
       <% if policy(User).create? %>
@@ -21,26 +22,48 @@
         </button>
       <% end %>
     </div>
-    <users-table :users="manual_users"></users-table>
+    <users-table :users="manual_users" class="mb-5"></users-table>
 
-    <div class="d-flex justify-content-between align-items-center mt-5">
-      <h3><%= Rails.application.config.x.site_association %> gebruikers</h3>
-      <% if policy(User).refresh_user_list? %>
-        <span>
-          <%= link_to refresh_user_list_users_path, class: 'btn btn-primary btn-sm me-1' do %>
-            <i class="fas fa-arrows-rotate"></i>
-            <span class="d-none d-md-inline ms-1">Synchroniseer gebruikers</span>
-          <% end %>
-        </span>
+    <% if Rails.application.config.x.amber_api_host.present? %>
+      <div class="d-flex justify-content-between align-items-center">
+        <h3><%= Rails.application.config.x.site_association %> gebruikers</h3>
+        <% if policy(User).refresh_user_list? %>
+          <span>
+            <%= link_to refresh_user_list_users_path, class: 'btn btn-primary btn-sm me-1' do %>
+              <i class="fas fa-arrows-rotate"></i>
+              <span class="d-none d-md-inline ms-1">Synchroniseer gebruikers</span>
+            <% end %>
+          </span>
+        <% end %>
+      </div>
+      <users-table :users="amber_users" class="mb-5"></users-table>
+    <% end %>
+    
+    <div class="d-flex justify-content-between align-items-center">
+      <h3>Streepsysteem gebruikers</h3>
+      <% if policy(User).create? %>
+        <button class="btn btn-sm btn-primary" data-bs-target="#new_sofia_account_user_modal" data-bs-toggle="modal" role="button">
+          <i class="fas fa-plus"></i>
+          <span class="d-none d-md-inline ms-1">
+            Nieuwe gebruiker
+          </span>
+        </button>
       <% end %>
     </div>
-    <users-table :users="amber_users"></users-table>
+    <users-table :users="sofia_account_users" class="mb-5"></users-table>
 
-    <% if @inactive_users.any? %>
+    <% if @not_activated_users.any? %>
       <div class="d-flex justify-content-between align-items-center mt-5">
-        <h3>Inactieve gebruikers</h3>
+        <h3>Nog niet geactiveerde gebruikers</h3>
       </div>
-      <users-table :users="inactive_users"></users-table>
+      <users-table :users="not_activated_users" class="mb-5"></users-table>
+    <% end %>
+
+    <% if @deactivated_users.any? %>
+      <div class="d-flex justify-content-between align-items-center mt-5">
+        <h3>Gedeactiveerde gebruikers</h3>
+      </div>
+      <users-table :users="deactivated_users" class="mb-5"></users-table>
     <%end %>
   <% end %>
 </div>

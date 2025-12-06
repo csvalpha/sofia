@@ -10,32 +10,38 @@ describe UsersController do
     end
 
     before do
-      sign_in user
+      sign_in action_user
       user.name = 'New Name'
       request
       user.reload
     end
 
-    describe 'when as user' do
-      let(:user) { create(:user) }
+    describe 'when as user themselves' do
+      let(:action_user) { user }
+
+      it { expect(request.status).to eq 403 }
+    end
+
+    describe 'when as another user' do
+      let(:action_user) { create(:user) }
 
       it { expect(request.status).to eq 403 }
     end
 
     describe 'when as main-bartender' do
-      let(:user) { create(:user, :main_bartender) }
+      let(:action_user) { create(:user, :main_bartender) }
 
       it { expect(request.status).to eq 403 }
     end
 
     describe 'when as renting-manager' do
-      let(:user) { create(:user, :renting_manager) }
+      let(:action_user) { create(:user, :renting_manager) }
 
       it { expect(request.status).to eq 403 }
     end
 
     describe 'when as treasurer' do
-      let(:user) { create(:user, :treasurer) }
+      let(:action_user) { create(:user, :treasurer) }
 
       it { expect(request.status).to eq 302 }
       it { expect(user.name).to eq 'New Name' }

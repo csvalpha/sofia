@@ -7,7 +7,7 @@
     "lint:styles:fix": "stylelint 'app/**/*.s+(a|c)ss' 'app/**/*.vue' --ignore-path .gitignore --fix",
     "build": "webpack --config webpack.config.js",
     "watch": "webpack --config webpack.config.js --watch",
-    "build:css": "sass ./app/assets/stylesheets/application.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules",
+    "build:css": "sass ./app/assets/stylesheets/application.scss:./app/assets/builds/application.css ./app/assets/stylesheets/pdf.scss:./app/assets/builds/pdf.css --no-source-map --load-path=node_modules",
     "update:font": "ruby bin/copy_fontawesome_fonts"
   },
   "dependencies": {
@@ -22,7 +22,7 @@
     "@hotwired/turbo-rails": "^8.0.20",
     "@popperjs/core": "^2.11.8",
     "autosuggest-highlight": "^3.3.4",
-    "axios": "^1.4.0",
+    "axios": "^1.13.2",
     "babel-loader": "^10.0.0",
     "babel-plugin-macros": "^3.1.0",
     "bootstrap": "^5.3.8",

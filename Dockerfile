@@ -19,7 +19,7 @@ RUN apt-get update -qq && \
   libyaml-dev
 
 # Add Node, required for asset pipeline.
-RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - && \
   apt-get install -y nodejs && \
   npm install -q -g yarn
 
@@ -28,7 +28,7 @@ WORKDIR /app
 
 # Pre-install gems, so that they can be cached.
 COPY Gemfile* /app/
-RUN if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ] || [ "$RAILS_ENV" = 'luxproduction' ]; then \
+RUN if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ] || [ "$RAILS_ENV" = 'luxproduction' ] || [ "$RAILS_ENV" = 'euros' ]; then \
     bundle config set --local without 'development test'; \
   else \
     bundle config set --local without 'development'; \
@@ -43,7 +43,7 @@ RUN yarn install --immutable
 COPY . /app/
 
 # Precompile assets after copying app because whole Rails pipeline is needed.
-RUN if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ] || [ "$RAILS_ENV" = 'luxproduction' ]; then \
+RUN if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ] || [ "$RAILS_ENV" = 'luxproduction' ] || [ "$RAILS_ENV" = 'euros' ]; then \
     SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile; \
   else \
     echo "Skipping assets:precompile"; \
