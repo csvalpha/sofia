@@ -10,7 +10,7 @@
         <% if @sofia_account && policy(@sofia_account).update_with_sofia_account? %>
           <div class="card mb-3">
             <div class="card-header py-2" type="button" data-bs-toggle="collapse" data-bs-target="#user-data-collapse" aria-expanded="false" aria-controls="user-data-collapse">
-              <h5 class="mb-0 py-1">Gegevens <%= fa_icon 'caret-down', class: 'float-end me-1' %></h5>
+              <h5 class="mb-0 py-1">Gegevens <i class="fas fa-caret-down float-end me-1"></i></h5>
             </div>
             <div class="collapse card-body" id="user-data-collapse">
               <%= simple_form_for @user, wrapper: :horizontal_form, url: update_with_sofia_account_user_path, method: :patch do |f| %>
@@ -38,7 +38,7 @@
           
           <div class="card mb-3">
             <div class="card-header py-2" type="button" data-bs-toggle="collapse" data-bs-target="#password-collapse" aria-expanded="false" aria-controls="password-collapse">
-              <h5 class="mb-0 py-1">Wachtwoord <%= fa_icon 'caret-down', class: 'float-end me-1' %></h5>
+              <h5 class="mb-0 py-1">Wachtwoord <i class="fas fa-caret-down float-end me-1"></i></h5>
             </div>
             <div class="collapse card-body" id="password-collapse">
               <%= simple_form_for @sofia_account, wrapper: :horizontal_form, url: update_password_sofia_account_path(@sofia_account.id), method: :patch do |f| %>
@@ -52,7 +52,7 @@
           
           <div class="card mb-3">
             <div class="card-header py-2" type="button" data-bs-toggle="collapse" data-bs-target="#otp-collapse" aria-expanded="false" aria-controls="otp-collapse">
-              <h5 class="mb-0 py-1">Two-factor-authenticatie <%= fa_icon 'caret-down', class: 'float-end me-1' %></h5>
+              <h5 class="mb-0 py-1">Two-factor-authenticatie <i class="fas fa-caret-down float-end me-1"></i></h5>
             </div>
             <div class="collapse card-body" id="otp-collapse">
               <p>
@@ -86,7 +86,7 @@
               
                   <ul>
                     <li>
-                      <%= fa_icon 'android', class: 'me-1' %>
+                      <i class="fab fa-android me-1"></i>
                       <a
                         href='https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2'
                         target='_blank'
@@ -95,7 +95,7 @@
                       </a>
                     </li>
                     <li>
-                    <%= fa_icon 'apple', class: 'me-1' %>
+                    <i class="fab fa-apple me-1"></i>
                       <a
                         href='https://itunes.apple.com/us/app/authenticator/id766157276?mt=8'
                         target='_blank'
@@ -104,7 +104,7 @@
                       </a>
                     </li>
                     <li>
-                      <%= fa_icon 'windows', class: 'me-1' %>
+                      <i class="fab fa-windows me-1"></i>
                       <a
                         href='https://www.microsoft.com/en-us/store/p/microsoft-authenticator/9nblgggzmcj6'
                         target='_blank'
