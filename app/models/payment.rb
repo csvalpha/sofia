@@ -26,15 +26,25 @@ class Payment < ApplicationRecord
     COMPLETE_STATUSES.include?(status)
   end
 
-  def self.create_with_mollie(description, attributes = nil)
+  def self.create_with_mollie(description, attributes = nil) # rubocop:disable Metrics/AbcSize
+    is_mandate_setup = attributes&.delete(:first_payment)
     obj = create(attributes)
     return obj unless obj.valid?
 
-    mollie_payment = Mollie::Payment.create(
+    mollie_payment_attrs = {
       amount: { value: format('%<amount>.2f', amount: attributes[:amount]), currency: 'EUR' },
-      description:,
-      redirect_url: "http://#{Rails.application.config.x.sofia_host}/payments/#{obj.id}/callback"
-    )
+      description:
+    }
+
+    if is_mandate_setup
+      # For mandate setup, include sequenceType and the redirect URL for mandate callback
+      mollie_payment_attrs[:sequenceType] = 'first'
+      mollie_payment_attrs[:redirectUrl] = "http://#{Rails.application.config.x.sofia_host}/payments/#{obj.id}/mandate_callback"
+    else
+      mollie_payment_attrs[:redirectUrl] = "http://#{Rails.application.config.x.sofia_host}/payments/#{obj.id}/callback"
+    end
+
+    mollie_payment = Mollie::Payment.create(mollie_payment_attrs)
 
     obj.update(mollie_id: mollie_payment.id)
     obj
@@ -46,6 +56,9 @@ class Payment < ApplicationRecord
 
   def process_complete_payment!
     return unless status_previously_was != 'paid' && status == 'paid'
+
+    # Skip credit mutation for mandate setup payments (1 cent)
+    return if amount == 0.01
 
     process_user! if user
     process_invoice! if invoice
@@ -76,6 +89,8 @@ class Payment < ApplicationRecord
 
   def user_amount
     return unless user
+    # Allow 1 cent payments for mandate setup
+    return if amount == 0.01
 
     errors.add(:amount, 'must be bigger than or equal to 20') unless amount && (amount >= 20)
   end

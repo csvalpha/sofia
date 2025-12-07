@@ -71,11 +71,17 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def insufficient_credit
+    # Users with auto-charge enabled are always allowed to order
+    return false if auto_charge_available?
+
     provider == 'amber_oauth2' and credit.negative?
   end
 
   def can_order(activity = nil)
     activity ||= current_activity
+    # Users with auto-charge enabled can always order
+    return true if auto_charge_available?
+
     if activity.nil?
       !insufficient_credit
     else
@@ -103,6 +109,30 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
     roles_users_not_to_have = roles_users - roles_users_to_have
     roles_users_not_to_have.map(&:destroy)
+  end
+
+  def mollie_customer
+    return nil unless mollie_customer_id.present?
+
+    @mollie_customer ||= Mollie::Customer.get(mollie_customer_id)
+  rescue Mollie::ResponseError
+    nil
+  end
+
+  def mollie_mandate
+    return nil unless mollie_mandate_id.present? && mollie_customer.present?
+
+    mollie_customer.mandates.get(mollie_mandate_id)
+  rescue Mollie::ResponseError
+    nil
+  end
+
+  def mandate_valid?
+    mollie_mandate&.status == 'valid'
+  end
+
+  def auto_charge_available?
+    auto_charge_enabled && mandate_valid?
   end
 
   def archive!
