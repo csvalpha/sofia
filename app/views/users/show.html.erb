@@ -123,6 +123,13 @@
                     Om je saldo aan te vullen kan je zelf geld overmaken.
                   <% end %>
                   <%= "Dat kan naar #{Rails.application.config.x.company_iban} t.n.v. #{Rails.application.config.x.company_name}" %>
+                  <%= 'onder vermelding van je naam en \'Inleg Zatladder\'.' %>
+
+                  <% if Rails.application.config.x.mollie_api_key.present? %>
+                    <%= link_to add_payments_path do %>
+                      <%= 'Klik hier om je saldo over te maken via iDEAL ' %>
+                    <% end %>
+                  <% end %>
                 </p>
               <% end %>
             </div>
