@@ -36,8 +36,6 @@ class Payment < ApplicationRecord
     obj
   end
 
-  private_class_method :create_mollie_payment, :build_mollie_attrs, :build_base_mollie_attrs, :add_redirect_url
-
   def self.create_mollie_payment(description, attributes, obj, is_mandate_setup)
     mollie_payment_attrs = build_mollie_attrs(description, attributes, obj, is_mandate_setup)
     Mollie::Payment.create(mollie_payment_attrs)
@@ -64,6 +62,8 @@ class Payment < ApplicationRecord
       attrs[:redirectUrl] = "http://#{Rails.application.config.x.sofia_host}/payments/#{obj.id}/callback"
     end
   end
+
+  private_class_method :create_mollie_payment, :build_mollie_attrs, :build_base_mollie_attrs, :add_redirect_url
 
   def mollie_payment
     Mollie::Payment.get(mollie_id)

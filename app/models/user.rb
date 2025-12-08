@@ -137,7 +137,7 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def archive!
     attributes.each_key do |attribute|
-      self[attribute] = nil unless %w[deleted_at updated_at created_at provider id uid].include? attribute
+      self[attribute] = nil unless %w[deleted_at updated_at created_at provider id uid auto_charge_enabled].include? attribute
     end
     self.name = "Gearchiveerde gebruiker #{id}"
     self.deactivated = true
