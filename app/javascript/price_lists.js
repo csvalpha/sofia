@@ -50,7 +50,7 @@ document.addEventListener('turbo:load', () => {
           const newProduct = {
             name: '',
             category: 0,
-            color: '',
+            color: '#f8f9fa',
             editing: true,
             product_prices: [],
           };

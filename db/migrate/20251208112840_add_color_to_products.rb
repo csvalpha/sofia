@@ -4,8 +4,7 @@ class AddColorToProducts < ActiveRecord::Migration[7.2]
   end
 
   def up
-    add_column :products, :color, :string, default: '#f8f9fa'
-    Product.where(color: nil).update_all(color: '#f8f9fa')
+    add_column :products, :color, :string, default: '#f8f9fa', null: false
   end
 
   def down

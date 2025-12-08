@@ -5,8 +5,8 @@ class Product < ApplicationRecord
   has_many :product_prices, dependent: :destroy
   has_many :price_lists, through: :product_prices, dependent: :restrict_with_error
 
-  validates :name, :category, presence: true
-  validates :color, format: { with: /\A#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})\z/, allow_blank: true }
+  validates :name, :category, :color, presence: true
+  validates :color, format: { with: /\A#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})\z/}
 
   accepts_nested_attributes_for :product_prices, allow_destroy: true
 
