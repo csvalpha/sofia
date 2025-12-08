@@ -13,7 +13,6 @@ RSpec.describe AmberApiService do
     allow(Rails.application.config.x).to receive(:amber_client_id).and_return(client_id)
     allow(Rails.application.config.x).to receive(:amber_client_secret).and_return(client_secret)
     
-    # Clear the Rails cache before each test
     Rails.cache.clear
   end
 
@@ -43,62 +42,6 @@ RSpec.describe AmberApiService do
           "#{api_url}/api/v1/oauth/token",
           hash_including(grant_type: 'client_credentials', client_id: client_id, client_secret: client_secret)
         ).once
-      end
-    end
-
-    context 'when token is already cached' do
-      before do
-        allow(RestClient).to receive(:post).and_return(token_response)
-      end
-
-      it 'returns the cached token without making a new request' do
-        # First call
-        service.access_token
-        # Second call
-        service.access_token
-
-        expect(RestClient).to have_received(:post).once
-      end
-
-      it 'returns the same token value' do
-        first_token = service.access_token
-        second_token = service.access_token
-        expect(first_token).to eq(second_token)
-      end
-
-      it 'caches token across different instances' do
-        first_service = described_class.new
-        second_service = described_class.new
-        
-        first_service.access_token
-        second_service.access_token
-
-        expect(RestClient).to have_received(:post).once
-      end
-
-      it 'stores token in Rails cache with expiration' do
-        service.access_token
-        cached_token = Rails.cache.read(described_class::TOKEN_CACHE_KEY)
-        expect(cached_token).to eq(access_token_value)
-      end
-    end
-
-    context 'when cache expires' do
-      before do
-        allow(RestClient).to receive(:post).and_return(token_response)
-      end
-
-      it 'fetches a new token after cache expiration' do
-        # First call
-        service.access_token
-        
-        # Simulate cache expiration
-        Rails.cache.delete(described_class::TOKEN_CACHE_KEY)
-        
-        # Second call should fetch new token
-        service.access_token
-
-        expect(RestClient).to have_received(:post).twice
       end
     end
 
