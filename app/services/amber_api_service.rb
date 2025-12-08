@@ -13,17 +13,28 @@ class AmberApiService
       client_secret: Rails.application.config.x.amber_client_secret
     }
 
-    response = RestClient.post("#{api_url}/api/v1/oauth/token", options)
-    @token = JSON.parse(response)['access_token']
+    begin
+      response = RestClient.post("#{api_url}/api/v1/oauth/token", options)
+      @token = JSON.parse(response)['access_token']
+    rescue RestClient::ExceptionWithResponse, JSON::ParserError => e
+      Rails.logger.error("Failed to obtain Amber API token: #{e.message}")
+      @token = nil
+    end
+    @token
   end
 
   # Fetch users from Amber API
   def fetch_users
-    response = RestClient.get(
-      "#{api_url}/api/v1/users?filter[group]=Leden",
-      'Authorization' => "Bearer #{access_token}"
-    )
-    JSON.parse(response)['data']
+    begin
+      response = RestClient.get(
+        "#{api_url}/api/v1/users?filter[group]=Leden",
+        'Authorization' => "Bearer #{access_token}"
+      )
+      JSON.parse(response)['data']
+    rescue RestClient::ExceptionWithResponse, JSON::ParserError => e
+      Rails.logger.error("Failed to fetch users from Amber API: #{e.message}")
+      []
+    end
   end
 
   private
