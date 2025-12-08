@@ -112,9 +112,9 @@
 
 .color-preview {
   display: inline-block;
+  flex-shrink: 0;
   width: 24px;
   height: 24px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  flex-shrink: 0;
 }
