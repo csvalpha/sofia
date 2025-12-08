@@ -5,8 +5,10 @@ class Product < ApplicationRecord
   has_many :product_prices, dependent: :destroy
   has_many :price_lists, through: :product_prices, dependent: :restrict_with_error
 
+  attribute :color, :string, default: '#f8f9fa'
+
   validates :name, :category, :color, presence: true
-  validates :color, format: { with: /\A#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})\z/, message: "must be a valid hex color code (e.g., #FF5733 or #F57)" }
+  validates :color, format: { with: /\A#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})\z/, message: 'must be a valid hexcode (e.g., #FF5733 or #F57)' }
 
   accepts_nested_attributes_for :product_prices, allow_destroy: true
 
