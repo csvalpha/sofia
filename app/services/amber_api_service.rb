@@ -1,26 +1,12 @@
 class AmberApiService
-  def initialize
-    @token = nil
-  end
+  TOKEN_CACHE_KEY = 'amber_api_access_token'
+  TOKEN_EXPIRATION = 2.hours
 
   # Get OAuth token from Amber API
   def access_token
-    return @token if @token.present?
-
-    options = {
-      grant_type: 'client_credentials',
-      client_id: Rails.application.config.x.amber_client_id,
-      client_secret: Rails.application.config.x.amber_client_secret
-    }
-
-    begin
-      response = RestClient.post("#{api_url}/api/v1/oauth/token", options)
-      @token = JSON.parse(response)['access_token']
-    rescue RestClient::ExceptionWithResponse, JSON::ParserError => e
-      Rails.logger.error("Failed to obtain Amber API token: #{e.message}")
-      @token = nil
+    Rails.cache.fetch(TOKEN_CACHE_KEY, expires_in: TOKEN_EXPIRATION) do
+      fetch_new_token
     end
-    @token
   end
 
   # Fetch users from Amber API
@@ -38,6 +24,22 @@ class AmberApiService
   end
 
   private
+
+  def fetch_new_token
+    options = {
+      grant_type: 'client_credentials',
+      client_id: Rails.application.config.x.amber_client_id,
+      client_secret: Rails.application.config.x.amber_client_secret
+    }
+
+    begin
+      response = RestClient.post("#{api_url}/api/v1/oauth/token", options)
+      JSON.parse(response)['access_token']
+    rescue RestClient::ExceptionWithResponse, JSON::ParserError => e
+      Rails.logger.error("Failed to obtain Amber API token: #{e.message}")
+      nil
+    end
+  end
 
   def api_url
     Rails.application.config.x.amber_api_url
