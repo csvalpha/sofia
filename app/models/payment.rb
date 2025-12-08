@@ -26,28 +26,43 @@ class Payment < ApplicationRecord
     COMPLETE_STATUSES.include?(status)
   end
 
-  def self.create_with_mollie(description, attributes = nil) # rubocop:disable Metrics/AbcSize
+  def self.create_with_mollie(description, attributes = nil)
     is_mandate_setup = attributes&.delete(:first_payment)
     obj = create(attributes)
     return obj unless obj.valid?
 
-    mollie_payment_attrs = {
-      amount: { value: format('%<amount>.2f', amount: attributes[:amount]), currency: 'EUR' },
-      description:
-    }
-
-    if is_mandate_setup
-      # For mandate setup, include sequenceType and the redirect URL for mandate callback
-      mollie_payment_attrs[:sequenceType] = 'first'
-      mollie_payment_attrs[:redirectUrl] = "http://#{Rails.application.config.x.sofia_host}/payments/#{obj.id}/mandate_callback"
-    else
-      mollie_payment_attrs[:redirectUrl] = "http://#{Rails.application.config.x.sofia_host}/payments/#{obj.id}/callback"
-    end
-
-    mollie_payment = Mollie::Payment.create(mollie_payment_attrs)
-
+    mollie_payment = create_mollie_payment(description, attributes, obj, is_mandate_setup)
     obj.update(mollie_id: mollie_payment.id)
     obj
+  end
+
+  private_class_method :create_mollie_payment, :build_mollie_attrs, :build_base_mollie_attrs, :add_redirect_url
+
+  def self.create_mollie_payment(description, attributes, obj, is_mandate_setup)
+    mollie_payment_attrs = build_mollie_attrs(description, attributes, obj, is_mandate_setup)
+    Mollie::Payment.create(mollie_payment_attrs)
+  end
+
+  def self.build_mollie_attrs(description, attributes, obj, is_mandate_setup)
+    attrs = build_base_mollie_attrs(description, attributes)
+    add_redirect_url(attrs, obj, is_mandate_setup)
+    attrs
+  end
+
+  def self.build_base_mollie_attrs(description, attributes)
+    {
+      amount: { value: format('%.2f', attributes[:amount]), currency: 'EUR' },
+      description:
+    }
+  end
+
+  def self.add_redirect_url(attrs, obj, is_mandate_setup)
+    if is_mandate_setup
+      attrs[:sequenceType] = 'first'
+      attrs[:redirectUrl] = "http://#{Rails.application.config.x.sofia_host}/payments/#{obj.id}/mandate_callback"
+    else
+      attrs[:redirectUrl] = "http://#{Rails.application.config.x.sofia_host}/payments/#{obj.id}/callback"
+    end
   end
 
   def mollie_payment
@@ -58,10 +73,14 @@ class Payment < ApplicationRecord
     return unless status_previously_was != 'paid' && status == 'paid'
 
     # Skip credit mutation for mandate setup payments (1 cent)
-    return if amount == 0.01
+    return if setup_payment?
 
     process_user! if user
     process_invoice! if invoice
+  end
+
+  def setup_payment?
+    amount.to_d == 0.01.to_d
   end
 
   def process_user!
@@ -90,7 +109,7 @@ class Payment < ApplicationRecord
   def user_amount
     return unless user
     # Allow 1 cent payments for mandate setup
-    return if amount == 0.01
+    return if setup_payment?
 
     errors.add(:amount, 'must be bigger than or equal to 20') unless amount && (amount >= 20)
   end

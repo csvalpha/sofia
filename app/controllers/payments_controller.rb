@@ -1,4 +1,4 @@
-class PaymentsController < ApplicationController
+class PaymentsController < ApplicationController # rubocop:disable Metrics/ClassLength
   before_action :authenticate_user!, only: %i[index create add setup_mandate mandate_callback toggle_auto_charge]
   after_action :verify_authorized, only: %i[index create add setup_mandate toggle_auto_charge]
 
@@ -116,24 +116,9 @@ class PaymentsController < ApplicationController
     redirect_to user_path(current_user)
   end
 
-  def toggle_auto_charge # rubocop:disable Metrics/AbcSize
+  def toggle_auto_charge
     authorize :payment
-
-    if current_user.mollie_mandate_id.blank? || !current_user.mandate_valid?
-      flash[:error] = 'Je hebt geen geldige mandate ingesteld'
-      redirect_to user_path(current_user)
-      return
-    end
-
-    current_user.update(auto_charge_enabled: !current_user.auto_charge_enabled)
-
-    if current_user.auto_charge_enabled
-      flash[:success] = 'Automatische opwaardering ingeschakeld'
-    else
-      flash[:warning] = 'Automatische opwaardering uitgeschakeld'
-    end
-
-    redirect_to user_path(current_user)
+    toggle_auto_charge_handler
   end
 
   def callback # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
@@ -170,6 +155,37 @@ class PaymentsController < ApplicationController
       redirect_to user_path(payment.user)
     else
       redirect_to invoice_path(payment.invoice.token)
+    end
+  end
+
+  private
+
+  def toggle_auto_charge_handler
+    return handle_invalid_mandate unless valid_mandate?
+
+    toggle_user_auto_charge
+    redirect_to user_path(current_user)
+  end
+
+  def valid_mandate?
+    current_user.mollie_mandate_id.present? && current_user.mandate_valid?
+  end
+
+  def handle_invalid_mandate
+    flash[:error] = 'Je hebt geen geldige mandate ingesteld'
+    redirect_to user_path(current_user)
+  end
+
+  def toggle_user_auto_charge
+    current_user.update(auto_charge_enabled: !current_user.auto_charge_enabled)
+    set_auto_charge_flash_message
+  end
+
+  def set_auto_charge_flash_message
+    if current_user.auto_charge_enabled
+      flash[:success] = 'Automatische opwaardering ingeschakeld'
+    else
+      flash[:warning] = 'Automatische opwaardering uitgeschakeld'
     end
   end
 end

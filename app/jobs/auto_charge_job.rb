@@ -3,24 +3,31 @@ class AutoChargeJob < ApplicationJob
 
   def perform
     # Find all users with auto_charge_enabled and valid mandates with negative credit
-    User.where(auto_charge_enabled: true).each do |user|
-      next unless user.mandate_valid?
-      next unless user.credit.negative?
-
-      begin
-        charge_user(user)
-      rescue StandardError => e
-        Rails.logger.error("AutoChargeJob failed for user #{user.id}: #{e.message}")
-        # Continue with next user
-      end
+    User.where(auto_charge_enabled: true).find_each do |user|
+      process_user_charge(user)
     end
 
-    return unless Rails.env.production? || Rails.env.staging? || Rails.env.luxproduction? || Rails.env.euros?
-
-    HealthCheckJob.perform_later('auto_charge')
+    perform_health_check
   end
 
   private
+
+  def process_user_charge(user)
+    return unless user.mandate_valid?
+    return unless user.credit.negative?
+
+    charge_user(user)
+  rescue StandardError => e
+    Rails.logger.error("AutoChargeJob failed for user #{user.id}: #{e.message}")
+  end
+
+  def perform_health_check
+    HealthCheckJob.perform_later('auto_charge') if production_or_staging?
+  end
+
+  def production_or_staging?
+    Rails.env.production? || Rails.env.staging? || Rails.env.luxproduction? || Rails.env.euros?
+  end
 
   def charge_user(user) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     # Calculate amount needed to bring balance back to 0 or add buffer
@@ -57,9 +64,7 @@ class AutoChargeJob < ApplicationJob
     Rails.logger.info("AutoChargeJob created payment #{payment.id} for user #{user.id} with amount #{amount_needed}")
 
     # If payment is already paid (for recurring), process it immediately
-    if mollie_payment.paid?
-      payment.update(status: 'paid')
-    end
+    payment.update(status: 'paid') if mollie_payment.paid?
   rescue Mollie::ResponseError => e
     Rails.logger.error("Mollie API error in AutoChargeJob for user #{user.id}: #{e.message}")
     raise

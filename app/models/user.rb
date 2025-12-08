@@ -112,7 +112,7 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def mollie_customer
-    return nil unless mollie_customer_id.present?
+    return if mollie_customer_id.blank?
 
     @mollie_customer ||= Mollie::Customer.get(mollie_customer_id)
   rescue Mollie::ResponseError
