@@ -69,6 +69,7 @@ module Sofia
     config.x.company_address      = ENV.fetch('COMPANY_ADDRESS', nil)
     config.x.company_website      = ENV.fetch('COMPANY_WEBSITE', nil)
     config.x.company_kvk          = ENV.fetch('COMPANY_KVK', nil)
+    config.x.personal_transaction_iban = ENV.fetch('PERSONAL_TRANSACTION_IBAN', nil)
 
     config.x.site_name            = ENV.fetch('SITE_NAME', 'S.O.F.I.A.')
     config.x.site_short_name      = ENV.fetch('SITE_SHORT_NAME', 'SOFIA')
