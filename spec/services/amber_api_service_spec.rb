@@ -9,10 +9,9 @@ RSpec.describe AmberApiService do
   let(:access_token_value) { 'test_access_token_123' }
 
   before do
-    allow(Rails.application.config.x).to receive(:amber_api_url).and_return(api_url)
-    allow(Rails.application.config.x).to receive(:amber_client_id).and_return(client_id)
-    allow(Rails.application.config.x).to receive(:amber_client_secret).and_return(client_secret)
-    
+    allow(Rails.application.config.x).to receive_messages(amber_api_url: api_url, amber_client_id: client_id,
+                                                          amber_client_secret: client_secret)
+
     Rails.cache.clear
   end
 
@@ -47,20 +46,20 @@ RSpec.describe AmberApiService do
 
     context 'when API returns an error' do
       before do
-        response = double('response', code: 401, body: { error: 'invalid_client' }.to_json)
+        response = instance_double(RestClient::Response, code: 401, body: { error: 'invalid_client' }.to_json)
         allow(RestClient).to receive(:post).and_raise(
           RestClient::Unauthorized.new(response)
         )
       end
 
-      it 'returns nil' do
-        expect(service.access_token).to be_nil
+      it 'raises the exception' do
+        expect { service.access_token }.to raise_error(RestClient::Unauthorized)
       end
 
-      it 'logs the error' do
+      it 'logs the error before raising' do
         allow(Rails.logger).to receive(:error)
-        service.access_token
-        expect(Rails.logger).to have_received(:error).with(/Failed to obtain Amber API token/)
+        expect { service.access_token }.to raise_error(RestClient::Unauthorized)
+        expect(Rails.logger).to have_received(:error).with(/Failed to obtain OAuth2 provider token/)
       end
     end
 
@@ -69,14 +68,14 @@ RSpec.describe AmberApiService do
         allow(RestClient).to receive(:post).and_return('invalid json')
       end
 
-      it 'returns nil' do
-        expect(service.access_token).to be_nil
+      it 'raises a JSON parse error' do
+        expect { service.access_token }.to raise_error(JSON::ParserError)
       end
 
-      it 'logs the parse error' do
+      it 'logs the parse error before raising' do
         allow(Rails.logger).to receive(:error)
-        service.access_token
-        expect(Rails.logger).to have_received(:error).with(/Failed to obtain Amber API token/)
+        expect { service.access_token }.to raise_error(JSON::ParserError)
+        expect(Rails.logger).to have_received(:error).with(/Failed to obtain OAuth2 provider token/)
       end
     end
 
@@ -85,14 +84,14 @@ RSpec.describe AmberApiService do
         allow(RestClient).to receive(:post).and_raise(RestClient::ExceptionWithResponse.new)
       end
 
-      it 'returns nil' do
-        expect(service.access_token).to be_nil
+      it 'raises the network error' do
+        expect { service.access_token }.to raise_error(RestClient::ExceptionWithResponse)
       end
 
-      it 'logs the network error' do
+      it 'logs the network error before raising' do
         allow(Rails.logger).to receive(:error)
-        service.access_token
-        expect(Rails.logger).to have_received(:error).with(/Failed to obtain Amber API token/)
+        expect { service.access_token }.to raise_error(RestClient::ExceptionWithResponse)
+        expect(Rails.logger).to have_received(:error).with(/Failed to obtain OAuth2 provider token/)
       end
     end
   end
@@ -160,20 +159,20 @@ RSpec.describe AmberApiService do
 
     context 'when API returns an error' do
       before do
-        response = double('response', code: 500, body: 'Internal Server Error')
+        response = instance_double(RestClient::Response, code: 500, body: 'Internal Server Error')
         allow(RestClient).to receive(:get).and_raise(
           RestClient::InternalServerError.new(response)
         )
       end
 
-      it 'returns an empty array' do
-        expect(service.fetch_users).to eq([])
+      it 'raises the exception' do
+        expect { service.fetch_users }.to raise_error(RestClient::InternalServerError)
       end
 
-      it 'logs the error' do
+      it 'logs the error before raising' do
         allow(Rails.logger).to receive(:error)
-        service.fetch_users
-        expect(Rails.logger).to have_received(:error).with(/Failed to fetch users from Amber API/)
+        expect { service.fetch_users }.to raise_error(RestClient::InternalServerError)
+        expect(Rails.logger).to have_received(:error).with(/Failed to fetch users from OAuth2 provider/)
       end
     end
 
@@ -182,33 +181,33 @@ RSpec.describe AmberApiService do
         allow(RestClient).to receive(:get).and_return('not valid json')
       end
 
-      it 'returns an empty array' do
-        expect(service.fetch_users).to eq([])
+      it 'raises a JSON parse error' do
+        expect { service.fetch_users }.to raise_error(JSON::ParserError)
       end
 
-      it 'logs the parse error' do
+      it 'logs the parse error before raising' do
         allow(Rails.logger).to receive(:error)
-        service.fetch_users
-        expect(Rails.logger).to have_received(:error).with(/Failed to fetch users from Amber API/)
+        expect { service.fetch_users }.to raise_error(JSON::ParserError)
+        expect(Rails.logger).to have_received(:error).with(/Failed to fetch users from OAuth2 provider/)
       end
     end
 
     context 'when authorization fails' do
       before do
-        response = double('response', code: 401, body: { error: 'Unauthorized' }.to_json)
+        response = instance_double(RestClient::Response, code: 401, body: { error: 'Unauthorized' }.to_json)
         allow(RestClient).to receive(:get).and_raise(
           RestClient::Unauthorized.new(response)
         )
       end
 
-      it 'returns an empty array' do
-        expect(service.fetch_users).to eq([])
+      it 'raises the authorization error' do
+        expect { service.fetch_users }.to raise_error(RestClient::Unauthorized)
       end
 
-      it 'logs the authorization error' do
+      it 'logs the authorization error before raising' do
         allow(Rails.logger).to receive(:error)
-        service.fetch_users
-        expect(Rails.logger).to have_received(:error).with(/Failed to fetch users from Amber API/)
+        expect { service.fetch_users }.to raise_error(RestClient::Unauthorized)
+        expect(Rails.logger).to have_received(:error).with(/Failed to fetch users from OAuth2 provider/)
       end
     end
 
@@ -217,41 +216,28 @@ RSpec.describe AmberApiService do
         allow(RestClient).to receive(:get).and_raise(RestClient::ExceptionWithResponse.new)
       end
 
-      it 'returns an empty array' do
-        expect(service.fetch_users).to eq([])
+      it 'raises the network error' do
+        expect { service.fetch_users }.to raise_error(RestClient::ExceptionWithResponse)
       end
 
-      it 'logs the network error' do
+      it 'logs the network error before raising' do
         allow(Rails.logger).to receive(:error)
-        service.fetch_users
-        expect(Rails.logger).to have_received(:error).with(/Failed to fetch users from Amber API/)
+        expect { service.fetch_users }.to raise_error(RestClient::ExceptionWithResponse)
+        expect(Rails.logger).to have_received(:error).with(/Failed to fetch users from OAuth2 provider/)
       end
     end
 
     context 'when token is not available' do
       before do
         # Make token request fail
-        token_response = double('response', code: 401, body: { error: 'invalid_client' }.to_json)
+        token_response = instance_double(RestClient::Response, code: 401, body: { error: 'invalid_client' }.to_json)
         allow(RestClient).to receive(:post).and_raise(
           RestClient::Unauthorized.new(token_response)
         )
-
-        get_response = double('response', code: 401, body: { error: 'Unauthorized' }.to_json)
-        allow(RestClient).to receive(:get).and_raise(
-          RestClient::Unauthorized.new(get_response)
-        )
       end
 
-      it 'still attempts to fetch users' do
-        service.fetch_users
-        expect(RestClient).to have_received(:get).with(
-          "#{api_url}/api/v1/users?filter[group]=Leden",
-          { 'Authorization' => 'Bearer ' }
-        )
-      end
-
-      it 'returns an empty array' do
-        expect(service.fetch_users).to eq([])
+      it 'fails when trying to get the token and does not attempt to fetch users' do
+        expect { service.fetch_users }.to raise_error(RestClient::Unauthorized)
       end
     end
   end

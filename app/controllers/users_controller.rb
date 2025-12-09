@@ -97,11 +97,19 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     redirect_to @user
   end
 
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def refresh_user_list
     authorize User
 
     amber_service = AmberApiService.new
-    users_json = amber_service.fetch_users
+
+    begin
+      users_json = amber_service.fetch_users
+    rescue RestClient::ExceptionWithResponse, JSON::ParserError => e
+      flash[:error] = "Failed to fetch users from OAuth2 provider: #{e.message}"
+      redirect_to users_path
+      return
+    end
 
     users_json.each do |user_json|
       find_or_create_user(user_json)
@@ -112,6 +120,7 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
 
     redirect_to users_path
   end
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
   def search
     authorize User

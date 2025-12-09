@@ -1,5 +1,5 @@
 class AmberApiService
-  TOKEN_CACHE_KEY = 'amber_api_access_token'
+  TOKEN_CACHE_KEY = 'amber_api_access_token'.freeze
   TOKEN_EXPIRATION = 2.hours
 
   # Get OAuth token from Amber API
@@ -11,16 +11,14 @@ class AmberApiService
 
   # Fetch users from Amber API
   def fetch_users
-    begin
-      response = RestClient.get(
-        "#{api_url}/api/v1/users?filter[group]=Leden",
-        'Authorization' => "Bearer #{access_token}"
-      )
-      JSON.parse(response)['data']
-    rescue RestClient::ExceptionWithResponse, JSON::ParserError => e
-      Rails.logger.error("Failed to fetch users from Amber API: #{e.message}")
-      []
-    end
+    response = RestClient.get(
+      "#{api_url}/api/v1/users?filter[group]=Leden",
+      'Authorization' => "Bearer #{access_token}"
+    )
+    JSON.parse(response)['data']
+  rescue RestClient::ExceptionWithResponse, JSON::ParserError => e
+    Rails.logger.error("Failed to fetch users from OAuth2 provider: #{e.message}")
+    raise
   end
 
   private
@@ -32,13 +30,11 @@ class AmberApiService
       client_secret: Rails.application.config.x.amber_client_secret
     }
 
-    begin
-      response = RestClient.post("#{api_url}/api/v1/oauth/token", options)
-      JSON.parse(response)['access_token']
-    rescue RestClient::ExceptionWithResponse, JSON::ParserError => e
-      Rails.logger.error("Failed to obtain Amber API token: #{e.message}")
-      nil
-    end
+    response = RestClient.post("#{api_url}/api/v1/oauth/token", options)
+    JSON.parse(response)['access_token']
+  rescue RestClient::ExceptionWithResponse, JSON::ParserError => e
+    Rails.logger.error("Failed to obtain OAuth2 provider token: #{e.message}")
+    raise
   end
 
   def api_url
