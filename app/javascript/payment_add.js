@@ -1,4 +1,5 @@
 import Vue from 'vue/dist/vue.esm';
+// eslint-disable-next-line no-unused-vars
 import api from './api/axiosInstance';
 
 const MIN_PAYMENT_AMOUNT = 21.8;
