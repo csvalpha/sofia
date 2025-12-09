@@ -117,14 +117,19 @@
                   <%= @user.credit <= 0 ? 'Je staat rood!' : 'Inleggen' %>
                 </h4>
                 <p class="card-text">
-                  <% if Rails.application.config.x.mollie_api_key.present? %>
+                  <% if Rails.application.config.x.mollie_api_key.present? && Rails.application.config.x.personal_transaction_iban.present? %>
                     Om je saldo aan te vullen kan je zelf geld overmaken of betalen met iDEAL.
-                  <% else %>
+                  <% elsif Rails.application.config.x.mollie_api_key.present? %>
+                    Om je saldo aan te vullen kan je betalen met iDEAL.
+                  <% elsif Rails.application.config.x.personal_transaction_iban.present? %>
                     Om je saldo aan te vullen kan je zelf geld overmaken.
+                  <% else %>
+                    Er is geen betaalmethode geconfigureerd om je saldo aan te vullen. Neem contact op met de penningmeester.
                   <% end %>
-                  <%= "Dat kan naar #{Rails.application.config.x.company_iban} t.n.v. #{Rails.application.config.x.company_name}" %>
-                  <%= 'onder vermelding van je naam en \'Inleg Zatladder\'.' %>
-
+                  <% if Rails.application.config.x.personal_transaction_iban.present? %>
+                    <%= "Dat kan naar #{Rails.application.config.x.personal_transaction_iban} t.n.v. #{Rails.application.config.x.company_name}" %>
+                    <%= 'onder vermelding van je naam en \'Inleg Zatladder\'.' %>
+                  <% end %>
                   <% if Rails.application.config.x.mollie_api_key.present? %>
                     <%= link_to add_payments_path do %>
                       <%= 'Klik hier om je saldo over te maken via iDEAL ' %>
