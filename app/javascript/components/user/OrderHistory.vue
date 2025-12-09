@@ -55,7 +55,7 @@
 
 <script>
 import ActivityOrderHistory from './ActivityOrderHistory.vue';
-import axios from 'axios';
+import api from '../../api/axiosInstance';
 import moment from 'moment';
 
 export default {
@@ -76,7 +76,7 @@ export default {
   methods: {
     activityProvider() {
       this.isLoading = true;
-      let promise = axios.get('/users/'+this.user.id+'/activities');
+      let promise = api.get('/users/'+this.user.id+'/activities');
 
       promise.then((response) => {
         let activities = response.data;

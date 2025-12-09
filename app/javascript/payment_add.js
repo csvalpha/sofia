@@ -1,10 +1,9 @@
 import Vue from 'vue/dist/vue.esm';
-import axios from 'axios';
+import api from './api/axiosInstance';
 
 const MIN_PAYMENT_AMOUNT = 21.8;
 
 document.addEventListener('turbo:load', () => {
-  axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
   const element = document.getElementById('payment-add');
   if (element !== null) {

@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import api from '../api/axiosInstance';
 
 export default {
   props: {
@@ -85,7 +85,7 @@ export default {
         order: orderData
       };
 
-      axios.patch(`/orders/${this.order.id}`, payload).then((response) => {
+      api.patch(`/orders/${this.order.id}`, payload).then((response) => {
         const updatedOrder = response.data;
 
         this.$emit('updateordertotal', this.order, updatedOrder.order_total);

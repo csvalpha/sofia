@@ -1,5 +1,5 @@
 import Vue from 'vue/dist/vue.esm';
-import axios from 'axios';
+import api from './api/axiosInstance';
 import UsersTable from './components/user/UsersTable.vue';
 
 let vueInstance = null;
@@ -12,10 +12,6 @@ document.addEventListener('turbo:before-cache', () => {
 });
 
 document.addEventListener('turbo:load', () => {
-  const csrfToken = document.querySelector('meta[name="csrf-token"]');
-  if (csrfToken) {
-    axios.defaults.headers.common['X-CSRF-Token'] = csrfToken.getAttribute('content');
-  }
   const element = document.getElementById('users-index');
   if (element !== null) {
     try {

@@ -1,10 +1,7 @@
 import Vue from 'vue/dist/vue.esm';
-import VueResource from 'vue-resource';
-
-Vue.use(VueResource);
+import api from './api/axiosInstance';
 
 document.addEventListener('turbo:load', () => {
-  Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
   const element = document.getElementById('new_activity_modal');
   if (element) {
     const priceLists = JSON.parse(element.dataset.priceLists);
