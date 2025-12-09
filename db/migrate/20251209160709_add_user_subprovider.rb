@@ -4,4 +4,3 @@ class AddUserSubprovider < ActiveRecord::Migration[7.2]
     add_index :users, :sub_provider
   end
 end
-
