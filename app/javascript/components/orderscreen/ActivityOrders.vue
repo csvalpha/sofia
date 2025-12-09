@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import api from '../../api/axiosInstance';
 import moment from 'moment';
 import ProductTable from '../ProductTable.vue';
 
@@ -97,7 +97,7 @@ export default {
         params = { user_id: this.user.id };
       }
 
-      let promise = axios.get('/orders', { params });
+      let promise = api.get('/orders', { params });
 
       return promise.then((response) => {
         const orders = response.data;
