@@ -7,21 +7,47 @@
 
 <br />
 
-<p style="margin: 0; font-size: 16px; line-height: 20px">
-  U kunt uw saldo automatisch opwaarderen door op onderstaande knop te klikken.
-  Als u zelf een bedrag wilt invoeren
-  <%= link_to  controller: 'payments', action: 'add' do %>
-    klik dan hier.
-  <% end %>
-</p>
+<% if Rails.application.config.x.mollie_api_key.present? && Rails.application.config.x.personal_transaction_iban.present? %>
+  <p style="margin: 0; font-size: 16px; line-height: 20px">
+    U kunt uw saldo aanvullen via twee manieren:
+  </p>
 
-<br />
+  <br />
 
-<p style="margin: 0; font-size: 16px; line-height: 20px">
-  Uw saldo aanvullen kan ook door het geld over te maken naar <span style="white-space: nowrap;"><%= Rails.application.config.x.company_iban %></span>
-  ten name van <%= Rails.application.config.x.company_name %> onder vermelding van je naam en
-  'inleg zatladder'. Hiermee kan het echter enkele dagen duren voordat het saldo op uw account staat
-</p>
+  <p style="margin: 0; font-size: 16px; line-height: 20px">
+    <strong>Optie 1 - iDEAL:</strong> U kunt uw saldo automatisch opwaarderen door op onderstaande knop te klikken.
+    Als u zelf een bedrag wilt invoeren
+    <%= link_to  controller: 'payments', action: 'add' do %>
+      klik dan hier.
+    <% end %>
+  </p>
+
+  <br />
+
+  <p style="margin: 0; font-size: 16px; line-height: 20px">
+    <strong>Optie 2 - Overschrijving:</strong> Uw saldo aanvullen kan ook door het geld over te maken naar <span style="white-space: nowrap;"><%= Rails.application.config.x.personal_transaction_iban %></span>
+    ten name van <%= Rails.application.config.x.company_name %> onder vermelding van je naam en
+    'inleg zatladder'. Hiermee kan het echter enkele dagen duren voordat het saldo op uw account staat
+  </p>
+<% elsif Rails.application.config.x.mollie_api_key.present? %>
+  <p style="margin: 0; font-size: 16px; line-height: 20px">
+    U kunt uw saldo automatisch opwaarderen door op onderstaande knop te klikken.
+    Als u zelf een bedrag wilt invoeren
+    <%= link_to  controller: 'payments', action: 'add' do %>
+      klik dan hier.
+    <% end %>
+  </p>
+<% elsif Rails.application.config.x.personal_transaction_iban.present? %>
+  <p style="margin: 0; font-size: 16px; line-height: 20px">
+    Uw saldo aanvullen kan door het geld over te maken naar <span style="white-space: nowrap;"><%= Rails.application.config.x.personal_transaction_iban %></span>
+    ten name van <%= Rails.application.config.x.company_name %> onder vermelding van je naam en
+    'inleg zatladder'. Hiermee kan het echter enkele dagen duren voordat het saldo op uw account staat
+  </p>
+<% else %>
+  <p style="margin: 0; font-size: 16px; line-height: 20px">
+    Er is geen betaalmethode geconfigureerd om uw saldo aan te vullen. Neem contact op met de penningmeester.
+  </p>
+<% end %>
 
 <p>
   Mocht u meer details willen, of van mening zijn dat uw saldo

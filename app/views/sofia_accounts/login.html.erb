@@ -119,11 +119,16 @@ async function authenticate_otp() {
 
   if (contentType.includes("application/json")) {
     const json = await response.json();
-    if (json.login_success) {
+    document.querySelector("#authenticate_flash_holder").classList.add('d-none');
+
+    if (json.state == "logged_in") {
       window.location.replace(json.redirect_url);
-    } else {
-      // authentication code is wrong
-      showAuthenticateFlashMessage(json.error_message);
+    } else if (json.state == "otp_prompt") {
+      // authentication code is wrong, stay on OTP prompt
+    }
+
+    if (json.error_message) {
+      showAuthenticateFlashMessage(json.error_message, { allowHtml: true });
     }
   } else {
     // Non-JSON response indicates an error
