@@ -3,7 +3,7 @@ class UserCreditMailer < ApplicationMailer
     @user = user
     @title = 'Notificatie over je saldo'
     @cab_link = url_for(controller: 'payments', action: 'add', resulting_credit: Rails.application.config.x.min_payment_amount)
-    @cab_text = "Saldo opwaarderen naar #{number_to_currency(Rails.application.config.x.min_payment_amount, unit: '€')}"
+    @cab_text = "Saldo opwaarderen naar €#{Rails.application.config.x.min_payment_amount}"
     mail to: user.email, subject: 'Verzoek met betrekking tot uw Zatladder saldo'
   end
 
