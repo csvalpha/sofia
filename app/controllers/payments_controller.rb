@@ -34,7 +34,7 @@ class PaymentsController < ApplicationController
     @user = current_user
     @payment = Payment.new
 
-    @payment.amount = params[:resulting_credit].to_i - @user.credit if params[:resulting_credit]
+    @payment.amount = params[:resulting_credit].to_f - @user.credit if params[:resulting_credit]
   end
 
   def callback # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
