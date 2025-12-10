@@ -76,7 +76,7 @@ module Sofia
     config.x.site_long_name       = ENV.fetch('SITE_LONG_NAME', 'Streepsysteem voor de Ordentelijke Festiviteiten van Inleggend Alpha')
     config.x.site_association     = ENV.fetch('SITE_ASSOCIATION', 'C.S.V. Alpha')
 
-    config.x.min_payment_amount   = ENV.fetch('MIN_PAYMENT_AMOUNT', '21.8').to_f
+    config.x.min_payment_amount   = [ENV.fetch('MIN_PAYMENT_AMOUNT', '21.8').to_f, 0.01].max
 
     config.x.codes                = {
       beer: ENV.fetch('CODE_BEER', nil),

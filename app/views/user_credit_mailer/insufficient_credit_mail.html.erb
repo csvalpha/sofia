@@ -25,7 +25,7 @@
   <br />
 
   <p style="margin: 0; font-size: 16px; line-height: 20px">
-    <strong>Optie 2 - Overschrijving:</strong> Uw saldo aanvullen kan ook door het geld over te maken naar <span style="white-space: nowrap;"><%= Rails.application.config.x.company_iban %></span>
+    <strong>Optie 2 - Overschrijving:</strong> Uw saldo aanvullen kan ook door het geld over te maken naar <span style="white-space: nowrap;"><%= Rails.application.config.x.personal_transaction_iban %></span>
     ten name van <%= Rails.application.config.x.company_name %> onder vermelding van je naam en
     'inleg zatladder'. Hiermee kan het echter enkele dagen duren voordat het saldo op uw account staat
   </p>
@@ -39,7 +39,7 @@
   </p>
 <% elsif Rails.application.config.x.personal_transaction_iban.present? %>
   <p style="margin: 0; font-size: 16px; line-height: 20px">
-    Uw saldo aanvullen kan door het geld over te maken naar <span style="white-space: nowrap;"><%= Rails.application.config.x.company_iban %></span>
+    Uw saldo aanvullen kan door het geld over te maken naar <span style="white-space: nowrap;"><%= Rails.application.config.x.personal_transaction_iban %></span>
     ten name van <%= Rails.application.config.x.company_name %> onder vermelding van je naam en
     'inleg zatladder'. Hiermee kan het echter enkele dagen duren voordat het saldo op uw account staat
   </p>

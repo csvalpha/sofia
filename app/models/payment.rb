@@ -77,6 +77,7 @@ class Payment < ApplicationRecord
   def user_amount
     return unless user
 
-    errors.add(:amount, "must be bigger than or equal to #{Rails.application.config.x.min_payment_amount}") unless amount && (amount >= Rails.application.config.x.min_payment_amount)
+    min_amount = Rails.application.config.x.min_payment_amount
+    errors.add(:amount, "must be bigger than or equal to €#{'%.2f' % min_amount}") unless amount && (amount >= min_amount)
   end
 end
