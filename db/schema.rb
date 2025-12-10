@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_12_08_112840) do
+ActiveRecord::Schema[7.2].define(version: 2025_12_09_160709) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -183,6 +183,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_08_112840) do
     t.boolean "deactivated", default: false, null: false
     t.string "activation_token"
     t.datetime "activation_token_valid_till"
+    t.string "sub_provider"
+    t.index ["sub_provider"], name: "index_users_on_sub_provider"
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
