@@ -125,9 +125,10 @@ async function authenticate_otp() {
       window.location.replace(json.redirect_url);
     } else if (json.state == "otp_prompt") {
       // authentication code is wrong, stay on OTP prompt
-      if (json.error_message) {
-        showAuthenticateFlashMessage(json.error_message, { allowHtml: true });
-      }
+    }
+
+    if (json.error_message) {
+      showAuthenticateFlashMessage(json.error_message, { allowHtml: true });
     }
   } else {
     // Non-JSON response indicates an error
