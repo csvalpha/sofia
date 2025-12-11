@@ -71,7 +71,7 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def insufficient_credit
-    provider == 'amber_oauth2' and credit.negative?
+    provider.in?(%w[amber_oauth2 sofia_account]) && credit.negative?
   end
 
   def can_order(activity = nil)
