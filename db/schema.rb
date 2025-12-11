@@ -135,6 +135,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_09_160709) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.integer "category", default: 0, null: false
+    t.string "color", default: "#f8f9fa", null: false
   end
 
   create_table "roles", force: :cascade do |t|

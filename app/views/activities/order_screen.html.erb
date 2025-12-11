@@ -166,6 +166,7 @@
   <div class="product-grid" v-if="selectedUser || payWithCash || payWithPin">
     <div @click="selectProduct(productPrice)" class="product-grid-product"
          :class="{ 'product-requires-age' : (selectedUser && selectedUser.minor && productPrice.product.requires_age) }"
+         :style="productPrice.product.color ? { backgroundColor: productPrice.product.color } : {}"
          v-for="productPrice in productPrices">
       <span class="product-grid-product-requires-age mb-2 fa-stack" v-if="selectedUser && selectedUser.minor && productPrice.product.requires_age">
         <i class="fa fa-circle fa-circle-lighter fa-stack-2x">
