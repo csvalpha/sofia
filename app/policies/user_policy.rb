@@ -3,10 +3,6 @@ class UserPolicy < ApplicationPolicy
     user&.treasurer? || user&.renting_manager? || user&.main_bartender?
   end
 
-  def refresh_user_list?
-    user&.treasurer?
-  end
-
   def search?
     index?
   end
