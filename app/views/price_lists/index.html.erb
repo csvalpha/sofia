@@ -68,9 +68,20 @@
               </div>
             </td>
             <td class="products-new products-color">
-              <div class="d-flex align-items-center">
-                <input class="form-control flex-grow-1" placeholder="#f8f9fa" type="text" v-model="product.color" maxlength="7">
-                <span v-if="product.color" class="color-preview ms-2" :style="{ backgroundColor: product.color }" :title="product.color"></span>
+              <div class="d-flex align-items-center flex-column">
+                <div class="d-flex align-items-center w-100">
+                  <input 
+                    class="form-control flex-grow-1" 
+                    placeholder="#f8f9fa" 
+                    type="text" 
+                    v-model="product.color" 
+                    maxlength="7"
+                    :class="{'is-invalid': getColorError(product.color)}">
+                  <span v-if="product.color" class="color-preview ms-2" :style="{ backgroundColor: product.color }" :title="product.color"></span>
+                </div>
+                <small v-if="getColorError(product.color)" class="text-danger mt-1">
+                  {{ getColorError(product.color) }}
+                </small>
               </div>
             </td>
             <td class="products-new products-category">
