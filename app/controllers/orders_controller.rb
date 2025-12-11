@@ -80,7 +80,7 @@ class OrdersController < ApplicationController
   def send_insufficient_credit_mail?(user, old_credit)
     return false if user.nil?
 
-    (user.provider == 'amber_oauth2' || user.provider == 'sofia_account') && user.credit.negative? && old_credit.positive?
+    user.provider.in?(%w[amber_oauth2 sofia_account]) && user.credit.negative? && old_credit.positive?
   end
 
   def permitted_attributes
