@@ -23,7 +23,7 @@
             {{doubleToCurrency(selectedUser.credit)}}
           </h3>
 
-          <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#credit-mutation-modal">
+          <button v-if="depositButtonEnabled" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#credit-mutation-modal">
             <i class="fa fa-money-bill me-1"></i>
             Geld inleggen
           </button>
@@ -104,6 +104,10 @@ export default {
     selectedUser: Object,
     payWithCash: Boolean,
     payWithPin: Boolean,
+    depositButtonEnabled: {
+      type: Boolean,
+      default: true
+    },
     users: {
       type: Array,
       required: true

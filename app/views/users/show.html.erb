@@ -152,7 +152,7 @@
               </div>
               <p class="card-text d-none d-md-block">
                 <%= 'Rechten zijn afhankelijk van de rollen die een gebruiker in het streepsysteem heeft. ' %>
-                <% if Rails.application.config.x.amber_api_url.present? %>
+                <% if Rails.application.config.x.amber_api_host.present? %>
                   <%= 'Rollen worden bepaald aan de hand van de groepen waar een gebruiker lid van is in de gekoppelde website.' %>
                 <% else %>
                   <%= 'Rollen kunnen geconfigureerd worden via de console van de serviceprovider.' %>
