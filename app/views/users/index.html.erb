@@ -27,14 +27,6 @@
     <% if Rails.application.config.x.amber_api_host.present? %>
       <div class="d-flex justify-content-between align-items-center">
         <h3><%= Rails.application.config.x.site_association %> gebruikers</h3>
-        <% if policy(User).refresh_user_list? %>
-          <span>
-            <%= link_to refresh_user_list_users_path, class: 'btn btn-primary btn-sm me-1' do %>
-              <i class="fas fa-arrows-rotate"></i>
-              <span class="d-none d-md-inline ms-1">Synchroniseer gebruikers</span>
-            <% end %>
-          </span>
-        <% end %>
       </div>
       <users-table :users="amber_users" class="mb-5"></users-table>
     <% end %>
