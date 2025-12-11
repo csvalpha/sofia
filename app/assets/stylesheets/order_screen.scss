@@ -248,18 +248,19 @@
     flex-flow: column nowrap;
     align-items: center;
     justify-content: center;
-    background-color: $gray-100;
+    cursor: pointer;
+    transition: filter 0.2s ease;
 
     &:hover {
-      background-color: $gray-200;
+      filter: brightness(0.85);
     }
   }
 
   .product-requires-age {
-    background-color: $gray-300;
+    filter: brightness(0.7);
 
     &:hover {
-      background-color: $gray-400;
+      filter: brightness(0.6);
     }
   }
 

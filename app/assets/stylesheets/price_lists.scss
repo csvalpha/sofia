@@ -20,6 +20,16 @@
     width: 6rem;
   }
 
+  .products-color {
+    left: 8.1rem;
+    width: 8rem;
+  }
+
+  .products-category {
+    left: 16.1rem;
+    width: 6rem;
+  }
+
   .products-actions,
   .products-new-edit-button,
   .products-save-new {
@@ -29,6 +39,8 @@
   .products-id,
   .products-cancel-edit,
   .products-name,
+  .products-color,
+  .products-category,
   .products-new-edit-button,
   .products-save-new {
     position: sticky;
@@ -96,4 +108,13 @@
       vertical-align: middle;
     }
   }
+}
+
+.color-preview {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
