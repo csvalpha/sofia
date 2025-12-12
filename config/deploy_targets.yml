@@ -1,0 +1,46 @@
+# Deployment Targets Configuration
+# 
+# This file defines all deployment targets for the Sofia application.
+# Each target specifies the deployment location, stage name, and URL.
+#
+# To add a new deployment target:
+#   1. Add a new entry below with the target name as the key
+#   2. Set deploy_path to the docker directory path on the server
+#   3. Set stage to the Rails environment name (creates config/environments/{stage}.rb)
+#   4. Set hostname to the application's domain
+#   5. Set url to the HTTPS URL for GitHub Actions deployment tracking
+#   6. Set branch_restriction to limit deployments to specific branches (optional)
+#   7. Optionally set allow_targets to whitelist this target (used by CI to determine valid targets)
+
+targets:
+  csvalpha:
+    deploy_path: /opt/docker/sofia/production
+    stage: production
+    hostname: streep.csvalpha.nl
+    url: https://streep.csvalpha.nl
+    branch_restriction: master  # Only from master branch
+    allow_targets: csvalpha
+
+  stagingstreep:
+    deploy_path: /opt/docker/sofia/staging
+    stage: staging
+    hostname: stagingstreep.csvalpha.nl
+    url: https://stagingstreep.csvalpha.nl
+    branch_restriction: staging  # Only from staging branch
+    allow_targets: csvalpha
+
+  luxadmosam:
+    deploy_path: /opt/docker/sofia/luxproduction
+    stage: luxproduction
+    hostname: luxstreep.csvalpha.nl
+    url: https://luxstreep.csvalpha.nl
+    branch_restriction: master  # Only from master branch
+    allow_targets: luxadmosam
+
+  euros:
+    deploy_path: /opt/docker/sofia/euros
+    stage: euros
+    hostname: euros.csvalpha.nl
+    url: https://euros.csvalpha.nl
+    branch_restriction: master  # Only from master branch
+    allow_targets: euros

@@ -28,7 +28,8 @@ WORKDIR /app
 
 # Pre-install gems, so that they can be cached.
 COPY Gemfile* /app/
-RUN if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ] || [ "$RAILS_ENV" = 'luxproduction' ] || [ "$RAILS_ENV" = 'euros' ]; then \
+COPY config/deploy_targets.yml /app/config/
+RUN if ruby -e "require 'yaml'; targets = YAML.load_file('config/deploy_targets.yml')['targets'].keys; exit(targets.include?(ENV['RAILS_ENV']) ? 0 : 1)"; then \
     bundle config set --local without 'development test'; \
   else \
     bundle config set --local without 'development'; \
@@ -43,7 +44,7 @@ RUN yarn install --immutable
 COPY . /app/
 
 # Precompile assets after copying app because whole Rails pipeline is needed.
-RUN if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ] || [ "$RAILS_ENV" = 'luxproduction' ] || [ "$RAILS_ENV" = 'euros' ]; then \
+RUN if ruby -e "require 'yaml'; targets = YAML.load_file('config/deploy_targets.yml')['targets'].keys; exit(targets.include?(ENV['RAILS_ENV']) ? 0 : 1)"; then \
     SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile; \
   else \
     echo "Skipping assets:precompile"; \
