@@ -59,7 +59,7 @@ class SofiaAccountsController < ApplicationController # rubocop:disable Metrics/
 
     begin
       flash_message =
-        if @sofia_account.authenticate_otp(params.require(:verification_code), drift: 30)
+        if @sofia_account.authenticate_otp(params.require(:verification_code), drift: 60)
           if @sofia_account.update(otp_enabled: true)
             { success: 'Two-factor-authenticatie aangezet!' }
           else

@@ -43,7 +43,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
     if params[:verification_code].blank?
       # OTP code not present, so request it
       render(json: { state: 'otp_prompt' })
-    elsif sofia_account.authenticate_otp(params[:verification_code], drift: 30)
+    elsif sofia_account.authenticate_otp(params[:verification_code], drift: 60)
       # OTP code correct
       sign_in(:user, user)
       render(json: { state: 'logged_in', redirect_url: user.roles.any? ? root_path : user_path(user.id) })
