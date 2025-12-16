@@ -24,7 +24,7 @@ class ZatladderController < ApplicationController
   end
 
   def zatladder_spendings(from, to)
-    users = User.in_amber.any? ? User.in_amber : User.sofia_account
+    users = User.in_amber.exists? ? User.in_amber : User.sofia_account
     @users_spendings = users.calculate_spendings(from:, to:)
     zatladder = users.select(:id, :name).map do |user|
       {
