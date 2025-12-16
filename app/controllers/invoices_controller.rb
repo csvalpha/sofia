@@ -15,10 +15,14 @@ class InvoicesController < ApplicationController
 
   def show
     @invoice = invoice
+    token_based_access = !integer_id?(params[:id])
 
     respond_to do |format|
       format.html
       format.pdf do
+        # Require treasurer authorization for PDF downloads unless accessed via token
+        authorize @invoice, :download? unless token_based_access
+
         render pdf: "Factuur #{@invoice.human_id}",
                template: 'invoices/show',
                formats: [:html],
@@ -74,6 +78,13 @@ class InvoicesController < ApplicationController
   end
 
   private
+
+  def integer_id?(id)
+    Integer(id)
+    true
+  rescue ArgumentError
+    false
+  end
 
   def invoice
     @invoice = Invoice.find(Integer(params[:id]))
