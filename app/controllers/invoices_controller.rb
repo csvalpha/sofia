@@ -20,7 +20,9 @@ class InvoicesController < ApplicationController
       format.html
       format.pdf do
         render pdf: "Factuur #{@invoice.human_id}",
-               template: 'invoices/show.html.erb',
+               template: 'invoices/show',
+               formats: [:html],
+               layout: 'pdf',
                lowquality: true
       end
     end
