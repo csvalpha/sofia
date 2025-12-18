@@ -3,7 +3,7 @@
   <%= javascript_include_tag "order_screen", "data-turbo-track": "reload", defer: true %>
 <% end %>
 <%= content_tag :div, id: 'order-screen', class: 'order-screen',
-                data: {users: @users_json, product_prices: @product_prices_json, activity: @activity_json, sumup_callback: sumup_callback_activity_url, sumup_key: @sumup_key, flashes: flash, site_name: Rails.application.config.x.site_short_name} do
+                data: {users: @users_json, product_prices: @product_prices_json, activity: @activity_json, sumup_callback: sumup_callback_activity_url, sumup_key: @sumup_key, flashes: flash, site_name: Rails.application.config.x.site_short_name, deposit_button_enabled: Rails.application.config.x.deposit_button_enabled} do
 
 %>
 
@@ -56,7 +56,7 @@
   </nav>
   <div class="side-panel">
     <user-selection :pay-with-cash="payWithCash" :pay-with-pin="payWithPin" :selected-user="selectedUser"
-                    :users="users" v-on:selectcash="selectCash" v-on:selectpin="selectPin" v-on:updateuser="setUser($event)">
+                    :users="users" :deposit-button-enabled="depositButtonEnabled" v-on:selectcash="selectCash" v-on:selectpin="selectPin" v-on:updateuser="setUser($event)">
     </user-selection>
     <div class="orders" v-if="selectedUser || payWithCash || payWithPin">
       <h4 class="orders-header py-4">
