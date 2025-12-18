@@ -22,7 +22,7 @@
                 <% end %>
                 <%= f.input :email, label: 'E-mailadres', placeholder: 'E-mailadres', required: true %>
                 <% if Rails.application.config.x.subprovider_label.present? %>
-                  <%= f.input :sub_provider, label: Rails.application.config.x.subprovider_label, placeholder: Rails.application.config.x.subprovider_label, required: true, input_html: { style: 'text-transform: uppercase;', onkeyup: 'this.value = this.value.toUpperCase();' } %>
+                  <%= f.input :sub_provider, label: "SubProvider", placeholder: Rails.application.config.x.subprovider_label, required: true, input_html: { style: 'text-transform: uppercase;', onkeyup: 'this.value = this.value.toUpperCase();' } %>
                 <% end %>
                 <% if current_user.treasurer? %>
                   <div class="row">
