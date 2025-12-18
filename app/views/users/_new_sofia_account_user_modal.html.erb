@@ -13,7 +13,9 @@
         <div class="modal-body" id="activities_modal">
           <%= f.input :name, label: 'Naam', placeholder: 'Naam', required: true %>
           <%= f.input :email, label: 'E-mailadres', placeholder: 'E-mailadres', required: true %>
-          <%= f.input :sub_provider, label: 'Subprovider', placeholder: 'Subprovider', input_html: { style: 'text-transform: uppercase;', onkeyup: 'this.value = this.value.toUpperCase();' } %>
+          <% if Rails.application.config.x.subprovider_label.present? %>
+            <%= f.input :sub_provider, label: Rails.application.config.x.subprovider_label, placeholder: Rails.application.config.x.subprovider_label, input_html: { style: 'text-transform: uppercase;', onkeyup: 'this.value = this.value.toUpperCase();' } %>
+          <% end %>
         </div>
 
         <div class="modal-footer">
