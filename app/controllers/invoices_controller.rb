@@ -19,16 +19,7 @@ class InvoicesController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.pdf do
-        # Require treasurer authorization for PDF downloads unless accessed via token
-        authorize @invoice, :download? unless token_based_access
-
-        render pdf: "Factuur #{@invoice.human_id}",
-               template: 'invoices/show',
-               formats: [:html],
-               layout: 'pdf',
-               lowquality: true
-      end
+      format.pdf { render_invoice_pdf(token_based_access) }
     end
   end
 
@@ -95,5 +86,15 @@ class InvoicesController < ApplicationController
 
   def permitted_attributes
     params.require(:invoice).permit(%i[user_id activity_id name_override email_override rows], rows_attributes: %i[name amount price])
+  end
+
+  def render_invoice_pdf(token_based_access)
+    authorize @invoice, :download? unless token_based_access
+
+    render pdf: "Factuur #{@invoice.human_id}",
+           template: 'invoices/show',
+           formats: [:html],
+           layout: 'pdf',
+           lowquality: true
   end
 end
