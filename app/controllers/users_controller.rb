@@ -140,7 +140,7 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     end
     authorize @sofia_account
 
-    if @user.update(params.require(:user).permit(%i[email] + (current_user.treasurer? ? %i[name deactivated] : []),
+    if @user.update(params.require(:user).permit(%i[email sub_provider] + (current_user.treasurer? ? %i[name deactivated] : []),
                                                  sofia_account_attributes: %i[id username]))
       flash[:success] = 'Gegevens gewijzigd'
     else
@@ -167,6 +167,6 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
   end
 
   def permitted_attributes
-    params.require(:user).permit(%w[name email provider])
+    params.require(:user).permit(%w[name email provider sub_provider])
   end
 end
