@@ -16,12 +16,12 @@ gem 'jquery-rails', '~> 4.6.1'
 gem 'jsbundling-rails', '~> 1.3', '>= 1.3.1'
 gem 'kaminari', '~> 1.2.2'
 gem 'mollie-api-ruby', '~> 4.18.0'
-gem 'net-imap', '~> 0.5.12'
+gem 'net-imap', '~> 0.6.2'
 gem 'net-pop',  '~> 0.1.2'
 gem 'net-smtp', '~> 0.5.1'
 gem 'omniauth', '~> 2.1.4'
 gem 'omniauth-identity', '~> 3.1', '>= 3.1.5'
-gem 'omniauth-oauth2', '~> 1.8.0'
+gem 'omniauth-oauth2', '~> 1.9.0'
 gem 'omniauth-rails_csrf_protection', '~> 1.0', '>= 1.0.2'
 gem 'paper_trail', '~> 17.0.0'
 gem 'paranoia', '~> 3.1.0'
@@ -37,7 +37,7 @@ gem 'rqrcode', '~> 3.1', '>= 3.1.1'
 gem 'sentry-rails', '~> 6.2'
 gem 'sentry-ruby', '~> 6.2'
 gem 'sentry-sidekiq', '~> 6.2'
-gem 'sidekiq', '~> 8.0.10'
+gem 'sidekiq', '~> 8.1.0'
 gem 'sidekiq-scheduler', '~> 6.0.1'
 gem 'simple_form', '~> 5.4.0'
 gem 'sprockets-rails', '~> 3.5', '>= 3.5.2'
@@ -53,7 +53,7 @@ group :development, :test do
   gem 'brakeman', '~> 7.1.1', require: false
   gem 'bullet', '~> 8.1'
   gem 'colorize', '~> 1.1.0'
-  gem 'database_consistency', '~> 2.1.0'
+  gem 'database_consistency', '~> 2.1.1'
   gem 'dotenv-rails', '~> 3.2.0'
   gem 'guard-livereload', '~> 2.5.2'
   gem 'guard-rspec', '~> 4.7.3', require: false
@@ -76,7 +76,7 @@ end
 
 group :test do
   gem 'rails-controller-testing', '~> 1.0.5'
-  gem 'rubocop', '~> 1.81.7', require: false
+  gem 'rubocop', '~> 1.82.0', require: false
   gem 'rubocop-factory_bot', '~> 2.28.0', require: false
   gem 'rubocop-performance', '~> 1.26', '>= 1.26.1', require: false
   gem 'rubocop-rails', '~> 2.34', '>= 2.34.2', require: false
