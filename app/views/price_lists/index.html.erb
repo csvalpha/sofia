@@ -38,6 +38,7 @@
         <tr>
           <th class="products-id" scope="col">ID</th>
           <th class="products-name" scope="col">Product</th>
+          <th class="products-color" scope="col">Kleur</th>
           <th class="products-category" scope="col">Categorie</th>
           <th class="products-pricelist rotate" scope="col" v-for="priceList in filteredPriceLists">
             <div class="center-text" v-bind:title="priceList.name">
@@ -66,6 +67,23 @@
                 <input class="form-control flex-grow-1" placeholder="Productnaam" type="text" v-model="product.name">
               </div>
             </td>
+            <td class="products-new products-color">
+              <div class="d-flex align-items-center flex-column">
+                <div class="d-flex align-items-center w-100">
+                  <input 
+                    class="form-control flex-grow-1" 
+                    placeholder="#f8f9fa" 
+                    type="text" 
+                    v-model="product.color" 
+                    maxlength="7"
+                    :class="{'is-invalid': getColorError(product.color)}">
+                  <span v-if="product.color" class="color-preview ms-2" :style="{ backgroundColor: product.color }" :title="product.color"></span>
+                </div>
+                <small v-if="getColorError(product.color)" class="text-danger mt-1">
+                  {{ getColorError(product.color) }}
+                </small>
+              </div>
+            </td>
             <td class="products-new products-category">
               <div class="d-flex">
                 <select class="form-select flex-grow-1" v-model="product.category">
@@ -92,6 +110,12 @@
           <template v-else="">
             <th class="products-id" scope="row">{{ product.id }}</th>
             <td class="products-name">{{ product.name }}</td>
+            <td class="products-color">
+              <div class="d-flex align-items-center">
+                <span v-if="product.color">{{ product.color }}</span>
+                <span v-if="product.color" class="color-preview ms-2" :style="{ backgroundColor: product.color }" :title="product.color"></span>
+              </div>
+            </td>
             <td class="products-category">{{ product.t_category }}</td>
             <td class="product-price center-text" v-for="priceList in filteredPriceLists">
               <span class="text-nowrap" v-bind:title="product.name + ' in lijst ' + priceList.name">
@@ -106,7 +130,7 @@
           </template>
         </tr>
         <tr>
-          <td colspan="3">
+          <td colspan="4">
             <div class="d-grid">
               <% if policy(Product).create? %>
                 <button class="btn btn-secondary btn-sm products-button-new" v-on:click.prevent="newProduct">

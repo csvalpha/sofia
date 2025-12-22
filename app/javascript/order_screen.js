@@ -13,6 +13,7 @@ document.addEventListener('turbo:load', () => {
     const productPrices = JSON.parse(element.dataset.productPrices);
     const activity = JSON.parse(element.dataset.activity);
     const flashes = JSON.parse(element.dataset.flashes);
+    const depositButtonEnabled = element.dataset.depositButtonEnabled === 'true';
 
     window.flash = function(message, actionText, type) {
       const event = new CustomEvent('flash', { detail: { message: message, actionText: actionText, type: type } } );
@@ -36,6 +37,7 @@ document.addEventListener('turbo:load', () => {
           payWithCash: false,
           payWithPin: false,
           keepUserSelected: false,
+          depositButtonEnabled: depositButtonEnabled,
           orderRows: [],
           isSubmitting: false
         };

@@ -7,7 +7,6 @@ document.addEventListener('turbo:load', () => {
     const priceLists = JSON.parse(element.dataset.priceLists);
     const products = JSON.parse(element.dataset.products);
 
-    // Make sure property exists before Vue sees the data
     products.forEach(p => p.editing = false);
 
     new Vue({
@@ -47,6 +46,7 @@ document.addEventListener('turbo:load', () => {
           const newProduct = {
             name: '',
             category: 0,
+            color: '#f8f9fa',
             editing: true,
             product_prices: [],
           };
@@ -55,13 +55,19 @@ document.addEventListener('turbo:load', () => {
         },
 
         saveProduct: function(product) {
+          const colorError = this.getColorError(product.color);
+          if (colorError) {
+            this.errors = [colorError];
+            return;
+          }
+
           if (product.id && product._beforeEditingCache.name !== product.name) {
             if (!confirm('Weet je zeker dat je de productnaam wilt wijzigen? Pas hier mee op want dit kan problemen geven in bestaande orders. Als je twijfelt, maak dan een nieuw product aan in plaats van het bestaande te hernoemen.')) {
               return;
             }
           }
           const sanitizedProduct = this.sanitizeProductInput(product);
-          if (sanitizedProduct.id) { // Existing product
+          if (sanitizedProduct.id) {
             api.put(`/products/${sanitizedProduct.id}.json`, { product: sanitizedProduct }).then((response) => {
               const newProduct = response.data;
               newProduct.editing = false;
@@ -115,7 +121,6 @@ document.addEventListener('turbo:load', () => {
         },
 
         editProduct: function(product) {
-          // Save original state
           product._beforeEditingCache = Vue.util.extend({}, product);
           product.product_prices.forEach((pp, i) => {
             product._beforeEditingCache.product_prices[i] = Vue.util.extend({}, pp);
@@ -154,6 +159,20 @@ document.addEventListener('turbo:load', () => {
 
         productPriceToCurrency: function(productPrice) {
           return (productPrice && productPrice.price) ? `€ ${parseFloat(productPrice.price).toFixed(2)}` : '';
+        },
+
+        isValidHexColor: function(color) {
+          return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color);
+        },
+
+        getColorError: function(color) {
+          if (!color) {
+            return 'Kleur is verplicht';
+          }
+          if (!this.isValidHexColor(color)) {
+            return 'Ongeldige kleur. Gebruik het formaat #RRGGBB of #RGB (bijv. #FF5733 of #F57)';
+          }
+          return null;
         },
       }
     });

@@ -90,7 +90,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
                         .find(params[:id])
 
     @product_prices_json = sorted_product_price(@activity).to_json(
-      include: { product: { only: %i[id name category], methods: %i[requires_age] } }
+      include: { product: { only: %i[id name category color], methods: %i[requires_age] } }
     )
 
     @users_json = users_hash.to_json

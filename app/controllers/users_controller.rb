@@ -97,19 +97,6 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     redirect_to @user
   end
 
-  def refresh_user_list
-    authorize User
-
-    users_json.each do |user_json|
-      find_or_create_user(user_json)
-    end
-
-    users_not_in_json = User.active.in_amber.where.not(uid: users_json.pluck('id')).where.not(name: 'Streepsysteem Flux')
-    users_not_in_json.each(&:archive!)
-
-    redirect_to users_path
-  end
-
   def search
     authorize User
 
@@ -153,7 +140,7 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     end
     authorize @sofia_account
 
-    if @user.update(params.require(:user).permit(%i[email] + (current_user.treasurer? ? %i[name deactivated] : []),
+    if @user.update(params.require(:user).permit(%i[email sub_provider] + (current_user.treasurer? ? %i[name deactivated] : []),
                                                  sofia_account_attributes: %i[id username]))
       flash[:success] = 'Gegevens gewijzigd'
     else
@@ -164,11 +151,6 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
   end
 
   private
-
-  def users_json
-    JSON.parse(RestClient.get("#{Rails.application.config.x.amber_api_url}/api/v1/users?filter[group]=Leden",
-                              'Authorization' => "Bearer #{api_token}"))['data']
-  end
 
   def find_or_create_user(user_json) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     fields = user_json['attributes']
@@ -185,6 +167,6 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
   end
 
   def permitted_attributes
-    params.require(:user).permit(%w[name email provider])
+    params.require(:user).permit(%w[name email provider sub_provider])
   end
 end
