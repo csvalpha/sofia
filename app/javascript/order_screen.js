@@ -204,7 +204,7 @@ document.addEventListener('turbo:load', () => {
             this.sendFlash('Server error!', 'Herlaad de pagina', 'error');
 
             try {
-              throw new Error(JSON.stringify(error.body));
+              throw new Error(JSON.stringify(error.response.data));
             } catch(e) {
               /* eslint-disable no-undef */
               Sentry.captureException(e);

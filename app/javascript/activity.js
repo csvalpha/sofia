@@ -1,6 +1,4 @@
 import Vue from 'vue/dist/vue.esm';
-// eslint-disable-next-line no-unused-vars
-import api from './api/axiosInstance';
 
 import ProductTotals from './components/activity/ProductTotals.vue';
 

@@ -10,23 +10,28 @@ function getCsrfToken() {
 }
 
 /**
- * Create and configure axios instance with CSRF token
+ * Create and configure axios instance.
+ * CSRF is injected via a request interceptor so the latest token is used.
  * @returns {AxiosInstance} Configured axios instance
  */
 function createAxiosInstance() {
   const instance = axios.create();
-  
-  // Set CSRF token in default headers
-  const csrfToken = getCsrfToken();
-  if (csrfToken) {
-    instance.defaults.headers.common['X-CSRF-Token'] = csrfToken;
-  }
-  
-  // Set Accept header to request JSON responses
+
+  // Always ask for JSON responses
   instance.defaults.headers.common['Accept'] = 'application/json';
-  
+
+  instance.interceptors.request.use((config) => {
+    const csrfToken = getCsrfToken();
+    if (csrfToken) {
+      config.headers['X-CSRF-Token'] = csrfToken;
+    }
+    return config;
+  });
+
   return instance;
 }
 
-export default createAxiosInstance();
-export { getCsrfToken };
+const axiosInstance = createAxiosInstance();
+
+export default axiosInstance;
+export { getCsrfToken, axiosInstance };
