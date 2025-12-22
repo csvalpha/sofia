@@ -22,6 +22,9 @@ function createAxiosInstance() {
     instance.defaults.headers.common['X-CSRF-Token'] = csrfToken;
   }
   
+  // Set Accept header to request JSON responses
+  instance.defaults.headers.common['Accept'] = 'application/json';
+  
   return instance;
 }
 

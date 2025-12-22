@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="user-input position-relative">
     <input type="text" class="d-none" :name="name" :value="selectedSuggestion.id">
-    <input type="text" class="form-control bg-white" v-model="query" placeholder="Begin met typen..."
+    <input type="text" class="form-control bg-white" v-model="query" placeholder="Zoek op gebruiker"
            @input="updateValue"
            @keydown.enter="selectFirstSuggestion"
            aria-haspopup="true" v-bind:aria-expanded="dropdownOpened"
