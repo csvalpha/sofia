@@ -1,18 +1,12 @@
 import Vue from 'vue/dist/vue.esm';
-import VueResource from 'vue-resource';
-import axios from 'axios';
+import api from './api/axiosInstance';
 import * as bootstrap from 'bootstrap';
 
 import FlashNotification from './components/FlashNotification.vue';
 import UserSelection from './components/orderscreen/UserSelection.vue';
 import ActivityOrders from './components/orderscreen/ActivityOrders.vue';
 
-Vue.use(VueResource);
-
 document.addEventListener('turbo:load', () => {
-  const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-  Vue.http.headers.common['X-CSRF-TOKEN'] = token;
-  axios.defaults.headers.common['X-CSRF-Token'] = token;
   const element = document.getElementById('order-screen');
   if (element != null) {
     const users = JSON.parse(element.dataset.users);
@@ -64,8 +58,8 @@ document.addEventListener('turbo:load', () => {
 
           if (user !== null) {
             // Reload user to get latest credit balance
-            this.$http.get(`/users/${user.id}/json?activity_id=${this.activity.id}`).then((response) => {
-              const refreshedUser = response.body;
+            api.get(`/users/${user.id}/json?activity_id=${this.activity.id}`).then((response) => {
+              const refreshedUser = response.data;
               const index = this.users.findIndex((candidate) => candidate.id === refreshedUser.id);
               if (index !== -1) {
                 this.$set(this.users, index, refreshedUser);
@@ -161,15 +155,15 @@ document.addEventListener('turbo:load', () => {
             };
           }
 
-          this.$http.post('/orders', {
+          api.post('/orders', {
             order: order
           }).then((response) => {
-            const user = response.body.user;
-            const orderTotal = this.doubleToCurrency(response.body.order_total);
+            const user = response.data.user;
+            const orderTotal = this.doubleToCurrency(response.data.order_total);
             let additionalInfo;
-            if (response.body.paid_with_pin) {
+            if (response.data.paid_with_pin) {
               additionalInfo = `Pin - ${orderTotal}`;
-            } else if (response.body.paid_with_cash) {
+            } else if (response.data.paid_with_cash) {
               additionalInfo = `Contant - ${orderTotal}`;
             } else {
               additionalInfo = `${user.name} - ${orderTotal}`;
@@ -178,9 +172,9 @@ document.addEventListener('turbo:load', () => {
             if (user) {
               const index = this.users.findIndex((candidate) => candidate.id === user.id);
               if (index !== -1) {
-                this.$set(this.users, index, response.body.user);
+                this.$set(this.users, index, response.data.user);
               } else {
-                this.users.push(response.body.user);
+                this.users.push(response.data.user);
               }
             }
 
@@ -189,14 +183,14 @@ document.addEventListener('turbo:load', () => {
               this.setUser(null);
             } else {
               // re-set user to update credit
-              this.setUser(response.body.user);
+              this.setUser(response.data.user);
               this.orderRows = [];
             }
 
             this.isSubmitting = false;
 
             if (openWithSumup) {
-              this.startSumupPayment(response.body.id, response.body.order_total);
+              this.startSumupPayment(response.data.id, response.data.order_total);
             }
           }, (response) => {
             this.handleXHRError(response);
@@ -210,7 +204,7 @@ document.addEventListener('turbo:load', () => {
             this.sendFlash('Server error!', 'Herlaad de pagina', 'error');
 
             try {
-              throw new Error(JSON.stringify(error.body));
+              throw new Error(JSON.stringify(error.response.data));
             } catch(e) {
               /* eslint-disable no-undef */
               Sentry.captureException(e);
@@ -246,7 +240,7 @@ document.addEventListener('turbo:load', () => {
         deleteOrder(orderId) {
           bootstrap.Modal.getOrCreateInstance('#sumup-error-order-modal').hide();
 
-          this.$http.delete(`/orders/${orderId}`).then(() => {
+          api.delete(`/orders/${orderId}`).then(() => {
             this.sendFlash('Pin bestelling verwijderd.', '', 'success');
             this.$refs.activityOrders.refresh();
           }, (response) => {
@@ -343,7 +337,7 @@ document.addEventListener('turbo:load', () => {
             return;
           }
 
-          app.$http.post('/credit_mutations', {
+          api.post('/credit_mutations', {
             credit_mutation: {
               user_id: app.selectedUser.id,
               activity_id: app.activity.id,
@@ -351,17 +345,17 @@ document.addEventListener('turbo:load', () => {
               amount: this.creditMutationAmount
             }
           }).then((response) => {
-            const index = app.users.findIndex((candidate) => candidate.id === response.body.user.id);
+            const index = app.users.findIndex((candidate) => candidate.id === response.data.user.id);
             if (index !== -1) {
-              app.$set(app.users, index, response.body.user);
+              app.$set(app.users, index, response.data.user);
             } else {
-              app.users.push(response.body.user);
+              app.users.push(response.data.user);
             }
             if(!app.keepUserSelected && app.orderRows.length === 0){
               app.setUser(null);
             } else {
               // re-set user to update credit
-              app.setUser(response.body.user);
+              app.setUser(response.data.user);
             }
 
             bootstrap.Modal.getOrCreateInstance('#credit-mutation-modal').hide();
@@ -370,7 +364,7 @@ document.addEventListener('turbo:load', () => {
             this.creditMutationAmount = null;
             this.creditMutationDescription = 'Inleg contant';
 
-            const additionalInfo = `${response.body.user.name} - ${app.doubleToCurrency(response.body.amount)}`;
+            const additionalInfo = `${response.data.user.name} - ${app.doubleToCurrency(response.data.amount)}`;
             app.sendFlash('Inleg opgeslagen.', additionalInfo, 'success');
             this.isSubmitting = false;
 

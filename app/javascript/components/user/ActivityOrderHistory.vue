@@ -17,7 +17,7 @@
 
 <script>
 import ProductTable from '../ProductTable.vue';
-import axios from 'axios';
+import api from '../../api/axiosInstance';
 import moment from 'moment';
 
 export default {
@@ -42,7 +42,7 @@ export default {
   created() {
     let params = { user_id: this.user.id, activity_id: this.activity.id };
 
-    let promise = axios.get('/orders', { params });
+    let promise = api.get('/orders', { params });
 
     promise.then((response) => {
       this.orders = response.data.sort((a, b) => (a.created_at > b.created_at) ? 1 : -1);
