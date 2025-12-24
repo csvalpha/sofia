@@ -1,19 +1,17 @@
 import Vue from 'vue/dist/vue.esm';
-import axios from 'axios';
-
-const MIN_PAYMENT_AMOUNT = 21.8;
 
 document.addEventListener('turbo:load', () => {
-  axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
   const element = document.getElementById('payment-add');
   if (element !== null) {
+    const minPaymentAmount = parseFloat(element.dataset.minPaymentAmount);
     new Vue({
       el: element,
       data: () => {
         return {
           currentCredit: parseFloat(element.dataset.userCredit),
-          paymentAmount: parseFloat(element.dataset.paymentAmount) || MIN_PAYMENT_AMOUNT
+          paymentAmount: parseFloat(element.dataset.paymentAmount) || minPaymentAmount,
+          minPaymentAmount: minPaymentAmount
         };
       },
       computed: {
@@ -23,7 +21,7 @@ document.addEventListener('turbo:load', () => {
       },
       methods: {
         amountValid() {
-          return parseFloat(this.paymentAmount) >= MIN_PAYMENT_AMOUNT;
+          return parseFloat(this.paymentAmount) >= this.minPaymentAmount;
         }
       },
     });

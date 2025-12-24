@@ -2,7 +2,7 @@
 <% content_for :head do %>
   <%= javascript_include_tag "payment_add", "data-turbo-track": "reload", defer: true %>
 <% end %>
-<%= content_tag :div, id: 'payment-add', class: 'container footer-padding', data: {user_credit: @user.credit, payment_amount: @payment.amount} do %>
+<%= content_tag :div, id: 'payment-add', class: 'container footer-padding', data: {user_credit: @user.credit, payment_amount: @payment.amount, min_payment_amount: Rails.application.config.x.min_payment_amount} do %>
   <div class="container footer-padding">
     <div class="row py-4">
       <div class="col-12">
@@ -27,7 +27,7 @@
 
           <div class="col-md-4 col-sm-8 col-12 offset-md-8 offset-sm-4" v-if="!amountValid()">
             <div class="alert alert-danger">
-              U heeft een incorrect getal ingevoerd. Het minimale inleg bedrag is €21,80.
+              U heeft een incorrect getal ingevoerd. Het minimale inleg bedrag is €{{ minPaymentAmount.toFixed(2).replace('.', ',') }}.
             </div>
           </div>
 

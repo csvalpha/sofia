@@ -74,7 +74,7 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
     # Users with auto-charge enabled are always allowed to order
     return false if auto_charge_available?
 
-    provider == 'amber_oauth2' and credit.negative?
+    provider.in?(%w[amber_oauth2 sofia_account]) && credit.negative?
   end
 
   def can_order(activity = nil)

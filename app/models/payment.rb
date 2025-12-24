@@ -111,6 +111,7 @@ class Payment < ApplicationRecord
     # Allow 1 cent payments for mandate setup
     return if setup_payment?
 
-    errors.add(:amount, 'must be bigger than or equal to 20') unless amount && (amount >= 20)
+    min_amount = Rails.application.config.x.min_payment_amount
+    errors.add(:amount, "must be bigger than or equal to €#{format('%.2f', min_amount)}") unless amount && (amount >= min_amount)
   end
 end

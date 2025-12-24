@@ -34,7 +34,7 @@ class PaymentsController < ApplicationController # rubocop:disable Metrics/Class
     @user = current_user
     @payment = Payment.new
 
-    @payment.amount = params[:resulting_credit].to_i - @user.credit if params[:resulting_credit]
+    @payment.amount = params[:resulting_credit].to_f - @user.credit if params[:resulting_credit]
   end
 
   def setup_mandate # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
