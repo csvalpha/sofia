@@ -44,7 +44,7 @@ COPY . /app/
 
 # Precompile assets after copying app because whole Rails pipeline is needed.
 RUN if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ] || [ "$RAILS_ENV" = 'luxproduction' ] || [ "$RAILS_ENV" = 'euros' ]; then \
-    SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile; \
+    SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile --trace; \
   else \
     echo "Skipping assets:precompile"; \
   fi
