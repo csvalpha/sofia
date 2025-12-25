@@ -32,7 +32,7 @@ module Sofia
     # Use nested pool configuration for proper initialization
     redis_cache_url = Rails.application.config_for(:cable)['url']
     config.cache_store = :redis_cache_store, {
-      url: redis_cache_url,
+      url: Rails.application.config_for(:cable)['url'],
       pool: { size: ENV.fetch('RAILS_MAX_THREADS', 5).to_i, timeout: 5 }
     }
     config.active_job.queue_adapter = :sidekiq
