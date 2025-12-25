@@ -30,8 +30,7 @@ module Sofia
 
     config.cache_store = :redis_cache_store, {
       url: Rails.application.config_for(:cable)['url'],
-      pool_size: ENV.fetch('RAILS_MAX_THREADS', 5).to_i,
-      pool_timeout: 5
+      pool: { size: ENV.fetch('RAILS_MAX_THREADS', 5).to_i, timeout: 5 }
     }
     config.active_job.queue_adapter = :sidekiq
 
