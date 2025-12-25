@@ -34,7 +34,9 @@ jobs:
           if [ "$GITHUB_REF_NAME" = 'master' ]; then
             echo 'tag=latest' >> "$GITHUB_OUTPUT"
           else
-            echo 'tag='"$GITHUB_REF_NAME" >> "$GITHUB_OUTPUT"
+            # Sanitize branch name for Docker tag (replace / with -)
+            SANITIZED_TAG=$(echo "$GITHUB_REF_NAME" | sed 's/\//-/g')
+            echo 'tag='"$SANITIZED_TAG" >> "$GITHUB_OUTPUT"
           fi
 
           if [ "$GITHUB_REF_NAME" = 'staging' ] || [ "$GITHUB_REF_NAME" = 'master' ]; then
