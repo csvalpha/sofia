@@ -28,10 +28,12 @@ module Sofia
     config.i18n.default_locale = :nl
     config.i18n.fallbacks = [:nl]
 
+    # Redis cache store with connection_pool 3.x compatibility
+    # Use nested pool configuration for proper initialization
+    redis_cache_url = Rails.application.config_for(:cable)['url']
     config.cache_store = :redis_cache_store, {
-      url: Rails.application.config_for(:cable)['url'],
-      pool_size: ENV.fetch('RAILS_MAX_THREADS', 5).to_i,
-      pool_timeout: 5
+      url: redis_cache_url,
+      pool: { size: ENV.fetch('RAILS_MAX_THREADS', 5).to_i, timeout: 5 }
     }
     config.active_job.queue_adapter = :sidekiq
 
