@@ -16,7 +16,7 @@ gem 'jquery-rails', '~> 4.6.1'
 gem 'jsbundling-rails', '~> 1.3', '>= 1.3.1'
 gem 'kaminari', '~> 1.2.2'
 gem 'mollie-api-ruby', '~> 4.18.0'
-gem 'net-imap', '~> 0.5.12'
+gem 'net-imap', '~> 0.6.2'
 gem 'net-pop',  '~> 0.1.2'
 gem 'net-smtp', '~> 0.5.1'
 gem 'omniauth', '~> 2.1.4'
@@ -52,7 +52,7 @@ group :development, :test do
   gem 'brakeman', '~> 7.1.1', require: false
   gem 'bullet', '~> 8.1'
   gem 'colorize', '~> 1.1.0'
-  gem 'database_consistency', '~> 2.1.0'
+  gem 'database_consistency', '~> 2.1.1'
   gem 'dotenv-rails', '~> 3.2.0'
   gem 'guard-livereload', '~> 2.5.2'
   gem 'guard-rspec', '~> 4.7.3', require: false
@@ -75,7 +75,7 @@ end
 
 group :test do
   gem 'rails-controller-testing', '~> 1.0.5'
-  gem 'rubocop', '~> 1.81.7', require: false
+  gem 'rubocop', '~> 1.82.1', require: false
   gem 'rubocop-factory_bot', '~> 2.28.0', require: false
   gem 'rubocop-performance', '~> 1.26', '>= 1.26.1', require: false
   gem 'rubocop-rails', '~> 2.34', '>= 2.34.2', require: false
