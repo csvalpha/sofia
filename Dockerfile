@@ -15,7 +15,8 @@ RUN apt-get update -qq && \
   libpq-dev \
   curl \
   netcat-traditional \
-  wkhtmltopdf \
+  chromium \
+  chromium-driver \
   libyaml-dev
 
 # Add Node, required for asset pipeline.

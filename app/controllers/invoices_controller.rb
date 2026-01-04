@@ -15,14 +15,11 @@ class InvoicesController < ApplicationController
 
   def show
     @invoice = invoice
+    token_based_access = !integer_id?(params[:id])
 
     respond_to do |format|
       format.html
-      format.pdf do
-        render pdf: "Factuur #{@invoice.human_id}",
-               template: 'invoices/show.html.erb',
-               lowquality: true
-      end
+      format.pdf { render_invoice_pdf(token_based_access) }
     end
   end
 
@@ -73,6 +70,13 @@ class InvoicesController < ApplicationController
 
   private
 
+  def integer_id?(id)
+    Integer(id)
+    true
+  rescue ArgumentError
+    false
+  end
+
   def invoice
     @invoice = Invoice.find(Integer(params[:id]))
     authorize @invoice
@@ -82,5 +86,17 @@ class InvoicesController < ApplicationController
 
   def permitted_attributes
     params.require(:invoice).permit(%i[user_id activity_id name_override email_override rows], rows_attributes: %i[name amount price])
+  end
+
+  def render_invoice_pdf(token_based_access)
+    authorize @invoice, :download? unless token_based_access
+
+    html = render_to_string(
+      template: 'invoices/show',
+      formats: [:html],
+      layout: 'pdf'
+    )
+    pdf = Grover.new(html).to_pdf
+    send_data pdf, filename: "Factuur #{@invoice.human_id}.pdf", type: 'application/pdf', disposition: 'inline'
   end
 end
