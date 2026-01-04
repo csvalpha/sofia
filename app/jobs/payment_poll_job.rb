@@ -9,7 +9,7 @@ class PaymentPollJob < ApplicationJob
       # it will be checked again the next time this poll job runs
     end
 
-    return unless production_deployed?
+    return if Rails.env.local?
 
     HealthCheckJob.perform_later('payment_poll')
   end

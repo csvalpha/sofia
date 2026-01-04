@@ -6,11 +6,7 @@ ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../config/environment', __dir__)
 # Prevent database truncation if the environment is production
 # rubocop:disable Rails/Exit
-deploy_targets = YAML.load_file(File.expand_path('../config/deploy_targets.yml', __dir__))['targets']
-production_envs = deploy_targets.keys.map(&:to_sym)
-if production_envs.include?(Rails.env.to_sym)
-  abort('The Rails environment is running in production mode!')
-end
+abort('The Rails environment is running in production mode!') unless Rails.env.local?
 # rubocop:enable Rails/Exit
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!

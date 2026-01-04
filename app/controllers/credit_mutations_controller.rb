@@ -19,7 +19,7 @@ class CreditMutationsController < ApplicationController
 
     respond_to do |format|
       if @mutation.save
-        NewCreditMutationNotificationJob.perform_later(@mutation) if production_deployed?
+        NewCreditMutationNotificationJob.perform_later(@mutation) unless Rails.env.local?
         format.html { redirect_to which_redirect?, flash: { success: 'Inleg of mutatie aangemaakt' } }
         format.json do
           render json: @mutation, include: { user: { methods: User.orderscreen_json_includes } }
