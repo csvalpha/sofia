@@ -54,7 +54,7 @@ jobs:
             print(restriction if restriction else '')
           PYTHON_EOF
           )
-          if [ ! -z "$BRANCH_RESTRICTION" ] && [ "$GITHUB_REF_NAME" != "$BRANCH_RESTRICTION" ]; then
+          if [ ! -n "$BRANCH_RESTRICTION" ] && [ "$GITHUB_REF_NAME" != "$BRANCH_RESTRICTION" ]; then
             echo "Target $TARGET_ENV can only be deployed from branch $BRANCH_RESTRICTION, but current branch is $GITHUB_REF_NAME."
             exit 1
           fi
