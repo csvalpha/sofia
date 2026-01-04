@@ -9,13 +9,19 @@ class InvoiceMailer < ApplicationMailer
       @cab_disabled = true
     end
 
-    html = render_to_string(
-      template: 'invoices/show',
-      formats: [:html],
-      layout: 'pdf'
-    )
-    pdf = Grover.new(html).to_pdf
-    attachments["#{invoice.human_id}.pdf"] = pdf
+    begin
+      html = render_to_string(
+        template: 'invoices/show',
+        formats: [:html],
+        layout: 'pdf'
+      )
+      pdf = Grover.new(html).to_pdf
+      attachments["#{invoice.human_id}.pdf"] = pdf
+    rescue StandardError => e
+      Rails.logger.error "Failed to generate PDF attachment for invoice #{invoice.id}: #{e.message}"
+      Rails.logger.error e.backtrace.join("\n")
+      # Continue sending email without PDF attachment
+    end
 
     mail to: @invoice.email, subject: "Factuur #{invoice.human_id} #{Rails.application.config.x.company_name}"
   end

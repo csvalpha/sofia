@@ -2,7 +2,7 @@ class InvoicesController < ApplicationController
   include ApplicationHelper
 
   before_action :authenticate_user!, except: %w[show pay]
-  after_action :verify_authorized, except: %w[show pay]
+  after_action :verify_authorized, except: %w[pay]
 
   def index
     authorize Invoice
@@ -16,6 +16,9 @@ class InvoicesController < ApplicationController
   def show
     @invoice = invoice
     token_based_access = !integer_id?(params[:id])
+    
+    # Authorize for authenticated access (integer ID), skip for token-based access
+    authorize @invoice, :show? unless token_based_access
 
     respond_to do |format|
       format.html
@@ -89,14 +92,16 @@ class InvoicesController < ApplicationController
   end
 
   def render_invoice_pdf(token_based_access)
-    authorize @invoice, :download? unless token_based_access
-
     html = render_to_string(
       template: 'invoices/show',
       formats: [:html],
       layout: 'pdf'
     )
     pdf = Grover.new(html).to_pdf
-    send_data pdf, filename: "Factuur #{@invoice.human_id}.pdf", type: 'application/pdf', disposition: 'inline'
+    send_data pdf, filename: "Factuur-#{@invoice.human_id}.pdf", type: 'application/pdf', disposition: 'attachment'
+  rescue StandardError => e
+    Rails.logger.error "Failed to generate PDF for invoice #{@invoice.id}: #{e.message}"
+    flash[:error] = 'Er is een fout opgetreden bij het genereren van de PDF. Probeer het later opnieuw.'
+    redirect_to invoice_path(@invoice)
   end
 end

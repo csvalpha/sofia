@@ -8,16 +8,13 @@
 # https://github.com/Studiosity/grover
 
 Grover.configure do |config|
-  # Location of the chromium/chrome executable
-  # config.options = {
-  #   executable_path: ENV.fetch('GOOGLE_CHROME_SHIM', nil)
-  # }
 
   # Common PDF options
   config.options = {
     format: 'A4',
     print_background: true,
     prefer_css_page_size: false,
-    display_url: Rails.application.config.x.sofia_host || 'localhost'
+    display_url: "https://#{Rails.application.config.x.sofia_host}"
+
   }
 end

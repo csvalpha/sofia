@@ -16,7 +16,6 @@ RUN apt-get update -qq && \
   curl \
   netcat-traditional \
   chromium \
-  chromium-driver \
   libyaml-dev
 
 # Add Node, required for asset pipeline.
