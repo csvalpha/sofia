@@ -23,8 +23,6 @@ AllCops:
 Rails/UnknownEnv:
   Environments:
     - production
-    - luxproduction
-    - euros
     - development
     - test
     - staging

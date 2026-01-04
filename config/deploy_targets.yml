@@ -31,7 +31,7 @@ targets:
 
   luxadmosam:
     deploy_path: /opt/docker/sofia/luxproduction
-    stage: luxproduction
+    stage: production
     hostname: luxstreep.csvalpha.nl
     url: https://luxstreep.csvalpha.nl
     branch_restriction: master  # Only from master branch
@@ -39,7 +39,7 @@ targets:
 
   euros:
     deploy_path: /opt/docker/sofia/euros
-    stage: euros
+    stage: production
     hostname: euros.csvalpha.nl
     url: https://euros.csvalpha.nl
     branch_restriction: master  # Only from master branch

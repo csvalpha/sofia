@@ -20,9 +20,3 @@ production: &production
 
 staging:
   <<: *production
-
-luxproduction:
-  <<: *production
-
-euros:
-  <<: *production
