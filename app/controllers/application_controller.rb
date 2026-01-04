@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
-  include EnvironmentAware
 
   protect_from_forgery with: :exception, prepend: true
 
