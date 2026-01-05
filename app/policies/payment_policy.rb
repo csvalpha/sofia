@@ -11,6 +11,18 @@ class PaymentPolicy < ApplicationPolicy
     mollie_enabled? && user
   end
 
+  def setup_mandate?
+    mollie_enabled? && user
+  end
+
+  def mandate_callback?
+    mollie_enabled? && user
+  end
+
+  def toggle_auto_charge?
+    mollie_enabled? && user
+  end
+
   def invoice_callback?
     mollie_enabled? && record && !record.completed?
   end

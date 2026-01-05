@@ -103,6 +103,11 @@
                 Inleggen
               </a></li>
             <li class="nav-item">
+              <a aria-controls="autoChargeInfo" aria-selected="false" class="nav-link" data-bs-toggle="tab" href="#autoChargeInfo" id="autoChargeInfo-tab" role="tab">
+                Automatische opwaardering
+              </a>
+            </li>
+            <li class="nav-item">
 
               <a aria-controls="roleInfo" aria-selected="false" class="nav-link" data-bs-toggle="tab" href="#roleInfo" id="roleInfo-tab" role="tab">
                 Rollen en rechten
@@ -132,10 +137,74 @@
                   <% end %>
                   <% if Rails.application.config.x.mollie_api_key.present? %>
                     <%= link_to add_payments_path do %>
-                      <%= 'Klik hier om je saldo over te maken via iDEAL ' %>
+                      <%= 'Klik hier om je saldo over te maken via iDEAL' %>
                     <% end %>
                   <% end %>
                 </p>
+              <% end %>
+            </div>
+            <div aria-labelledby="autoChargeInfo-tab" class="tab-pane p-2" id="autoChargeInfo" role="tabpanel">
+              <% if Rails.application.config.x.mollie_api_key.present? %>
+                <h4 class="card-title">Automatische opwaardering</h4>
+                <p class="card-text">
+                  Met automatische opwaardering kun je je saldo automatisch aanvullen via SEPA-incasso wanneer je saldo onder de 0 euro komt.
+                </p>
+                
+                <% if @user == current_user %>
+                  <% if @user.mollie_mandate_id.blank? %>
+                    <div class="alert alert-info mb-3">
+                      <p>
+                        Je hebt nog geen mandate ingesteld. Klik op onderstaande knop om een mandate in te stellen door 1 cent te betalen via iDEAL.
+                      </p>
+                      <%= link_to setup_mandate_payments_path, method: :post, class: 'btn btn-primary' do %>
+                        <i class="fas fa-link me-1"></i>
+                        Mandate instellen
+                      <% end %>
+                    </div>
+                  <% elsif @user.mandate_valid? %>
+                    <div class="alert alert-success mb-3">
+                      <p class="mb-2">
+                        <i class="fas fa-check-circle me-2"></i>
+                        Je mandate is actief en geldig.
+                      </p>
+                      <div class="form-check form-switch">
+                        <input 
+                          class="form-check-input" 
+                          type="checkbox" 
+                          id="autoChargeToggle" 
+                          <%= 'checked' if @user.auto_charge_enabled %>
+                          onchange="document.getElementById('toggleAutoChargeForm').submit();"
+                          <%= 'disabled' if !@user.mandate_valid? %>
+                        >
+                        <label class="form-check-label" for="autoChargeToggle">
+                          Automatische opwaardering inschakelen
+                        </label>
+                      </div>
+                      <%= form_with url: toggle_auto_charge_payments_path, method: :post, local: true, id: 'toggleAutoChargeForm' do |f| %>
+                      <% end %>
+                    </div>
+                  <% else %>
+                    <div class="alert alert-warning">
+                      <p>
+                        Je mandate is niet meer geldig. Stel alstublieft opnieuw een mandate in.
+                      </p>
+                      <%= link_to setup_mandate_payments_path, method: :post, class: 'btn btn-primary' do %>
+                        <i class="fas fa-link me-1"></i>
+                        Mandate opnieuw instellen
+                      <% end %>
+                    </div>
+                  <% end %>
+                <% else %>
+                  <div class="alert alert-secondary">
+                    <p>
+                      Dit gedeelte kan alleen door jezelf worden beheerd.
+                    </p>
+                  </div>
+                <% end %>
+              <% else %>
+                <div class="alert alert-warning">
+                  <p>Automatische opwaardering is momenteel niet beschikbaar.</p>
+                </div>
               <% end %>
             </div>
             <div aria-labelledby="roleInfo-tab" class="tab-pane p-2" id="roleInfo" role="tabpanel">
