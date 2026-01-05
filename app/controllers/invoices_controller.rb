@@ -2,7 +2,7 @@ class InvoicesController < ApplicationController
   include ApplicationHelper
 
   before_action :authenticate_user!, except: %w[show pay]
-  after_action :verify_authorized, except: %w[pay]
+  after_action :verify_authorized, except: %w[show pay]
 
   def index
     authorize Invoice
@@ -16,13 +16,13 @@ class InvoicesController < ApplicationController
   def show
     @invoice = invoice
     token_based_access = !integer_id?(params[:id])
-    
+
     # Authorize for authenticated access (integer ID), skip for token-based access
     authorize @invoice, :show? unless token_based_access
 
     respond_to do |format|
       format.html
-      format.pdf { render_invoice_pdf(token_based_access) }
+      format.pdf { render_invoice_pdf }
     end
   end
 
@@ -91,7 +91,7 @@ class InvoicesController < ApplicationController
     params.require(:invoice).permit(%i[user_id activity_id name_override email_override rows], rows_attributes: %i[name amount price])
   end
 
-  def render_invoice_pdf(token_based_access)
+  def render_invoice_pdf # rubocop:disable Metrics/MethodLength
     html = render_to_string(
       template: 'invoices/show',
       formats: [:html],

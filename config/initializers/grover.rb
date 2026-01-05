@@ -8,7 +8,6 @@
 # https://github.com/Studiosity/grover
 
 Grover.configure do |config|
-
   # Common PDF options
   config.options = {
     format: 'A4',
