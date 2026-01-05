@@ -82,7 +82,6 @@ class InvoicesController < ApplicationController
 
   def invoice
     @invoice = Invoice.find(Integer(params[:id]))
-    authorize @invoice
   rescue ArgumentError
     @invoice = Invoice.find_by!(token: params[:id])
   end
