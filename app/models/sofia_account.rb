@@ -32,4 +32,15 @@ class SofiaAccount < OmniAuth::Identity::Models::ActiveRecord
     default_options = Rails.application.config.action_mailer.default_url_options
     URI::Generic.build(default_options.merge(path: "/sofia_accounts/#{id}/reset_password", query: params.to_query)).to_s
   end
+
+  def self.find_for_login(identifier)
+    return nil if identifier.blank?
+
+    trimmed = identifier.to_s.strip
+    find_by(username: trimmed) || User.includes(:sofia_account).where.not(email: nil).find { |u| u.email.casecmp?(trimmed) }&.sofia_account
+  end
+
+  def self.resolve_login_identifier(identifier)
+    find_for_login(identifier)&.username
+  end
 end
