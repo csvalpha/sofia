@@ -21,7 +21,7 @@
       <h4 class="card-title">Inloggen</h4>
     </div>
     <div class="card-body px-4 py-3">
-      <%= f.input :auth_key, as: :string, label: "Gebruikersnaam", input_html: {name: 'auth_key', class: 'sofia-account-input'} %>
+      <%= f.input :auth_key, as: :string, label: "Gebruikersnaam of e-mailadres", input_html: {name: 'auth_key', class: 'sofia-account-input'} %>
       <%= f.input :password, as: :password, label: "Wachtwoord", hint: 'Wachtwoord vergeten?', wrapper: :with_hint_link, input_html: {name: 'password', class: 'sofia-account-input'}, hint_html: {href: forgot_password_view_sofia_accounts_path} %>
       <div class="d-grid mt-4">
         <button class="btn btn-primary" type="submit" formaction='javascript:authenticate_login();' id="login_submit_button">Inloggen</button>
