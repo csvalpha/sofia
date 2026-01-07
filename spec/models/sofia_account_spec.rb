@@ -238,10 +238,10 @@ RSpec.describe SofiaAccount do
   end
 
   describe '.resolve_login_identifier' do
-    let!(:account) { create(:sofia_account, username: 'resolveuser', password: 'password1234') }
     let!(:email_account) { create(:sofia_account, password: 'password1234') }
 
     before do
+      create(:sofia_account, username: 'resolveuser', password: 'password1234')
       email_account.user.update!(email: 'resolve@example.com')
     end
 
@@ -305,11 +305,11 @@ RSpec.describe SofiaAccount do
     end
 
     context 'with multiple accounts and varied normalization' do
-      let!(:account_one) { create(:sofia_account, username: 'FirstResolver', password: 'password1234') }
-      let!(:account_two) { create(:sofia_account, username: 'SecondResolver', password: 'password1234') }
       let!(:account_three) { create(:sofia_account, password: 'password1234') }
 
       before do
+        create(:sofia_account, username: 'FirstResolver', password: 'password1234')
+        create(:sofia_account, username: 'SecondResolver', password: 'password1234')
         account_three.user.update!(email: 'thirdresolver@domain.org')
       end
 
