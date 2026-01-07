@@ -12,6 +12,9 @@ Devise.setup do |config|
   # ==> OmniAuth
   require_dependency Rails.root.join('config', 'initializers', 'omniauth_strategies', 'amber_oauth2.rb')
 
+  # CSRF protection (built-in solution for CVE-2015-9284)
+  OmniAuth.config.request_validation_phase = OmniAuth::AuthenticityTokenProtection.new(key: :_csrf_token)
+
   config.omniauth :amber_oauth2, Rails.application.config.x.amber_client_id,
                   Rails.application.config.x.amber_client_secret
   config.omniauth :identity, model: SofiaAccount, fields: %i[username user_id],

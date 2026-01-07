@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="user-input position-relative">
     <input type="text" class="d-none" :name="name" :value="selectedSuggestion.id">
-    <input type="text" class="form-control bg-white" v-model="query" placeholder="Begin met typen..."
+    <input type="text" class="form-control bg-white" v-model="query" placeholder="Zoek op gebruiker"
            @input="updateValue"
            @keydown.enter="selectFirstSuggestion"
            aria-haspopup="true" v-bind:aria-expanded="dropdownOpened"
@@ -19,6 +19,8 @@
 </template>
 
 <script>
+import api from '../api/axiosInstance';
+
 export default {
   props: {
     name: {
@@ -76,8 +78,8 @@ export default {
         return;
       }
 
-      this.$http.post('/users/search.json', { query: this.query }).then( (response) => {
-        let results = response.body || [];
+      api.post('/users/search.json', { query: this.query }).then( (response) => {
+        let results = response.data || [];
 
         if (this.includePin && 'gepind'.indexOf(this.query.toLowerCase()) >= 0) {
           results.push({ name: 'Gepind', paid_with_pin: true });
