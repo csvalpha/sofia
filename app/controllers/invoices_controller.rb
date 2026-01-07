@@ -42,6 +42,9 @@ class InvoicesController < ApplicationController
 
   def pay # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @invoice = invoice
+    token_based_access = !integer_id?(params[:id])
+
+    authorize @invoice, :pay? unless token_based_access
 
     if @invoice.paid?
       redirect_to invoice_path params[:id]
