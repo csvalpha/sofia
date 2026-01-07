@@ -183,6 +183,8 @@ GEM
     google-protobuf (4.33.0-x86_64-linux-gnu)
       bigdecimal
       rake (>= 13)
+    grover (1.2.4)
+      nokogiri (~> 1)
     guard (2.19.1)
       formatador (>= 0.2.4)
       listen (>= 2.7, < 4.0)
@@ -596,10 +598,6 @@ GEM
       base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    wicked_pdf (2.8.2)
-      activesupport
-      ostruct
-    wkhtmltopdf-binary (0.12.6.10)
     zeitwerk (2.7.3)
 
 PLATFORMS
@@ -625,6 +623,7 @@ DEPENDENCIES
   factory_bot_rails (~> 6.5.1)
   faker (~> 3.5.3)
   foreman (~> 0.90.0)
+  grover (~> 1.2.4)
   guard-livereload (~> 2.5.2)
   guard-rspec (~> 4.7.3)
   http (~> 5.3.1)
@@ -682,8 +681,6 @@ DEPENDENCIES
   uglifier (~> 4.2.1)
   validates_timeliness (~> 7.1.0)
   web-console (~> 4.2.1)
-  wicked_pdf (~> 2.8.2)
-  wkhtmltopdf-binary (~> 0.12.6.10)
 
 BUNDLED WITH
    2.6.9
