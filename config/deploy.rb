@@ -9,11 +9,10 @@ set :domain, 'ssh.csvalpha.nl'
 
 # Load deployment targets from config/deploy_targets.yml
 deploy_targets_path = File.expand_path('deploy_targets.yml', __dir__)
-
-begin
-  deploy_config = YAML.safe_load_file(deploy_targets_path, permitted_classes: [], permitted_symbols: [], aliases: false)
+deploy_config = YAML.safe_load_file(deploy_targets_path, permitted_classes: [], permitted_symbols: [], aliases: false)
 
 deploy_targets = deploy_config['targets']
+
 # Dynamically create mina tasks for each deployment target
 deploy_targets.each do |target_name, config|
   task target_name.to_sym do
