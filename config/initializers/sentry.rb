@@ -3,7 +3,7 @@ deploy_targets = YAML.load_file(Rails.root.join('config', 'deploy_targets.yml'))
 
 Sentry.init do |config|
   config.dsn = Rails.application.config.x.sentry_dsn
-  config.enabled_environments = deploy_targets.keys.map(&:to_sym)
+  config.enabled_environments = deploy_targets.values.map { |target| target['stage'] }.uniq.map(&:to_sym)
   config.environment = Rails.env
   config.release = ENV.fetch('BUILD_HASH', nil)
 end
