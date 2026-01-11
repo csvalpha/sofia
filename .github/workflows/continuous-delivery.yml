@@ -175,6 +175,11 @@ jobs:
       inputs.merge && fromJSON(needs.metadata.outputs.has_diff) || github.event.inputs.ignore_metadata_diff && success()) ||
       ((!inputs.merge|| !fromJSON(needs.metadata.outputs.has_diff)) || github.event.inputs.ignore_metadata_diff && !cancelled()))
     steps:
+      - name: Checkout code
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          ref: ${{ needs.merge.outputs.sha }}
+
       - name: Get environment URL
         id: get_url
         env:
@@ -195,11 +200,6 @@ jobs:
           PYTHON_EOF
           )
           echo "environment_url=$URL" >> "$GITHUB_OUTPUT"
-
-      - name: Checkout code
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-        with:
-          ref: ${{ needs.merge.outputs.sha }}
 
       - name: Start deployment
         uses: bobheadxi/deployments@648679e8e4915b27893bd7dbc35cb504dc915bc8 # v1.5.0

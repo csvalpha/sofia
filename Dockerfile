@@ -30,7 +30,7 @@ WORKDIR /app
 COPY Gemfile* /app/
 RUN if [ "$RAILS_ENV" != 'development' ] && [ "$RAILS_ENV" != 'test' ]; then \
     bundle config set --local without 'development test'; \
-  else \
+  elif [ "$RAILS_ENV" != 'test' ]; then \
     bundle config set --local without 'development'; \
   fi
 RUN bundle install
