@@ -94,6 +94,9 @@ class InvoicesController < ApplicationController
   end
 
   def render_invoice_pdf # rubocop:disable Metrics/MethodLength
+    token_based_access = !integer_id?(params[:id])
+    authorize @invoice, :download? unless token_based_access
+
     html = render_to_string(
       template: 'invoices/show',
       formats: [:html],
@@ -101,8 +104,15 @@ class InvoicesController < ApplicationController
     )
     pdf = Grover.new(html).to_pdf
     send_data pdf, filename: "Factuur-#{@invoice.human_id}.pdf", type: 'application/pdf', disposition: 'attachment'
-  rescue StandardError => e
+   rescue StandardError => e
     Rails.logger.error "Failed to generate PDF for invoice #{@invoice.id}: #{e.message}"
+    if request.format.pdf?
+      render plain: 'Er is een fout opgetreden bij het genereren van de PDF. Probeer het later opnieuw.', status: 500
+    else
+      flash[:error] = 'Er is een fout opgetreden bij het genereren van de PDF. Probeer het later opnieuw.'
+      redirect_to invoice_path(@invoice)
+    end
+  end
     flash[:error] = 'Er is een fout opgetreden bij het genereren van de PDF. Probeer het later opnieuw.'
     redirect_to invoice_path(@invoice)
   end
