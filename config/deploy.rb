@@ -2,22 +2,20 @@
 # This file is for mina to be able to connect to the rails console on the server
 
 require 'mina/rails'
+require 'yaml'
 import 'lib/mina/tasks/rails.rake'
 
 set :domain, 'ssh.csvalpha.nl'
 
-task :staging do
-  set :deploy_to, '/opt/docker/sofia/staging'
-end
+# Load deployment targets from config/deploy_targets.yml
+deploy_targets_path = File.expand_path('deploy_targets.yml', __dir__)
+deploy_config = YAML.safe_load_file(deploy_targets_path, permitted_classes: [], permitted_symbols: [], aliases: false)
 
-task :production do
-  set :deploy_to, '/opt/docker/sofia/production'
-end
+deploy_targets = deploy_config['targets']
 
-task :luxproduction do
-  set :deploy_to, '/opt/docker/sofia/luxproduction'
-end
-
-task :euros do
-  set :deploy_to, '/opt/docker/sofia/euros'
+# Dynamically create mina tasks for each deployment target
+deploy_targets.each do |target_name, config|
+  task target_name.to_sym do
+    set :deploy_to, config['deploy_path']
+  end
 end

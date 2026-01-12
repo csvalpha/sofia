@@ -33,6 +33,9 @@ jobs:
     name: Branch Check
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
       - name: Validate branch
         env:
           TARGET_ENV: ${{ github.event.inputs.target_env }}
@@ -41,11 +44,19 @@ jobs:
             echo 'This workflow can only be run on branches staging and master.'
             exit 1
           fi
-          if [ "$TARGET_ENV" == 'luxadmosam' ] || [ "$TARGET_ENV" == 'euros' ]; then
-            if [ "$GITHUB_REF_NAME" != 'master' ]; then
-              echo 'Only the master branch can be deployed to external parties.'
-              exit 1
-            fi
+          # Check branch restriction from deploy_targets.yml
+          BRANCH_RESTRICTION=$(python3 << 'PYTHON_EOF'
+          import yaml
+          with open('config/deploy_targets.yml', 'r') as f:
+            config = yaml.safe_load(f)
+            target = config['targets']['${{ github.event.inputs.target_env }}']
+            restriction = target.get('branch_restriction')
+            print(restriction if restriction else '')
+          PYTHON_EOF
+          )
+          if [ -n "$BRANCH_RESTRICTION" ] && [ "$GITHUB_REF_NAME" != "$BRANCH_RESTRICTION" ]; then
+            echo "Target $TARGET_ENV can only be deployed from branch $BRANCH_RESTRICTION, but current branch is $GITHUB_REF_NAME."
+            exit 1
           fi
 
   metadata:
@@ -74,17 +85,24 @@ jobs:
                 echo 'has_diff=false' >> "$GITHUB_OUTPUT"
               fi
             fi
-
-            if [ "$TARGET_ENV" == 'luxadmosam' ]; then
-              echo 'stage=luxproduction' >> "$GITHUB_OUTPUT"
-            elif [ "$TARGET_ENV" == 'euros' ]; then
-              echo 'stage=euros' >> "$GITHUB_OUTPUT"
-            else
-              echo 'stage=production' >> "$GITHUB_OUTPUT"
-            fi
-          else
-            echo 'stage=staging' >> "$GITHUB_OUTPUT"
           fi
+
+          # Get stage from deploy_targets.yml
+          STAGE=$(python3 << 'PYTHON_EOF'
+          import yaml
+          with open('config/deploy_targets.yml', 'r') as f:
+            config = yaml.safe_load(f)
+            target_env = '${{ github.event.inputs.target_env }}'
+            current_branch = '${{ github.ref_name }}'
+            # If on staging branch, always use staging stage unless targeting external party
+            if current_branch == 'staging':
+              print('staging')
+            else:
+              # On master: use the stage from the target environment
+              print(config['targets'][target_env]['stage'])
+          PYTHON_EOF
+          )
+          echo "stage=$STAGE" >> "$GITHUB_OUTPUT"
 
   merge:
     name: Merge
@@ -157,25 +175,31 @@ jobs:
       inputs.merge && fromJSON(needs.metadata.outputs.has_diff) || github.event.inputs.ignore_metadata_diff && success()) ||
       ((!inputs.merge|| !fromJSON(needs.metadata.outputs.has_diff)) || github.event.inputs.ignore_metadata_diff && !cancelled()))
     steps:
+      - name: Checkout code
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          ref: ${{ needs.merge.outputs.sha }}
+
       - name: Get environment URL
         id: get_url
         env:
           TARGET_ENV: ${{ github.event.inputs.target_env }}
         run: |
-          if [ "$TARGET_ENV" == 'luxadmosam' ] && [ "$GITHUB_REF_NAME" = 'master' ]; then
-            echo 'environment_url=https://luxstreep.csvalpha.nl' >> "$GITHUB_OUTPUT"
-          elif [ "$TARGET_ENV" == 'euros' ] && [ "$GITHUB_REF_NAME" = 'master' ]; then
-            echo 'environment_url=https://euros.csvalpha.nl' >> "$GITHUB_OUTPUT"
-          elif [ "$GITHUB_REF_NAME" = 'master' ]; then
-            echo 'environment_url=https://streep.csvalpha.nl' >> "$GITHUB_OUTPUT"
-          else
-            echo 'environment_url=https://stagingstreep.csvalpha.nl' >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Checkout code
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-        with:
-          ref: ${{ needs.merge.outputs.sha }}
+          # Get URL from deploy_targets.yml based on current branch and target
+          URL=$(python3 << 'PYTHON_EOF'
+          import yaml
+          with open('config/deploy_targets.yml', 'r') as f:
+            config = yaml.safe_load(f)
+            current_branch = '${{ github.ref_name }}'
+            target_env = '${{ github.event.inputs.target_env }}'
+            # If on staging, use stagingstreep URL; otherwise use the target's URL
+            if current_branch == 'staging':
+              print(config['targets']['stagingstreep']['url'])
+            else:
+              print(config['targets'][target_env]['url'])
+          PYTHON_EOF
+          )
+          echo "environment_url=$URL" >> "$GITHUB_OUTPUT"
 
       - name: Start deployment
         uses: bobheadxi/deployments@648679e8e4915b27893bd7dbc35cb504dc915bc8 # v1.5.0
