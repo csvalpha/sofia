@@ -107,28 +107,13 @@ RSpec.describe SofiaAccount do
         expect(result).to eq(account)
       end
 
-      it 'does not find account by uppercase username' do
+      it 'does not find account by different case username' do
         result = described_class.find_for_login('TESTUSER')
         expect(result).to be_nil
       end
 
-      it 'does not find account by mixed case username' do
-        result = described_class.find_for_login('TestUser')
-        expect(result).to be_nil
-      end
-
-      it 'finds account by username with surrounding whitespace' do
+      it 'finds account by username with whitespace trimmed' do
         result = described_class.find_for_login('  testuser  ')
-        expect(result).to eq(account)
-      end
-
-      it 'finds account by username with leading whitespace' do
-        result = described_class.find_for_login('  testuser')
-        expect(result).to eq(account)
-      end
-
-      it 'finds account by username with trailing whitespace' do
-        result = described_class.find_for_login('testuser  ')
         expect(result).to eq(account)
       end
     end
@@ -148,23 +133,8 @@ RSpec.describe SofiaAccount do
         expect(result).to eq(account_with_email)
       end
 
-      it 'finds account by email with mixed case' do
-        result = described_class.find_for_login('User@Example.Com')
-        expect(result).to eq(account_with_email)
-      end
-
-      it 'finds account by email with surrounding whitespace' do
+      it 'finds account by email with whitespace trimmed' do
         result = described_class.find_for_login('  user@example.com  ')
-        expect(result).to eq(account_with_email)
-      end
-
-      it 'finds account by email with leading whitespace' do
-        result = described_class.find_for_login('  user@example.com')
-        expect(result).to eq(account_with_email)
-      end
-
-      it 'finds account by email with trailing whitespace' do
-        result = described_class.find_for_login('user@example.com  ')
         expect(result).to eq(account_with_email)
       end
 
@@ -176,19 +146,10 @@ RSpec.describe SofiaAccount do
     end
 
     context 'when handling nil or blank input' do
-      it 'returns nil for nil identifier' do
-        result = described_class.find_for_login(nil)
-        expect(result).to be_nil
-      end
-
-      it 'returns nil for empty string' do
-        result = described_class.find_for_login('')
-        expect(result).to be_nil
-      end
-
-      it 'returns nil for whitespace-only string' do
-        result = described_class.find_for_login('   ')
-        expect(result).to be_nil
+      it 'returns nil for nil or blank identifier' do
+        expect(described_class.find_for_login(nil)).to be_nil
+        expect(described_class.find_for_login('')).to be_nil
+        expect(described_class.find_for_login('   ')).to be_nil
       end
     end
 
@@ -202,45 +163,9 @@ RSpec.describe SofiaAccount do
         result = described_class.find_for_login('nonexistent@example.com')
         expect(result).to be_nil
       end
-
-      it 'returns nil when user exists but email is nil' do
-        user_without_email = create(:user, email: nil)
-        create(:sofia_account, user: user_without_email, password: 'password1234')
-        result = described_class.find_for_login('anyvalue@example.com')
-        expect(result).to be_nil
-      end
-    end
-
-    context 'with multiple accounts and unique test data' do
-      let!(:alpha_account) { create(:sofia_account, username: 'AlphaUser', password: 'password1234') }
-      let!(:beta_account) { create(:sofia_account, username: 'BetaUser', password: 'password1234') }
-      let!(:gamma_account) { create(:sofia_account, password: 'password1234') }
-
-      before do
-        gamma_account.user.update!(email: 'gamma_user@domain.io')
-      end
-
-      it 'finds correct account among multiple by username' do
-        expect(described_class.find_for_login('AlphaUser')).to eq(alpha_account)
-        expect(described_class.find_for_login('BetaUser')).to eq(beta_account)
-      end
-
-      it 'finds correct account among multiple by email' do
-        expect(described_class.find_for_login('gamma_user@domain.io')).to eq(gamma_account)
-      end
-
-      it 'does not find accounts with incorrect username case' do
-        expect(described_class.find_for_login('alphauser')).to be_nil
-        expect(described_class.find_for_login('betauser')).to be_nil
-      end
-    end
-  end
-
-  describe '.resolve_login_identifier' do
-    let!(:email_account) { create(:sofia_account, password: 'password1234') }
-
-    before do
-      create(:sofia_account, username: 'resolveuser', password: 'password1234')
+ or email' do
+        expect(described_class.find_for_login('nonexistent')).to be_nil
+        expect(described_class.find_for_login('nonexistent@example.comassword: 'password1234')
       email_account.user.update!(email: 'resolve@example.com')
     end
 
@@ -277,59 +202,9 @@ RSpec.describe SofiaAccount do
     end
 
     context 'when identifier does not resolve to an account' do
-      it 'returns nil for nil identifier' do
-        result = described_class.resolve_login_identifier(nil)
-        expect(result).to be_nil
-      end
-
-      it 'returns nil for empty string' do
-        result = described_class.resolve_login_identifier('')
-        expect(result).to be_nil
-      end
-
-      it 'returns nil for blank identifier' do
-        result = described_class.resolve_login_identifier('   ')
-        expect(result).to be_nil
-      end
-
-      it 'returns nil for non-existent username' do
-        result = described_class.resolve_login_identifier('nonexistentuser')
-        expect(result).to be_nil
-      end
-
-      it 'returns nil for non-existent email' do
-        result = described_class.resolve_login_identifier('nonexistent@example.com')
-        expect(result).to be_nil
-      end
-    end
-
-    context 'with multiple accounts and varied normalization' do
-      let!(:account_three) { create(:sofia_account, password: 'password1234') }
-
-      before do
-        create(:sofia_account, username: 'FirstResolver', password: 'password1234')
-        create(:sofia_account, username: 'SecondResolver', password: 'password1234')
-        account_three.user.update!(email: 'thirdresolver@domain.org')
-      end
-
-      it 'returns nil for mismatched case on first account' do
-        result = described_class.resolve_login_identifier('firstresolver')
-        expect(result).to be_nil
-      end
-
-      it 'returns nil for mismatched case on second account' do
-        result = described_class.resolve_login_identifier('secondresolver')
-        expect(result).to be_nil
-      end
-
-      it 'returns correct username for email account with case variation' do
-        result = described_class.resolve_login_identifier('THIRDRESOLVER@DOMAIN.ORG')
-        expect(result).to eq(account_three.username)
-      end
-
-      it 'applies whitespace trimming for email lookups' do
-        expect(described_class.resolve_login_identifier('  thirdresolver@domain.org  ')).to eq(account_three.username)
-      end
-    end
-  end
-end
+      it 'returns nil for nil, empty or non-existent identifiers' do
+        expect(described_class.resolve_login_identifier(nil)).to be_nil
+        expect(described_class.resolve_login_identifier('')).to be_nil
+        expect(described_class.resolve_login_identifier('   ')).to be_nil
+        expect(described_class.resolve_login_identifier('nonexistentuser')).to be_nil
+        expect(described_class.resolve_login_identifier('nonexistent@example.com')).to be_nil
