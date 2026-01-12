@@ -28,6 +28,16 @@ module Sofia
     config.i18n.default_locale = :nl
     config.i18n.fallbacks = [:nl]
 
+    if ENV['REDIS_HOST'].present?
+      cable_url = config_for(:cable)['url']
+      config.cache_store :redis_cache_store, {
+        url: cable_url,
+        pool: { size: ENV.fetch('RAILS_MAX_THREADS', 5).to_i, timeout: 5 }
+      }
+    else
+      config.cache_store :memory_store
+    end
+
     config.active_job.queue_adapter = :sidekiq
 
     config.exceptions_app = routes
