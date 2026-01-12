@@ -28,16 +28,6 @@ module Sofia
     config.i18n.default_locale = :nl
     config.i18n.fallbacks = [:nl]
 
-    config.cache_store = if ENV['REDIS_HOST'].present?
-                           redis_password = ENV['REDIS_PASSWORD'].present? ? ":#{ENV['REDIS_PASSWORD']}@" : ':'
-                           redis_url = "redis://#{redis_password}#{ENV['REDIS_HOST']}:#{ENV.fetch('REDIS_PORT', 6379)}/1"
-                           :redis_cache_store, {
-                             url: redis_url,
-                             pool: { size: ENV.fetch('RAILS_MAX_THREADS', 5).to_i, timeout: 5 }
-                           }
-                         else
-                           :memory_store
-                         end
     config.active_job.queue_adapter = :sidekiq
 
     config.exceptions_app = routes
