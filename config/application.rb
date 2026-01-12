@@ -28,12 +28,11 @@ module Sofia
     config.i18n.default_locale = :nl
     config.i18n.fallbacks = [:nl]
 
+    # Build Redis URL from environment variables
     redis_url = ENV['REDIS_URL']
-    redis_url ||= begin
-      cable_cfg = Rails.application.config_for(:cable)
-      cable_cfg['url'] if cable_cfg.present?
-    rescue StandardError
-      nil
+    if redis_url.blank? && ENV['REDIS_HOST'].present?
+      password = ENV['REDIS_PASSWORD'].present? ? ":#{ENV['REDIS_PASSWORD']}@" : ':'
+      redis_url = "redis://#{password}#{ENV['REDIS_HOST']}:#{ENV.fetch('REDIS_PORT', 6379)}/1"
     end
 
     if redis_url.present?
