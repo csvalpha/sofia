@@ -166,10 +166,10 @@ RSpec.describe SofiaAccount do
     end
 
     context 'when identifier resolves to an account' do
-      let!(:resolve_account) { create(:sofia_account, username: 'resolveuser', password: 'password1234') }
-      let!(:email_resolve_account) { create(:sofia_account, username: 'emailuser', password: 'password1234') }
+      let(:email_resolve_account) { create(:sofia_account, username: 'emailuser', password: 'password1234') }
 
       before do
+        create(:sofia_account, username: 'resolveuser', password: 'password1234')
         email_resolve_account.user.update!(email: 'resolve@example.com')
       end
 
