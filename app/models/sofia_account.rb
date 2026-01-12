@@ -10,6 +10,12 @@ class SofiaAccount < OmniAuth::Identity::Models::ActiveRecord
 
   auth_key :username # specifies the field within the model that will be used during the login process as username
 
+  def self.locate(auth_key_value)
+    # Override the default locate method to support both username and email lookup
+    resolve_username = resolve_login_identifier(auth_key_value)
+    find_by(username: resolve_username) if resolve_username
+  end
+
   def self.activate_account_url(user_id, activation_token)
     params = { user_id:, activation_token: }
     default_options = Rails.application.config.action_mailer.default_url_options

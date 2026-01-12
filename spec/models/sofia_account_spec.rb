@@ -166,6 +166,13 @@ RSpec.describe SofiaAccount do
     end
 
     context 'when identifier resolves to an account' do
+      let!(:resolve_account) { create(:sofia_account, username: 'resolveuser', password: 'password1234') }
+      let!(:email_resolve_account) { create(:sofia_account, username: 'emailuser', password: 'password1234') }
+
+      before do
+        email_resolve_account.user.update!(email: 'resolve@example.com')
+      end
+
       it 'returns username when searched by username' do
         result = described_class.resolve_login_identifier('resolveuser')
         expect(result).to eq('resolveuser')
@@ -173,7 +180,7 @@ RSpec.describe SofiaAccount do
 
       it 'returns username when searched by email' do
         result = described_class.resolve_login_identifier('resolve@example.com')
-        expect(result).to eq(email_account.username)
+        expect(result).to eq(email_resolve_account.username)
       end
 
       it 'returns nil for mismatched username case' do
@@ -183,7 +190,7 @@ RSpec.describe SofiaAccount do
 
       it 'normalizes case for email lookup' do
         result = described_class.resolve_login_identifier('RESOLVE@EXAMPLE.COM')
-        expect(result).to eq(email_account.username)
+        expect(result).to eq(email_resolve_account.username)
       end
 
       it 'trims whitespace for username lookup' do
@@ -193,7 +200,7 @@ RSpec.describe SofiaAccount do
 
       it 'trims whitespace for email lookup' do
         result = described_class.resolve_login_identifier('  resolve@example.com  ')
-        expect(result).to eq(email_account.username)
+        expect(result).to eq(email_resolve_account.username)
       end
     end
 
