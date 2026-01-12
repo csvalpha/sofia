@@ -204,3 +204,7 @@ RSpec.describe SofiaAccount do
         expect(described_class.resolve_login_identifier('   ')).to be_nil
         expect(described_class.resolve_login_identifier('nonexistentuser')).to be_nil
         expect(described_class.resolve_login_identifier('nonexistent@example.com')).to be_nil
+      end
+    end
+  end
+end
