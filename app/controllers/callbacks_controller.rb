@@ -15,12 +15,12 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
     if user&.persisted?
       if user.deactivated
-        render json: { state: 'password_prompt', error_message: 'Uw account is gedeactiveerd, dus inloggen is niet mogelijk.' }
+        render(json: { state: 'password_prompt', error_message: 'Uw account is gedeactiveerd, dus inloggen is niet mogelijk.' })
       else
         check_identity_with_user(user, SofiaAccount.find_by(user_id: user.id))
       end
     else
-      render json: { state: 'password_prompt', error_message: 'Inloggen mislukt. De ingevulde gegevens zijn incorrect.' }
+      render(json: { state: 'password_prompt', error_message: 'Inloggen mislukt. De ingevulde gegevens zijn incorrect.' })
     end
   end
 
@@ -30,26 +30,26 @@ class CallbacksController < Devise::OmniauthCallbacksController
     elsif sofia_account
       # no OTP enabled
       sign_in(:user, user)
-      render json: { state: 'logged_in', redirect_url: user.roles.any? ? root_path : user_path(user.id) }
+      render(json: { state: 'logged_in', redirect_url: user.roles.any? ? root_path : user_path(user.id) })
     else
       # sofia_account does not exist, should not be possible
-      render json: { state: 'password_prompt', error_message: 'Inloggen mislukt door een error. Herlaad de pagina en probeer het nog
+      render(json: { state: 'password_prompt', error_message: 'Inloggen mislukt door een error. Herlaad de pagina en probeer het nog
                                                                een keer. <br/><i>Werkt het na een paar keer proberen nog steeds niet?
-                                                               Neem dan contact op met de ICT-commissie.</i>' }
+                                                               Neem dan contact op met de ICT-commissie.</i>' })
     end
   end
 
   def check_identity_with_otp(sofia_account, user)
     if params[:verification_code].blank?
       # OTP code not present, so request it
-      render json: { state: 'otp_prompt' }
+      render(json: { state: 'otp_prompt' })
     elsif sofia_account.authenticate_otp(params[:verification_code], drift: 60)
       # OTP code correct
       sign_in(:user, user)
-      render json: { state: 'logged_in', redirect_url: user.roles.any? ? root_path : user_path(user.id) }
+      render(json: { state: 'logged_in', redirect_url: user.roles.any? ? root_path : user_path(user.id) })
     else
       # OTP code incorrect
-      render json: { state: 'otp_prompt', error_message: 'Inloggen mislukt. De authenticatiecode is incorrect.' }
+      render(json: { state: 'otp_prompt', error_message: 'Inloggen mislukt. De authenticatiecode is incorrect.' })
     end
   end
 
@@ -62,6 +62,6 @@ class CallbacksController < Devise::OmniauthCallbacksController
                          ' Er is een onverwachte fout opgetreden.'
                        end
     end
-    render json: { state: 'password_prompt', error_message: }
+    render(json: { state: 'password_prompt', error_message: })
   end
 end

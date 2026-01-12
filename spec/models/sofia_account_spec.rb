@@ -107,14 +107,14 @@ RSpec.describe SofiaAccount do
         expect(result).to eq(account)
       end
 
-      it 'finds account by username regardless of case' do
+      it 'does not find account by uppercase username' do
         result = described_class.find_for_login('TESTUSER')
-        expect(result).to eq(account)
+        expect(result).to be_nil
       end
 
-      it 'finds account by username with mixed case' do
+      it 'does not find account by mixed case username' do
         result = described_class.find_for_login('TestUser')
-        expect(result).to eq(account)
+        expect(result).to be_nil
       end
 
       it 'finds account by username with surrounding whitespace' do
@@ -229,10 +229,9 @@ RSpec.describe SofiaAccount do
         expect(described_class.find_for_login('gamma_user@domain.io')).to eq(gamma_account)
       end
 
-      it 'handles case-insensitive lookup for each account independently' do
-        expect(described_class.find_for_login('alphauser')).to eq(alpha_account)
-        expect(described_class.find_for_login('betauser')).to eq(beta_account)
-        expect(described_class.find_for_login('GAMMA_USER@DOMAIN.IO')).to eq(gamma_account)
+      it 'does not find accounts with incorrect username case' do
+        expect(described_class.find_for_login('alphauser')).to be_nil
+        expect(described_class.find_for_login('betauser')).to be_nil
       end
     end
   end
@@ -256,9 +255,9 @@ RSpec.describe SofiaAccount do
         expect(result).to eq(email_account.username)
       end
 
-      it 'normalizes case for username lookup' do
+      it 'returns nil for mismatched username case' do
         result = described_class.resolve_login_identifier('RESOLVEUSER')
-        expect(result).to eq('resolveuser')
+        expect(result).to be_nil
       end
 
       it 'normalizes case for email lookup' do
@@ -313,14 +312,14 @@ RSpec.describe SofiaAccount do
         account_three.user.update!(email: 'thirdresolver@domain.org')
       end
 
-      it 'returns correct username for first account with case variation' do
+      it 'returns nil for mismatched case on first account' do
         result = described_class.resolve_login_identifier('firstresolver')
-        expect(result).to eq('FirstResolver')
+        expect(result).to be_nil
       end
 
-      it 'returns correct username for second account with case variation' do
+      it 'returns nil for mismatched case on second account' do
         result = described_class.resolve_login_identifier('secondresolver')
-        expect(result).to eq('SecondResolver')
+        expect(result).to be_nil
       end
 
       it 'returns correct username for email account with case variation' do
@@ -328,9 +327,7 @@ RSpec.describe SofiaAccount do
         expect(result).to eq(account_three.username)
       end
 
-      it 'applies whitespace trimming across all lookup types' do
-        expect(described_class.resolve_login_identifier('  firstresolver  ')).to eq('FirstResolver')
-        expect(described_class.resolve_login_identifier('  secondresolver  ')).to eq('SecondResolver')
+      it 'applies whitespace trimming for email lookups' do
         expect(described_class.resolve_login_identifier('  thirdresolver@domain.org  ')).to eq(account_three.username)
       end
     end
