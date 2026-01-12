@@ -30,7 +30,7 @@ class CreditInsufficientNotificationJob < ApplicationJob
       ).deliver_later
     end
 
-    return unless Rails.env.production? || Rails.env.staging? || Rails.env.luxproduction? || Rails.env.euros?
+    return if Rails.env.local?
 
     HealthCheckJob.perform_later('credit_insufficient')
   end
