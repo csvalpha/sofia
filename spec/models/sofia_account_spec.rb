@@ -163,10 +163,6 @@ RSpec.describe SofiaAccount do
         result = described_class.find_for_login('nonexistent@example.com')
         expect(result).to be_nil
       end
- or email' do
-        expect(described_class.find_for_login('nonexistent')).to be_nil
-        expect(described_class.find_for_login('nonexistent@example.comassword: 'password1234')
-      email_account.user.update!(email: 'resolve@example.com')
     end
 
     context 'when identifier resolves to an account' do
