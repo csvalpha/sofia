@@ -28,10 +28,22 @@ module Sofia
     config.i18n.default_locale = :nl
     config.i18n.fallbacks = [:nl]
 
-    config.cache_store = :redis_cache_store, {
-      url: Rails.application.config_for(:cable)['url'],
-      pool: { size: ENV.fetch('RAILS_MAX_THREADS', 5).to_i, timeout: 5 }
-    }
+    redis_url = ENV['REDIS_URL']
+    redis_url ||= begin
+      cable_cfg = Rails.application.config_for(:cable)
+      cable_cfg['url'] if cable_cfg.present?
+    rescue StandardError
+      nil
+    end
+
+    if redis_url.present?
+      config.cache_store = :redis_cache_store, {
+        url: redis_url,
+        pool: { size: ENV.fetch('RAILS_MAX_THREADS', 5).to_i, timeout: 5 }
+      }
+    else
+      config.cache_store = :memory_store
+    end
     config.active_job.queue_adapter = :sidekiq
 
     config.exceptions_app = routes
