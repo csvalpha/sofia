@@ -195,7 +195,7 @@ jobs:
             target_env = '${{ github.event.inputs.target_env }}'
             # If on staging, use stagingstreep URL; otherwise use the target's URL
             if current_branch == 'staging':
-              print(config['targets']['stagingstreep']['url'])
+              print(config['targets']['staging']['url'])
             else:
               print(config['targets'][target_env]['url'])
           PYTHON_EOF
