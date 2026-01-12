@@ -20,7 +20,7 @@ Devise.setup do |config|
   config.omniauth :identity, model: SofiaAccount, fields: %i[username user_id],
                              locate_conditions: lambda { |req|
                                resolved_username = SofiaAccount.resolve_login_identifier(req.params['auth_key'])
-                               { SofiaAccount.auth_key => resolved_username }
+                               { SofiaAccount.auth_key => resolved_username || req.params['auth_key'] }
                              },
                              on_login: lambda { |e|
                                          SofiaAccountsController.action(:omniauth_redirect_login).call(e)
