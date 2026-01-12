@@ -23,7 +23,7 @@ targets:
     url: https://streep.csvalpha.nl
     branch_restriction: master
 
-  stagingstreep:
+  staging:
     deploy_path: /opt/docker/sofia/staging
     stage: staging
     hostname: stagingstreep.csvalpha.nl

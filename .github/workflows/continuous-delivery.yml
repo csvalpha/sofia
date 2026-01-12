@@ -17,10 +17,11 @@ on:
         type: choice
         description: Target environment
         options:
+          - staging
           - csvalpha
           - luxadmosam
           - euros
-        default: 'csvalpha'
+        default: 'staging'
 
 concurrency:
   group: cd-${{ github.ref_name }}
