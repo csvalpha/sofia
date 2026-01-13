@@ -23,18 +23,16 @@ dutch_names = [
   'Anna de Boer'
 ]
 
-users = []
-dutch_names.each do |name|
-  users << FactoryBot.create(:user, name:)
+users = dutch_names.map do |name|
+  FactoryBot.create(:user, name:)
 end
 users << FactoryBot.create(:user, name: 'Benjamin Knopje', birthday: 16.years.ago)
 
 p 'Seeding activities...'
 # Recente activiteiten
-activity_names = ['Donderdagborrel', 'Vrijdagborrel', 'ALV', 'Kerstdiner', 'Filmavond', 'Bierproeverij']
-activities = []
-activity_names.each do |title|
-  activities << FactoryBot.create(:activity, title:, price_list: price_lists.sample, created_by: users.sample)
+activity_names = %w[Donderdagborrel Vrijdagborrel ALV Kerstdiner Filmavond Bierproeverij]
+activities = activity_names.map do |title|
+  FactoryBot.create(:activity, title:, price_list: price_lists.sample, created_by: users.sample)
 end
 
 # Historische activiteiten (locked)
@@ -49,11 +47,11 @@ historical_activities = [
 historical_activities.each do |hist_act|
   start_time = hist_act[:days_ago].days.ago.beginning_of_hour
   end_time = (hist_act[:days_ago] - 1).days.ago.beginning_of_hour
-  activity = FactoryBot.create(:activity, 
-                                title: hist_act[:title], 
-                                start_time:, 
+  activity = FactoryBot.create(:activity,
+                                title: hist_act[:title],
+                                start_time:,
                                 end_time:,
-                                price_list: price_lists.sample, 
+                                price_list: price_lists.sample,
                                 created_by: users.sample)
   activities << activity
 end
@@ -81,12 +79,12 @@ users.each do |user|
   3.times do
     mutation = mutation_descriptions.sample
     amount = rand(mutation[:amount_range])
-    FactoryBot.create(:credit_mutation, 
-                     user:, 
-                     created_by: users.sample,
-                     description: mutation[:description],
-                     amount:,
-                     activity: (activities + [nil]).sample)
+    FactoryBot.create(:credit_mutation,
+                      user:,
+                      created_by: users.sample,
+                      description: mutation[:description],
+                      amount:,
+                      activity: (activities + [nil]).sample)
   end
 end
 
@@ -103,7 +101,6 @@ Role.create(role_type: :main_bartender)
 
 p 'Seeding Sofia accounts...'
 # Use environment variable for password or fallback to default for development
-seed_password = ENV.fetch('SEED_PASSWORD', 'password1234')
 
 treasurer_user = FactoryBot.create(:user, :sofia_account, name: 'Penningmeester Test')
 SofiaAccount.create!(username: 'penningmeester', password: 'password1234', user: treasurer_user)

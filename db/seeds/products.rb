@@ -1,7 +1,7 @@
 def seed_products # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   # Category colors for products
   category_colors = {
-    beer: '#FFD700',           # Goud/geel - bierkleur
+    beer: '#FFD700', # Goud/geel - bierkleur
     low_alcohol_beer: '#90EE90', # Lichtgroen - light/gezonder
     craft_beer: '#CD7F32',     # Brons - premium/craft
     non_alcoholic: '#87CEEB',  # Lichtblauw - fris/water
