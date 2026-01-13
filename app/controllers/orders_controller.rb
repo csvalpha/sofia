@@ -16,7 +16,7 @@ class OrdersController < ApplicationController
   end
 
   def create # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-    @order = Order.new(permitted_attributes.merge(created_by: current_user))
+    @order = Order.new(order_params.merge(created_by: current_user))
     authorize @order
 
     current_credit = @order.user&.credit
@@ -43,7 +43,7 @@ class OrdersController < ApplicationController
 
     authorize @order
 
-    if @order.update(permitted_attributes_on_update)
+    if @order.update(order_params_for_update)
       render json: @order.to_json(proper_json)
     else
       render json: @order.errors, status: :unprocessable_content
@@ -83,13 +83,12 @@ class OrdersController < ApplicationController
     user.provider.in?(%w[amber_oauth2 sofia_account]) && user.credit.negative? && old_credit.positive?
   end
 
-  def permitted_attributes
-    params.require(:order).permit(%i[user_id paid_with_cash paid_with_pin activity_id],
-                                  order_rows_attributes: %i[id product_id product_count])
+  def order_params
+    params.require(:order).permit(policy(Order).permitted_attributes_for_create)
   end
 
-  def permitted_attributes_on_update
-    params.require(:order).permit(:id, order_rows_attributes: %i[id product_count])
+  def order_params_for_update
+    params.require(:order).permit(policy(@order).permitted_attributes_for_update)
   end
 
   def proper_json

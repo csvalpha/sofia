@@ -22,4 +22,18 @@ class UserPolicy < ApplicationPolicy
   def update_with_sofia_account?
     record == user
   end
+
+  def permitted_attributes
+    %i[name email provider sub_provider]
+  end
+
+  def permitted_attributes_for_update
+    %i[name email deactivated]
+  end
+
+  def permitted_attributes_for_update_with_sofia_account
+    base = %i[email sub_provider]
+    base += %i[name deactivated] if user&.treasurer?
+    base + [{ sofia_account_attributes: %i[id username] }]
+  end
 end

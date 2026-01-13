@@ -45,7 +45,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
   end
 
   def create
-    @activity = Activity.new(permitted_attributes.merge(created_by: current_user))
+    @activity = Activity.new(activity_params.merge(created_by: current_user))
     authorize @activity
 
     if @activity.save
@@ -61,7 +61,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
     @activity = Activity.find(params[:id])
     authorize @activity
 
-    if @activity.update(params.require(:activity).permit(%i[title]))
+    if @activity.update(activity_params_for_update)
       flash[:success] = 'Activiteit hernoemd'
     else
       flash[:error] = "Activiteit hernoemen mislukt; #{@activity.errors.full_messages.join(', ')}"
@@ -177,7 +177,11 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
     activity.price_list.product_price.sort_by { |p| p.product.id }
   end
 
-  def permitted_attributes
-    params.require(:activity).permit(%i[title start_time end_time price_list_id])
+  def activity_params
+    params.require(:activity).permit(policy(Activity).permitted_attributes)
+  end
+
+  def activity_params_for_update
+    params.require(:activity).permit(policy(@activity).permitted_attributes_for_update)
   end
 end

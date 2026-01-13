@@ -5,7 +5,7 @@ class ProductsController < ApplicationController
   after_action :verify_authorized
 
   def create
-    @product = Product.new(permitted_attributes)
+    @product = Product.new(product_params)
     authorize @product
 
     if @product.save
@@ -18,7 +18,7 @@ class ProductsController < ApplicationController
   def update
     authorize @product
 
-    if @product.update(permitted_attributes)
+    if @product.update(product_params)
       render json: @product, include: json_includes, except: json_exludes, methods: :t_category
     else
       render json: @product.errors, status: :unprocessable_content
@@ -31,10 +31,8 @@ class ProductsController < ApplicationController
     @product = Product.find(params[:id])
   end
 
-  def permitted_attributes
-    params.require(:product)
-          .permit(%i[name category color requires_age id],
-                  product_prices_attributes: %i[id product_id price_list_id price _destroy])
+  def product_params
+    params.require(:product).permit(policy(Product).permitted_attributes)
   end
 
   def json_includes
