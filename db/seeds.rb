@@ -47,4 +47,17 @@ Role.create(role_type: :main_bartender, group_uid: 6)
 Role.create(role_type: :treasurer)
 Role.create(role_type: :renting_manager)
 Role.create(role_type: :main_bartender)
+
+p 'Seeding Sofia accounts...'
+treasurer_user = FactoryBot.create(:user, :sofia_account, name: 'Penningmeester Test')
+SofiaAccount.create!(username: 'penningmeester', password: 'password1234', user: treasurer_user)
+Role.create(role_type: :treasurer, user: treasurer_user)
+
+main_bartender_user = FactoryBot.create(:user, :sofia_account, name: 'Hoofdtapper Test')
+SofiaAccount.create!(username: 'hoofdtapper', password: 'password1234', user: main_bartender_user)
+Role.create(role_type: :main_bartender, user: main_bartender_user)
+
+renting_manager_user = FactoryBot.create(:user, :sofia_account, name: 'Verhuur Test')
+SofiaAccount.create!(username: 'verhuur', password: 'password1234', user: renting_manager_user)
+Role.create(role_type: :renting_manager, user: renting_manager_user)
 # rubocop:enable Rails/Output
