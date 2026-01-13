@@ -88,7 +88,7 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     @user = User.find(params[:id])
     authorize @user
 
-    if @user.update(params.require(:user).permit(policy(@user).permitted_attributes_for_update))
+    if update_user
       flash[:success] = 'Gebruiker geupdate'
     else
       flash[:error] = "Gebruiker updaten mislukt; #{@user.errors.full_messages.join(', ')}"
@@ -150,6 +150,11 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
   end
 
   private
+
+  def update_user
+    permitted_params = params.require(:user).permit(policy(@user).permitted_attributes_for_update)
+    @user.update(permitted_params)
+  end
 
   def find_or_create_user(user_json) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     fields = user_json['attributes']
