@@ -32,6 +32,7 @@ describe 'SofiaAccount login', type: :request do
 
       it 'sends a json response' do
         expect(response).to have_http_status(:ok)
+        expect(response.content_type).to eq 'application/json; charset=utf-8'
         expect(response.parsed_body['state']).to eq 'password_prompt'
         expect(response.parsed_body['error_message']).to eq 'Inloggen mislukt. De ingevulde gegevens zijn incorrect.'
       end

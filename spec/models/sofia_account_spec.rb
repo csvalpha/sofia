@@ -107,9 +107,9 @@ RSpec.describe SofiaAccount do
         expect(result).to eq(account)
       end
 
-      it 'does not find account by different case username' do
+      it 'finds account by username regardless of case' do
         result = described_class.find_for_login('TESTUSER')
-        expect(result).to be_nil
+        expect(result).to eq(account)
       end
 
       it 'finds account by username with whitespace trimmed' do
@@ -164,7 +164,9 @@ RSpec.describe SofiaAccount do
         expect(result).to be_nil
       end
     end
+  end
 
+  describe '.resolve_login_identifier' do
     context 'when identifier resolves to an account' do
       let(:email_resolve_account) { create(:sofia_account, username: 'emailuser', password: 'password1234') }
 
@@ -183,9 +185,9 @@ RSpec.describe SofiaAccount do
         expect(result).to eq(email_resolve_account.username)
       end
 
-      it 'returns nil for mismatched username case' do
+      it 'normalizes case for username lookup' do
         result = described_class.resolve_login_identifier('RESOLVEUSER')
-        expect(result).to be_nil
+        expect(result).to eq('resolveuser')
       end
 
       it 'normalizes case for email lookup' do

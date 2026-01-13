@@ -37,7 +37,7 @@ class SofiaAccount < OmniAuth::Identity::Models::ActiveRecord
     return nil if identifier.blank?
 
     trimmed = identifier.to_s.strip
-    find_by(username: trimmed) || User.where('LOWER(email) = LOWER(?)', trimmed).first&.sofia_account
+    where('LOWER(username) = LOWER(?)', trimmed).first || User.find_by('LOWER(email) = LOWER(?)', trimmed)&.sofia_account
   end
 
   def self.resolve_login_identifier(identifier)
