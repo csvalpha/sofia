@@ -11,16 +11,51 @@ price_lists = price_lists_names.map do |name|
 end
 
 p 'Seeding users...'
+# Nederlandse testnamen
+dutch_names = [
+  'Jan de Vries',
+  'Piet Bakker',
+  'Lisa Jansen',
+  'Emma van der Berg',
+  'Daan Visser',
+  'Sophie Smit',
+  'Thomas Mulder',
+  'Anna de Boer'
+]
+
 users = []
-4.times do
-  users << FactoryBot.create(:user)
+dutch_names.each do |name|
+  users << FactoryBot.create(:user, name:)
 end
 users << FactoryBot.create(:user, name: 'Benjamin Knopje', birthday: 16.years.ago)
 
 p 'Seeding activities...'
+# Recente activiteiten
+activity_names = ['Donderdagborrel', 'Vrijdagborrel', 'ALV', 'Kerstdiner', 'Filmavond', 'Bierproeverij']
 activities = []
-4.times do
-  activities << FactoryBot.create(:activity, price_list: price_lists.sample, created_by: users.sample)
+activity_names.each do |title|
+  activities << FactoryBot.create(:activity, title:, price_list: price_lists.sample, created_by: users.sample)
+end
+
+# Historische activiteiten (locked)
+p 'Seeding historical activities...'
+historical_activities = [
+  { title: 'Nieuwjaarsborrel', days_ago: 15 },
+  { title: 'Studiemiddag', days_ago: 30 },
+  { title: 'Kroegentocht', days_ago: 45 },
+  { title: 'Dies Natalis', days_ago: 90 }
+]
+
+historical_activities.each do |hist_act|
+  start_time = hist_act[:days_ago].days.ago.beginning_of_hour
+  end_time = (hist_act[:days_ago] - 1).days.ago.beginning_of_hour
+  activity = FactoryBot.create(:activity, 
+                                title: hist_act[:title], 
+                                start_time:, 
+                                end_time:,
+                                price_list: price_lists.sample, 
+                                created_by: users.sample)
+  activities << activity
 end
 
 p 'Seeding orders...'
@@ -32,9 +67,27 @@ activities.each do |activity|
 end
 
 p 'Seeding credit mutations...'
+# Realistische credit mutations met variatie
+mutation_descriptions = [
+  { description: 'Opwaardering', amount_range: 10..50 },
+  { description: 'Contant gestort', amount_range: 5..30 },
+  { description: 'iDEAL betaling', amount_range: 10..100 },
+  { description: 'Correctie admin', amount_range: -20..20 },
+  { description: 'Restitutie borrel', amount_range: 5..15 },
+  { description: 'Handmatige correctie', amount_range: -10..10 }
+]
+
 users.each do |user|
-  FactoryBot.create_list(:credit_mutation, 3, user:, created_by: users.sample,
-                                              activity: (activities + [nil]).sample)
+  3.times do
+    mutation = mutation_descriptions.sample
+    amount = rand(mutation[:amount_range])
+    FactoryBot.create(:credit_mutation, 
+                     user:, 
+                     created_by: users.sample,
+                     description: mutation[:description],
+                     amount:,
+                     activity: (activities + [nil]).sample)
+  end
 end
 
 p 'Seeding invoices'
