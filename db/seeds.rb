@@ -102,15 +102,21 @@ Role.create(role_type: :renting_manager)
 Role.create(role_type: :main_bartender)
 
 p 'Seeding Sofia accounts...'
+# Use environment variable for password or fallback to default for development
+seed_password = ENV.fetch('SEED_PASSWORD', 'password1234')
+
 treasurer_user = FactoryBot.create(:user, :sofia_account, name: 'Penningmeester Test')
 SofiaAccount.create!(username: 'penningmeester', password: 'password1234', user: treasurer_user)
-Role.create(role_type: :treasurer, user: treasurer_user)
+treasurer_role = Role.create(role_type: :treasurer)
+treasurer_user.roles << treasurer_role
 
 main_bartender_user = FactoryBot.create(:user, :sofia_account, name: 'Hoofdtapper Test')
 SofiaAccount.create!(username: 'hoofdtapper', password: 'password1234', user: main_bartender_user)
-Role.create(role_type: :main_bartender, user: main_bartender_user)
+main_bartender_role = Role.create(role_type: :main_bartender)
+main_bartender_user.roles << main_bartender_role
 
 renting_manager_user = FactoryBot.create(:user, :sofia_account, name: 'Verhuur Test')
 SofiaAccount.create!(username: 'verhuur', password: 'password1234', user: renting_manager_user)
-Role.create(role_type: :renting_manager, user: renting_manager_user)
+renting_manager_role = Role.create(role_type: :renting_manager)
+renting_manager_user.roles << renting_manager_role
 # rubocop:enable Rails/Output
