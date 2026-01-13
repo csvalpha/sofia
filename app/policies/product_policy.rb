@@ -9,7 +9,7 @@ class ProductPolicy < ApplicationPolicy
 
   def permitted_attributes
     [
-      :name, :category, :color, :requires_age, :id,
+      :name, :category, :color, :requires_age,
       { product_prices_attributes: %i[id product_id price_list_id price _destroy] }
     ]
   end

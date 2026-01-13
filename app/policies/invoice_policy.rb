@@ -13,7 +13,7 @@ class InvoicePolicy < ApplicationPolicy
 
   def permitted_attributes
     [
-      :user_id, :activity_id, :name_override, :email_override, :rows,
+      :user_id, :activity_id, :name_override, :email_override,
       { rows_attributes: %i[name amount price] }
     ]
   end

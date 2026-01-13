@@ -81,6 +81,6 @@ class InvoicesController < ApplicationController
   end
 
   def invoice_params
-    params.require(:invoice).permit(policy(Invoice).permitted_attributes)
+    params.require(:invoice).permit(policy(Invoice.new).permitted_attributes)
   end
 end

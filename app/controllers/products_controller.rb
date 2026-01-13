@@ -32,7 +32,7 @@ class ProductsController < ApplicationController
   end
 
   def product_params
-    params.require(:product).permit(policy(Product).permitted_attributes)
+    params.require(:product).permit(policy(Product.new).permitted_attributes)
   end
 
   def json_includes

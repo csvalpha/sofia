@@ -166,6 +166,6 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
   end
 
   def user_params
-    params.require(:user).permit(policy(User).permitted_attributes)
+    params.require(:user).permit(policy(User.new).permitted_attributes)
   end
 end

@@ -178,7 +178,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
   end
 
   def activity_params
-    params.require(:activity).permit(policy(Activity).permitted_attributes)
+    params.require(:activity).permit(policy(Activity.new).permitted_attributes)
   end
 
   def activity_params_for_update

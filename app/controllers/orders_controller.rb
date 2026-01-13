@@ -84,7 +84,7 @@ class OrdersController < ApplicationController
   end
 
   def order_params
-    params.require(:order).permit(policy(Order).permitted_attributes_for_create)
+    params.require(:order).permit(policy(Order.new).permitted_attributes_for_create)
   end
 
   def order_params_for_update
