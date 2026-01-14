@@ -104,7 +104,7 @@ class InvoicesController < ApplicationController
     )
     pdf = Grover.new(html).to_pdf
     send_data pdf, filename: "Factuur-#{@invoice.human_id}.pdf", type: 'application/pdf', disposition: 'attachment'
-   rescue StandardError => e
+  rescue StandardError => e
     Rails.logger.error "Failed to generate PDF for invoice #{@invoice.id}: #{e.message}"
     if request.format.pdf?
       render plain: 'Er is een fout opgetreden bij het genereren van de PDF. Probeer het later opnieuw.', status: 500
@@ -112,8 +112,5 @@ class InvoicesController < ApplicationController
       flash[:error] = 'Er is een fout opgetreden bij het genereren van de PDF. Probeer het later opnieuw.'
       redirect_to invoice_path(@invoice)
     end
-  end
-    flash[:error] = 'Er is een fout opgetreden bij het genereren van de PDF. Probeer het later opnieuw.'
-    redirect_to invoice_path(@invoice)
   end
 end
