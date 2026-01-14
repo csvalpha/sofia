@@ -24,9 +24,10 @@ dutch_names = [
 ]
 
 users = dutch_names.map do |name|
-  FactoryBot.create(:user, name:)
+  email = "#{name.downcase.gsub(/ van der | de | van /i, ' ').tr(' ', '.')}@example.com"
+  FactoryBot.create(:user, name:, email:)
 end
-users << FactoryBot.create(:user, name: 'Benjamin Knopje', birthday: 16.years.ago)
+users << FactoryBot.create(:user, name: 'Benjamin Knopje', email: 'benjamin.knopje@example.com', birthday: 16.years.ago)
 
 p 'Seeding activities...'
 # Recente activiteiten
@@ -44,16 +45,18 @@ historical_activities = [
   { title: 'Dies Natalis', days_ago: 90 }
 ]
 
-historical_activities.each do |hist_act|
-  start_time = hist_act[:days_ago].days.ago.beginning_of_hour
-  end_time = (hist_act[:days_ago] - 1).days.ago.beginning_of_hour
+historical_activities_list = historical_activities.map do |hist_act|
+  past_start_time = hist_act[:days_ago].days.ago.beginning_of_hour
+  past_end_time = (hist_act[:days_ago] - 1).days.ago.beginning_of_hour
+
+  # Create activity with future times first to pass validation
   activity = FactoryBot.create(:activity,
                                title: hist_act[:title],
-                               start_time:,
-                               end_time:,
                                price_list: price_lists.sample,
                                created_by: users.sample)
+
   activities << activity
+  { activity:, past_start_time:, past_end_time: }
 end
 
 p 'Seeding orders...'
@@ -88,6 +91,14 @@ users.each do |user|
   end
 end
 
+# Lock historical activities at the very end after all orders and credit mutations are created
+p 'Locking historical activities...'
+historical_activities_list.each do |hist_act|
+  # rubocop:disable Rails/SkipsModelValidations
+  hist_act[:activity].update_columns(start_time: hist_act[:past_start_time], end_time: hist_act[:past_end_time])
+  # rubocop:enable Rails/SkipsModelValidations
+end
+
 p 'Seeding invoices'
 FactoryBot.create_list(:invoice, 3, :with_rows)
 
@@ -102,17 +113,17 @@ Role.create(role_type: :main_bartender)
 p 'Seeding Sofia accounts...'
 # Use environment variable for password or fallback to default for development
 
-treasurer_user = FactoryBot.create(:user, :sofia_account, name: 'Penningmeester Test')
+treasurer_user = FactoryBot.create(:user, :sofia_account, name: 'Penningmeester Test', email: 'penningmeester@example.com')
 SofiaAccount.create!(username: 'penningmeester', password: 'password1234', user: treasurer_user)
 treasurer_role = Role.create(role_type: :treasurer)
 treasurer_user.roles << treasurer_role
 
-main_bartender_user = FactoryBot.create(:user, :sofia_account, name: 'Hoofdtapper Test')
+main_bartender_user = FactoryBot.create(:user, :sofia_account, name: 'Hoofdtapper Test', email: 'hoofdtapper@example.com')
 SofiaAccount.create!(username: 'hoofdtapper', password: 'password1234', user: main_bartender_user)
 main_bartender_role = Role.create(role_type: :main_bartender)
 main_bartender_user.roles << main_bartender_role
 
-renting_manager_user = FactoryBot.create(:user, :sofia_account, name: 'Verhuur Test')
+renting_manager_user = FactoryBot.create(:user, :sofia_account, name: 'Verhuur Test', email: 'verhuur@example.com')
 SofiaAccount.create!(username: 'verhuur', password: 'password1234', user: renting_manager_user)
 renting_manager_role = Role.create(role_type: :renting_manager)
 renting_manager_user.roles << renting_manager_role
