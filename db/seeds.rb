@@ -24,7 +24,7 @@ dutch_names = [
 ]
 
 users = dutch_names.map do |name|
-  email = "#{name.downcase.tr(' ', '.').gsub(' de ', '.').gsub(' van der ', '.').gsub(' van ', '.')}@example.com"
+  email = "#{name.downcase.gsub(/ van der | de | van /i, ' ').tr(' ', '.')}@example.com"
   FactoryBot.create(:user, name:, email:)
 end
 users << FactoryBot.create(:user, name: 'Benjamin Knopje', email: 'benjamin.knopje@example.com', birthday: 16.years.ago)
