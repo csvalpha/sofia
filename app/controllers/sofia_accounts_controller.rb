@@ -15,7 +15,7 @@ class SofiaAccountsController < ApplicationController # rubocop:disable Metrics/
     user = User.find_by(id: user_id)
     validate_user(user)
 
-    sofia_account = SofiaAccount.new(permitted_attributes.merge(user_id:))
+    sofia_account = SofiaAccount.new(sofia_account_params.merge(user_id:))
     raise normalize_error_messages(sofia_account.errors.full_messages) unless sofia_account.save
 
     update_user_after_creation(user, sofia_account)
@@ -256,7 +256,7 @@ class SofiaAccountsController < ApplicationController # rubocop:disable Metrics/
     raise normalize_error_messages(user.errors.full_messages)
   end
 
-  def permitted_attributes
-    params.require(:sofia_account).permit(%i[username password password_confirmation])
+  def sofia_account_params
+    params.require(:sofia_account).permit(policy(SofiaAccount).permitted_attributes)
   end
 end

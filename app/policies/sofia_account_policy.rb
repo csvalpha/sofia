@@ -18,4 +18,8 @@ class SofiaAccountPolicy < ApplicationPolicy
   def disable_otp?
     update?
   end
+
+  def permitted_attributes
+    %i[username password password_confirmation]
+  end
 end

@@ -48,4 +48,12 @@ class ActivityPolicy < ApplicationPolicy
   def credit_mutations?
     user&.treasurer?
   end
+
+  def permitted_attributes
+    %i[title start_time end_time price_list_id]
+  end
+
+  def permitted_attributes_for_update
+    %i[title]
+  end
 end

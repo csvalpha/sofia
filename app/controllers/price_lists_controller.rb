@@ -21,7 +21,7 @@ class PriceListsController < ApplicationController
   end
 
   def create
-    @price_list = PriceList.new(permitted_attributes)
+    @price_list = PriceList.new(price_list_params)
     authorize @price_list
 
     if @price_list.save
@@ -36,7 +36,7 @@ class PriceListsController < ApplicationController
     @price_list = PriceList.find(params[:id])
     authorize @price_list
 
-    if @price_list.update(permitted_attributes)
+    if @price_list.update(price_list_params)
       flash[:success] = 'Prijslijst opgeslagen'
     else
       flash[:error] = "Prijslijst wijzigen mislukt; #{@price_list.errors.full_messages.join(', ')}"
@@ -76,7 +76,7 @@ class PriceListsController < ApplicationController
 
   private
 
-  def permitted_attributes
-    params.require(:price_list).permit(:name)
+  def price_list_params
+    params.require(:price_list).permit(policy(PriceList).permitted_attributes)
   end
 end
