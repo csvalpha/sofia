@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
 gem 'active_model_otp', '~> 2.3', '>= 2.3.4'
-gem 'bcrypt', '~> 3.1.20'
-gem 'bootsnap', '~> 1.19.0'
+gem 'bcrypt', '~> 3.1.21'
+gem 'bootsnap', '~> 1.20.1'
 gem 'browser', '~> 6.2.0'
 gem 'cssbundling-rails', '~> 1.4', '>= 1.4.3'
 gem 'dartsass-rails', '~> 0.5.1'
@@ -24,7 +24,7 @@ gem 'omniauth-identity', '~> 3.1', '>= 3.1.5'
 gem 'omniauth-oauth2', '~> 1.9.0'
 gem 'paper_trail', '~> 17.0.0'
 gem 'paranoia', '~> 3.1.0'
-gem 'pg', '~> 1.6.2'
+gem 'pg', '~> 1.6.3'
 gem 'puma', '~> 7.1.0'
 gem 'pundit', '~> 2.5.2'
 gem 'rack-attack', '~> 6.8.0'
@@ -32,13 +32,13 @@ gem 'rails', '~> 7.2.3'
 gem 'rails-i18n', '~> 7.0.10'
 gem 'redis', '~> 5.4', '>= 5.4.1'
 gem 'rest-client', '~> 2.1.0'
-gem 'rqrcode', '~> 3.1', '>= 3.1.1'
+gem 'rqrcode', '~> 3.2'
 gem 'sentry-rails', '~> 6.2'
 gem 'sentry-ruby', '~> 6.2'
 gem 'sentry-sidekiq', '~> 6.2'
-gem 'sidekiq', '~> 8.0.10'
+gem 'sidekiq', '~> 8.1.0'
 gem 'sidekiq-scheduler', '~> 6.0.1'
-gem 'simple_form', '~> 5.4.0'
+gem 'simple_form', '~> 5.4.1'
 gem 'sprockets-rails', '~> 3.5', '>= 3.5.2'
 gem 'turbo-rails', '~> 2.0', '>= 2.0.20'
 gem 'uglifier', '~> 4.2.1'
@@ -49,7 +49,7 @@ gem 'wkhtmltopdf-binary', '~> 0.12.6.10'
 group :development, :test do
   gem 'awesome_print', '~> 1.9.2'
   gem 'better_errors', '~> 2.10.1'
-  gem 'brakeman', '~> 7.1.1', require: false
+  gem 'brakeman', '~> 7.1.2', require: false
   gem 'bullet', '~> 8.1'
   gem 'colorize', '~> 1.1.0'
   gem 'database_consistency', '~> 2.1.1'
@@ -78,8 +78,8 @@ group :test do
   gem 'rubocop', '~> 1.82.1', require: false
   gem 'rubocop-factory_bot', '~> 2.28.0', require: false
   gem 'rubocop-performance', '~> 1.26', '>= 1.26.1', require: false
-  gem 'rubocop-rails', '~> 2.34', '>= 2.34.2', require: false
-  gem 'rubocop-rspec', '~> 3.8', require: false
+  gem 'rubocop-rails', '~> 2.34', '>= 2.34.3', require: false
+  gem 'rubocop-rspec', '~> 3.9', require: false
   gem 'rubocop-rspec_rails', '~> 2.32', require: false
   gem 'simplecov', '~> 0.22.0', require: false
   gem 'simplecov-lcov', '~> 0.9.0', require: false

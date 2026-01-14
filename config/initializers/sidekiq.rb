@@ -1,6 +1,7 @@
-redis_url = Rails.application.config_for(:cable)['url']
+if ENV['REDIS_HOST'].present?
+  redis_password = ENV['REDIS_PASSWORD'].present? ? ":#{ENV['REDIS_PASSWORD']}@" : ':'
+  redis_url = "redis://#{redis_password}#{ENV['REDIS_HOST']}:#{ENV.fetch('REDIS_PORT', 6379)}/1"
 
-if redis_url
   Sidekiq.configure_server do |config|
     config.redis = {
       url: redis_url,
