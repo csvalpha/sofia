@@ -24,7 +24,7 @@ dutch_names = [
 ]
 
 users = dutch_names.map do |name|
-  email = name.downcase.gsub(' ', '.').gsub(' de ', '.').gsub(' van der ', '.').gsub(' van ', '.') + '@example.com'
+  email = "#{name.downcase.tr(' ', '.').gsub(' de ', '.').gsub(' van der ', '.').gsub(' van ', '.')}@example.com"
   FactoryBot.create(:user, name:, email:)
 end
 users << FactoryBot.create(:user, name: 'Benjamin Knopje', email: 'benjamin.knopje@example.com', birthday: 16.years.ago)
@@ -48,13 +48,13 @@ historical_activities = [
 historical_activities_list = historical_activities.map do |hist_act|
   past_start_time = hist_act[:days_ago].days.ago.beginning_of_hour
   past_end_time = (hist_act[:days_ago] - 1).days.ago.beginning_of_hour
-  
+
   # Create activity with future times first to pass validation
   activity = FactoryBot.create(:activity,
                                title: hist_act[:title],
                                price_list: price_lists.sample,
                                created_by: users.sample)
-  
+
   activities << activity
   { activity:, past_start_time:, past_end_time: }
 end
@@ -94,8 +94,7 @@ end
 # Lock historical activities at the very end after all orders and credit mutations are created
 p 'Locking historical activities...'
 historical_activities_list.each do |hist_act|
-  hist_act[:activity].update_attribute(:start_time, hist_act[:past_start_time])
-  hist_act[:activity].update_attribute(:end_time, hist_act[:past_end_time])
+  hist_act[:activity].update_columns(start_time: hist_act[:past_start_time], end_time: hist_act[:past_end_time])
 end
 
 p 'Seeding invoices'
