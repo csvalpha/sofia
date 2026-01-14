@@ -93,7 +93,7 @@ class InvoicesController < ApplicationController
     params.require(:invoice).permit(%i[user_id activity_id name_override email_override rows], rows_attributes: %i[name amount price])
   end
 
-  def render_invoice_pdf # rubocop:disable Metrics/MethodLength
+  def render_invoice_pdf # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     token_based_access = !integer_id?(params[:id])
     authorize @invoice, :download? unless token_based_access
 
@@ -107,7 +107,7 @@ class InvoicesController < ApplicationController
   rescue StandardError => e
     Rails.logger.error "Failed to generate PDF for invoice #{@invoice.id}: #{e.message}"
     if request.format.pdf?
-      render plain: 'Er is een fout opgetreden bij het genereren van de PDF. Probeer het later opnieuw.', status: 500
+      render plain: 'Er is een fout opgetreden bij het genereren van de PDF. Probeer het later opnieuw.', status: :internal_server_error
     else
       flash[:error] = 'Er is een fout opgetreden bij het genereren van de PDF. Probeer het later opnieuw.'
       redirect_to invoice_path(@invoice)
