@@ -94,7 +94,9 @@ end
 # Lock historical activities at the very end after all orders and credit mutations are created
 p 'Locking historical activities...'
 historical_activities_list.each do |hist_act|
+  # rubocop:disable Rails/SkipsModelValidations
   hist_act[:activity].update_columns(start_time: hist_act[:past_start_time], end_time: hist_act[:past_end_time])
+  # rubocop:enable Rails/SkipsModelValidations
 end
 
 p 'Seeding invoices'
