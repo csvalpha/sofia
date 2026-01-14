@@ -48,11 +48,11 @@ historical_activities.each do |hist_act|
   start_time = hist_act[:days_ago].days.ago.beginning_of_hour
   end_time = (hist_act[:days_ago] - 1).days.ago.beginning_of_hour
   activity = FactoryBot.create(:activity,
-                                title: hist_act[:title],
-                                start_time:,
-                                end_time:,
-                                price_list: price_lists.sample,
-                                created_by: users.sample)
+                               title: hist_act[:title],
+                               start_time:,
+                               end_time:,
+                               price_list: price_lists.sample,
+                               created_by: users.sample)
   activities << activity
 end
 
