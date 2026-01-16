@@ -15,14 +15,14 @@ class InvoicesController < ApplicationController
 
   def show
     @invoice = invoice
+    token_based_access = !integer_id?(params[:id])
+
+    # Authorize for authenticated access (integer ID), skip for token-based access
+    authorize @invoice, :show? unless token_based_access
 
     respond_to do |format|
       format.html
-      format.pdf do
-        render pdf: "Factuur #{@invoice.human_id}",
-               template: 'invoices/show.html.erb',
-               lowquality: true
-      end
+      format.pdf { render_invoice_pdf }
     end
   end
 
@@ -42,6 +42,9 @@ class InvoicesController < ApplicationController
 
   def pay # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @invoice = invoice
+    token_based_access = !integer_id?(params[:id])
+
+    authorize @invoice, :pay? unless token_based_access
 
     if @invoice.paid?
       redirect_to invoice_path params[:id]
@@ -73,14 +76,41 @@ class InvoicesController < ApplicationController
 
   private
 
+  def integer_id?(id)
+    Integer(id)
+    true
+  rescue ArgumentError
+    false
+  end
+
   def invoice
     @invoice = Invoice.find(Integer(params[:id]))
-    authorize @invoice
   rescue ArgumentError
     @invoice = Invoice.find_by!(token: params[:id])
   end
 
   def permitted_attributes
     params.require(:invoice).permit(%i[user_id activity_id name_override email_override rows], rows_attributes: %i[name amount price])
+  end
+
+  def render_invoice_pdf # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    token_based_access = !integer_id?(params[:id])
+    authorize @invoice, :download? unless token_based_access
+
+    html = render_to_string(
+      template: 'invoices/show',
+      formats: [:html],
+      layout: 'pdf'
+    )
+    pdf = Grover.new(html).to_pdf
+    send_data pdf, filename: "Factuur-#{@invoice.human_id}.pdf", type: 'application/pdf', disposition: 'attachment'
+  rescue StandardError => e
+    Rails.logger.error "Failed to generate PDF for invoice #{@invoice.id}: #{e.message}"
+    if request.format.pdf?
+      render plain: 'Er is een fout opgetreden bij het genereren van de PDF. Probeer het later opnieuw.', status: :internal_server_error
+    else
+      flash[:error] = 'Er is een fout opgetreden bij het genereren van de PDF. Probeer het later opnieuw.'
+      redirect_to invoice_path(@invoice)
+    end
   end
 end

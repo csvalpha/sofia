@@ -94,9 +94,9 @@
         <table class="table table-striped">
           <thead>
           <tr>
-            <td scope="col" class="col-8">Consumpties</td>
-            <td scope="col" class="col-2">Aantal</td>
-            <td scope="col" class="col-2">Totaalbedrag</td>
+            <th scope="col" class="col-8">Consumpties</th>
+            <th scope="col" class="col-2">Aantal</th>
+            <th scope="col" class="col-2">Totaalbedrag</th>
           </tr>
           </thead>
           <tbody class="table-group-divider">
@@ -110,9 +110,9 @@
           </tbody>
           <tfoot class="table-group-divider">
             <tr>
-              <td class="border-bottom-0">Totaal</td>
+              <th class="border-bottom-0">Totaal</th>
               <td class="border-bottom-0" />
-              <td class="border-bottom-0"><%= number_to_currency(@invoice.activity.revenue_by_user(@invoice.user), unit: '€') %></td>
+              <th class="border-bottom-0"><%= number_to_currency(@invoice.activity.revenue_by_user(@invoice.user), unit: '€') %></th>
             </tr>
           </tfoot>
         </table>
@@ -124,9 +124,9 @@
         <table class="table table-striped">
           <thead>
           <tr>
-            <td scope="col" class="col-8"><% if @invoice.activity.count_per_product(user: @invoice.user).any? %>Overige kosten<% else %>Kosten<% end %></td>
-            <td scope="col" class="col-2">Aantal</td>
-            <td scope="col" class="col-2">Totaalbedrag</td>
+            <th scope="col" class="col-8"><% if @invoice.activity.count_per_product(user: @invoice.user).any? %>Overige kosten<% else %>Kosten<% end %></th>
+            <th scope="col" class="col-2">Aantal</th>
+            <th scope="col" class="col-2">Totaalbedrag</th>
           </tr>
           </thead>
           <tbody class="table-group-divider">
@@ -140,9 +140,9 @@
           </tbody>
           <tfoot class="table-group-divider">
             <tr>
-              <td class="border-bottom-0">Totaal</td>
+              <th class="border-bottom-0">Totaal</th>
               <td class="border-bottom-0" />
-              <td class="border-bottom-0"><%= number_to_currency(@invoice.row_amount, unit: '€') %></td>
+              <th class="border-bottom-0"><%= number_to_currency(@invoice.row_amount, unit: '€') %></th>
             </tr>
           </tfoot>
         </table>
