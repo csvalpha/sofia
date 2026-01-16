@@ -33,6 +33,7 @@ class ZatladderController < ApplicationController
         spendings: @users_spendings.fetch(user.id, 0)
       }
     end
+    zatladder.reject! { |user| user[:spendings].zero? }
     zatladder.sort_by { |id| id[:spendings] }.reverse!
   end
 end
