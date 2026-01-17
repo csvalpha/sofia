@@ -16,7 +16,10 @@ RUN apt-get update -qq && \
   curl \
   netcat-traditional \
   chromium \
-  libyaml-dev
+  libyaml-dev \
+  fonts-liberation \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 # Add Node, required for asset pipeline.
 RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - && \
