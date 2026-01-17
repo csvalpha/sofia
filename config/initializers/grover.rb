@@ -8,13 +8,17 @@
 # https://github.com/Studiosity/grover
 
 Grover.configure do |config|
-  # Common PDF options
-  config.options = {
+  options = {
     format: 'A4',
     print_background: true,
     prefer_css_page_size: false,
-    display_url: "https://#{Rails.application.config.x.sofia_host}",
-    executable_path: '/usr/bin/chromium',
-    launch_args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+    display_url: "https://#{Rails.application.config.x.sofia_host}"
   }
+
+  unless Rails.env.development?
+    options[:executable_path] = '/usr/bin/chromium'
+    options[:launch_args] = ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+  end
+
+  config.options = options
 end
