@@ -13,7 +13,8 @@ Grover.configure do |config|
     format: 'A4',
     print_background: true,
     prefer_css_page_size: false,
-    display_url: "https://#{Rails.application.config.x.sofia_host}"
-
+    display_url: "https://#{Rails.application.config.x.sofia_host}",
+    executable_path: '/usr/bin/chromium',
+    launch_args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
   }
 end
