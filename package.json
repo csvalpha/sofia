@@ -7,7 +7,7 @@
     "lint:styles:fix": "stylelint 'app/**/*.s+(a|c)ss' 'app/**/*.vue' --ignore-path .gitignore --fix",
     "build": "webpack --config webpack.config.js",
     "watch": "webpack --config webpack.config.js --watch",
-    "build:css": "sass ./app/assets/stylesheets/application.scss:./app/assets/builds/application.css ./app/assets/stylesheets/pdf.scss:./app/assets/builds/pdf.css --no-source-map --load-path=node_modules",
+    "build:css": "sass ./app/assets/stylesheets/application.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules",
     "update:font": "ruby bin/copy_fontawesome_fonts"
   },
   "dependencies": {
