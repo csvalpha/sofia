@@ -4,18 +4,8 @@
 <html>
 <head>
 <title><%= yield(:title) %></title>
-  <% css = '' %>
-  <% candidates = [] %>
-  <% candidates.concat(Dir.glob(Rails.root.join('app', 'assets', 'builds', '*.css').to_s)) %>
-  <% candidates.concat(Dir.glob(Rails.root.join('public', 'assets', '*.css').to_s)) %>
-  <% css = candidates.filter_map do |path|
-    begin
-      File.read(path)
-    rescue => e
-      Rails.logger.warn "Could not read compiled css from #{path}: #{e.message}"
-      nil
-    end
-  end.join("\n") %>
+  <% app_css_path = Rails.root.join('app', 'assets', 'builds', 'application.css') %>
+  <% css = File.exist?(app_css_path) ? File.read(app_css_path) : '' %>
   <style type="text/css">
     <%= css.html_safe %>
   </style>
