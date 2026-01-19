@@ -18,6 +18,10 @@ RUN apt-get update -qq && \
   chromium \
   libyaml-dev \
   fonts-liberation \
+  libgbm1 \
+  libnss3 \
+  libatk-bridge2.0-0 \
+  libcups2 \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
