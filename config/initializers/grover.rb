@@ -17,7 +17,14 @@ Grover.configure do |config|
 
   unless Rails.env.development?
     options[:executable_path] = '/usr/bin/chromium'
-    options[:launch_args] = ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+    options[:launch_args] = [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+      '--disable-software-rasterizer',
+      '--hide-scrollbars'
+    ]
   end
 
   config.options = options
