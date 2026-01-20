@@ -1,6 +1,10 @@
 Grover.configure do |config|
   config.options = {
-    format: 'A4',
+    viewport: {
+      width: 794,  # A4 width in pixels at 96 DPI (210mm)
+      height: 1123 # Starting height, will expand as needed
+    },
+    emulate_media: 'screen',
     print_background: true,
     executable_path: Rails.env.development? ? nil : '/usr/bin/chromium',
     launch_args: Rails.env.development? ? [] : [
@@ -9,7 +13,6 @@ Grover.configure do |config|
       '--disable-dev-shm-usage',
       '--disable-gpu',
       '--disable-software-rasterizer',
-      '--hide-scrollbars'
     ]
   }
 end
