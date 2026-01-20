@@ -48,6 +48,7 @@
             <%= Rails.application.config.x.company_kvk %>
           </td>
         </tr>
+        <% if current_user&.treasurer? %>
         <tr>
           <th scope="row">
             Status
@@ -60,6 +61,7 @@
             <% end %>
           </td>
         </tr>
+        <% end %>
         </tbody>
       </table>
 
