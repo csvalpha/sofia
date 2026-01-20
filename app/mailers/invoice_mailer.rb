@@ -12,7 +12,7 @@ class InvoiceMailer < ApplicationMailer
     begin
       # Use token-based URL for unauthenticated Grover access
       url = url_for(controller: 'invoices', action: 'show', id: invoice.token, pdf: true, only_path: false)
-      pdf = Grover.new(url, format: 'A4').to_pdf
+      pdf = Grover.new(url).to_pdf
       attachments["#{invoice.human_id}.pdf"] = pdf
     rescue StandardError => e
       Rails.logger.error "Failed to generate PDF attachment for invoice #{invoice.id}: #{e.message}"
