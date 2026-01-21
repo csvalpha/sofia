@@ -49,12 +49,18 @@
           Persoon onthouden
         </span>
       </button>
+      <button v-if="isTreasurer && (selectedUser || payWithCash || payWithPin)" type="button" class="btn btn-outline-secondary m-3 w-auto" @click="toggleEditMode">
+        <i class="fas" :class="editMode ? 'fa-check' : 'fa-pen'"></i>
+        <span class="ms-1">
+          {{ editMode ? 'Klaar' : 'Bewerken' }}
+        </span>
+      </button>
     </div>
 
     <flash-notification>
     </flash-notification>
   </nav>
-  <div class="side-panel">
+  <div class="side-panel" :class="{ 'edit-mode-disabled': editMode }">
     <user-selection :pay-with-cash="payWithCash" :pay-with-pin="payWithPin" :selected-user="selectedUser"
                     :users="users" :deposit-button-enabled="depositButtonEnabled" v-on:selectcash="selectCash" v-on:selectpin="selectPin" v-on:updateuser="setUser($event)">
     </user-selection>
@@ -66,11 +72,11 @@
         <template v-for="(orderRow, index) in orderRows">
           <div class="orders-rows-row row py-2">
             <div class="orders-rows-row-count col-3 px-1 px-md-2 px-lg-3">
-              <i class="far fa-square-plus fa-lg orders-rows-row-count-icon" @click="increaseRowAmount(orderRow)"></i>
+              <i class="far fa-square-plus fa-lg orders-rows-row-count-icon" @click="!editMode && increaseRowAmount(orderRow)"></i>
               <div>
                 <%= '{{orderRow.amount}}' %>
               </div>
-              <i class="far fa-square-minus fa-lg orders-rows-row-count-icon" @click="decreaseRowAmount(orderRow)"></i>
+              <i class="far fa-square-minus fa-lg orders-rows-row-count-icon" @click="!editMode && decreaseRowAmount(orderRow)"></i>
             </div>
             <div class="orders-rows-row-product-name col-6">
               {{orderRow.productPrice.product.name}}
@@ -79,7 +85,7 @@
               <span :title="doubleToCurrency(orderRow.productPrice.price) + ' p.s.'">
                 {{doubleToCurrency(orderRow.productPrice.price * orderRow.amount)}}
               </span>
-              <span @click="dropOrderRow(index)" class="order-rows-row-remove ms-1">
+              <span @click="!editMode && dropOrderRow(index)" class="order-rows-row-remove ms-1">
                 <i class="far fa-circle-xmark fa-lg"></i>
               </span>
             </div>
@@ -110,12 +116,12 @@
         <div class="btn-group btn-group-lg" role="group" v-if="payWithPin && <%= @sumup_enabled.to_s %> && isMobile">
           <button type="button" class="btn btn-success col-9"
              @click="confirmOrder(true)"
-             :class="{ 'disabled': orderConfirmButtonDisabled }">
+             :class="{ 'disabled': orderConfirmButtonDisabled || editMode }">
             <span class="text-uppercase">
               Sumup betaling
             </span>
           </button>
-          <button type="button" class="btn btn-dark" :disabled="orderConfirmButtonDisabled"
+          <button type="button" class="btn btn-dark" :disabled="orderConfirmButtonDisabled || editMode"
                   @click="confirmOrder(false)">
             <i class="fas fa-money-bill"></i>
           </button>
@@ -123,7 +129,7 @@
 
         <button @click="maybeConfirmOrder" class="btn btn-lg btn-success"
               :class="{ 'btn-warning' : showOrderWarning && !showCannotOrderWarning, 'btn-danger' : showCannotOrderWarning }"
-              :disabled="orderConfirmButtonDisabled"
+              :disabled="orderConfirmButtonDisabled || editMode"
               v-if="!payWithPin || !<%= @sumup_enabled.to_s %> || !isMobile">
           <span class="text-uppercase">
             Bestelling plaatsen
@@ -164,31 +170,35 @@
     </activity-orders>
   </div>
   <div class="product-grid" v-if="selectedUser || payWithCash || payWithPin">
-    <!-- Edit mode toggle for treasurers -->
-    <div class="edit-mode-toggle" v-if="isTreasurer && !currentFolder">
-      <button @click="toggleEditMode" class="btn btn-sm" :class="editMode ? 'btn-warning' : 'btn-outline-secondary'">
-        <i class="fas" :class="editMode ? 'fa-check' : 'fa-pen'"></i>
-        {{ editMode ? 'Klaar' : 'Bewerken' }}
-      </button>
-    </div>
-
     <!-- Back button when inside a folder -->
     <div v-if="currentFolder" 
          @click="exitFolder"
          class="product-grid-product folder-tile back-button-tile"
          :style="{ backgroundColor: currentFolder.color }">
+      <span class="product-grid-product-name">
+        Terug
+      </span>
       <span class="folder-icon">
         <i class="fas fa-folder-open"></i>
         <i class="fas fa-arrow-left folder-back-arrow"></i>
-      </span>
-      <span class="product-grid-product-name">
-        Terug
       </span>
     </div>
 
     <!-- Folders on home screen -->
     <template v-if="!currentFolder">
       <div class="folder-container" v-if="sortedFolders.length > 0 || editMode">
+        <!-- Add folder button (edit mode only) - positioned first -->
+        <div v-if="editMode" 
+             @click="openFolderModal(null)"
+             class="product-grid-product folder-tile add-folder-tile">
+          <span class="product-grid-product-name">
+            Nieuwe map
+          </span>
+          <span class="folder-icon">
+            <i class="fas fa-folder-plus"></i>
+          </span>
+        </div>
+
         <div v-for="folder in sortedFolders" 
              :key="'folder-' + folder.id"
              :data-folder-id="folder.id"
@@ -201,23 +211,11 @@
           <span class="folder-edit-btn" v-if="editMode" @click.stop="openFolderModal(folder)">
             <i class="fas fa-pen"></i>
           </span>
-          <span class="folder-icon">
-            <i class="fas fa-folder"></i>
-          </span>
           <span class="product-grid-product-name">
             {{ folder.name }}
           </span>
-        </div>
-
-        <!-- Add folder button (edit mode only) -->
-        <div v-if="editMode" 
-             @click="openFolderModal(null)"
-             class="product-grid-product folder-tile add-folder-tile">
           <span class="folder-icon">
-            <i class="fas fa-folder-plus"></i>
-          </span>
-          <span class="product-grid-product-name">
-            Nieuwe map
+            <i class="fas fa-folder"></i>
           </span>
         </div>
       </div>
@@ -227,7 +225,7 @@
     <div v-for="productPrice in visibleProducts"
          :key="'product-' + productPrice.id"
          :data-product-price-id="productPrice.id"
-         @click="selectProduct(productPrice)"
+         @click="!editMode && selectProduct(productPrice)"
          :draggable="editMode"
          @dragstart="onDragStartProduct($event, productPrice)"
          @dragend="onDragEnd"
@@ -287,16 +285,9 @@
             <input type="text" class="form-control" v-model="folderForm.name" placeholder="Mapnaam">
           </div>
           <div class="mb-3">
-            <label class="form-label">Kleur</label>
-            <div class="color-swatches">
-              <span v-for="color in ['#6c757d', '#007bff', '#28a745', '#dc3545', '#ffc107', '#17a2b8', '#6610f2', '#e83e8c', '#fd7e14', '#20c997']"
-                    :key="color"
-                    class="color-swatch"
-                    :class="{ 'selected': folderForm.color === color }"
-                    :style="{ backgroundColor: color }"
-                    @click="folderForm.color = color">
-              </span>
-            </div>
+            <label class="form-label">Kleur (Hex)</label>
+            <input type="text" class="form-control" v-model="folderForm.color" placeholder="#6c757d" pattern="^#[0-9A-Fa-f]{6}$">
+            <small class="form-text text-muted">Gebruik een hex kleurcode (bijv. #6c757d)</small>
           </div>
         </div>
         <div class="folder-modal-footer">
