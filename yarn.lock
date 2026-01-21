@@ -6659,6 +6659,7 @@ __metadata:
     puppeteer: "npm:^24.35.0"
     remove-accents: "npm:^0.5.0"
     sass: "npm:^1.97.2"
+    sortablejs: "npm:^1.15.0"
     stylelint: "npm:^17.0.0"
     stylelint-config-recess-order: "npm:^7.4.0"
     stylelint-config-standard-scss: "npm:^17.0.0"
@@ -6673,6 +6674,13 @@ __metadata:
     webpack-cli: "npm:^6.0.1"
   languageName: unknown
   linkType: soft
+
+"sortablejs@npm:^1.15.0":
+  version: 1.15.6
+  resolution: "sortablejs@npm:1.15.6"
+  checksum: 10c0/a75dcf53e5613b4106d46434e40114830f9c6449b3b439bc1925c1fbf0a0c1f044727a8f3d4ae1759fa7beaa33e7eb0c4a413e6aa88d6026577b59f3658ff727
+  languageName: node
+  linkType: hard
 
 "source-map-js@npm:>=0.6.2 <2.0.0, source-map-js@npm:^1.0.1, source-map-js@npm:^1.2.1":
   version: 1.2.1
