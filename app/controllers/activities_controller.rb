@@ -90,12 +90,20 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
                         .find(params[:id])
 
     @product_prices_json = sorted_product_price(@activity).to_json(
+      only: %i[id price position product_price_folder_id],
       include: { product: { only: %i[id name category color], methods: %i[requires_age] } }
+    )
+
+    @folders_json = @activity.price_list.product_price_folders.order(:position).to_json(
+      only: %i[id name position color]
     )
 
     @users_json = users_hash.to_json
 
     @activity_json = @activity.to_json(only: %i[id title start_time end_time])
+
+    @is_treasurer = current_user.treasurer?
+    @price_list_id = @activity.price_list_id
 
     @sumup_key = Rails.application.config.x.sumup_key
     @sumup_enabled = @sumup_key.present?
@@ -174,7 +182,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
   end
 
   def sorted_product_price(activity)
-    activity.price_list.product_price.sort_by { |p| p.product.id }
+    activity.price_list.product_price.includes(:product).order(:position)
   end
 
   def permitted_attributes

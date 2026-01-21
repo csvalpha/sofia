@@ -17,6 +17,23 @@ Rails.application.routes.draw do
       post :archive
       post :unarchive
     end
+    resources :product_price_folders, only: %i[index create] do
+      collection do
+        patch :reorder
+      end
+    end
+    resources :product_prices, only: [] do
+      collection do
+        patch :reorder
+      end
+    end
+  end
+
+  resources :product_price_folders, only: %i[update destroy]
+  resources :product_prices, only: [] do
+    member do
+      patch :assign_folder
+    end
   end
 
   resources :users, only: %i[index show create update] do

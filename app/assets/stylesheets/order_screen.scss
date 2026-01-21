@@ -124,6 +124,12 @@
     background-color: $gray-200;
     border-right: 2px solid $gray-400;
     box-shadow: 2px 0 4px -2px $transparent-200;
+
+    &.edit-mode-disabled {
+      opacity: 0.5;
+      pointer-events: none;
+      user-select: none;
+    }
   }
 
   .user-details {
@@ -278,5 +284,171 @@
     display: grid;
     grid-area: order-grid;
     overflow-y: auto;
+  }
+
+  // Folder styles
+  .folder-container {
+    display: contents;
+  }
+
+  .folder-tile {
+    position: relative;
+    background-color: $gray-600;
+    color: $white;
+
+    .folder-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.5rem;
+      font-size: 3.5rem;
+      position: relative;
+    }
+
+    .folder-back-arrow {
+      position: absolute;
+      font-size: 1rem;
+      bottom: 0;
+      right: -0.5rem;
+      color: $white;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+      padding: 0.2rem;
+    }
+
+    .product-grid-product-name {
+      color: $font-color-dark;
+      font-size: $font-size-lg;
+      text-shadow: none;
+    }
+
+    &.edit-mode {
+      cursor: grab;
+    }
+  }
+
+  .folder-edit-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: $gray-700;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: $white;
+      transform: scale(1.1);
+    }
+  }
+
+  .add-folder-tile {
+    background-color: $gray-400;
+    border: 2px dashed $gray-600;
+
+    .folder-icon {
+      color: $gray-600;
+    }
+
+    .product-grid-product-name {
+      color: $gray-600;
+    }
+
+    &:hover {
+      background-color: $gray-300;
+    }
+  }
+
+  .drop-home-tile {
+    background-color: $gray-500;
+    border: 2px dashed $gray-700;
+  }
+
+  .back-button-tile {
+    .folder-icon {
+      font-size: 2rem;
+    }
+  }
+
+  // Draggable styles
+  .draggable {
+    cursor: grab;
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  .drag-handle {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    color: rgba(0, 0, 0, 0.3);
+    font-size: 1rem;
+  }
+
+  .sortable-ghost {
+    opacity: 0.4;
+  }
+
+  .sortable-chosen {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .sortable-drag {
+    background-color: $white;
+  }
+
+  // Folder modal styles
+  .folder-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+  }
+
+  .folder-modal {
+    background-color: $white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .folder-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid $gray-300;
+
+    h5 {
+      margin: 0;
+    }
+  }
+
+  .folder-modal-body {
+    padding: 1rem;
+  }
+
+  .folder-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-top: 1px solid $gray-300;
   }
 }

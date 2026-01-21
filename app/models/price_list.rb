@@ -2,6 +2,7 @@ class PriceList < ApplicationRecord
   has_many :product_price, dependent: :destroy
   has_many :products, through: :product_price, dependent: :restrict_with_exception
   has_many :activities, dependent: :restrict_with_exception
+  has_many :product_price_folders, dependent: :destroy
 
   validates :name, presence: true
 

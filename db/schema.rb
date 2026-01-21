@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_12_12_000001) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_21_000002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -117,6 +117,19 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_12_000001) do
     t.datetime "archived_at"
   end
 
+  create_table "product_price_folders", force: :cascade do |t|
+    t.bigint "price_list_id", null: false
+    t.string "name", null: false
+    t.integer "position", default: 0, null: false
+    t.string "color", default: "#6c757d", null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["deleted_at"], name: "index_product_price_folders_on_deleted_at"
+    t.index ["price_list_id", "position"], name: "index_product_price_folders_on_price_list_id_and_position"
+    t.index ["price_list_id"], name: "index_product_price_folders_on_price_list_id"
+  end
+
   create_table "product_prices", force: :cascade do |t|
     t.bigint "product_id"
     t.bigint "price_list_id"
@@ -124,9 +137,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_12_000001) do
     t.datetime "deleted_at", precision: nil
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.bigint "product_price_folder_id"
+    t.integer "position", default: 0, null: false
+    t.index ["price_list_id", "product_price_folder_id", "position"], name: "index_product_prices_on_folder_and_position"
     t.index ["price_list_id"], name: "index_product_prices_on_price_list_id"
     t.index ["product_id", "price_list_id", "deleted_at"], name: "index_product_prices_on_product_id_and_price_list_id", unique: true
     t.index ["product_id"], name: "index_product_prices_on_product_id"
+    t.index ["product_price_folder_id"], name: "index_product_prices_on_product_price_folder_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -202,5 +219,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_12_000001) do
   add_foreign_key "activities", "users", column: "locked_by_id"
   add_foreign_key "credit_mutations", "users", column: "created_by_id"
   add_foreign_key "orders", "users", column: "created_by_id"
+  add_foreign_key "product_price_folders", "price_lists"
+  add_foreign_key "product_prices", "product_price_folders"
   add_foreign_key "sofia_accounts", "users"
 end
