@@ -1,6 +1,7 @@
 import Vue from 'vue/dist/vue.esm';
 import api from './api/axiosInstance';
 import * as bootstrap from 'bootstrap';
+import Sortable from 'sortablejs';
 
 import FlashNotification from './components/FlashNotification.vue';
 import UserSelection from './components/orderscreen/UserSelection.vue';
@@ -11,9 +12,12 @@ document.addEventListener('turbo:load', () => {
   if (element != null) {
     const users = JSON.parse(element.dataset.users);
     const productPrices = JSON.parse(element.dataset.productPrices);
+    const folders = JSON.parse(element.dataset.folders || '[]');
     const activity = JSON.parse(element.dataset.activity);
     const flashes = JSON.parse(element.dataset.flashes);
     const depositButtonEnabled = element.dataset.depositButtonEnabled === 'true';
+    const isTreasurer = element.dataset.isTreasurer === 'true';
+    const priceListId = element.dataset.priceListId;
 
     window.flash = function(message, actionText, type) {
       const event = new CustomEvent('flash', { detail: { message: message, actionText: actionText, type: type } } );
@@ -32,6 +36,7 @@ document.addEventListener('turbo:load', () => {
         return {
           users: users,
           productPrices: productPrices,
+          folders: folders,
           activity: activity,
           selectedUser: null,
           payWithCash: false,
@@ -39,7 +44,21 @@ document.addEventListener('turbo:load', () => {
           keepUserSelected: false,
           depositButtonEnabled: depositButtonEnabled,
           orderRows: [],
-          isSubmitting: false
+          isSubmitting: false,
+          // Folder navigation
+          currentFolder: null,
+          // Edit mode (treasurer only)
+          editMode: false,
+          isTreasurer: isTreasurer,
+          priceListId: priceListId,
+          // Folder modal
+          showFolderModal: false,
+          editingFolder: null,
+          folderForm: { name: '', color: '#6c757d' },
+          // Drag state
+          draggedItem: null,
+          sortableInstance: null,
+          folderSortableInstance: null
         };
       },
       methods: {
@@ -247,6 +266,202 @@ document.addEventListener('turbo:load', () => {
             this.handleXHRError(response);
           });
         },
+
+        // Folder navigation methods
+        enterFolder(folder) {
+          if (!this.editMode) {
+            this.currentFolder = folder;
+          }
+        },
+
+        exitFolder() {
+          this.currentFolder = null;
+        },
+
+        // Edit mode methods
+        toggleEditMode() {
+          this.editMode = !this.editMode;
+          if (this.editMode) {
+            this.$nextTick(() => {
+              this.initSortable();
+            });
+          } else {
+            this.destroySortable();
+          }
+        },
+
+        initSortable() {
+          const productGrid = this.$el.querySelector('.product-grid');
+          if (productGrid && !this.sortableInstance) {
+            this.sortableInstance = Sortable.create(productGrid, {
+              animation: 150,
+              ghostClass: 'sortable-ghost',
+              chosenClass: 'sortable-chosen',
+              dragClass: 'sortable-drag',
+              filter: '.folder-tile, .back-button-tile, .add-folder-tile',
+              onEnd: this.onProductDragEnd.bind(this)
+            });
+          }
+
+          const folderContainer = this.$el.querySelector('.folder-container');
+          if (folderContainer && !this.folderSortableInstance) {
+            this.folderSortableInstance = Sortable.create(folderContainer, {
+              animation: 150,
+              ghostClass: 'sortable-ghost',
+              filter: '.add-folder-tile',
+              onEnd: this.onFolderDragEnd.bind(this)
+            });
+          }
+        },
+
+        destroySortable() {
+          if (this.sortableInstance) {
+            this.sortableInstance.destroy();
+            this.sortableInstance = null;
+          }
+          if (this.folderSortableInstance) {
+            this.folderSortableInstance.destroy();
+            this.folderSortableInstance = null;
+          }
+        },
+
+        onProductDragEnd(evt) {
+          const productPriceId = evt.item.dataset.productPriceId;
+          const targetFolderId = evt.to.dataset.folderId || null;
+          
+          // Update position via API
+          const productPrice = this.productPrices.find(p => p.id == productPriceId);
+          if (productPrice) {
+            this.assignProductToFolder(productPrice, targetFolderId, evt.newIndex);
+          }
+        },
+
+        onFolderDragEnd(evt) {
+          // Update folder positions
+          const folderPositions = [];
+          const folderElements = evt.to.querySelectorAll('.folder-tile');
+          folderElements.forEach((el, index) => {
+            const folderId = el.dataset.folderId;
+            if (folderId) {
+              folderPositions.push({ id: parseInt(folderId), position: index });
+              const folder = this.folders.find(f => f.id == folderId);
+              if (folder) folder.position = index;
+            }
+          });
+
+          if (folderPositions.length > 0) {
+            api.patch(`/price_lists/${this.priceListId}/product_price_folders/reorder`, {
+              folder_positions: folderPositions
+            }).catch((response) => {
+              this.handleXHRError(response);
+            });
+          }
+        },
+
+        assignProductToFolder(productPrice, folderId, newPosition = 0) {
+          api.patch(`/product_prices/${productPrice.id}/assign_folder`, {
+            folder_id: folderId
+          }).then(() => {
+            productPrice.product_price_folder_id = folderId ? parseInt(folderId) : null;
+            productPrice.position = newPosition;
+          }).catch((response) => {
+            this.handleXHRError(response);
+          });
+        },
+
+        // Drop product on folder
+        onDropOnFolder(evt, folder) {
+          evt.preventDefault();
+          const productPriceId = evt.dataTransfer.getData('productPriceId');
+          const productPrice = this.productPrices.find(p => p.id == productPriceId);
+          if (productPrice) {
+            this.assignProductToFolder(productPrice, folder ? folder.id : null);
+          }
+        },
+
+        onDragStartProduct(evt, productPrice) {
+          evt.dataTransfer.setData('productPriceId', productPrice.id);
+          this.draggedItem = productPrice;
+        },
+
+        onDragEnd() {
+          this.draggedItem = null;
+        },
+
+        // Folder CRUD methods
+        openFolderModal(folder = null) {
+          this.editingFolder = folder;
+          if (folder) {
+            this.folderForm = { name: folder.name, color: folder.color };
+          } else {
+            this.folderForm = { name: '', color: '#6c757d' };
+          }
+          this.showFolderModal = true;
+        },
+
+        closeFolderModal() {
+          this.showFolderModal = false;
+          this.editingFolder = null;
+          this.folderForm = { name: '', color: '#6c757d' };
+        },
+
+        saveFolder() {
+          if (!this.folderForm.name.trim()) {
+            this.sendFlash('Voer een mapnaam in', '', 'warning');
+            return;
+          }
+
+          if (this.editingFolder) {
+            // Update existing folder
+            api.patch(`/product_price_folders/${this.editingFolder.id}`, {
+              product_price_folder: this.folderForm
+            }).then((response) => {
+              const index = this.folders.findIndex(f => f.id === this.editingFolder.id);
+              if (index !== -1) {
+                this.$set(this.folders, index, response.data);
+              }
+              this.sendFlash('Map bijgewerkt', '', 'success');
+              this.closeFolderModal();
+            }).catch((response) => {
+              this.handleXHRError(response);
+            });
+          } else {
+            // Create new folder
+            api.post(`/price_lists/${this.priceListId}/product_price_folders`, {
+              product_price_folder: this.folderForm
+            }).then((response) => {
+              this.folders.push(response.data);
+              this.sendFlash('Map aangemaakt', '', 'success');
+              this.closeFolderModal();
+            }).catch((response) => {
+              this.handleXHRError(response);
+            });
+          }
+        },
+
+        deleteFolder(folder) {
+          if (!confirm(`Map "${folder.name}" verwijderen? Producten worden terug naar het hoofdscherm verplaatst.`)) {
+            return;
+          }
+
+          api.delete(`/product_price_folders/${folder.id}`).then(() => {
+            // Move products back to home
+            this.productPrices.forEach(pp => {
+              if (pp.product_price_folder_id === folder.id) {
+                pp.product_price_folder_id = null;
+              }
+            });
+            // Remove folder from list
+            const index = this.folders.findIndex(f => f.id === folder.id);
+            if (index !== -1) {
+              this.folders.splice(index, 1);
+            }
+            this.sendFlash('Map verwijderd', '', 'success');
+            this.closeFolderModal();
+          }).catch((response) => {
+            this.handleXHRError(response);
+          });
+        },
       },
 
       computed: {
@@ -295,6 +510,35 @@ document.addEventListener('turbo:load', () => {
 
         isMobile() {
           return this.isIos || /Android|webOS|Opera Mini/i.test(navigator.userAgent);
+        },
+
+        // Folder computed properties
+        sortedFolders() {
+          return [...this.folders].sort((a, b) => a.position - b.position);
+        },
+
+        productsWithoutFolder() {
+          return this.productPrices
+            .filter(pp => !pp.product_price_folder_id)
+            .sort((a, b) => a.position - b.position);
+        },
+
+        productsInCurrentFolder() {
+          if (!this.currentFolder) return [];
+          return this.productPrices
+            .filter(pp => pp.product_price_folder_id === this.currentFolder.id)
+            .sort((a, b) => a.position - b.position);
+        },
+
+        visibleProducts() {
+          if (this.currentFolder) {
+            return this.productsInCurrentFolder;
+          }
+          return this.productsWithoutFolder;
+        },
+
+        isInFolder() {
+          return this.currentFolder !== null;
         }
       },
 
