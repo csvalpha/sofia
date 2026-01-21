@@ -103,7 +103,7 @@ class InvoicesController < ApplicationController
     authorize @invoice, :download? unless token_based_access
 
     # Use token-based URL for unauthenticated Grover access
-    url = invoice_url(@invoice.token, pdf: true)
+    url = invoice_url(@invoice.token, pdf: true, only_path: false)
     pdf = Grover.new(url).to_pdf
     send_data pdf, filename: "Factuur-#{@invoice.human_id}.pdf", type: 'application/pdf', disposition: 'attachment'
   rescue StandardError => e
