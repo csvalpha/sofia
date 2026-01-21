@@ -97,6 +97,7 @@ class InvoicesController < ApplicationController
     params.require(:invoice).permit(%i[user_id activity_id name_override email_override rows], rows_attributes: %i[name amount price])
   end
 
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def render_invoice_pdf
     token_based_access = !integer_id?(params[:id])
     authorize @invoice, :download? unless token_based_access
@@ -114,4 +115,5 @@ class InvoicesController < ApplicationController
       redirect_to invoice_path(@invoice)
     end
   end
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 end

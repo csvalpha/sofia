@@ -7,12 +7,16 @@ Grover.configure do |config|
     emulate_media: 'screen',
     print_background: true,
     executable_path: Rails.env.development? ? nil : '/usr/bin/chromium',
-    launch_args: Rails.env.development? ? [] : [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-gpu',
-      '--disable-software-rasterizer',
-    ]
+    launch_args: if Rails.env.development?
+                   []
+                 else
+                   [
+                     '--no-sandbox',
+                     '--disable-setuid-sandbox',
+                     '--disable-dev-shm-usage',
+                     '--disable-gpu',
+                     '--disable-software-rasterizer'
+                   ]
+                 end
   }
 end
