@@ -1,31 +1,22 @@
-# Grover Global Configuration
-#
-# Use this to set up shared configuration options for your entire application.
-# Any of the configuration options shown here can also be applied to single
-# models by passing arguments to the Grover.new call.
-#
-# To learn more, check out the README:
-# https://github.com/Studiosity/grover
-
 Grover.configure do |config|
-  options = {
-    format: 'A4',
+  config.options = {
+    viewport: {
+      width: 794,  # A4 width in pixels at 96 DPI (210mm)
+      height: 1123 # Starting height, will expand as needed
+    },
+    emulate_media: 'screen',
     print_background: true,
-    prefer_css_page_size: false,
-    display_url: "https://#{Rails.application.config.x.sofia_host}"
+    executable_path: Rails.env.development? ? nil : '/usr/bin/chromium',
+    launch_args: if Rails.env.development?
+                   []
+                 else
+                   [
+                     '--no-sandbox',
+                     '--disable-setuid-sandbox',
+                     '--disable-dev-shm-usage',
+                     '--disable-gpu',
+                     '--disable-software-rasterizer'
+                   ]
+                 end
   }
-
-  unless Rails.env.development?
-    options[:executable_path] = '/usr/bin/chromium'
-    options[:launch_args] = [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-gpu',
-      '--disable-software-rasterizer',
-      '--hide-scrollbars'
-    ]
-  end
-
-  config.options = options
 end

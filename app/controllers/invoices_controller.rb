@@ -20,6 +20,10 @@ class InvoicesController < ApplicationController
     # Authorize for authenticated access (integer ID), skip for token-based access
     authorize @invoice, :show? unless token_based_access
 
+    # Hide navbar when generating PDF
+    @show_navigationbar = params[:pdf].blank?
+    @show_extras = params[:pdf].blank?
+
     respond_to do |format|
       format.html
       format.pdf { render_invoice_pdf }
@@ -93,16 +97,14 @@ class InvoicesController < ApplicationController
     params.require(:invoice).permit(%i[user_id activity_id name_override email_override rows], rows_attributes: %i[name amount price])
   end
 
-  def render_invoice_pdf # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def render_invoice_pdf
     token_based_access = !integer_id?(params[:id])
     authorize @invoice, :download? unless token_based_access
 
-    html = render_to_string(
-      template: 'invoices/show',
-      formats: [:html],
-      layout: 'pdf'
-    )
-    pdf = Grover.new(html).to_pdf
+    # Use token-based URL for unauthenticated Grover access
+    url = invoice_url(@invoice.token, pdf: true, only_path: false)
+    pdf = Grover.new(url).to_pdf
     send_data pdf, filename: "Factuur-#{@invoice.human_id}.pdf", type: 'application/pdf', disposition: 'attachment'
   rescue StandardError => e
     Rails.logger.error "Failed to generate PDF for invoice #{@invoice.id}: #{e.message}"
@@ -113,4 +115,5 @@ class InvoicesController < ApplicationController
       redirect_to invoice_path(@invoice)
     end
   end
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 end
