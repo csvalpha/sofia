@@ -15,8 +15,15 @@ RUN apt-get update -qq && \
   libpq-dev \
   curl \
   netcat-traditional \
-  wkhtmltopdf \
-  libyaml-dev
+  chromium \
+  libyaml-dev \
+  fonts-liberation \
+  libgbm1 \
+  libnss3 \
+  libatk-bridge2.0-0 \
+  libcups2 \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 # Add Node, required for asset pipeline.
 RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - && \

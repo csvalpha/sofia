@@ -7,7 +7,7 @@
     "lint:styles:fix": "stylelint 'app/**/*.s+(a|c)ss' 'app/**/*.vue' --ignore-path .gitignore --fix",
     "build": "webpack --config webpack.config.js",
     "watch": "webpack --config webpack.config.js --watch",
-    "build:css": "sass ./app/assets/stylesheets/application.scss:./app/assets/builds/application.css ./app/assets/stylesheets/pdf.scss:./app/assets/builds/pdf.css --no-source-map --load-path=node_modules",
+    "build:css": "sass ./app/assets/stylesheets/application.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules",
     "update:font": "ruby bin/copy_fontawesome_fonts"
   },
   "dependencies": {
@@ -32,6 +32,7 @@
     "jquery": "^3.7.1",
     "moment": "^2.30.1",
     "popper.js": "^1.16.1",
+    "puppeteer": "^24.35.0",
     "remove-accents": "^0.5.0",
     "vue": "^2.7.16",
     "vue-loader": "^15.11.1",
@@ -54,9 +55,9 @@
     "postcss-preset-env": "^10.6.1",
     "postcss-scss": "^4.0.9",
     "sass": "^1.97.2",
-    "stylelint": "^16.26.1",
+    "stylelint": "^17.0.0",
     "stylelint-config-recess-order": "^7.4.0",
-    "stylelint-config-standard-scss": "^16.0.0",
+    "stylelint-config-standard-scss": "^17.0.0",
     "stylelint-order": "^7.0.1",
     "vue-eslint-parser": "^10.2.0",
     "vue-style-loader": "^4.1.3"
