@@ -82,6 +82,11 @@ module Sofia
     config.x.subprovider_label    = ENV.fetch('SUBPROVIDER_LABEL', nil)
     config.x.deposit_button_enabled = ENV.fetch('DEPOSIT_BUTTON_ENABLED', 'true') == 'true'
 
+    config.x.sepa_incasso_enabled = ENV.fetch('SEPA_INCASSO_ENABLED', 'false') == 'true'
+    config.x.sepa_creditor_iban = ENV.fetch('SEPA_CREDITOR_IBAN', nil)
+    config.x.sepa_creditor_identifier = ENV.fetch('SEPA_CREDITOR_IDENTIFIER', nil)
+    config.x.sepa_auto_collection_day = ENV.fetch('SEPA_AUTO_COLLECTION_DAY', '5').to_i
+
     config.x.min_payment_amount   = [ENV.fetch('MIN_PAYMENT_AMOUNT', '21.8').to_f, 0.01].max
 
     config.x.codes                = {

@@ -8,6 +8,11 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   has_many :roles_users, class_name: 'RolesUsers', dependent: :destroy
   has_many :roles, through: :roles_users
 
+  # SEPA Direct Debit associations
+  has_many :debit_mandates, class_name: 'Debit::Mandate', dependent: :destroy
+  has_many :debit_transactions, class_name: 'Debit::Transaction', dependent: :nullify
+  has_many :debit_collections, through: :debit_transactions, source: :collection
+
   validates :name, presence: true
   validates :uid, uniqueness: true, allow_blank: true
   validate :no_deactivation_when_nonzero_credit

@@ -19,6 +19,10 @@ class UserPolicy < ApplicationPolicy
     show?
   end
 
+  def debit_collections?
+    show?
+  end
+
   def update_with_sofia_account?
     record == user
   end

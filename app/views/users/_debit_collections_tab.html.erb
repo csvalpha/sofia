@@ -1,0 +1,131 @@
+<% collections = user.debit_collections.order(collection_date: :desc).includes(:transactions) %>
+
+<% if collections.any? %>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Collectie</th>
+          <th scope="col">Datum</th>
+          <th scope="col">Beschrijving</th>
+          <th scope="col">Status</th>
+          <th class="text-end" scope="col">Bedrag</th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        <% collections.each do |collection| %>
+          <% user_transactions = collection.transactions.where(user: user) %>
+          <% if user_transactions.any? %>
+            <% user_transactions.each_with_index do |transaction, index| %>
+              <tr>
+                <% if index == 0 %>
+                  <td rowspan="<%= user_transactions.count %>">
+                    <% if current_user&.treasurer? %>
+                      <%= link_to collection.name, debit_collection_path(collection) %>
+                    <% else %>
+                      <%= collection.name %>
+                    <% end %>
+                  </td>
+                  <td rowspan="<%= user_transactions.count %>" class="text-nowrap">
+                    <%= l(collection.collection_date) %>
+                  </td>
+                <% end %>
+                <td>
+                  <%= transaction.description %>
+                </td>
+                <td>
+                  <% case transaction.status %>
+                  <% when 'success' %>
+                    <span class="badge bg-success">Geslaagd</span>
+                  <% when 'failed' %>
+                    <span class="badge bg-danger">Mislukt</span>
+                  <% else %>
+                    <span class="badge bg-warning">In behandeling</span>
+                  <% end %>
+                </td>
+                <td class="text-end text-nowrap">
+                  <%= number_to_currency(transaction.amount, unit: '€') %>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        <% end %>
+      </tbody>
+      <tfoot>
+        <tr class="fw-bold">
+          <td colspan="4" class="text-end">Totaal geïncasseerd:</td>
+          <td class="text-end text-nowrap">
+            <%= number_to_currency(
+                  user.debit_transactions.sum(:amount),
+                  unit: '€'
+                ) %>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  
+  <% if user.debit_mandates.any? %>
+    <div class="mt-4">
+      <h5>Actieve Mandaten</h5>
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th scope="col">IBAN</th>
+              <th scope="col">Rekeninghouder</th>
+              <th scope="col">Status</th>
+              <th scope="col">Geldig vanaf</th>
+              <th scope="col">Geldig tot</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            <% user.debit_mandates.order(created_at: :desc).each do |mandate| %>
+              <tr class="<%= 'table-secondary' unless mandate.active? %>">
+                <td class="text-nowrap font-monospace">
+                  <%= mandate.formatted_iban %>
+                </td>
+                <td>
+                  <%= mandate.iban_holder %>
+                </td>
+                <td>
+                  <% if mandate.active? %>
+                    <span class="badge bg-success">Actief</span>
+                  <% else %>
+                    <span class="badge bg-secondary">Inactief</span>
+                  <% end %>
+                </td>
+                <td class="text-nowrap">
+                  <%= l(mandate.start_date) %>
+                </td>
+                <td class="text-nowrap">
+                  <%= mandate.end_date ? l(mandate.end_date) : 'Doorlopend' %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <%= link_to debit_mandates_path, class: 'btn btn-sm btn-outline-primary mt-2' do %>
+        <i class="fas fa-cog me-1"></i> Beheer mandaten
+      <% end %>
+    </div>
+  <% else %>
+    <div class="alert alert-warning mt-3">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      Je hebt nog geen actief SEPA mandaat. 
+      <%= link_to 'Klik hier om een mandaat aan te maken', new_debit_mandate_path, class: 'alert-link' %>.
+    </div>
+  <% end %>
+<% else %>
+  <div class="alert alert-info">
+    <i class="fas fa-info-circle me-2"></i>
+    <% if user.debit_mandates.any? %>
+      Er zijn nog geen incasso's uitgevoerd voor jouw account.
+    <% else %>
+      Je hebt nog geen SEPA mandaat. 
+      <%= link_to 'Klik hier om een mandaat aan te maken', new_debit_mandate_path, class: 'alert-link' %> 
+      om automatische incasso mogelijk te maken.
+    <% end %>
+  </div>
+<% end %>

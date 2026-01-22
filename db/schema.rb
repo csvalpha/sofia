@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_12_12_000001) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_21_164408) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -41,6 +41,54 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_12_000001) do
     t.index ["activity_id"], name: "index_credit_mutations_on_activity_id"
     t.index ["created_by_id"], name: "index_credit_mutations_on_created_by_id"
     t.index ["user_id"], name: "index_credit_mutations_on_user_id"
+  end
+
+  create_table "debit_collections", force: :cascade do |t|
+    t.string "name", null: false
+    t.date "collection_date", null: false
+    t.bigint "author_id"
+    t.string "status", default: "pending", null: false
+    t.text "sepa_file_content"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_debit_collections_on_author_id"
+    t.index ["collection_date"], name: "index_debit_collections_on_collection_date"
+    t.index ["deleted_at"], name: "index_debit_collections_on_deleted_at"
+    t.index ["status"], name: "index_debit_collections_on_status"
+  end
+
+  create_table "debit_mandates", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "iban", null: false
+    t.string "iban_holder", null: false
+    t.string "mandate_reference", null: false
+    t.date "start_date", null: false
+    t.date "end_date"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["deleted_at"], name: "index_debit_mandates_on_deleted_at"
+    t.index ["iban"], name: "index_debit_mandates_on_iban"
+    t.index ["mandate_reference"], name: "index_debit_mandates_on_mandate_reference", unique: true
+    t.index ["user_id"], name: "index_debit_mandates_on_user_id"
+  end
+
+  create_table "debit_transactions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "collection_id", null: false
+    t.bigint "mandate_id", null: false
+    t.string "description", null: false
+    t.decimal "amount", precision: 8, scale: 2, null: false
+    t.string "status", default: "pending", null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["collection_id"], name: "index_debit_transactions_on_collection_id"
+    t.index ["deleted_at"], name: "index_debit_transactions_on_deleted_at"
+    t.index ["mandate_id"], name: "index_debit_transactions_on_mandate_id"
+    t.index ["status"], name: "index_debit_transactions_on_status"
+    t.index ["user_id"], name: "index_debit_transactions_on_user_id"
   end
 
   create_table "invoice_rows", force: :cascade do |t|
@@ -117,6 +165,19 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_12_000001) do
     t.datetime "archived_at"
   end
 
+  create_table "product_price_folders", force: :cascade do |t|
+    t.bigint "price_list_id", null: false
+    t.string "name", null: false
+    t.integer "position", default: 0, null: false
+    t.string "color", default: "#6c757d", null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["deleted_at"], name: "index_product_price_folders_on_deleted_at"
+    t.index ["price_list_id", "position"], name: "index_product_price_folders_on_price_list_id_and_position"
+    t.index ["price_list_id"], name: "index_product_price_folders_on_price_list_id"
+  end
+
   create_table "product_prices", force: :cascade do |t|
     t.bigint "product_id"
     t.bigint "price_list_id"
@@ -124,9 +185,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_12_000001) do
     t.datetime "deleted_at", precision: nil
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.bigint "product_price_folder_id"
+    t.integer "position", default: 0, null: false
+    t.index ["price_list_id", "product_price_folder_id", "position"], name: "index_product_prices_on_folder_and_position"
     t.index ["price_list_id"], name: "index_product_prices_on_price_list_id"
     t.index ["product_id", "price_list_id", "deleted_at"], name: "index_product_prices_on_product_id_and_price_list_id", unique: true
     t.index ["product_id"], name: "index_product_prices_on_product_id"
+    t.index ["product_price_folder_id"], name: "index_product_prices_on_product_price_folder_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -201,6 +266,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_12_000001) do
   add_foreign_key "activities", "users", column: "created_by_id"
   add_foreign_key "activities", "users", column: "locked_by_id"
   add_foreign_key "credit_mutations", "users", column: "created_by_id"
+  add_foreign_key "debit_collections", "users", column: "author_id"
+  add_foreign_key "debit_mandates", "users"
+  add_foreign_key "debit_transactions", "debit_collections", column: "collection_id"
+  add_foreign_key "debit_transactions", "debit_mandates", column: "mandate_id"
+  add_foreign_key "debit_transactions", "users"
   add_foreign_key "orders", "users", column: "created_by_id"
+  add_foreign_key "product_price_folders", "price_lists"
+  add_foreign_key "product_prices", "product_price_folders"
   add_foreign_key "sofia_accounts", "users"
 end

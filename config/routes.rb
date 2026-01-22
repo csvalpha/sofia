@@ -40,6 +40,17 @@ Rails.application.routes.draw do
   end
   resources :zatladder, only: %i[index]
   resources :finance_overview, only: %i[index]
+
+  # SEPA Direct Debit
+  namespace :debit do
+    resources :mandates
+    resources :collections, only: %i[index show] do
+      member do
+        post :generate
+        get :download
+      end
+    end
+  end
   resources :payments, only: %i[index create] do
     member do
       get :callback

@@ -67,6 +67,24 @@
             <% end %>
           </li>
         <% end %>
+        <% if Rails.application.config.x.sepa_incasso_enabled && current_user&.treasurer? %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="sepaDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-file-invoice-dollar me-2"></i> SEPA Beheer
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="sepaDropdown">
+              <li><%= link_to 'Incasso\'s', debit_collections_path, class: 'dropdown-item' %></li>
+              <li><%= link_to 'Mandaten', debit_mandates_path, class: 'dropdown-item' %></li>
+            </ul>
+          </li>
+        <% end %>
+        <% if Rails.application.config.x.sepa_incasso_enabled && current_user && !current_user&.treasurer? %>
+          <li class="nav-item">
+            <%= nav_link debit_mandates_path, class: 'nav-link' do %>
+              <i class="fas fa-file-invoice-dollar me-2"></i> Mijn Mandaten
+            <% end %>
+          </li>
+        <% end %>
       </ul>
       <% if current_user %>
         <div class="navbar-nav">

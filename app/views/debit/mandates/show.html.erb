@@ -1,0 +1,135 @@
+<% content_for :title, "Mandaat - #{Rails.application.config.x.site_name}" %>
+
+<div class="container footer-padding">
+  <div class="row py-4">
+    <div class="col-sm-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>
+          <i class="fas fa-file-invoice-dollar me-2"></i>
+          SEPA Mandaat
+        </h1>
+        <div class="d-flex gap-2">
+          <%= link_to edit_debit_mandate_path(@mandate), class: 'btn btn-outline-secondary' do %>
+            <i class="fas fa-edit me-1"></i> Bewerken
+          <% end %>
+          <%= link_to debit_mandates_path, class: 'btn btn-outline-primary' do %>
+            <i class="fas fa-arrow-left me-1"></i> Terug
+          <% end %>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <h6 class="text-muted mb-1">Gebruiker</h6>
+              <p class="mb-0">
+                <%= link_to @mandate.user.name, @mandate.user %>
+              </p>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+              <h6 class="text-muted mb-1">Status</h6>
+              <p class="mb-0">
+                <% if @mandate.active? %>
+                  <span class="badge bg-success">Actief</span>
+                <% else %>
+                  <span class="badge bg-secondary">Inactief</span>
+                <% end %>
+              </p>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+              <h6 class="text-muted mb-1">IBAN</h6>
+              <p class="mb-0 font-monospace">
+                <%= @mandate.formatted_iban %>
+              </p>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+              <h6 class="text-muted mb-1">Rekeninghouder</h6>
+              <p class="mb-0">
+                <%= @mandate.iban_holder %>
+              </p>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+              <h6 class="text-muted mb-1">Mandaatreferentie</h6>
+              <p class="mb-0 font-monospace">
+                <%= @mandate.mandate_reference %>
+              </p>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+              <h6 class="text-muted mb-1">Startdatum</h6>
+              <p class="mb-0">
+                <%= l(@mandate.start_date) %>
+              </p>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+              <h6 class="text-muted mb-1">Einddatum</h6>
+              <p class="mb-0">
+                <%= @mandate.end_date ? l(@mandate.end_date) : 'Doorlopend' %>
+              </p>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+              <h6 class="text-muted mb-1">Aangemaakt op</h6>
+              <p class="mb-0">
+                <%= l(@mandate.created_at, format: :with_year) %>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <% if @mandate.transactions.any? %>
+        <div class="mt-4">
+          <h3>Transacties</h3>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Datum</th>
+                  <th scope="col">Collectie</th>
+                  <th scope="col">Beschrijving</th>
+                  <th scope="col">Bedrag</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody class="table-group-divider">
+                <% @mandate.transactions.order(created_at: :desc).each do |transaction| %>
+                  <tr>
+                    <td class="text-nowrap">
+                      <%= l(transaction.created_at.to_date) %>
+                    </td>
+                    <td>
+                      <%= link_to transaction.collection.name, debit_collection_path(transaction.collection) %>
+                    </td>
+                    <td>
+                      <%= transaction.description %>
+                    </td>
+                    <td class="text-nowrap">
+                      <%= number_to_currency(transaction.amount, unit: '€') %>
+                    </td>
+                    <td>
+                      <% case transaction.status %>
+                      <% when 'success' %>
+                        <span class="badge bg-success">Geslaagd</span>
+                      <% when 'failed' %>
+                        <span class="badge bg-danger">Mislukt</span>
+                      <% else %>
+                        <span class="badge bg-warning">In behandeling</span>
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

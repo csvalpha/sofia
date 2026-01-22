@@ -1,0 +1,70 @@
+<% content_for :title, "Mandaat bewerken - #{Rails.application.config.x.site_name}" %>
+
+<div class="container footer-padding">
+  <div class="row py-4">
+    <div class="col-sm-12 col-md-8 col-lg-6">
+      <h1>
+        <i class="fas fa-file-invoice-dollar me-2"></i>
+        Mandaat bewerken
+      </h1>
+      
+      <%= form_with model: @mandate, url: debit_mandate_path(@mandate), method: :patch, local: true, class: 'mt-4' do |f| %>
+        <% if @mandate.errors.any? %>
+          <div class="alert alert-danger">
+            <h5>Er zijn fouten opgetreden:</h5>
+            <ul class="mb-0">
+              <% @mandate.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <% if current_user&.treasurer? %>
+          <div class="mb-3">
+            <%= f.label :user_id, 'Gebruiker', class: 'form-label' %>
+            <%= f.collection_select :user_id, 
+                                    User.active.order(:name), 
+                                    :id, 
+                                    :name, 
+                                    {}, 
+                                    { class: 'form-select', required: true } %>
+          </div>
+        <% end %>
+
+        <div class="mb-3">
+          <%= f.label :iban, 'IBAN', class: 'form-label' %>
+          <%= f.text_field :iban, 
+                          class: 'form-control', 
+                          required: true,
+                          pattern: '[A-Z]{2}[0-9]{2}[A-Z0-9]+' %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :iban_holder, 'Rekeninghouder', class: 'form-label' %>
+          <%= f.text_field :iban_holder, 
+                          class: 'form-control',
+                          required: true %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :start_date, 'Startdatum', class: 'form-label' %>
+          <%= f.date_field :start_date, 
+                          class: 'form-control',
+                          required: true %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :end_date, 'Einddatum (optioneel)', class: 'form-label' %>
+          <%= f.date_field :end_date, 
+                          class: 'form-control' %>
+        </div>
+
+        <div class="d-flex gap-2 mt-4">
+          <%= f.submit 'Wijzigingen opslaan', class: 'btn btn-primary' %>
+          <%= link_to 'Annuleren', debit_mandate_path(@mandate), class: 'btn btn-secondary' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

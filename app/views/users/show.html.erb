@@ -189,6 +189,13 @@
             <a aria-controls="creditMutations" aria-selected="false" class="nav-link" data-bs-toggle="tab" href="#creditMutations" id="creditMutations-tab" role="tab">
               Inleg en saldocorrecties
             </a></li>
+          <% if Rails.application.config.x.sepa_incasso_enabled && policy(@user).debit_collections? %>
+            <li class="nav-item">
+              <a aria-controls="sepaIncassos" aria-selected="false" class="nav-link" data-bs-toggle="tab" href="#sepaIncassos" id="sepaIncassos-tab" role="tab">
+                SEPA Incasso's
+              </a>
+            </li>
+          <% end %>
         </ul>
       </div>
       <div class="card-body">
@@ -232,6 +239,11 @@
               </table>
             </div>
           </div>
+          <% if Rails.application.config.x.sepa_incasso_enabled && policy(@user).debit_collections? %>
+            <div aria-labelledby="sepaIncassos-tab" class="tab-pane" id="sepaIncassos" role="tabpanel">
+              <%= render 'debit_collections_tab', user: @user %>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>

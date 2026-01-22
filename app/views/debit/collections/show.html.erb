@@ -1,0 +1,141 @@
+<% content_for :title, "#{@collection.name} - #{Rails.application.config.x.site_name}" %>
+
+<div class="container footer-padding">
+  <div class="row py-4">
+    <div class="col-sm-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>
+          <i class="fas fa-file-invoice-dollar me-2"></i>
+          <%= @collection.name %>
+        </h1>
+        <div class="d-flex gap-2">
+          <% if @collection.sepa_file_content.present? %>
+            <%= link_to download_debit_collection_path(@collection), 
+                        class: 'btn btn-success' do %>
+              <i class="fas fa-download me-1"></i> Download SEPA
+            <% end %>
+          <% elsif current_user&.treasurer? && @collection.can_generate? %>
+            <%= link_to generate_debit_collection_path(@collection), 
+                        method: :post,
+                        data: { turbo_method: :post, turbo_confirm: 'SEPA bestand genereren voor deze collectie?' },
+                        class: 'btn btn-success' do %>
+              <i class="fas fa-file-export me-1"></i> Genereer SEPA
+            <% end %>
+          <% end %>
+          <%= link_to debit_collections_path, class: 'btn btn-outline-primary' do %>
+            <i class="fas fa-arrow-left me-1"></i> Terug
+          <% end %>
+        </div>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="text-muted mb-1">Collectiedatum</h6>
+              <p class="mb-0 fs-5">
+                <%= l(@collection.collection_date) %>
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="text-muted mb-1">Status</h6>
+              <p class="mb-0 fs-5">
+                <% case @collection.status %>
+                <% when 'completed' %>
+                  <span class="badge bg-success">Voltooid</span>
+                <% when 'processing' %>
+                  <span class="badge bg-info">Bezig</span>
+                <% when 'failed' %>
+                  <span class="badge bg-danger">Mislukt</span>
+                <% else %>
+                  <span class="badge bg-warning">In behandeling</span>
+                <% end %>
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="text-muted mb-1">Aantal transacties</h6>
+              <p class="mb-0 fs-5">
+                <%= @collection.transaction_count %>
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+          <div class="card">
+            <div class="card-body">
+              <h6 class="text-muted mb-1">Totaalbedrag</h6>
+              <p class="mb-0 fs-5">
+                <%= number_to_currency(@collection.total_amount, unit: '€') %>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Transacties</h3>
+      <% if @transactions.any? %>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Gebruiker</th>
+                <th scope="col">Beschrijving</th>
+                <th scope="col">IBAN</th>
+                <th scope="col">Rekeninghouder</th>
+                <th scope="col">Bedrag</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody class="table-group-divider">
+              <% @transactions.each do |transaction| %>
+                <tr>
+                  <td>
+                    <%= link_to transaction.user.name, transaction.user %>
+                  </td>
+                  <td>
+                    <%= transaction.description %>
+                  </td>
+                  <td class="text-nowrap font-monospace">
+                    <%= transaction.mandate.formatted_iban %>
+                  </td>
+                  <td>
+                    <%= transaction.mandate.iban_holder %>
+                  </td>
+                  <td class="text-nowrap">
+                    <%= number_to_currency(transaction.amount, unit: '€') %>
+                  </td>
+                  <td>
+                    <% case transaction.status %>
+                    <% when 'success' %>
+                      <span class="badge bg-success">Geslaagd</span>
+                    <% when 'failed' %>
+                      <span class="badge bg-danger">Mislukt</span>
+                    <% else %>
+                      <span class="badge bg-warning">In behandeling</span>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          Er zijn nog geen transacties voor deze collectie.
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
