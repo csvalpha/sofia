@@ -52,7 +52,7 @@
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-html": "^1.8.0",
     "postcss-import": "^16.1.1",
-    "postcss-preset-env": "^10.6.1",
+    "postcss-preset-env": "^11.1.2",
     "postcss-scss": "^4.0.9",
     "sass": "^1.97.2",
     "stylelint": "^17.0.0",
