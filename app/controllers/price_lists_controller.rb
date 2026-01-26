@@ -77,6 +77,6 @@ class PriceListsController < ApplicationController
   private
 
   def price_list_params
-    params.require(:price_list).permit(policy(PriceList).permitted_attributes)
+    params.require(:price_list).permit(policy(PriceList.new).permitted_attributes)
   end
 end
