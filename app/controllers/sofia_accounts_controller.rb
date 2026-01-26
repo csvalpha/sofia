@@ -257,6 +257,6 @@ class SofiaAccountsController < ApplicationController # rubocop:disable Metrics/
   end
 
   def sofia_account_params
-    params.require(:sofia_account).permit(policy(SofiaAccount).permitted_attributes)
+    params.require(:sofia_account).permit(policy(SofiaAccount.new).permitted_attributes)
   end
 end
