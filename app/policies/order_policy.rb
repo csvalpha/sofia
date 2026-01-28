@@ -26,6 +26,6 @@ class OrderPolicy < ApplicationPolicy
   end
 
   def permitted_attributes_for_update
-    [:id, { order_rows_attributes: %i[id product_count] }]
+    [{ order_rows_attributes: %i[id product_count] }]
   end
 end
