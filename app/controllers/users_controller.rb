@@ -72,7 +72,7 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
   end
 
   def create
-    @user = User.new(permitted_attributes)
+    @user = User.new(user_params)
     authorize @user
 
     if @user.save
@@ -88,7 +88,7 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     @user = User.find(params[:id])
     authorize @user
 
-    if @user.update(params.require(:user).permit(%i[name email deactivated]))
+    if update_user
       flash[:success] = 'Gebruiker geupdate'
     else
       flash[:error] = "Gebruiker updaten mislukt; #{@user.errors.full_messages.join(', ')}"
@@ -140,8 +140,7 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     end
     authorize @sofia_account
 
-    if @user.update(params.require(:user).permit(%i[email sub_provider] + (current_user.treasurer? ? %i[name deactivated] : []),
-                                                 sofia_account_attributes: %i[id username]))
+    if @user.update(params.require(:user).permit(policy(@user).permitted_attributes_for_update_with_sofia_account))
       flash[:success] = 'Gegevens gewijzigd'
     else
       flash[:error] = "Gegevens wijzigen mislukt; #{@user.errors.full_messages.join(', ')}"
@@ -151,6 +150,11 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
   end
 
   private
+
+  def update_user
+    permitted_params = params.require(:user).permit(policy(@user).permitted_attributes_for_update)
+    @user.update(permitted_params)
+  end
 
   def find_or_create_user(user_json) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     fields = user_json['attributes']
@@ -166,7 +170,7 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     u.save
   end
 
-  def permitted_attributes
-    params.require(:user).permit(%w[name email provider sub_provider])
+  def user_params
+    params.require(:user).permit(policy(User.new).permitted_attributes)
   end
 end

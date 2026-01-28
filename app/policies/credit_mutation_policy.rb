@@ -16,4 +16,8 @@ class CreditMutationPolicy < ApplicationPolicy
   def create?
     user&.treasurer? || (user&.main_bartender? && record.activity.present?)
   end
+
+  def permitted_attributes
+    %i[description amount user_id activity_id]
+  end
 end
