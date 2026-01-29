@@ -21,6 +21,7 @@ on:
           - csvalpha
           - luxadmosam
           - euros
+          - demo
         default: 'staging'
 
 concurrency:
