@@ -43,3 +43,10 @@ targets:
     hostname: euros.csvalpha.nl
     url: https://euros.csvalpha.nl
     branch_restriction: master
+
+  demo:
+    deploy_path: /opt/docker/sofia/demo
+    stage: demo
+    hostname: demostreep.csvalpha.nl
+    url: https://demostreep.csvalpha.nl
+    branch_restriction: master
