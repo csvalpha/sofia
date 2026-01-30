@@ -7,6 +7,10 @@ class InvoicePolicy < ApplicationPolicy
     user&.treasurer?
   end
 
+  def download?
+    user&.treasurer?
+  end
+
   def pay?
     show?
   end

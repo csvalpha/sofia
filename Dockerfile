@@ -15,8 +15,15 @@ RUN apt-get update -qq && \
   libpq-dev \
   curl \
   netcat-traditional \
-  wkhtmltopdf \
-  libyaml-dev
+  chromium \
+  libyaml-dev \
+  fonts-liberation \
+  libgbm1 \
+  libnss3 \
+  libatk-bridge2.0-0 \
+  libcups2 \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 # Add Node, required for asset pipeline.
 RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - && \
@@ -28,9 +35,9 @@ WORKDIR /app
 
 # Pre-install gems, so that they can be cached.
 COPY Gemfile* /app/
-RUN if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ] || [ "$RAILS_ENV" = 'luxproduction' ] || [ "$RAILS_ENV" = 'euros' ]; then \
+RUN if [ "$RAILS_ENV" != 'development' ] && [ "$RAILS_ENV" != 'test' ]; then \
     bundle config set --local without 'development test'; \
-  else \
+  elif [ "$RAILS_ENV" != 'test' ]; then \
     bundle config set --local without 'development'; \
   fi
 RUN bundle install
@@ -43,7 +50,7 @@ RUN yarn install --immutable
 COPY . /app/
 
 # Precompile assets after copying app because whole Rails pipeline is needed.
-RUN if [ "$RAILS_ENV" = 'production' ] || [ "$RAILS_ENV" = 'staging' ] || [ "$RAILS_ENV" = 'luxproduction' ] || [ "$RAILS_ENV" = 'euros' ]; then \
+RUN if [ "$RAILS_ENV" != 'development' ] && [ "$RAILS_ENV" != 'test' ]; then \
     SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile; \
   else \
     echo "Skipping assets:precompile"; \

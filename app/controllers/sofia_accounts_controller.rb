@@ -126,7 +126,7 @@ class SofiaAccountsController < ApplicationController # rubocop:disable Metrics/
 
   def forgot_password # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     generic_message = 'Als dit account bestaat, is er een email verstuurd.'
-    sofia_account = SofiaAccount.find_by(username: params.require(:username))
+    sofia_account = SofiaAccount.find_for_login(params.require(:username))
     user = sofia_account&.user
 
     if user&.email.present?
