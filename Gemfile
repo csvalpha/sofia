@@ -48,7 +48,7 @@ gem 'validates_timeliness', '~> 7.1.0'
 group :development, :test do
   gem 'awesome_print', '~> 1.9.2'
   gem 'better_errors', '~> 2.10.1'
-  gem 'brakeman', '~> 7.1.1', require: false
+  gem 'brakeman', '~> 8.0.1', require: false
   gem 'bullet', '~> 8.1'
   gem 'colorize', '~> 1.1.0'
   gem 'database_consistency', '~> 2.1.1'
