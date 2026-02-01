@@ -6,9 +6,6 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-# Ensure connection_pool 3.x compatibility for early cache store setup
-require_relative 'initializers/connection_pool_compat'
-
 module Sofia
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
