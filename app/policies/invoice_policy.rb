@@ -7,7 +7,18 @@ class InvoicePolicy < ApplicationPolicy
     user&.treasurer?
   end
 
+  def download?
+    user&.treasurer?
+  end
+
   def pay?
     show?
+  end
+
+  def permitted_attributes
+    [
+      :user_id, :activity_id, :name_override, :email_override,
+      { rows_attributes: %i[name amount price] }
+    ]
   end
 end
