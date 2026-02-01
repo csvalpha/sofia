@@ -32,7 +32,6 @@ module Sofia
       url: Rails.application.config_for(:cable)['url'],
       pool: { size: ENV.fetch('RAILS_MAX_THREADS', 5).to_i, timeout: 5 }
     }
-
     config.active_job.queue_adapter = :sidekiq
 
     config.exceptions_app = routes
