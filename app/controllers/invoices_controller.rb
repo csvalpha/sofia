@@ -31,7 +31,7 @@ class InvoicesController < ApplicationController
   end
 
   def create
-    attributes = remove_empty(permitted_attributes.to_h)
+    attributes = remove_empty(invoice_params.to_h)
     @invoice = Invoice.new(attributes)
     authorize @invoice
 
@@ -93,8 +93,8 @@ class InvoicesController < ApplicationController
     @invoice = Invoice.find_by!(token: params[:id])
   end
 
-  def permitted_attributes
-    params.require(:invoice).permit(%i[user_id activity_id name_override email_override rows], rows_attributes: %i[name amount price])
+  def invoice_params
+    params.require(:invoice).permit(policy(Invoice.new).permitted_attributes)
   end
 
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
