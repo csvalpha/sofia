@@ -6,7 +6,7 @@ class SofiaAccount < OmniAuth::Identity::Models::ActiveRecord
   validates :user, uniqueness: true # rubocop:disable Rails/UniqueValidationWithoutIndex
   validates :username, presence: true, uniqueness: true
   # the presence of :password is already checked by omniauth-sofia-account itself
-  validates :password, length: { minimum: 12 }, allow_nil: true
+  validates :password, length: { minimum: 12, maximum: 128 }, allow_nil: true
 
   auth_key :username # specifies the field within the model that will be used during the login process as username
 
