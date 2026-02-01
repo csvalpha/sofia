@@ -666,7 +666,7 @@ DEPENDENCIES
   sentry-rails (~> 6.2)
   sentry-ruby (~> 6.2)
   sentry-sidekiq (~> 6.2)
-  sidekiq (~> 8.1.0)
+  sidekiq (~> 8.0.10)
   sidekiq-scheduler (~> 6.0.1)
   simple_form (~> 5.4.1)
   simplecov (~> 0.22.0)
