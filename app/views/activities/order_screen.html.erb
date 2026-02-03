@@ -18,7 +18,7 @@
   <nav class="header">
     <ul class="header-nav">
       <li class="header-nav-item header-nav-home">
-        <span @click="payWithCash ? payWithCash = false : (payWithPin ? payWithPin = false : selectedUser = null)"
+        <span @click="leaveOrderScreen"
               class="user-details-close" v-if="selectedUser || payWithCash || payWithPin">
           <i class="fas fa-chevron-left"></i>
           </span>
@@ -38,7 +38,19 @@
       </li>
     </ul>
     <div class="row pull-right g-0" style="flex-direction: row-reverse">
-      <button type="button" class="btn btn-outline-secondary m-3 w-auto" @click="keepUserSelected = !keepUserSelected" >
+      <button v-if="isTreasurer && (selectedUser || payWithCash || payWithPin)" type="button" class="btn btn-outline-secondary m-3 me-5 w-auto" @click="toggleEditMode">
+        <i class="fas" :class="editMode ? 'fa-check' : 'fa-pen'"></i>
+        <span class="ms-1">
+          {{ editMode ? 'Klaar' : 'Bewerken' }}
+        </span>
+      </button>
+      <button v-if="editMode" type="button" class="btn btn-outline-secondary m-3 w-auto" @click="openFolderModal(null)">
+        <i class="fas fa-folder-plus"></i>
+        <span class="ms-1">
+          Nieuwe map
+        </span>
+      </button>
+      <button v-if="!editMode" type="button" class="btn btn-outline-secondary m-3 w-auto" @click="keepUserSelected = !keepUserSelected" >
         <span v-if="keepUserSelected">
           <i class="fas fa-square-check fa-lg me-1"></i>
         </span>
@@ -47,12 +59,6 @@
         </span>
         <span>
           Persoon onthouden
-        </span>
-      </button>
-      <button v-if="isTreasurer && (selectedUser || payWithCash || payWithPin)" type="button" class="btn btn-outline-secondary m-3 w-auto" @click="toggleEditMode">
-        <i class="fas" :class="editMode ? 'fa-check' : 'fa-pen'"></i>
-        <span class="ms-1">
-          {{ editMode ? 'Klaar' : 'Bewerken' }}
         </span>
       </button>
     </div>
@@ -170,10 +176,13 @@
     </activity-orders>
   </div>
   <div class="product-grid" v-if="selectedUser || payWithCash || payWithPin">
-    <!-- Back button when inside a folder -->
+    <!-- Back button when inside a folder - outside sortable area -->
     <div v-if="currentFolder" 
-         @click="exitFolder"
+         @click.stop="exitFolder"
+         @dragover.prevent
+         @drop="onDropOnBackButton"
          class="product-grid-product folder-tile back-button-tile"
+         :class="{ 'drop-target': draggedItem, 'not-editable': !editMode }"
          :style="{ backgroundColor: currentFolder.color }">
       <span class="product-grid-product-name">
         Terug
@@ -184,85 +193,60 @@
       </span>
     </div>
 
-    <!-- Folders on home screen -->
+    <!-- Folders on home screen - outside sortable area -->
     <template v-if="!currentFolder">
-      <div class="folder-container" v-if="sortedFolders.length > 0 || editMode">
-        <!-- Add folder button (edit mode only) - positioned first -->
-        <div v-if="editMode" 
-             @click="openFolderModal(null)"
-             class="product-grid-product folder-tile add-folder-tile">
-          <span class="product-grid-product-name">
-            Nieuwe map
-          </span>
-          <span class="folder-icon">
-            <i class="fas fa-folder-plus"></i>
-          </span>
-        </div>
-
-        <div v-for="folder in sortedFolders" 
-             :key="'folder-' + folder.id"
-             :data-folder-id="folder.id"
-             @click="enterFolder(folder)"
-             @dragover.prevent
-             @drop="onDropOnFolder($event, folder)"
-             class="product-grid-product folder-tile"
-             :class="{ 'edit-mode': editMode }"
-             :style="{ backgroundColor: folder.color }">
-          <span class="folder-edit-btn" v-if="editMode" @click.stop="openFolderModal(folder)">
-            <i class="fas fa-pen"></i>
-          </span>
-          <span class="product-grid-product-name">
-            {{ folder.name }}
-          </span>
-          <span class="folder-icon">
-            <i class="fas fa-folder"></i>
-          </span>
-        </div>
+      <div v-for="folder in sortedFolders" 
+           :key="'folder-' + folder.id"
+           :data-folder-id="folder.id"
+           @click="!editMode && enterFolder(folder)"
+           @dragover.prevent
+           @drop="onDropOnFolder($event, folder)"
+           class="product-grid-product folder-tile"
+           :class="{ 'edit-mode': editMode, 'drop-target': draggedItem }"
+           :style="{ backgroundColor: folder.color }">
+        <span class="folder-edit-btn" v-if="editMode" @click.stop="openFolderModal(folder)">
+          <i class="fas fa-pen"></i>
+        </span>
+        <span class="product-grid-product-name">
+          {{ folder.name }}
+        </span>
+        <span class="folder-icon">
+          <i class="fas fa-folder"></i>
+        </span>
       </div>
     </template>
 
-    <!-- Products -->
-    <div v-for="productPrice in visibleProducts"
-         :key="'product-' + productPrice.id"
-         :data-product-price-id="productPrice.id"
-         @click="!editMode && selectProduct(productPrice)"
-         :draggable="editMode"
-         @dragstart="onDragStartProduct($event, productPrice)"
-         @dragend="onDragEnd"
-         class="product-grid-product"
-         :class="{ 
-           'product-requires-age': (selectedUser && selectedUser.minor && productPrice.product.requires_age),
-           'draggable': editMode
-         }"
-         :style="productPrice.product.color ? { backgroundColor: productPrice.product.color } : {}">
-      <span class="product-grid-product-requires-age mb-2 fa-stack" v-if="selectedUser && selectedUser.minor && productPrice.product.requires_age">
-        <i class="fa fa-circle fa-circle-lighter fa-stack-2x">
-        </i>
-        <span class="fa fa-stack-1x fa-inverse fa-plus18">
+    <!-- Products - inside sortable container -->
+    <div class="products-container" ref="productsContainer">
+      <div v-for="productPrice in visibleProducts"
+           :key="'product-' + productPrice.id"
+           :data-product-price-id="productPrice.id"
+           @click="!editMode && selectProduct(productPrice)"
+           :draggable="editMode"
+           @dragstart="onDragStartProduct($event, productPrice)"
+           @dragend="onDragEnd"
+           class="product-grid-product"
+           :class="{ 
+             'product-requires-age': (selectedUser && selectedUser.minor && productPrice.product.requires_age),
+             'draggable': editMode
+           }"
+           :style="productPrice.product.color ? { backgroundColor: productPrice.product.color } : {}">
+        <span class="product-grid-product-requires-age mb-2 fa-stack" v-if="selectedUser && selectedUser.minor && productPrice.product.requires_age">
+          <i class="fa fa-circle fa-circle-lighter fa-stack-2x">
+          </i>
+          <span class="fa fa-stack-1x fa-inverse fa-plus18">
+          </span>
         </span>
-      </span>
-      <span class="drag-handle" v-if="editMode">
-        <i class="fas fa-grip-vertical"></i>
-      </span>
-      <span class="product-grid-product-name">
-        {{productPrice.product.name}}
-      </span>
-      <span class="product-grid-product-price">
-        {{doubleToCurrency(productPrice.price)}}
-      </span>
-    </div>
-
-    <!-- Drop zone for returning products to home (when in folder, edit mode) -->
-    <div v-if="currentFolder && editMode" 
-         @dragover.prevent
-         @drop="onDropOnFolder($event, null)"
-         class="product-grid-product folder-tile drop-home-tile">
-      <span class="folder-icon">
-        <i class="fas fa-home"></i>
-      </span>
-      <span class="product-grid-product-name">
-        Naar hoofdscherm
-      </span>
+        <span class="drag-handle" v-if="editMode">
+          <i class="fas fa-grip-vertical"></i>
+        </span>
+        <span class="product-grid-product-name">
+          {{productPrice.product.name}}
+        </span>
+        <span class="product-grid-product-price">
+          {{doubleToCurrency(productPrice.price)}}
+        </span>
+      </div>
     </div>
 
     <em class="no-items" v-if="!visibleProducts.length && !sortedFolders.length">
@@ -286,8 +270,10 @@
           </div>
           <div class="mb-3">
             <label class="form-label">Kleur (Hex)</label>
-            <input type="text" class="form-control" v-model="folderForm.color" placeholder="#6c757d" pattern="^#[0-9A-Fa-f]{6}$">
-            <small class="form-text text-muted">Gebruik een hex kleurcode (bijv. #6c757d)</small>
+            <div class="d-flex align-items-center gap-2">
+              <input type="text" class="form-control" v-model="folderForm.color" placeholder="#6c757d" pattern="^#[0-9A-Fa-f]{6}$">
+              <span class="border rounded" :style="{ width: '28px', height: '28px', backgroundColor: (folderForm.color && isValidHexColor(folderForm.color.trim())) ? folderForm.color.trim() : 'transparent' }"></span>
+            </div>
           </div>
         </div>
         <div class="folder-modal-footer">

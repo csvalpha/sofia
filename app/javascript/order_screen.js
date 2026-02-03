@@ -70,6 +70,26 @@ document.addEventListener('turbo:load', () => {
           return `€${parseFloat(price).toFixed(2)}`;
         },
 
+        isValidHexColor(color) {
+          return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color);
+        },
+
+        leaveOrderScreen() {
+          if (this.payWithCash) {
+            this.payWithCash = false;
+          } else if (this.payWithPin) {
+            this.payWithPin = false;
+          } else {
+            this.selectedUser = null;
+          }
+
+          this.currentFolder = null;
+          if (this.editMode) {
+            this.editMode = false;
+            this.destroySortable();
+          }
+        },
+
         setUser(user = null) {
           if (this.selectedUser === null || user === null || this.selectedUser.id != user.id) {
             this.orderRows = [];
@@ -97,6 +117,14 @@ document.addEventListener('turbo:load', () => {
           this.payWithCash = false;
           this.payWithPin = false;
           this.selectedUser = user;
+
+          if (user === null) {
+            this.currentFolder = null;
+            if (this.editMode) {
+              this.editMode = false;
+              this.destroySortable();
+            }
+          }
         },
 
         selectCash() {
@@ -275,7 +303,9 @@ document.addEventListener('turbo:load', () => {
         },
 
         exitFolder() {
-          this.currentFolder = null;
+          if (!this.editMode) {
+            this.currentFolder = null;
+          }
         },
 
         // Edit mode methods
@@ -291,25 +321,18 @@ document.addEventListener('turbo:load', () => {
         },
 
         initSortable() {
-          const productGrid = this.$el.querySelector('.product-grid');
-          if (productGrid && !this.sortableInstance) {
-            this.sortableInstance = Sortable.create(productGrid, {
-              animation: 150,
+          const productsContainer = this.$refs.productsContainer;
+          if (productsContainer && !this.sortableInstance) {
+            this.sortableInstance = Sortable.create(productsContainer, {
+              animation: 100,
               ghostClass: 'sortable-ghost',
               chosenClass: 'sortable-chosen',
               dragClass: 'sortable-drag',
-              filter: '.folder-tile, .back-button-tile, .add-folder-tile',
+              forceFallback: false,
+              touchStartThreshold: 0,
+              delayOnTouchOnly: true,
+              delay: 50,
               onEnd: this.onProductDragEnd.bind(this)
-            });
-          }
-
-          const folderContainer = this.$el.querySelector('.folder-container');
-          if (folderContainer && !this.folderSortableInstance) {
-            this.folderSortableInstance = Sortable.create(folderContainer, {
-              animation: 150,
-              ghostClass: 'sortable-ghost',
-              filter: '.add-folder-tile',
-              onEnd: this.onFolderDragEnd.bind(this)
             });
           }
         },
@@ -319,20 +342,33 @@ document.addEventListener('turbo:load', () => {
             this.sortableInstance.destroy();
             this.sortableInstance = null;
           }
-          if (this.folderSortableInstance) {
-            this.folderSortableInstance.destroy();
-            this.folderSortableInstance = null;
-          }
         },
 
         onProductDragEnd(evt) {
           const productPriceId = evt.item.dataset.productPriceId;
-          const targetFolderId = evt.to.dataset.folderId || null;
           
           // Update position via API
           const productPrice = this.productPrices.find(p => p.id == productPriceId);
           if (productPrice) {
-            this.assignProductToFolder(productPrice, targetFolderId, evt.newIndex);
+            // Update optimistically immediately - keep the same folder
+            const oldIndex = productPrice.position;
+            productPrice.position = evt.newIndex;
+            
+            // Get all products in the current view and update their positions
+            const productsInView = this.visibleProducts;
+            const productPositions = [];
+            productsInView.forEach((pp, index) => {
+              productPositions.push({ id: pp.id, position: index });
+              pp.position = index;
+            });
+            
+            // Sync with server
+            api.patch(`/price_lists/${this.priceListId}/product_prices/reorder`, {
+              product_positions: productPositions,
+              folder_id: this.currentFolder ? this.currentFolder.id : null
+            }).catch((response) => {
+              this.handleXHRError(response);
+            });
           }
         },
 
@@ -372,11 +408,35 @@ document.addEventListener('turbo:load', () => {
         // Drop product on folder
         onDropOnFolder(evt, folder) {
           evt.preventDefault();
-          const productPriceId = evt.dataTransfer.getData('productPriceId');
-          const productPrice = this.productPrices.find(p => p.id == productPriceId);
-          if (productPrice) {
-            this.assignProductToFolder(productPrice, folder ? folder.id : null);
-          }
+          evt.stopPropagation();
+          if (!this.draggedItem || !folder) return;
+          
+          const productPrice = this.draggedItem;
+          productPrice.product_price_folder_id = parseInt(folder.id);
+          productPrice.position = 0;
+          
+          api.patch(`/product_prices/${productPrice.id}/assign_folder`, {
+            folder_id: folder.id
+          }).catch((response) => {
+            this.handleXHRError(response);
+          });
+        },
+
+        onDropOnBackButton(evt) {
+          evt.preventDefault();
+          evt.stopPropagation();
+          if (!this.draggedItem) return;
+          
+          const productPrice = this.draggedItem;
+          // Move product out of the folder to the home level
+          productPrice.product_price_folder_id = null;
+          productPrice.position = this.productPrices.filter(pp => !pp.product_price_folder_id).length;
+          
+          api.patch(`/product_prices/${productPrice.id}/assign_folder`, {
+            folder_id: null
+          }).catch((response) => {
+            this.handleXHRError(response);
+          });
         },
 
         onDragStartProduct(evt, productPrice) {
@@ -403,6 +463,7 @@ document.addEventListener('turbo:load', () => {
           this.showFolderModal = false;
           this.editingFolder = null;
           this.folderForm = { name: '', color: '#6c757d' };
+          this.currentFolder = null;
         },
 
         saveFolder() {
@@ -410,6 +471,16 @@ document.addEventListener('turbo:load', () => {
             this.sendFlash('Voer een mapnaam in', '', 'warning');
             return;
           }
+
+          const normalizedColor = (this.folderForm.color || '').trim();
+          if (!this.isValidHexColor(normalizedColor)) {
+            this.sendFlash('Voer een geldige hex kleur in (bijv. #6c757d)', '', 'warning');
+            return;
+          }
+          this.folderForm.color = normalizedColor;
+
+          const previousColor = this.editingFolder ? this.editingFolder.color : null;
+          const isNewFolder = !this.editingFolder;
 
           if (this.editingFolder) {
             // Update existing folder
