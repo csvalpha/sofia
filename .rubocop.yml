@@ -25,6 +25,7 @@ Rails/UnknownEnv:
     - production
     - luxproduction
     - euros
+    - demo
     - development
     - test
     - staging

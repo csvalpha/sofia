@@ -26,7 +26,7 @@ RUN apt-get update -qq && \
   && rm -rf /var/lib/apt/lists/*
 
 # Add Node, required for asset pipeline.
-RUN curl -sL https://deb.nodesource.com/setup_22.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_24.x | bash - && \
   apt-get install -y nodejs && \
   npm install -q -g yarn
 
