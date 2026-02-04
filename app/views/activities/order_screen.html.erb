@@ -174,7 +174,7 @@
          @dragover.prevent
          @drop="onDropOnBackButton"
          class="product-grid-product folder-tile back-button-tile"
-         :class="{ 'drop-target': draggedItem, 'not-editable': !editMode }"
+         :class="{ 'drop-target': draggedItem }"
          :style="{ backgroundColor: currentFolder.color }">
       <span class="product-grid-product-name">
         Terug

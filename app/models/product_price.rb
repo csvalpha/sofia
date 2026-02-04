@@ -1,5 +1,5 @@
 class ProductPrice < ApplicationRecord
-  acts_as_paranoid
+
 
   belongs_to :product
   belongs_to :price_list
@@ -11,7 +11,7 @@ class ProductPrice < ApplicationRecord
 
   delegate :name, to: :product
 
-  default_scope { order(:position) }
+  scope :ordered, -> { order(:position) }
 
   before_validation :set_default_position, on: :create
 
@@ -24,7 +24,7 @@ class ProductPrice < ApplicationRecord
   def set_default_position
     return if position.present? && position >= 0
 
-    scope = price_list&.product_price&.where(product_price_folder_id: product_price_folder_id)
+    scope = price_list&.product_prices&.where(product_price_folder_id: product_price_folder_id)
     max_position = scope&.maximum(:position) || -1
     self.position = max_position + 1
   end
