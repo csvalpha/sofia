@@ -3,13 +3,11 @@ class ProductPricesController < ApplicationController
   before_action :set_product_price, only: %i[assign_folder]
   before_action :set_price_list, only: %i[reorder]
 
-  # PATCH /product_prices/:id/assign_folder
   def assign_folder
     authorize @product_price, :update?
 
     folder_id = params[:folder_id]
     
-    # Validate folder belongs to same price list if provided
     if folder_id.present?
       folder = ProductPriceFolder.find(folder_id)
       unless folder.price_list_id == @product_price.price_list_id
@@ -24,7 +22,6 @@ class ProductPricesController < ApplicationController
     end
   end
 
-  # PATCH /price_lists/:price_list_id/product_prices/reorder
   def reorder
     authorize ProductPrice, :update?
 

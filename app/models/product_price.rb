@@ -15,10 +15,8 @@ class ProductPrice < ApplicationRecord
 
   before_validation :set_default_position, on: :create
 
-  # Scope for products without a folder (shown on home screen)
   scope :without_folder, -> { where(product_price_folder_id: nil) }
 
-  # Scope for products in a specific folder
   scope :in_folder, ->(folder) { where(product_price_folder: folder) }
 
   private

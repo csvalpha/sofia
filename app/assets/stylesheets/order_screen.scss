@@ -303,7 +303,6 @@
     overflow-y: auto;
   }
 
-  // Folder styles
   .folder-container {
     display: contents;
   }
@@ -396,7 +395,6 @@
     }
   }
 
-  // Draggable styles
   .draggable {
     cursor: grab;
 
@@ -425,7 +423,6 @@
     background-color: $white;
   }
 
-  // Folder modal styles
   .folder-modal-backdrop {
     position: fixed;
     top: 0;

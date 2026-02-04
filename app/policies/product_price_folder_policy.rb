@@ -1,5 +1,4 @@
 class ProductPriceFolderPolicy < ApplicationPolicy
-  # Only treasurers can manage folders
   def index?
     user&.treasurer? || user&.renting_manager? || user&.main_bartender?
   end
