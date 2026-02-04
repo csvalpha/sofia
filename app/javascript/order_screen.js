@@ -45,17 +45,13 @@ document.addEventListener('turbo:load', () => {
           depositButtonEnabled: depositButtonEnabled,
           orderRows: [],
           isSubmitting: false,
-          // Folder navigation
           currentFolder: null,
-          // Edit mode (treasurer only)
           editMode: false,
           isTreasurer: isTreasurer,
           priceListId: priceListId,
-          // Folder modal
           showFolderModal: false,
           editingFolder: null,
           folderForm: { name: '', color: '#6c757d' },
-          // Drag state
           draggedItem: null,
           sortableInstance: null,
           folderSortableInstance: null
@@ -96,7 +92,6 @@ document.addEventListener('turbo:load', () => {
           }
 
           if (user !== null) {
-            // Reload user to get latest credit balance
             api.get(`/users/${user.id}/json?activity_id=${this.activity.id}`).then((response) => {
               const refreshedUser = response.data;
               const index = this.users.findIndex((candidate) => candidate.id === refreshedUser.id);
@@ -229,7 +224,6 @@ document.addEventListener('turbo:load', () => {
             if(!this.keepUserSelected){
               this.setUser(null);
             } else {
-              // re-set user to update credit
               this.setUser(response.data.user);
               this.orderRows = [];
             }
@@ -295,7 +289,6 @@ document.addEventListener('turbo:load', () => {
           });
         },
 
-        // Folder navigation methods
         enterFolder(folder) {
           if (!this.editMode) {
             this.currentFolder = folder;
@@ -308,7 +301,6 @@ document.addEventListener('turbo:load', () => {
           }
         },
 
-        // Edit mode methods
         toggleEditMode() {
           this.editMode = !this.editMode;
           if (this.editMode) {
@@ -347,14 +339,11 @@ document.addEventListener('turbo:load', () => {
         onProductDragEnd(evt) {
           const productPriceId = evt.item.dataset.productPriceId;
           
-          // Update position via API
           const productPrice = this.productPrices.find(p => p.id == productPriceId);
           if (productPrice) {
-            // Update optimistically immediately - keep the same folder
             const oldIndex = productPrice.position;
             productPrice.position = evt.newIndex;
             
-            // Get all products in the current view and update their positions
             const productsInView = this.visibleProducts;
             const productPositions = [];
             productsInView.forEach((pp, index) => {
@@ -362,7 +351,6 @@ document.addEventListener('turbo:load', () => {
               pp.position = index;
             });
             
-            // Sync with server
             api.patch(`/price_lists/${this.priceListId}/product_prices/reorder`, {
               product_positions: productPositions,
               folder_id: this.currentFolder ? this.currentFolder.id : null
@@ -373,7 +361,6 @@ document.addEventListener('turbo:load', () => {
         },
 
         onFolderDragEnd(evt) {
-          // Update folder positions
           const folderPositions = [];
           const folderElements = evt.to.querySelectorAll('.folder-tile');
           folderElements.forEach((el, index) => {
@@ -405,7 +392,6 @@ document.addEventListener('turbo:load', () => {
           });
         },
 
-        // Drop product on folder
         onDropOnFolder(evt, folder) {
           evt.preventDefault();
           evt.stopPropagation();
@@ -428,7 +414,6 @@ document.addEventListener('turbo:load', () => {
           if (!this.draggedItem) return;
           
           const productPrice = this.draggedItem;
-          // Move product out of the folder to the home level
           productPrice.product_price_folder_id = null;
           productPrice.position = this.productPrices.filter(pp => !pp.product_price_folder_id).length;
           
@@ -448,7 +433,6 @@ document.addEventListener('turbo:load', () => {
           this.draggedItem = null;
         },
 
-        // Folder CRUD methods
         openFolderModal(folder = null) {
           this.editingFolder = folder;
           if (folder) {
@@ -483,7 +467,6 @@ document.addEventListener('turbo:load', () => {
           const isNewFolder = !this.editingFolder;
 
           if (this.editingFolder) {
-            // Update existing folder
             api.patch(`/product_price_folders/${this.editingFolder.id}`, {
               product_price_folder: this.folderForm
             }).then((response) => {
@@ -497,7 +480,6 @@ document.addEventListener('turbo:load', () => {
               this.handleXHRError(response);
             });
           } else {
-            // Create new folder
             api.post(`/price_lists/${this.priceListId}/product_price_folders`, {
               product_price_folder: this.folderForm
             }).then((response) => {
@@ -516,13 +498,11 @@ document.addEventListener('turbo:load', () => {
           }
 
           api.delete(`/product_price_folders/${folder.id}`).then(() => {
-            // Move products back to home
             this.productPrices.forEach(pp => {
               if (pp.product_price_folder_id === folder.id) {
                 pp.product_price_folder_id = null;
               }
             });
-            // Remove folder from list
             const index = this.folders.findIndex(f => f.id === folder.id);
             if (index !== -1) {
               this.folders.splice(index, 1);
@@ -536,6 +516,10 @@ document.addEventListener('turbo:load', () => {
       },
 
       computed: {
+        hasActiveSession() {
+          return this.selectedUser || this.payWithCash || this.payWithPin;
+        },
+
         orderTotal() {
           return this.orderRows.map(function(row) {
             return row.productPrice.price * row.amount;
@@ -575,15 +559,14 @@ document.addEventListener('turbo:load', () => {
         },
 
         isIos() {
-          return /iPhone|iPad|iPod/i.test(navigator.userAgent) || // iOS
-            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS
+          return /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
         },
 
         isMobile() {
           return this.isIos || /Android|webOS|Opera Mini/i.test(navigator.userAgent);
         },
 
-        // Folder computed properties
         sortedFolders() {
           return [...this.folders].sort((a, b) => a.position - b.position);
         },
@@ -613,8 +596,6 @@ document.addEventListener('turbo:load', () => {
         }
       },
 
-      // Listen to escape button which are dispatched on the body content_tag
-      // https://vuejsdevelopers.com/2017/05/01/vue-js-cant-help-head-body/
       created: function() {
         document.addEventListener('keyup', this.escapeKeyListener);
       },
@@ -669,7 +650,6 @@ document.addEventListener('turbo:load', () => {
             if(!app.keepUserSelected && app.orderRows.length === 0){
               app.setUser(null);
             } else {
-              // re-set user to update credit
               app.setUser(response.data.user);
             }
 

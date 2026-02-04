@@ -19,10 +19,10 @@
     <ul class="header-nav">
       <li class="header-nav-item header-nav-home">
         <span @click="leaveOrderScreen"
-              class="user-details-close" v-if="selectedUser || payWithCash || payWithPin">
+              class="user-details-close" v-if="hasActiveSession">
           <i class="fas fa-chevron-left"></i>
           </span>
-        <span v-else="">
+        <span v-else>
           <%= link_to @activity do %>
             <i class="fas fa-home"></i>
           <% end %>
@@ -37,8 +37,8 @@
         </small>
       </li>
     </ul>
-    <div class="row pull-right g-0" style="flex-direction: row-reverse">
-      <button v-if="isTreasurer && (selectedUser || payWithCash || payWithPin)" type="button" class="btn btn-outline-secondary m-3 me-5 w-auto" @click="toggleEditMode">
+    <div class="header-actions">
+      <button v-if="isTreasurer && hasActiveSession" type="button" class="btn btn-outline-secondary m-3 me-5 w-auto" @click="toggleEditMode">
         <i class="fas" :class="editMode ? 'fa-check' : 'fa-pen'"></i>
         <span class="ms-1">
           {{ editMode ? 'Klaar' : 'Bewerken' }}
@@ -50,16 +50,9 @@
           Nieuwe map
         </span>
       </button>
-      <button v-if="!editMode" type="button" class="btn btn-outline-secondary m-3 w-auto" @click="keepUserSelected = !keepUserSelected" >
-        <span v-if="keepUserSelected">
-          <i class="fas fa-square-check fa-lg me-1"></i>
-        </span>
-        <span v-if="!keepUserSelected">
-          <i class="far fa-square fa-lg me-1"></i>
-        </span>
-        <span>
-          Persoon onthouden
-        </span>
+      <button v-if="!editMode" type="button" class="btn btn-outline-secondary m-3 w-auto" @click="keepUserSelected = !keepUserSelected">
+        <i :class="keepUserSelected ? 'fas fa-square-check' : 'far fa-square'" class="fa-lg me-1"></i>
+        <span>Persoon onthouden</span>
       </button>
     </div>
 
@@ -70,7 +63,7 @@
     <user-selection :pay-with-cash="payWithCash" :pay-with-pin="payWithPin" :selected-user="selectedUser"
                     :users="users" :deposit-button-enabled="depositButtonEnabled" v-on:selectcash="selectCash" v-on:selectpin="selectPin" v-on:updateuser="setUser($event)">
     </user-selection>
-    <div class="orders" v-if="selectedUser || payWithCash || payWithPin">
+    <div class="orders" v-if="hasActiveSession">
       <h4 class="orders-header py-4">
         Bestelling
       </h4>
@@ -171,12 +164,11 @@
       </div>
     </div>
   </div>
-  <div class="order-grid" v-if="!selectedUser && !payWithCash && !payWithPin">
+  <div class="order-grid" v-if="!hasActiveSession">
     <activity-orders ref="activityOrders" :activity="activity" editable expand_first>
     </activity-orders>
   </div>
-  <div class="product-grid" v-if="selectedUser || payWithCash || payWithPin">
-    <!-- Back button when inside a folder - outside sortable area -->
+  <div class="product-grid" v-if="hasActiveSession">
     <div v-if="currentFolder" 
          @click.stop="exitFolder"
          @dragover.prevent
@@ -193,7 +185,6 @@
       </span>
     </div>
 
-    <!-- Folders on home screen - outside sortable area -->
     <template v-if="!currentFolder">
       <div v-for="folder in sortedFolders" 
            :key="'folder-' + folder.id"
@@ -216,7 +207,6 @@
       </div>
     </template>
 
-    <!-- Products - inside sortable container -->
     <div class="products-container" ref="productsContainer">
       <div v-for="productPrice in visibleProducts"
            :key="'product-' + productPrice.id"
@@ -256,7 +246,6 @@
       </span>
     </em>
 
-    <!-- Folder Edit Modal -->
     <div class="folder-modal-backdrop" v-if="showFolderModal" @click="closeFolderModal">
       <div class="folder-modal" @click.stop>
         <div class="folder-modal-header">

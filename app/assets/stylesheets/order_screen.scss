@@ -119,6 +119,11 @@
     }
   }
 
+  .header-actions {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
   .side-panel {
     z-index: 4;
     display: flex;
