@@ -9,7 +9,10 @@ class ProductPricesController < ApplicationController
     folder_id = params[:folder_id]
 
     if folder_id.present?
-      folder = ProductPriceFolder.find(folder_id)
+      folder = ProductPriceFolder.find_by(id: folder_id)
+      unless folder
+        return render json: { errors: ['Folder not found'] }, status: :not_found
+      end
       unless folder.price_list_id == @product_price.price_list_id
         return render json: { errors: ['Folder does not belong to the same price list'] }, status: :unprocessable_content
       end
