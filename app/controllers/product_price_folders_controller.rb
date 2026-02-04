@@ -16,7 +16,7 @@ class ProductPriceFoldersController < ApplicationController
     if @folder.save
       render json: @folder, status: :created
     else
-      render json: { errors: @folder.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @folder.errors.full_messages }, status: :unprocessable_content
     end
   end
 
@@ -26,24 +26,23 @@ class ProductPriceFoldersController < ApplicationController
     if @folder.update(folder_params)
       render json: @folder
     else
-      render json: { errors: @folder.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @folder.errors.full_messages }, status: :unprocessable_content
     end
   end
 
   def destroy
     authorize @folder
 
-    @folder.product_prices.update_all(product_price_folder_id: nil)
     @folder.destroy
 
     head :no_content
   end
 
-  def reorder
+  def reorder # rubocop:disable Metrics/MethodLength
     authorize ProductPriceFolder, :reorder?
 
     folder_positions = params.require(:folder_positions)
-    
+
     ActiveRecord::Base.transaction do
       folder_positions.each do |folder_data|
         folder = @price_list.product_price_folders.find(folder_data[:id])
@@ -53,7 +52,7 @@ class ProductPriceFoldersController < ApplicationController
 
     render json: { success: true }
   rescue ActiveRecord::RecordInvalid => e
-    render json: { errors: [e.message] }, status: :unprocessable_entity
+    render json: { errors: [e.message] }, status: :unprocessable_content
   end
 
   private

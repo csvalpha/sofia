@@ -3,26 +3,26 @@ class ProductPricesController < ApplicationController
   before_action :set_product_price, only: %i[assign_folder]
   before_action :set_price_list, only: %i[reorder]
 
-  def assign_folder
+  def assign_folder # rubocop:disable Metrics/MethodLength
     authorize @product_price, :update?
 
     folder_id = params[:folder_id]
-    
+
     if folder_id.present?
       folder = ProductPriceFolder.find(folder_id)
       unless folder.price_list_id == @product_price.price_list_id
-        return render json: { errors: ['Folder does not belong to the same price list'] }, status: :unprocessable_entity
+        return render json: { errors: ['Folder does not belong to the same price list'] }, status: :unprocessable_content
       end
     end
 
     if @product_price.update(product_price_folder_id: folder_id)
       render json: @product_price, include: product_price_includes
     else
-      render json: { errors: @product_price.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @product_price.errors.full_messages }, status: :unprocessable_content
     end
   end
 
-  def reorder
+  def reorder # rubocop:disable Metrics/MethodLength
     authorize ProductPrice, :update?
 
     product_positions = params.require(:product_positions)
@@ -39,7 +39,7 @@ class ProductPricesController < ApplicationController
 
     render json: { success: true }
   rescue ActiveRecord::RecordInvalid => e
-    render json: { errors: [e.message] }, status: :unprocessable_entity
+    render json: { errors: [e.message] }, status: :unprocessable_content
   end
 
   private

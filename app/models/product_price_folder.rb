@@ -15,7 +15,7 @@ class ProductPriceFolder < ApplicationRecord
   private
 
   def set_default_position
-    return if position.present? && position > 0
+    return if position.present? && position.positive?
 
     max_position = price_list&.product_price_folders&.maximum(:position) || -1
     self.position = max_position + 1
