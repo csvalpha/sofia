@@ -53,8 +53,7 @@ document.addEventListener('turbo:load', () => {
           editingFolder: null,
           folderForm: { name: '', color: '#6c757d' },
           draggedItem: null,
-          sortableInstance: null,
-          folderSortableInstance: null
+          sortableInstance: null
         };
       },
       methods: {
@@ -426,11 +425,21 @@ document.addEventListener('turbo:load', () => {
             if (typeof pp.position === 'number' && pp.position > maxPosition) {
               maxPosition = pp.position;
             }
+
+          const productPrice = this.draggedItem;
+          const folderId = parseInt(folder.id);
+
+          // Determine the next available position within the target folder
+          const productsInFolder = this.productPrices.filter(pp => pp.product_price_folder_id == folderId);
+          let maxPosition = -1;
+          productsInFolder.forEach(pp => {
+            if (typeof pp.position === 'number' && pp.position > maxPosition) {
+              maxPosition = pp.position;
+            }
           });
-          
+
           productPrice.product_price_folder_id = folderId;
           productPrice.position = maxPosition + 1;
-          
           api.patch(`/product_prices/${productPrice.id}/assign_folder`, {
             folder_id: folder.id
           }).catch((response) => {
@@ -477,7 +486,7 @@ document.addEventListener('turbo:load', () => {
           this.showFolderModal = false;
           this.editingFolder = null;
           this.folderForm = { name: '', color: '#6c757d' };
-          this.currentFolder = null;
+
         },
 
         saveFolder() {
