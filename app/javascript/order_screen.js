@@ -425,7 +425,6 @@ document.addEventListener('turbo:load', () => {
         },
 
         onDragStartProduct(evt, productPrice) {
-          evt.dataTransfer.setData('productPriceId', productPrice.id);
           this.draggedItem = productPrice;
         },
 
