@@ -6925,6 +6925,7 @@ __metadata:
     puppeteer: "npm:^24.36.1"
     remove-accents: "npm:^0.5.0"
     sass: "npm:^1.97.3"
+    sortablejs: "npm:^1.15.0"
     stylelint: "npm:^17.1.0"
     stylelint-config-recess-order: "npm:^7.6.0"
     stylelint-config-standard-scss: "npm:^17.0.0"
