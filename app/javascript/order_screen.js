@@ -555,8 +555,8 @@ document.addEventListener('turbo:load', () => {
         },
 
         isIos() {
-          return /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+          return /iPhone|iPad|iPod/i.test(navigator.userAgent) || // iOS
+            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS
         },
 
         isMobile() {
@@ -592,6 +592,8 @@ document.addEventListener('turbo:load', () => {
         }
       },
 
+      // Listen to escape button which are dispatched on the body content_tag
+      // https://vuejsdevelopers.com/2017/05/01/vue-js-cant-help-head-body/
       created: function() {
         document.addEventListener('keyup', this.escapeKeyListener);
       },
@@ -646,6 +648,7 @@ document.addEventListener('turbo:load', () => {
             if(!app.keepUserSelected && app.orderRows.length === 0){
               app.setUser(null);
             } else {
+              // re-set user to update credit
               app.setUser(response.data.user);
             }
 
