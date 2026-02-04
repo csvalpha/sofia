@@ -5,7 +5,7 @@ class ProductPriceFolder < ApplicationRecord
   has_many :product_prices, dependent: :nullify
 
   validates :name, presence: true
-  validates :color, presence: true
+  validates :color, presence: true, format: { with: /\A#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})\z/, message: 'must be a valid hexcode (e.g., #FF5733 or #F57)' }
   validates :position, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   default_scope { order(:position) }

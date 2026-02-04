@@ -4,7 +4,7 @@ class ProductPriceFoldersController < ApplicationController
   before_action :set_folder, only: %i[update destroy]
 
   def index
-    authorize ProductPriceFolder
+    authorize ProductPriceFolder, :index?
     @folders = @price_list.product_price_folders.order(:position)
     render json: @folders
   end
