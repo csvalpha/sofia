@@ -115,7 +115,7 @@
         <div class="btn-group btn-group-lg" role="group" v-if="payWithPin && <%= @sumup_enabled.to_s %> && isMobile">
           <button type="button" class="btn btn-success col-9"
              @click="confirmOrder(true)"
-             :class="{ 'disabled': orderConfirmButtonDisabled || editMode }">
+             :disabled="orderConfirmButtonDisabled || editMode">
             <span class="text-uppercase">
               Sumup betaling
             </span>
@@ -185,7 +185,7 @@
       </span>
     </div>
 
-    <template v-if="!currentFolder">
+    <div v-if="!currentFolder" ref="foldersContainer">
       <div v-for="folder in sortedFolders" 
            :key="'folder-' + folder.id"
            :data-folder-id="folder.id"
@@ -205,7 +205,7 @@
           <i class="fas fa-folder"></i>
         </span>
       </div>
-    </template>
+    </div>
 
     <div class="products-container" ref="productsContainer">
       <div v-for="productPrice in visibleProducts"

@@ -327,6 +327,21 @@ document.addEventListener('turbo:load', () => {
               onEnd: this.onProductDragEnd.bind(this)
             });
           }
+          
+          const foldersContainer = this.$refs.foldersContainer;
+          if (foldersContainer && !this.folderSortableInstance) {
+            this.folderSortableInstance = Sortable.create(foldersContainer, {
+              animation: 100,
+              ghostClass: 'sortable-ghost',
+              chosenClass: 'sortable-chosen',
+              dragClass: 'sortable-drag',
+              forceFallback: false,
+              touchStartThreshold: 0,
+              delayOnTouchOnly: true,
+              delay: 50,
+              onEnd: this.onFolderDragEnd.bind(this)
+            });
+          }
         },
 
         destroySortable() {
@@ -334,23 +349,29 @@ document.addEventListener('turbo:load', () => {
             this.sortableInstance.destroy();
             this.sortableInstance = null;
           }
+          if (this.folderSortableInstance) {
+            this.folderSortableInstance.destroy();
+            this.folderSortableInstance = null;
+          }
         },
 
         onProductDragEnd(evt) {
-          const productPriceId = evt.item.dataset.productPriceId;
+          const productPositions = [];
+          const productElements = evt.to.querySelectorAll('[data-product-price-id]');
+          productElements.forEach((el, index) => {
+            const productPriceId = el.dataset.productPriceId;
+            if (productPriceId) {
+              productPositions.push({ 
+                id: parseInt(productPriceId), 
+                position: index,
+                folder_id: this.currentFolder ? this.currentFolder.id : null
+              });
+              const productPrice = this.productPrices.find(p => p.id == productPriceId);
+              if (productPrice) productPrice.position = index;
+            }
+          });
           
-          const productPrice = this.productPrices.find(p => p.id == productPriceId);
-          if (productPrice) {
-            const oldIndex = productPrice.position;
-            productPrice.position = evt.newIndex;
-            
-            const productsInView = this.visibleProducts;
-            const productPositions = [];
-            productsInView.forEach((pp, index) => {
-              productPositions.push({ id: pp.id, position: index });
-              pp.position = index;
-            });
-            
+          if (productPositions.length > 0) {
             api.patch(`/price_lists/${this.priceListId}/product_prices/reorder`, {
               product_positions: productPositions
             }).catch((response) => {
@@ -397,8 +418,18 @@ document.addEventListener('turbo:load', () => {
           if (!this.draggedItem || !folder) return;
           
           const productPrice = this.draggedItem;
-          productPrice.product_price_folder_id = parseInt(folder.id);
-          productPrice.position = 0;
+          const folderId = parseInt(folder.id);
+          
+          const productsInFolder = this.productPrices.filter(pp => pp.product_price_folder_id == folderId);
+          let maxPosition = -1;
+          productsInFolder.forEach(pp => {
+            if (typeof pp.position === 'number' && pp.position > maxPosition) {
+              maxPosition = pp.position;
+            }
+          });
+          
+          productPrice.product_price_folder_id = folderId;
+          productPrice.position = maxPosition + 1;
           
           api.patch(`/product_prices/${productPrice.id}/assign_folder`, {
             folder_id: folder.id
@@ -414,7 +445,8 @@ document.addEventListener('turbo:load', () => {
           
           const productPrice = this.draggedItem;
           productPrice.product_price_folder_id = null;
-          productPrice.position = this.productPrices.filter(pp => !pp.product_price_folder_id).length;
+          const rootProducts = this.productPrices.filter(pp => !pp.product_price_folder_id);
+          productPrice.position = rootProducts.length > 0 ? rootProducts.length - 1 : 0;
           
           api.patch(`/product_prices/${productPrice.id}/assign_folder`, {
             folder_id: null
@@ -460,8 +492,6 @@ document.addEventListener('turbo:load', () => {
             return;
           }
           this.folderForm.color = normalizedColor;
-
-          const previousColor = this.editingFolder ? this.editingFolder.color : null;
 
           if (this.editingFolder) {
             api.patch(`/product_price_folders/${this.editingFolder.id}`, {

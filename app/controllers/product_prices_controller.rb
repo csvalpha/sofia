@@ -32,7 +32,7 @@ class ProductPricesController < ApplicationController
 
     ActiveRecord::Base.transaction do
       product_positions.each do |product_data|
-        product_price = @price_list.product_price.find(product_data[:id])
+        product_price = @price_list.product_prices.find(product_data[:id])
         product_price.update!(
           position: product_data[:position],
           product_price_folder_id: product_data[:folder_id]

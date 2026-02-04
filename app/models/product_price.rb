@@ -22,7 +22,7 @@ class ProductPrice < ApplicationRecord
   private
 
   def set_default_position
-    return if position.present? && position.positive?
+    return if position.present? && position >= 0
 
     scope = price_list&.product_price&.where(product_price_folder_id: product_price_folder_id)
     max_position = scope&.maximum(:position) || -1
