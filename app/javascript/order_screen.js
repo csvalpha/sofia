@@ -464,7 +464,6 @@ document.addEventListener('turbo:load', () => {
           this.folderForm.color = normalizedColor;
 
           const previousColor = this.editingFolder ? this.editingFolder.color : null;
-          const isNewFolder = !this.editingFolder;
 
           if (this.editingFolder) {
             api.patch(`/product_price_folders/${this.editingFolder.id}`, {
