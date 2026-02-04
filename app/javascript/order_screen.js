@@ -516,10 +516,6 @@ document.addEventListener('turbo:load', () => {
       },
 
       computed: {
-        hasActiveSession() {
-          return this.selectedUser || this.payWithCash || this.payWithPin;
-        },
-
         orderTotal() {
           return this.orderRows.map(function(row) {
             return row.productPrice.price * row.amount;
