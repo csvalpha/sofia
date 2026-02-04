@@ -352,8 +352,7 @@ document.addEventListener('turbo:load', () => {
             });
             
             api.patch(`/price_lists/${this.priceListId}/product_prices/reorder`, {
-              product_positions: productPositions,
-              folder_id: this.currentFolder ? this.currentFolder.id : null
+              product_positions: productPositions
             }).catch((response) => {
               this.handleXHRError(response);
             });
