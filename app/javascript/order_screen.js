@@ -486,7 +486,6 @@ document.addEventListener('turbo:load', () => {
           this.showFolderModal = false;
           this.editingFolder = null;
           this.folderForm = { name: '', color: '#6c757d' };
-
         },
 
         saveFolder() {
