@@ -75,7 +75,7 @@ class Payment < ApplicationRecord
     errors.add(:payment, 'must belong to a user xor invoice') unless user.present? ^ invoice.present?
   end
 
-  def user_amount
+  def user_amount # rubocop:disable Metrics/AbcSize
     return unless user
 
     min_amount = Rails.application.config.x.min_payment_amount
