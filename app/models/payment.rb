@@ -17,6 +17,7 @@ class Payment < ApplicationRecord
 
   validate :user_xor_invoice
   validate :user_amount
+  validate :invoice_amount
 
   scope :not_completed, -> { where.not(status: COMPLETE_STATUSES) }
 
@@ -78,6 +79,15 @@ class Payment < ApplicationRecord
     return unless user
 
     min_amount = Rails.application.config.x.min_payment_amount
+    max_amount = 1000
+    errors.add(:amount, "must be bigger than or equal to €#{format('%.2f', min_amount)}") unless amount && (amount >= min_amount)
+    errors.add(:amount, "must be less than or equal to €#{format('%.2f', max_amount)}") unless amount && (amount <= max_amount)
+  end
+
+  def invoice_amount
+    return unless invoice
+
+    min_amount = 1
     errors.add(:amount, "must be bigger than or equal to €#{format('%.2f', min_amount)}") unless amount && (amount >= min_amount)
   end
 end
