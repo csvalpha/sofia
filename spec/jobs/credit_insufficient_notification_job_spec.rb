@@ -10,11 +10,6 @@ RSpec.describe CreditInsufficientNotificationJob do
     let(:user_without_email) do
       create(:user, name: 'Good Emailless', email: nil, provider: 'some_external_source')
     end
-    let(:treasurer) do
-      create(:user,
-             name: 'Sis Treasures', email: 'treasurer@csvalpha.nl',
-             roles: [create(:role, role_type: :treasurer)])
-    end
     let(:emails) { ActionMailer::Base.deliveries }
 
     subject(:job) { perform_enqueued_jobs { described_class.perform_now } }
@@ -25,14 +20,13 @@ RSpec.describe CreditInsufficientNotificationJob do
       create(:credit_mutation, user: negative_user, amount: -2)
       create(:credit_mutation, user: negative_user_without_email, amount: -2)
       user_without_email
-      treasurer
       job
     end
 
     it { expect(emails.size).to eq 2 }
     it { expect(emails.first.to.first).to eq negative_user.email }
     it { expect(emails.first.body.to_s).to include 'http://testhost:1337/payments/add' }
-    it { expect(emails.second.to.first).to eq treasurer.email }
+    it { expect(emails.second.to.first).to eq Rails.application.config.x.treasurer_email }
     it { expect(emails.second.body.to_s).to include negative_user_without_email.name }
     it { expect(emails.second.body.to_s).not_to include user_without_email.name }
   end
