@@ -83,6 +83,8 @@ module Sofia
     config.x.deposit_button_enabled = ENV.fetch('DEPOSIT_BUTTON_ENABLED', 'true') == 'true'
 
     config.x.min_payment_amount   = [ENV.fetch('MIN_PAYMENT_AMOUNT', '21.8').to_f, 0.01].max
+    config.x.max_payment_amount   = ENV.fetch('MAX_PAYMENT_AMOUNT', '1000')
+    config.x.min_invoice_amount   = [ENV.fetch('MIN_INVOICE_AMOUNT', '1').to_f, 0.01].max
 
     config.x.codes                = {
       beer: ENV.fetch('CODE_BEER', nil),
