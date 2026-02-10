@@ -8,6 +8,9 @@ class UserCreditMailer < ApplicationMailer
   end
 
   def credit_delivery_report_mail(success_count, unnotifyable_users)
+    @user = OpenStruct.new(
+      name: Rails.application.config.x.treasurer_name || Rails.application.config.x.treasurer_title.capitalize
+    )
     @unnotifyable_users = unnotifyable_users
     @success_count = success_count
     @title = 'Notificatie over de saldomail'
