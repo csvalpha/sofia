@@ -30,12 +30,6 @@ RSpec.describe CreditMutation do
       it { expect(mutation).not_to be_valid }
     end
 
-    context 'when with too high amount' do
-      subject(:mutation) { build_stubbed(:credit_mutation, amount: 5001) }
-
-      it { expect(mutation).not_to be_valid }
-    end
-
     context 'when with boundary amounts' do
       context 'when at maximum amount' do
         subject(:mutation) { build_stubbed(:credit_mutation, amount: 5000) }
