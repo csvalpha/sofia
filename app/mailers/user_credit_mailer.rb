@@ -7,6 +7,7 @@ class UserCreditMailer < ApplicationMailer
     mail to: user.email, subject: 'Verzoek met betrekking tot uw Zatladder saldo'
   end
 
+  # rubocop:disable Metrics/AbcSize
   def credit_delivery_report_mail(success_count, unnotifyable_users)
     @user = Struct.new(:name).new(
       Rails.application.config.x.treasurer_name || Rails.application.config.x.treasurer_title.capitalize
@@ -19,6 +20,7 @@ class UserCreditMailer < ApplicationMailer
 
     mail to: Rails.application.config.x.treasurer_email, subject:
   end
+  # rubocop:enable Metrics/AbcSize
 
   def new_credit_mutation_mail(credit_mutation)
     @user = credit_mutation.user
