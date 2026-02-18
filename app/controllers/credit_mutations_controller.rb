@@ -14,7 +14,7 @@ class CreditMutationsController < ApplicationController
   end
 
   def create # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-    @mutation = CreditMutation.new(permitted_attributes.merge(created_by: current_user))
+    @mutation = CreditMutation.new(credit_mutation_params.merge(created_by: current_user))
     authorize @mutation
 
     respond_to do |format|
@@ -40,7 +40,7 @@ class CreditMutationsController < ApplicationController
     %i[user activity created_by]
   end
 
-  def permitted_attributes
-    params.require(:credit_mutation).permit(%i[description amount user_id activity_id])
+  def credit_mutation_params
+    params.require(:credit_mutation).permit(policy(CreditMutation).permitted_attributes)
   end
 end
