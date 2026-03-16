@@ -4,6 +4,9 @@ FactoryBot.define do
 
     sequence(:email) { |n| Faker::Internet.email(name: "#{Faker::Internet.user_name}#{n}") }
 
+    auto_charge_enabled { false }
+    deactivated { false }
+
     trait(:treasurer) do
       after :create do |user, _evaluator|
         user.roles = [FactoryBot.create(:role, role_type: :treasurer)]
