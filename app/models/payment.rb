@@ -17,6 +17,7 @@ class Payment < ApplicationRecord
 
   validate :user_xor_invoice
   validate :user_amount
+  validate :invoice_amount
 
   scope :not_completed, -> { where.not(status: COMPLETE_STATUSES) }
 
@@ -74,10 +75,19 @@ class Payment < ApplicationRecord
     errors.add(:payment, 'must belong to a user xor invoice') unless user.present? ^ invoice.present?
   end
 
-  def user_amount
+  def user_amount # rubocop:disable Metrics/AbcSize
     return unless user
 
     min_amount = Rails.application.config.x.min_payment_amount
-    errors.add(:amount, "must be bigger than or equal to €#{format('%.2f', min_amount)}") unless amount && (amount >= min_amount)
+    max_amount = Rails.application.config.x.max_payment_amount
+    errors.add(:amount, "must be greater than or equal to €#{format('%.2f', min_amount)}") unless amount && (amount >= min_amount)
+    errors.add(:amount, "must be less than or equal to €#{format('%.2f', max_amount)}") unless amount && (amount <= max_amount)
+  end
+
+  def invoice_amount
+    return unless invoice
+
+    min_amount = Rails.application.config.x.min_invoice_amount
+    errors.add(:amount, "must be greater than or equal to €#{format('%.2f', min_amount)}") unless amount && (amount >= min_amount)
   end
 end

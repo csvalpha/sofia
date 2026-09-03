@@ -38,6 +38,46 @@ RSpec.describe Payment do
       end
     end
 
+    context 'when with too high amount' do
+      context 'when with user' do
+        subject(:payment) { build_stubbed(:payment, amount: 1001) }
+
+        it { expect(payment).not_to be_valid }
+      end
+
+      context 'when with invoice and high amount' do
+        subject(:payment) { build_stubbed(:payment, :invoice, amount: 1001) }
+
+        it { expect(payment).to be_valid }
+      end
+    end
+
+    context 'when with boundary amounts' do
+      context 'when with user at max amount' do
+        subject(:payment) { build_stubbed(:payment, amount: 1000) }
+
+        it { expect(payment).to be_valid }
+      end
+
+      context 'when with user just over max amount' do
+        subject(:payment) { build_stubbed(:payment, amount: 1000.01) }
+
+        it { expect(payment).not_to be_valid }
+      end
+
+      context 'when with invoice below minimum' do
+        subject(:payment) { build_stubbed(:payment, :invoice, amount: 0.99) }
+
+        it { expect(payment).not_to be_valid }
+      end
+
+      context 'when with invoice at minimum' do
+        subject(:payment) { build_stubbed(:payment, :invoice, amount: 1) }
+
+        it { expect(payment).to be_valid }
+      end
+    end
+
     context 'when without a status' do
       subject(:payment) { build_stubbed(:payment, status: nil) }
 
