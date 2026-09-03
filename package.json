@@ -58,7 +58,7 @@
     "stylelint": "^17.4.0",
     "stylelint-config-recess-order": "^7.6.1",
     "stylelint-config-standard-scss": "^17.0.0",
-    "stylelint-order": "^7.0.1",
+    "stylelint-order": "^8.1.1",
     "vue-eslint-parser": "^10.4.0",
     "vue-style-loader": "^4.1.3"
   },
