@@ -2,15 +2,15 @@ source 'https://rubygems.org'
 
 gem 'active_model_otp', '~> 2.3', '>= 2.3.4'
 gem 'bcrypt', '~> 3.1.21'
-gem 'bootsnap', '~> 1.20.1'
+gem 'bootsnap', '~> 1.21.1'
 gem 'browser', '~> 6.2.0'
 gem 'cssbundling-rails', '~> 1.4', '>= 1.4.3'
 gem 'dartsass-rails', '~> 0.5.1'
 gem 'devise', '~>5.0.0'
 gem 'devise-i18n', '~>1.15.0'
 gem 'factory_bot_rails', '~> 6.5.1'
-gem 'faker', '~> 3.5.3'
-gem 'grover', '~> 1.2.4'
+gem 'faker', '~> 3.6.0'
+gem 'grover', '~> 1.2.6'
 gem 'http', '~> 5.3.1'
 gem 'jbuilder', '~> 2.14.1'
 gem 'jquery-rails', '~> 4.6.1'
@@ -26,7 +26,7 @@ gem 'omniauth-oauth2', '~> 1.9.0'
 gem 'paper_trail', '~> 17.0.0'
 gem 'paranoia', '~> 3.1.0'
 gem 'pg', '~> 1.6.3'
-gem 'puma', '~> 7.1.0'
+gem 'puma', '~> 7.2.0'
 gem 'pundit', '~> 2.5.2'
 gem 'rack-attack', '~> 6.8.0'
 gem 'rails', '~> 7.2.3'
@@ -34,14 +34,14 @@ gem 'rails-i18n', '~> 7.0.10'
 gem 'redis', '~> 5.4', '>= 5.4.1'
 gem 'rest-client', '~> 2.1.0'
 gem 'rqrcode', '~> 3.2'
-gem 'sentry-rails', '~> 6.2'
-gem 'sentry-ruby', '~> 6.2'
-gem 'sentry-sidekiq', '~> 6.2'
+gem 'sentry-rails', '~> 6.3'
+gem 'sentry-ruby', '~> 6.3'
+gem 'sentry-sidekiq', '~> 6.3'
 gem 'sidekiq', '~> 8.0.10'
 gem 'sidekiq-scheduler', '~> 6.0.1'
 gem 'simple_form', '~> 5.4.1'
 gem 'sprockets-rails', '~> 3.5', '>= 3.5.2'
-gem 'turbo-rails', '~> 2.0', '>= 2.0.20'
+gem 'turbo-rails', '~> 2.0', '>= 2.0.23'
 gem 'uglifier', '~> 4.2.1'
 gem 'validates_timeliness', '~> 7.1.0'
 
@@ -55,7 +55,7 @@ group :development, :test do
   gem 'dotenv-rails', '~> 3.2.0'
   gem 'guard-livereload', '~> 2.5.2'
   gem 'guard-rspec', '~> 4.7.3', require: false
-  gem 'pry-byebug', '~> 3.11.0'
+  gem 'pry-byebug', '~> 3.12.0'
   gem 'pry-rails', '~> 0.3.11'
   gem 'rb-readline', '~> 0.5.5'
   gem 'rspec-rails', '~> 8.0.2'
@@ -64,7 +64,7 @@ end
 group :development do
   gem 'capistrano-sidekiq', '~> 3.2.0'
   gem 'foreman', '~> 0.90.0', require: false
-  gem 'listen', '~> 3.9.0'
+  gem 'listen', '~> 3.10.0'
   gem 'mina', '~> 1.2.5'
   gem 'spring', '~> 4.4.0', require: false
   gem 'spring-commands-rspec', '~> 1.0.4', require: false
@@ -74,7 +74,7 @@ end
 
 group :test do
   gem 'rails-controller-testing', '~> 1.0.5'
-  gem 'rubocop', '~> 1.82.1', require: false
+  gem 'rubocop', '~> 1.84.0', require: false
   gem 'rubocop-factory_bot', '~> 2.28.0', require: false
   gem 'rubocop-performance', '~> 1.26', '>= 1.26.1', require: false
   gem 'rubocop-rails', '~> 2.34', '>= 2.34.3', require: false
