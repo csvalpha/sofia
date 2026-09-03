@@ -50,7 +50,7 @@
     "globals": "^17.3.0",
     "postcss": "^8.5.6",
     "postcss-flexbugs-fixes": "^5.0.2",
-    "postcss-html": "^1.8.1",
+    "postcss-html": "^2.0.0",
     "postcss-import": "^16.1.1",
     "postcss-preset-env": "^11.2.0",
     "postcss-scss": "^4.0.9",
