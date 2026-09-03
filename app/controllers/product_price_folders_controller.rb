@@ -34,7 +34,7 @@ class ProductPriceFoldersController < ApplicationController
     authorize @folder
 
     orphaned_products = @folder.product_prices
-    max_position = @folder.price_list.product_price.without_folder.maximum(:position) || -1
+    max_position = @folder.price_list.product_prices.without_folder.maximum(:position) || -1
 
     orphaned_products.each_with_index do |product_price, index|
       product_price.update(product_price_folder_id: nil, position: max_position + index + 1)

@@ -30,6 +30,14 @@ class ProductPricesController < ApplicationController
       product_positions.each do |product_data|
         product_price = @price_list.product_prices.find(product_data[:id])
         authorize product_price, :update?
+
+        if product_data[:folder_id].present?
+           unless `@price_list.product_price_folders.exists`?(id: product_data[:folder_id])
+            raise ActiveRecord::RecordInvalid.new(product_price),
+                  'Folder does not belong to this price list'
+          end
+        end
+
         product_price.update!(
           position: product_data[:position],
           product_price_folder_id: product_data[:folder_id]
