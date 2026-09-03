@@ -3,7 +3,7 @@
   <%= javascript_include_tag "order_screen", "data-turbo-track": "reload", defer: true %>
 <% end %>
 <%= content_tag :div, id: 'order-screen', class: 'order-screen',
-                data: {users: @users_json, product_prices: @product_prices_json, activity: @activity_json, sumup_callback: sumup_callback_activity_url, sumup_key: @sumup_key, flashes: flash, site_name: Rails.application.config.x.site_short_name, deposit_button_enabled: Rails.application.config.x.deposit_button_enabled} do
+                data: {users: @users_json, product_prices: @product_prices_json, folders: @folders_json, activity: @activity_json, is_treasurer: @is_treasurer, price_list_id: @price_list_id, sumup_callback: sumup_callback_activity_url, sumup_key: @sumup_key, flashes: flash, site_name: Rails.application.config.x.site_short_name, deposit_button_enabled: Rails.application.config.x.deposit_button_enabled} do
 
 %>
 
@@ -18,11 +18,11 @@
   <nav class="header">
     <ul class="header-nav">
       <li class="header-nav-item header-nav-home">
-        <span @click="payWithCash ? payWithCash = false : (payWithPin ? payWithPin = false : selectedUser = null)"
+        <span @click="leaveOrderScreen"
               class="user-details-close" v-if="selectedUser || payWithCash || payWithPin">
           <i class="fas fa-chevron-left"></i>
           </span>
-        <span v-else="">
+        <span v-else>
           <%= link_to @activity do %>
             <i class="fas fa-home"></i>
           <% end %>
@@ -37,24 +37,29 @@
         </small>
       </li>
     </ul>
-    <div class="row pull-right g-0" style="flex-direction: row-reverse">
-      <button type="button" class="btn btn-outline-secondary m-3 w-auto" @click="keepUserSelected = !keepUserSelected" >
-        <span v-if="keepUserSelected">
-          <i class="fas fa-square-check fa-lg me-1"></i>
+    <div class="header-actions">
+      <button v-if="isTreasurer && (selectedUser || payWithCash || payWithPin)" type="button" class="btn btn-outline-secondary m-3 me-5 w-auto" @click="toggleEditMode">
+        <i class="fas" :class="editMode ? 'fa-check' : 'fa-pen'"></i>
+        <span class="ms-1">
+          {{ editMode ? 'Klaar' : 'Bewerken' }}
         </span>
-        <span v-if="!keepUserSelected">
-          <i class="far fa-square fa-lg me-1"></i>
+      </button>
+      <button v-if="editMode" type="button" class="btn btn-outline-secondary m-3 w-auto" @click="openFolderModal(null)">
+        <i class="fas fa-folder-plus"></i>
+        <span class="ms-1">
+          Nieuwe map
         </span>
-        <span>
-          Persoon onthouden
-        </span>
+      </button>
+      <button v-if="!editMode" type="button" class="btn btn-outline-secondary m-3 w-auto" @click="keepUserSelected = !keepUserSelected">
+        <i :class="keepUserSelected ? 'fas fa-square-check' : 'far fa-square'" class="fa-lg me-1"></i>
+        <span>Persoon onthouden</span>
       </button>
     </div>
 
     <flash-notification>
     </flash-notification>
   </nav>
-  <div class="side-panel">
+  <div class="side-panel" :class="{ 'edit-mode-disabled': editMode }">
     <user-selection :pay-with-cash="payWithCash" :pay-with-pin="payWithPin" :selected-user="selectedUser"
                     :users="users" :deposit-button-enabled="depositButtonEnabled" v-on:selectcash="selectCash" v-on:selectpin="selectPin" v-on:updateuser="setUser($event)">
     </user-selection>
@@ -66,11 +71,11 @@
         <template v-for="(orderRow, index) in orderRows">
           <div class="orders-rows-row row py-2">
             <div class="orders-rows-row-count col-3 px-1 px-md-2 px-lg-3">
-              <i class="far fa-square-plus fa-lg orders-rows-row-count-icon" @click="increaseRowAmount(orderRow)"></i>
+              <i class="far fa-square-plus fa-lg orders-rows-row-count-icon" @click="!editMode && increaseRowAmount(orderRow)"></i>
               <div>
                 <%= '{{orderRow.amount}}' %>
               </div>
-              <i class="far fa-square-minus fa-lg orders-rows-row-count-icon" @click="decreaseRowAmount(orderRow)"></i>
+              <i class="far fa-square-minus fa-lg orders-rows-row-count-icon" @click="!editMode && decreaseRowAmount(orderRow)"></i>
             </div>
             <div class="orders-rows-row-product-name col-6">
               {{orderRow.productPrice.product.name}}
@@ -79,7 +84,7 @@
               <span :title="doubleToCurrency(orderRow.productPrice.price) + ' p.s.'">
                 {{doubleToCurrency(orderRow.productPrice.price * orderRow.amount)}}
               </span>
-              <span @click="dropOrderRow(index)" class="order-rows-row-remove ms-1">
+              <span @click="!editMode && dropOrderRow(index)" class="order-rows-row-remove ms-1">
                 <i class="far fa-circle-xmark fa-lg"></i>
               </span>
             </div>
@@ -110,12 +115,12 @@
         <div class="btn-group btn-group-lg" role="group" v-if="payWithPin && <%= @sumup_enabled.to_s %> && isMobile">
           <button type="button" class="btn btn-success col-9"
              @click="confirmOrder(true)"
-             :class="{ 'disabled': orderConfirmButtonDisabled }">
+             :disabled="orderConfirmButtonDisabled || editMode">
             <span class="text-uppercase">
               Sumup betaling
             </span>
           </button>
-          <button type="button" class="btn btn-dark" :disabled="orderConfirmButtonDisabled"
+          <button type="button" class="btn btn-dark" :disabled="orderConfirmButtonDisabled || editMode"
                   @click="confirmOrder(false)">
             <i class="fas fa-money-bill"></i>
           </button>
@@ -123,7 +128,7 @@
 
         <button @click="maybeConfirmOrder" class="btn btn-lg btn-success"
               :class="{ 'btn-warning' : showOrderWarning && !showCannotOrderWarning, 'btn-danger' : showCannotOrderWarning }"
-              :disabled="orderConfirmButtonDisabled"
+              :disabled="orderConfirmButtonDisabled || editMode"
               v-if="!payWithPin || !<%= @sumup_enabled.to_s %> || !isMobile">
           <span class="text-uppercase">
             Bestelling plaatsen
@@ -164,28 +169,110 @@
     </activity-orders>
   </div>
   <div class="product-grid" v-if="selectedUser || payWithCash || payWithPin">
-    <div @click="selectProduct(productPrice)" class="product-grid-product"
-         :class="{ 'product-requires-age' : (selectedUser && selectedUser.minor && productPrice.product.requires_age) }"
-         :style="productPrice.product.color ? { backgroundColor: productPrice.product.color } : {}"
-         v-for="productPrice in productPrices">
-      <span class="product-grid-product-requires-age mb-2 fa-stack" v-if="selectedUser && selectedUser.minor && productPrice.product.requires_age">
-        <i class="fa fa-circle fa-circle-lighter fa-stack-2x">
-        </i>
-        <span class="fa fa-stack-1x fa-inverse fa-plus18">
-        </span>
-      </span>
+    <div v-if="currentFolder" 
+         @click.stop="exitFolder"
+         @dragover.prevent
+         @drop="onDropOnBackButton"
+         class="product-grid-product folder-tile back-button-tile"
+         :class="{ 'drop-target': draggedItem }"
+         :style="{ backgroundColor: currentFolder.color }">
       <span class="product-grid-product-name">
-        {{productPrice.product.name}}
+        Terug
       </span>
-      <span class="product-grid-product-price">
-        {{doubleToCurrency(productPrice.price)}}
+      <span class="folder-icon">
+        <i class="fas fa-folder-open"></i>
+        <i class="fas fa-arrow-left folder-back-arrow"></i>
       </span>
     </div>
-    <em class="no-items" v-if="!productPrices.length">
+
+    <div v-if="!currentFolder" ref="foldersContainer">
+      <div v-for="folder in sortedFolders" 
+           :key="'folder-' + folder.id"
+           :data-folder-id="folder.id"
+           @click="!editMode && enterFolder(folder)"
+           @dragover.prevent
+           @drop="onDropOnFolder($event, folder)"
+           class="product-grid-product folder-tile"
+           :class="{ 'edit-mode': editMode, 'drop-target': draggedItem }"
+           :style="{ backgroundColor: folder.color }">
+        <span class="folder-edit-btn" v-if="editMode" @click.stop="openFolderModal(folder)">
+          <i class="fas fa-pen"></i>
+        </span>
+        <span class="product-grid-product-name">
+          {{ folder.name }}
+        </span>
+        <span class="folder-icon">
+          <i class="fas fa-folder"></i>
+        </span>
+      </div>
+    </div>
+
+    <div class="products-container" ref="productsContainer">
+      <div v-for="productPrice in visibleProducts"
+           :key="'product-' + productPrice.id"
+           :data-product-price-id="productPrice.id"
+           @click="!editMode && selectProduct(productPrice)"
+           :draggable="editMode"
+           @dragstart="onDragStartProduct($event, productPrice)"
+           @dragend="onDragEnd"
+           class="product-grid-product"
+           :class="{ 
+             'product-requires-age': (selectedUser && selectedUser.minor && productPrice.product.requires_age),
+             'draggable': editMode
+           }"
+           :style="productPrice.product.color ? { backgroundColor: productPrice.product.color } : {}">
+        <span class="product-grid-product-requires-age mb-2 fa-stack" v-if="selectedUser && selectedUser.minor && productPrice.product.requires_age">
+          <i class="fa fa-circle fa-circle-lighter fa-stack-2x">
+          </i>
+          <span class="fa fa-stack-1x fa-inverse fa-plus18">
+          </span>
+        </span>
+        <span class="drag-handle" v-if="editMode">
+          <i class="fas fa-grip-vertical"></i>
+        </span>
+        <span class="product-grid-product-name">
+          {{productPrice.product.name}}
+        </span>
+        <span class="product-grid-product-price">
+          {{doubleToCurrency(productPrice.price)}}
+        </span>
+      </div>
+    </div>
+
+    <em class="no-items" v-if="!visibleProducts.length && !sortedFolders.length">
       <span>
         Nog geen producten beschikbaar in de prijslijst  <%= @activity.price_list.name %> .
         Klik <%= link_to 'hier', price_lists_path %> om prijzen aan te maken.
       </span>
     </em>
+
+    <div class="folder-modal-backdrop" v-if="showFolderModal" @click="closeFolderModal">
+      <div class="folder-modal" @click.stop>
+        <div class="folder-modal-header">
+          <h5>{{ editingFolder ? 'Map bewerken' : 'Nieuwe map' }}</h5>
+          <button type="button" class="btn-close" @click="closeFolderModal"></button>
+        </div>
+        <div class="folder-modal-body">
+          <div class="mb-3">
+            <label class="form-label">Naam</label>
+            <input type="text" class="form-control" v-model="folderForm.name" placeholder="Mapnaam">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Kleur (Hex)</label>
+            <div class="d-flex align-items-center gap-2">
+              <input type="text" class="form-control" v-model="folderForm.color" placeholder="#6c757d" pattern="^#[0-9A-Fa-f]{6}$">
+              <span class="border rounded" :style="{ width: '28px', height: '28px', backgroundColor: (folderForm.color && isValidHexColor(folderForm.color.trim())) ? folderForm.color.trim() : 'transparent' }"></span>
+            </div>
+          </div>
+        </div>
+        <div class="folder-modal-footer">
+          <button v-if="editingFolder" type="button" class="btn btn-danger me-auto" @click="deleteFolder(editingFolder)">
+            <i class="fas fa-trash"></i> Verwijderen
+          </button>
+          <button type="button" class="btn btn-secondary" @click="closeFolderModal">Annuleren</button>
+          <button type="button" class="btn btn-primary" @click="saveFolder">Opslaan</button>
+        </div>
+      </div>
+    </div>
   </div>
 <% end %>
