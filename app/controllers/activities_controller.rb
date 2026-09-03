@@ -182,7 +182,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
   end
 
   def sorted_product_price(activity)
-    activity.price_list.product_price.includes(:product).order(:position)
+    activity.price_list.product_prices.includes(:product).order(:position)
   end
 
   def activity_params
