@@ -51,7 +51,7 @@ group :development, :test do
   gem 'brakeman', '~> 8.0.1', require: false
   gem 'bullet', '~> 8.1'
   gem 'colorize', '~> 1.1.0'
-  gem 'database_consistency', '~> 2.1.1'
+  gem 'database_consistency', '~> 3.0.11'
   gem 'dotenv-rails', '~> 3.2.0'
   gem 'guard-livereload', '~> 2.5.2'
   gem 'guard-rspec', '~> 4.7.3', require: false
