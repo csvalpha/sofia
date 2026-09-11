@@ -7,15 +7,17 @@ class UserCreditMailer < ApplicationMailer
     mail to: user.email, subject: 'Verzoek met betrekking tot uw Zatladder saldo'
   end
 
-  def credit_delivery_report_mail(treasurer, success_count, unnotifyable_users)
-    @user = treasurer
+  def credit_delivery_report_mail(success_count, unnotifyable_users)
+    @user = Struct.new(:name).new(
+      Rails.application.config.x.treasurer_name
+    )
     @unnotifyable_users = unnotifyable_users
     @success_count = success_count
     @title = 'Notificatie over de saldomail'
 
     subject = "Er is #{@success_count.positive? ? 'een' : 'geen'} saldomail verstuurd"
 
-    mail to: treasurer.email, subject:
+    mail to: Rails.application.config.x.treasurer_email, subject:
   end
 
   def new_credit_mutation_mail(credit_mutation)

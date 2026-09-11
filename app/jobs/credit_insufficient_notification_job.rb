@@ -24,13 +24,11 @@ class CreditInsufficientNotificationJob < ApplicationJob
   end
 
   def send_notification_delivery_reports(success_count, unnotifyable_users)
-    User.treasurer.each do |treasurer|
-      UserCreditMailer.credit_delivery_report_mail(
-        treasurer, success_count, unnotifyable_users
-      ).deliver_later
-    end
+    UserCreditMailer.credit_delivery_report_mail(
+      success_count, unnotifyable_users
+    ).deliver_later
 
-    return unless Rails.env.production? || Rails.env.staging? || Rails.env.luxproduction? || Rails.env.euros?
+    return if Rails.env.local?
 
     HealthCheckJob.perform_later('credit_insufficient')
   end

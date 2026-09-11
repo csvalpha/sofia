@@ -14,14 +14,12 @@ class CreditMutationsController < ApplicationController
   end
 
   def create # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-    @mutation = CreditMutation.new(permitted_attributes.merge(created_by: current_user))
+    @mutation = CreditMutation.new(credit_mutation_params.merge(created_by: current_user))
     authorize @mutation
 
     respond_to do |format|
       if @mutation.save
-        if Rails.env.production? || Rails.env.staging? || Rails.env.luxproduction? || Rails.env.euros?
-          NewCreditMutationNotificationJob.perform_later(@mutation)
-        end
+        NewCreditMutationNotificationJob.perform_later(@mutation) unless Rails.env.local?
         format.html { redirect_to which_redirect?, flash: { success: 'Inleg of mutatie aangemaakt' } }
         format.json do
           render json: @mutation, include: { user: { methods: User.orderscreen_json_includes } }
@@ -42,7 +40,7 @@ class CreditMutationsController < ApplicationController
     %i[user activity created_by]
   end
 
-  def permitted_attributes
-    params.require(:credit_mutation).permit(%i[description amount user_id activity_id])
+  def credit_mutation_params
+    params.require(:credit_mutation).permit(policy(CreditMutation).permitted_attributes)
   end
 end

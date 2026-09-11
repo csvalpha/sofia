@@ -1,8 +1,8 @@
 <footer class="footer d-flex justify-content-between">
   <span class="text-danger text-uppercase fw-bold mx-2">
-    <% if Rails.application.config.x.sofia_host == 'stagingstreep.csvalpha.nl' %>
+    <% if Rails.env.staging? %>
       For demo and testing purposes only
-    <% elsif Rails.application.config.x.sofia_host != 'streep.csvalpha.nl' && Rails.application.config.x.sofia_host != 'luxstreep.csvalpha.nl' && Rails.application.config.x.sofia_host != 'euros.csvalpha.nl' %>
+    <% elsif Rails.env.development? %>
       Development mode
     <% end %>
   </span>

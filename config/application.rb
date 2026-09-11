@@ -28,7 +28,10 @@ module Sofia
     config.i18n.default_locale = :nl
     config.i18n.fallbacks = [:nl]
 
-    config.cache_store = :redis_cache_store, { url: Rails.application.config_for(:cable)['url'] }
+    config.cache_store = :redis_cache_store, {
+      url: Rails.application.config_for(:cable)['url'],
+      pool: { size: ENV.fetch('RAILS_MAX_THREADS', 5).to_i, timeout: 5 }
+    }
     config.active_job.queue_adapter = :sidekiq
 
     config.exceptions_app = routes
@@ -80,6 +83,8 @@ module Sofia
     config.x.deposit_button_enabled = ENV.fetch('DEPOSIT_BUTTON_ENABLED', 'true') == 'true'
 
     config.x.min_payment_amount   = [ENV.fetch('MIN_PAYMENT_AMOUNT', '21.8').to_f, 0.01].max
+    config.x.max_payment_amount   = ENV.fetch('MAX_PAYMENT_AMOUNT', '1000').to_f
+    config.x.min_invoice_amount   = [ENV.fetch('MIN_INVOICE_AMOUNT', '1').to_f, 0.01].max
 
     config.x.codes                = {
       beer: ENV.fetch('CODE_BEER', nil),
