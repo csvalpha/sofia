@@ -1,9 +1,10 @@
 import Vue from 'vue/dist/vue.esm';
+import * as bootstrap from 'bootstrap';
 import api from './api/axiosInstance';
 
 document.addEventListener('turbo:load', () => {
   const element = document.getElementById('pricelists-container');
-  if (element != null) {
+  if (element != null && !element.__vue__) {
     const priceLists = JSON.parse(element.dataset.priceLists);
     const products = JSON.parse(element.dataset.products);
 
@@ -143,7 +144,6 @@ document.addEventListener('turbo:load', () => {
 
         editPriceList: function(priceList) {
           this.currentlyEditingPriceList = { ...priceList };
-          /* eslint-disable no-undef */
           bootstrap.Modal.getOrCreateInstance('#editPriceListModal').show();
         },
 
@@ -183,23 +183,26 @@ document.addEventListener('turbo:load', () => {
       }
     });
 
-    new Vue({
-      el: document.getElementById('editPriceListModal'),
-      computed: {
-        url() {
-          return '/price_lists/' + app.currentlyEditingPriceList?.id;
-        },
-        name: {
-          get() {
-            return app.currentlyEditingPriceList?.name || '';
+    const editModalElement = document.getElementById('editPriceListModal');
+    if (editModalElement && !editModalElement.__vue__) {
+      new Vue({
+        el: editModalElement,
+        computed: {
+          url() {
+            return '/price_lists/' + app.currentlyEditingPriceList?.id;
           },
-          set(value) {
-            if (app.currentlyEditingPriceList) {
-              app.currentlyEditingPriceList.name = value;
+          name: {
+            get() {
+              return app.currentlyEditingPriceList?.name || '';
+            },
+            set(value) {
+              if (app.currentlyEditingPriceList) {
+                app.currentlyEditingPriceList.name = value;
+              }
             }
           }
         }
-      }
-    });
+      });
+    }
   }
 });
