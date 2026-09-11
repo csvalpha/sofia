@@ -17,3 +17,6 @@ luxproduction:
 
 euros:
   <<: *production
+
+demo:
+  <<: *production
