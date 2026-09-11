@@ -279,8 +279,8 @@
   }
 
   .product-grid .grid-tile-back {
-    grid-column: 1;
     grid-row: 1;
+    grid-column: 1;
   }
 
   .products-container {
@@ -452,7 +452,6 @@
   .sortable-drag {
     background-color: $white;
   }
-
 
   .folder-modal-backdrop {
     position: fixed;
