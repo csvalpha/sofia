@@ -57,7 +57,9 @@ document.addEventListener('turbo:load', () => {
           draggedItem: null,
           draggedItemType: null,
           sortableInstance: null,
-          gridSize: priceListGridSize
+          gridSize: priceListGridSize,
+          gridSizeUpdateInProgress: false,
+          gridSizeUpdateTimeout: null
         };
       },
       methods: {
@@ -488,9 +490,16 @@ document.addEventListener('turbo:load', () => {
         },
 
         updateGridSize() {
+          // Prevent rapid consecutive calls
+          if (this.gridSizeUpdateInProgress) return;
+          this.gridSizeUpdateInProgress = true;
+          
           api.patch(`/price_lists/${this.priceListId}`, {
             price_list: { grid_size: this.gridSize }
+          }).then(() => {
+            this.gridSizeUpdateInProgress = false;
           }).catch((response) => {
+            this.gridSizeUpdateInProgress = false;
             this.handleXHRError(response);
           });
         },
@@ -702,7 +711,19 @@ document.addEventListener('turbo:load', () => {
 
       watch: {
         gridSize: {
-          handler: 'updateGridSize',
+          handler: function(newVal, oldVal) {
+            // Only call update if value actually changed and we're not already updating
+            if (newVal !== oldVal && !this.gridSizeUpdateInProgress) {
+              // Clear any pending update
+              if (this.gridSizeUpdateTimeout) {
+                clearTimeout(this.gridSizeUpdateTimeout);
+              }
+              // Debounce the update
+              this.gridSizeUpdateTimeout = setTimeout(() => {
+                this.updateGridSize();
+              }, 500);
+            }
+          },
           immediate: false
         }
       },
@@ -714,6 +735,9 @@ document.addEventListener('turbo:load', () => {
       },
       destroyed: function() {
         document.removeEventListener('keyup', this.escapeKeyListener);
+        if (this.gridSizeUpdateTimeout) {
+          clearTimeout(this.gridSizeUpdateTimeout);
+        }
       },
 
       components: {

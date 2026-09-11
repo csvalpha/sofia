@@ -302,6 +302,8 @@
     justify-content: center;
     cursor: pointer;
     transition: filter 0.2s ease;
+    outline: none;
+    border: none;
 
     &:hover {
       filter: brightness(0.85);
@@ -451,10 +453,6 @@
     background-color: $white;
   }
 
-  .drop-target {
-    background-color: $gray-500;
-    border: 2px dashed $gray-700;
-  }
 
   .folder-modal-backdrop {
     position: fixed;
