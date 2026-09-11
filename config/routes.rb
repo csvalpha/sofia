@@ -17,6 +17,23 @@ Rails.application.routes.draw do
       post :archive
       post :unarchive
     end
+    resources :product_price_folders, only: %i[index create] do
+      collection do
+        patch :reorder
+      end
+    end
+    resources :product_prices, only: [] do
+      collection do
+        patch :reorder
+      end
+    end
+  end
+
+  resources :product_price_folders, only: %i[update destroy]
+  resources :product_prices, only: [] do
+    member do
+      patch :assign_folder
+    end
   end
 
   resources :users, only: %i[index show create update] do
@@ -83,6 +100,6 @@ Rails.application.routes.draw do
   get '/403', to: 'errors#forbidden'
   get '/404', to: 'errors#not_found'
   get '/406', to: 'errors#unacceptable'
-  get '/422', to: 'errors#unprocessable_entity'
+  get '/422', to: 'errors#unprocessable_content'
   get '/500', to: 'errors#internal_server_error'
 end

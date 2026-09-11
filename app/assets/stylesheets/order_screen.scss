@@ -10,21 +10,28 @@
   height: 100vh;
 
   .flash {
+    position: fixed;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    z-index: 1000;
     display: flex;
-    align-self: flex-end;
-    height: 100%;
+    min-width: 250px;
+    max-width: 450px;
+    height: auto;
     font-size: $font-size-lg;
     vertical-align: middle;
     color: $font-color-light;
     text-align: center;
     background-color: $gray-800;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
   }
 
   .flash-text {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 1rem;
+    padding: 1rem 1.5rem;
 
     a {
       &:hover {
@@ -112,6 +119,29 @@
     }
   }
 
+  .header-actions {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+  }
+
+  .header-slider {
+    display: flex;
+    align-items: center;
+    width: 150px;
+  }
+
+  .header-slider .form-range {
+    flex-grow: 1;
+    height: 0.5rem;
+  }
+
+  .header-slider label {
+    font-size: $font-size-sm;
+    color: $font-color-dark;
+    white-space: nowrap;
+  }
+
   .side-panel {
     z-index: 4;
     display: flex;
@@ -124,6 +154,12 @@
     background-color: $gray-200;
     border-right: 2px solid $gray-400;
     box-shadow: 2px 0 4px -2px $transparent-200;
+
+    &.edit-mode-disabled {
+      pointer-events: none;
+      user-select: none;
+      opacity: 0.5;
+    }
   }
 
   .user-details {
@@ -236,35 +272,76 @@
   .product-grid {
     display: grid;
     grid-area: product-grid;
-    grid-template-rows: auto;
-    grid-template-columns: repeat(4, 1fr);
+    grid-auto-flow: dense;
     gap: 2px;
     justify-content: flex-start;
     background-color: $gray-400;
   }
 
-  .product-grid-product {
+  .product-grid .grid-tile-back {
+    grid-row: 1;
+    grid-column: 1;
+  }
+
+  .products-container {
+    display: contents;
+  }
+
+  .grid-tile-back {
+    .grid-tile-name {
+      font-size: $font-size-lg;
+      color: $white;
+      text-shadow: none;
+    }
+  }
+
+  .grid-tile {
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: filter 0.2s ease;
+    outline: none;
+    border: none;
 
     &:hover {
       filter: brightness(0.85);
     }
   }
 
-  .product-requires-age {
-    filter: brightness(0.7);
+  .grid-tile-product {
+    color: $font-color-dark;
+    text-align: center;
+    
+    &.product-requires-age {
+      filter: brightness(0.7);
 
-    &:hover {
-      filter: brightness(0.6);
+      &:hover {
+        filter: brightness(0.6);
+      }
     }
   }
 
-  .product-grid-product-name {
+  .grid-tile-folder,
+  .grid-tile-back {
+    color: $white;
+    background-color: $gray-600;
+    
+    .grid-tile-name {
+      font-size: $font-size-lg;
+      color: $font-color-dark;
+      text-shadow: none;
+    }
+  }
+
+  .grid-tile-name {
+    font-size: $font-size-lg;
+    color: $font-color-dark;
+    text-align: center;
+  }
+
+  .grid-tile-price {
     font-size: $font-size-lg;
     color: $font-color-dark;
     text-align: center;
@@ -278,5 +355,146 @@
     display: grid;
     grid-area: order-grid;
     overflow-y: auto;
+  }
+
+  .grid-tile-folder,
+  .grid-tile-back {
+    position: relative;
+    
+    .folder-icon {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.5rem;
+      font-size: 3.5rem;
+    }
+
+    .folder-back-arrow {
+      position: absolute;
+      right: -0.5rem;
+      bottom: 0;
+      padding: 0.2rem;
+      font-size: 1rem;
+      color: $white;
+      background: rgb(0 0 0 / 50%);
+      border-radius: 50%;
+    }
+
+    &.edit-mode {
+      cursor: grab;
+    }
+  }
+
+  .grid-tile-back {
+    pointer-events: auto;
+    
+    .folder-icon {
+      font-size: 2rem;
+    }
+    
+    .grid-tile-name {
+      font-size: $font-size-lg;
+      color: $white;
+      text-shadow: none;
+    }
+  }
+
+  .folder-edit-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    font-size: 1.6rem;
+    color: $gray-700;
+    cursor: pointer;
+    background-color: rgb(255 255 255 / 90%);
+    border-radius: 50%;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: $white;
+      transform: scale(1.1);
+    }
+  }
+
+  .draggable {
+    cursor: grab;
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  .drag-handle {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    font-size: 1rem;
+    color: $gray-700;
+    cursor: grab;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+  }
+
+  .sortable-ghost {
+    opacity: 0.4;
+  }
+
+  .sortable-chosen {
+    box-shadow: 0 4px 12px rgb(0 0 0 / 30%);
+  }
+
+  .sortable-drag {
+    background-color: $white;
+  }
+
+  .folder-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(0 0 0 / 50%);
+  }
+
+  .folder-modal {
+    width: 90%;
+    max-width: 400px;
+    background-color: $white;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgb(0 0 0 / 30%);
+  }
+
+  .folder-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid $gray-300;
+
+    h5 {
+      margin: 0;
+    }
+  }
+
+  .folder-modal-body {
+    padding: 1rem;
+  }
+
+  .folder-modal-footer {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    padding: 1rem;
+    border-top: 1px solid $gray-300;
   }
 }

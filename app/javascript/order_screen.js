@@ -1,19 +1,25 @@
 import Vue from 'vue/dist/vue.esm';
 import api from './api/axiosInstance';
 import * as bootstrap from 'bootstrap';
+import Sortable from 'sortablejs';
 
 import FlashNotification from './components/FlashNotification.vue';
 import UserSelection from './components/orderscreen/UserSelection.vue';
 import ActivityOrders from './components/orderscreen/ActivityOrders.vue';
+import GridTile from './components/orderscreen/GridTile.vue';
 
 document.addEventListener('turbo:load', () => {
   const element = document.getElementById('order-screen');
   if (element != null) {
     const users = JSON.parse(element.dataset.users);
     const productPrices = JSON.parse(element.dataset.productPrices);
+    const folders = JSON.parse(element.dataset.folders || '[]');
     const activity = JSON.parse(element.dataset.activity);
     const flashes = JSON.parse(element.dataset.flashes);
     const depositButtonEnabled = element.dataset.depositButtonEnabled === 'true';
+    const isTreasurer = element.dataset.isTreasurer === 'true';
+    const priceListId = element.dataset.priceListId;
+    const priceListGridSize = parseInt(element.dataset.priceListGridSize || '4');
 
     window.flash = function(message, actionText, type) {
       const event = new CustomEvent('flash', { detail: { message: message, actionText: actionText, type: type } } );
@@ -32,6 +38,7 @@ document.addEventListener('turbo:load', () => {
         return {
           users: users,
           productPrices: productPrices,
+          folders: folders,
           activity: activity,
           selectedUser: null,
           payWithCash: false,
@@ -39,7 +46,20 @@ document.addEventListener('turbo:load', () => {
           keepUserSelected: false,
           depositButtonEnabled: depositButtonEnabled,
           orderRows: [],
-          isSubmitting: false
+          isSubmitting: false,
+          currentFolder: null,
+          editMode: false,
+          isTreasurer: isTreasurer,
+          priceListId: priceListId,
+          showFolderModal: false,
+          editingFolder: null,
+          folderForm: { name: '', color: '#6c757d' },
+          draggedItem: null,
+          draggedItemType: null,
+          sortableInstance: null,
+          gridSize: priceListGridSize,
+          gridSizeUpdateInProgress: false,
+          gridSizeUpdateTimeout: null
         };
       },
       methods: {
@@ -51,13 +71,32 @@ document.addEventListener('turbo:load', () => {
           return `€${parseFloat(price).toFixed(2)}`;
         },
 
+        isValidHexColor(color) {
+          return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color);
+        },
+
+        leaveOrderScreen() {
+          if (this.payWithCash) {
+            this.payWithCash = false;
+          } else if (this.payWithPin) {
+            this.payWithPin = false;
+          } else {
+            this.selectedUser = null;
+          }
+
+          this.currentFolder = null;
+          if (this.editMode) {
+            this.editMode = false;
+            this.destroySortable();
+          }
+        },
+
         setUser(user = null) {
           if (this.selectedUser === null || user === null || this.selectedUser.id != user.id) {
             this.orderRows = [];
           }
 
           if (user !== null) {
-            // Reload user to get latest credit balance
             api.get(`/users/${user.id}/json?activity_id=${this.activity.id}`).then((response) => {
               const refreshedUser = response.data;
               const index = this.users.findIndex((candidate) => candidate.id === refreshedUser.id);
@@ -78,6 +117,14 @@ document.addEventListener('turbo:load', () => {
           this.payWithCash = false;
           this.payWithPin = false;
           this.selectedUser = user;
+
+          if (user === null) {
+            this.currentFolder = null;
+            if (this.editMode) {
+              this.editMode = false;
+              this.destroySortable();
+            }
+          }
         },
 
         selectCash() {
@@ -182,7 +229,6 @@ document.addEventListener('turbo:load', () => {
             if(!this.keepUserSelected){
               this.setUser(null);
             } else {
-              // re-set user to update credit
               this.setUser(response.data.user);
               this.orderRows = [];
             }
@@ -247,6 +293,293 @@ document.addEventListener('turbo:load', () => {
             this.handleXHRError(response);
           });
         },
+
+        handleTileClick(payload) {
+          if (this.editMode || !payload) return;
+          
+          const itemType = payload.itemType;
+          const item = payload.item;
+          
+          if (itemType === 'folder') {
+            this.currentFolder = item;
+          } else if (itemType === 'back') {
+            this.currentFolder = null;
+          } else if (itemType === 'product') {
+            this.selectProduct(item);
+          }
+        },
+
+        handleTileEdit(payload) {
+          if (!this.editMode || !payload) return;
+          
+          const itemType = payload.itemType;
+          const item = payload.item;
+          
+          if (itemType === 'folder') {
+            this.openFolderModal(item);
+          }
+        },
+
+        handleDragOver(payload) {
+          // Allow drag over for drop targets
+          if (this.editMode && this.draggedItem && payload && (payload.itemType === 'folder' || payload.itemType === 'back')) {
+            if (payload.evt && payload.evt.dataTransfer) {
+              payload.evt.preventDefault();
+              payload.evt.dataTransfer.dropEffect = 'move';
+            }
+          }
+        },
+
+        toggleEditMode() {
+          this.editMode = !this.editMode;
+          if (this.editMode) {
+            this.$nextTick(() => {
+              this.initSortable();
+            });
+          } else {
+            this.destroySortable();
+          }
+        },
+
+        initSortable() {
+          const gridContainer = this.$refs.gridContainer;
+          if (gridContainer && !this.sortableInstance) {
+            this.sortableInstance = Sortable.create(gridContainer, {
+              animation: 250,
+              ghostClass: 'sortable-ghost',
+              chosenClass: 'sortable-chosen',
+              dragClass: 'sortable-drag',
+              forceFallback: false,
+              touchStartThreshold: 0,
+              delayOnTouchOnly: true,
+              filter: '.grid-tile-back',
+              draggable: '.grid-tile:not(.grid-tile-back)',
+              swapThreshold: 0.75,
+              fallbackOnBody: false,
+              fallbackTolerance: 0,
+              onEnd: this.onGridDragEnd.bind(this)
+            });
+          }
+        },
+
+        destroySortable() {
+          if (this.sortableInstance) {
+            this.sortableInstance.destroy();
+            this.sortableInstance = null;
+          }
+        },
+
+        onGridDragEnd(evt) {
+          const positions = [];
+          const gridElements = evt.to.querySelectorAll('.grid-tile');
+          
+          gridElements.forEach((el, index) => {
+            const itemId = el.dataset.itemId;
+            const itemType = el.dataset.itemType;
+            
+            if (itemId && itemId !== 'back') {
+              if (itemType === 'folder') {
+                const folder = this.folders.find(f => f.id == itemId);
+                if (folder) {
+                  folder.position = index;
+                  positions.push({ 
+                    id: parseInt(itemId), 
+                    position: index,
+                    type: 'folder'
+                  });
+                }
+              } else if (itemType === 'product') {
+                const productPrice = this.productPrices.find(pp => pp.id == itemId);
+                if (productPrice) {
+                  productPrice.position = index;
+                  positions.push({ 
+                    id: parseInt(itemId), 
+                    position: index,
+                    type: 'product',
+                    folder_id: this.currentFolder ? this.currentFolder.id : null
+                  });
+                }
+              }
+            }
+          });
+
+          // Separate folder and product positions for API calls
+          const folderPositions = positions.filter(p => p.type === 'folder').map(p => ({ id: p.id, position: p.position }));
+          const productPositions = positions.filter(p => p.type === 'product').map(p => ({ id: p.id, position: p.position, folder_id: p.folder_id }));
+
+          if (folderPositions.length > 0) {
+            api.patch(`/price_lists/${this.priceListId}/product_price_folders/reorder`, {
+              folder_positions: folderPositions
+            }).catch((response) => {
+              this.handleXHRError(response);
+            });
+          }
+
+          if (productPositions.length > 0) {
+            api.patch(`/price_lists/${this.priceListId}/product_prices/reorder`, {
+              product_positions: productPositions
+            }).catch((response) => {
+              this.handleXHRError(response);
+            });
+          }
+        },
+
+        onDrop(payload) {
+          if (!this.draggedItem || !payload || !payload.item) return;
+          
+          const draggedItemType = this.draggedItemType;
+          const draggedItem = this.draggedItem;
+          const targetItemType = payload.itemType;
+          const targetItem = payload.item;
+          
+          // Ensure we have a valid event object
+          if (payload.evt && typeof payload.evt.preventDefault === 'function') {
+            payload.evt.preventDefault();
+            payload.evt.stopPropagation();
+          }
+          
+          // Only allow dropping products onto folders or back button
+          if (draggedItemType === 'product' && (targetItemType === 'folder' || targetItemType === 'back')) {
+            // Fast path for folder/back drops - respond immediately
+            if (targetItemType === 'folder') {
+              const folderId = parseInt(targetItem.id);
+              const productsInFolder = this.productPrices.filter(pp => pp.product_price_folder_id == folderId);
+              let maxPosition = -1;
+              productsInFolder.forEach(pp => {
+                if (typeof pp.position === 'number' && pp.position > maxPosition) {
+                  maxPosition = pp.position;
+                }
+              });
+
+              // Update UI immediately for fast response
+              draggedItem.product_price_folder_id = folderId;
+              draggedItem.position = maxPosition + 1;
+              
+              // API call with minimal delay
+              api.patch(`/product_prices/${draggedItem.id}/assign_folder`, {
+                folder_id: folderId
+              }).catch((response) => {
+                this.handleXHRError(response);
+              });
+            } else if (targetItemType === 'back') {
+              // Update UI immediately
+              draggedItem.product_price_folder_id = null;
+              const rootProducts = this.productPrices.filter(pp => !pp.product_price_folder_id);
+              draggedItem.position = rootProducts.length > 0 ? rootProducts.length - 1 : 0;
+              
+              // API call with minimal delay
+              api.patch(`/product_prices/${draggedItem.id}/assign_folder`, {
+                folder_id: null
+              }).catch((response) => {
+                this.handleXHRError(response);
+              });
+            }
+          }
+        },
+
+        onDragStart(payload) {
+          if (payload && payload.item) {
+            this.draggedItem = payload.item;
+            this.draggedItemType = payload.itemType;
+          }
+        },
+
+        onDragEnd() {
+          this.draggedItem = null;
+          this.draggedItemType = null;
+        },
+
+        updateGridSize() {
+          // Prevent rapid consecutive calls
+          if (this.gridSizeUpdateInProgress) return;
+          this.gridSizeUpdateInProgress = true;
+          
+          api.patch(`/price_lists/${this.priceListId}`, {
+            price_list: { grid_size: this.gridSize }
+          }).then(() => {
+            this.gridSizeUpdateInProgress = false;
+          }).catch((response) => {
+            this.gridSizeUpdateInProgress = false;
+            this.handleXHRError(response);
+          });
+        },
+
+        openFolderModal(folder = null) {
+          this.editingFolder = folder;
+          if (folder) {
+            this.folderForm = { name: folder.name, color: folder.color };
+          } else {
+            this.folderForm = { name: '', color: '#6c757d' };
+          }
+          this.showFolderModal = true;
+        },
+
+        closeFolderModal() {
+          this.showFolderModal = false;
+          this.editingFolder = null;
+          this.folderForm = { name: '', color: '#6c757d' };
+        },
+
+        saveFolder() {
+          if (!this.folderForm.name.trim()) {
+            this.sendFlash('Voer een mapnaam in', '', 'warning');
+            return;
+          }
+
+          const normalizedColor = (this.folderForm.color || '').trim();
+          if (!this.isValidHexColor(normalizedColor)) {
+            this.sendFlash('Voer een geldige hex kleur in (bijv. #6c757d)', '', 'warning');
+            return;
+          }
+          this.folderForm.color = normalizedColor;
+
+          if (this.editingFolder) {
+            api.patch(`/product_price_folders/${this.editingFolder.id}`, {
+              product_price_folder: this.folderForm
+            }).then((response) => {
+              const index = this.folders.findIndex(f => f.id === this.editingFolder.id);
+              if (index !== -1) {
+                this.$set(this.folders, index, response.data);
+              }
+              this.sendFlash('Map bijgewerkt', '', 'success');
+              this.closeFolderModal();
+            }).catch((response) => {
+              this.handleXHRError(response);
+            });
+          } else {
+            api.post(`/price_lists/${this.priceListId}/product_price_folders`, {
+              product_price_folder: this.folderForm
+            }).then((response) => {
+              this.folders.push(response.data);
+              this.sendFlash('Map aangemaakt', '', 'success');
+              this.closeFolderModal();
+            }).catch((response) => {
+              this.handleXHRError(response);
+            });
+          }
+        },
+
+        deleteFolder(folder) {
+          if (!confirm(`Map "${folder.name}" verwijderen? Producten worden terug naar het hoofdscherm verplaatst.`)) {
+            return;
+          }
+
+          api.delete(`/product_price_folders/${folder.id}`).then(() => {
+            this.productPrices.forEach(pp => {
+              if (pp.product_price_folder_id === folder.id) {
+                pp.product_price_folder_id = null;
+              }
+            });
+            const index = this.folders.findIndex(f => f.id === folder.id);
+            if (index !== -1) {
+              this.folders.splice(index, 1);
+            }
+            this.sendFlash('Map verwijderd', '', 'success');
+            this.closeFolderModal();
+          }).catch((response) => {
+            this.handleXHRError(response);
+          });
+        },
       },
 
       computed: {
@@ -295,6 +628,103 @@ document.addEventListener('turbo:load', () => {
 
         isMobile() {
           return this.isIos || /Android|webOS|Opera Mini/i.test(navigator.userAgent);
+        },
+
+        sortedFolders() {
+          return [...this.folders].sort((a, b) => a.position - b.position);
+        },
+
+        productsWithoutFolder() {
+          return this.productPrices
+            .filter(pp => !pp.product_price_folder_id)
+            .sort((a, b) => a.position - b.position);
+        },
+
+        productsInCurrentFolder() {
+          if (!this.currentFolder) return [];
+          return this.productPrices
+            .filter(pp => pp.product_price_folder_id === this.currentFolder.id)
+            .sort((a, b) => a.position - b.position);
+        },
+
+        visibleProducts() {
+          if (this.currentFolder) {
+            return this.productsInCurrentFolder;
+          }
+          return this.productsWithoutFolder;
+        },
+
+        isInFolder() {
+          return this.currentFolder !== null;
+        },
+
+        gridItems() {
+          const items = [];
+          
+          // Add back button if in folder - always first and fixed
+          if (this.currentFolder) {
+            items.push({
+              type: 'back',
+              item: this.currentFolder,
+              id: 'back',
+              position: -1000 // Always first, fixed position
+            });
+          }
+          
+          // Add folders if not in folder
+          if (!this.currentFolder) {
+            this.sortedFolders.forEach(folder => {
+              items.push({
+                type: 'folder',
+                item: folder,
+                id: folder.id,
+                position: folder.position
+              });
+            });
+          }
+          
+          // Add products
+          this.visibleProducts.forEach(productPrice => {
+            items.push({
+              type: 'product',
+              item: productPrice,
+              id: productPrice.id,
+              position: productPrice.position
+            });
+          });
+          
+          // Sort by position, but keep back button always first
+          return items.sort((a, b) => {
+            if (a.type === 'back') return -1;
+            if (b.type === 'back') return 1;
+            return a.position - b.position;
+          });
+        },
+
+        productGridStyle() {
+          return {
+            gridTemplateColumns: `repeat(${this.gridSize}, 1fr)`,
+            gridTemplateRows: `repeat(${this.gridSize}, auto)`
+          };
+        }
+      },
+
+      watch: {
+        gridSize: {
+          handler: function(newVal, oldVal) {
+            // Only call update if value actually changed and we're not already updating
+            if (newVal !== oldVal && !this.gridSizeUpdateInProgress) {
+              // Clear any pending update
+              if (this.gridSizeUpdateTimeout) {
+                clearTimeout(this.gridSizeUpdateTimeout);
+              }
+              // Debounce the update
+              this.gridSizeUpdateTimeout = setTimeout(() => {
+                this.updateGridSize();
+              }, 500);
+            }
+          },
+          immediate: false
         }
       },
 
@@ -305,12 +735,16 @@ document.addEventListener('turbo:load', () => {
       },
       destroyed: function() {
         document.removeEventListener('keyup', this.escapeKeyListener);
+        if (this.gridSizeUpdateTimeout) {
+          clearTimeout(this.gridSizeUpdateTimeout);
+        }
       },
 
       components: {
         FlashNotification,
         UserSelection,
-        ActivityOrders
+        ActivityOrders,
+        GridTile
       },
     });
 
