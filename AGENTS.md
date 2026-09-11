@@ -33,7 +33,7 @@ Controllers: `app/controllers/*.rb` extend ApplicationController
 Models: `app/models/*.rb`
 Jobs: `app/jobs/*.rb`
 Policies: `app/policies/*.rb` (Pundit)
-Views: Slim templates
+Views: ERB templates
 Tests: `spec/controllers/*_spec.rb`, `spec/models/*_spec.rb`
 Factories: `spec/factories/*.rb` use FactoryBot + Faker
 
