@@ -4,7 +4,7 @@ class CreditMutation < ApplicationRecord
   belongs_to :created_by, class_name: 'User'
 
   validates :description, presence: true
-  validates :amount, presence: true, numericality: { less_than_or_equal_to: 1000 }
+  validates :amount, presence: true, numericality: { less_than_or_equal_to: 5000 }
 
   validate :activity_not_locked
 

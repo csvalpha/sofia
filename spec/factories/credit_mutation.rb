@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :credit_mutation do
-    description { Faker::Space.agency }
+    sequence(:description) { |n| "#{Faker::Space.agency} #{n}" }
     user
     created_by factory: %i[user]
     amount { rand(0..100) }

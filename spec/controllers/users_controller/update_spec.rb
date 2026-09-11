@@ -12,6 +12,7 @@ describe UsersController do
     before do
       sign_in action_user
       user.name = 'New Name'
+      user.sub_provider = 'NEW_PROVIDER'
       request
       user.reload
     end
@@ -45,6 +46,7 @@ describe UsersController do
 
       it { expect(request.status).to eq 302 }
       it { expect(user.name).to eq 'New Name' }
+      it { expect(user.sub_provider).to eq 'NEW_PROVIDER' }
     end
   end
 end

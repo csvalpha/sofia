@@ -28,7 +28,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def permitted_attributes_for_update
-    %i[name email deactivated]
+    %i[name email sub_provider deactivated]
   end
 
   def permitted_attributes_for_update_with_sofia_account
