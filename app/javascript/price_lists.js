@@ -1,18 +1,19 @@
 import Vue from 'vue/dist/vue.esm';
+import * as bootstrap from 'bootstrap';
 import api from './api/axiosInstance';
 
 document.addEventListener('turbo:load', () => {
   const element = document.getElementById('pricelists-container');
-  if (element != null) {
+  if (element != null && !element.__vue__) {
     const priceLists = JSON.parse(element.dataset.priceLists);
     const products = JSON.parse(element.dataset.products);
 
     products.forEach(p => p.editing = false);
 
-    new Vue({
+    const app = new Vue({
       el: element,
       data: () => {
-        return { priceLists: priceLists, products: products, showArchived: false, errors: [] };
+        return { priceLists: priceLists, products: products, showArchived: false, errors: [], currentlyEditingPriceList: null };
       },
       computed: {
         filteredPriceLists: function() {
@@ -141,6 +142,11 @@ document.addEventListener('turbo:load', () => {
           }
         },
 
+        editPriceList: function(priceList) {
+          this.currentlyEditingPriceList = { ...priceList };
+          bootstrap.Modal.getOrCreateInstance('#editPriceListModal').show();
+        },
+
         archivePriceList: function(priceList) {
           api.post(`/price_lists/${priceList.id}/archive`, {}).then((response) => {
             priceList.archived_at = response.data;
@@ -176,5 +182,27 @@ document.addEventListener('turbo:load', () => {
         },
       }
     });
+
+    const editModalElement = document.getElementById('editPriceListModal');
+    if (editModalElement && !editModalElement.__vue__) {
+      new Vue({
+        el: editModalElement,
+        computed: {
+          url() {
+            return '/price_lists/' + app.currentlyEditingPriceList?.id;
+          },
+          name: {
+            get() {
+              return app.currentlyEditingPriceList?.name || '';
+            },
+            set(value) {
+              if (app.currentlyEditingPriceList) {
+                app.currentlyEditingPriceList.name = value;
+              }
+            }
+          }
+        }
+      });
+    }
   }
 });
