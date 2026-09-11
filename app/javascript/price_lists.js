@@ -142,7 +142,7 @@ document.addEventListener('turbo:load', () => {
         },
 
         editPriceList: function(priceList) {
-          this.currentlyEditingPriceList = priceList;
+          this.currentlyEditingPriceList = { ...priceList };
           /* eslint-disable no-undef */
           bootstrap.Modal.getOrCreateInstance('#editPriceListModal').show();
         },

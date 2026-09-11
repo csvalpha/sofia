@@ -2,7 +2,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">
+        <h5 class="modal-title" id="editPriceListModalLabel">
           Prijslijst wijzigen
         </h5>
         <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"/>
@@ -12,8 +12,8 @@
         <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
         <div class="modal-body">
           <div class="mb-3">
-            <label class="form-label">Naam *</label>
-            <input class="form-control" name="price_list[name]" v-model="name" required="true" placeholder="Naam">
+            <label class="form-label" for="edit-price-list-name">Naam *</label>
+            <input id="edit-price-list-name" class="form-control" name="price_list[name]" v-model="name" required="true" placeholder="Naam">
           </div>
         </div>
         <div class="modal-footer">

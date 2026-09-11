@@ -56,10 +56,10 @@
         <tr @keyup.enter="saveProduct(product)" @keyup.esc="cancelEditProduct(product)" class="products-product" v-for="product in products" v-on:dblclick="editProduct(product)">
           <template v-if="product.editing">
             <td class="products-cancel-edit" v-on:click="cancelEditProduct(product)">
-              <span title="Cancel" v-if="product.id">
+              <span title="Cancel" v-if="product.id" aria-label="Annuleren">
                 <i class="fas fa-arrow-rotate-left fa-lg"></i>
               </span>
-              <span title="Remove" v-else="">
+              <span title="Remove" v-else="" aria-label="Verwijderen">
                 <i class="fas fa-xmark fa-lg"></i>
               </span>
             </td>
@@ -104,7 +104,7 @@
               </div>
             </td>
             <td class="products-save-new" v-on:click="saveProduct(product)">
-            <span class="btn btn-primary">
+            <span class="btn btn-primary" aria-label="Opslaan">
               <i class="far fa-floppy-disk fa-lg"></i>
             </span></td>
           </template>
@@ -124,7 +124,7 @@
               </span>
             </td>
             <td class="products-new-edit-button" v-if="<%= policy(Product).update? %> && filteredPriceLists.length > 0">
-              <button class="btn btn-sm btn-outline-secondary" v-on:click="editProduct(product)">
+              <button class="btn btn-sm btn-outline-secondary" v-on:click="editProduct(product)" aria-label="Product bewerken">
                 <i class="fas fa-pencil"></i>
               </button>
             </td>
@@ -144,14 +144,14 @@
           <td v-for="priceList in filteredPriceLists">
             <div class="center-text d-flex">
               <div class="products-archive-button">
-                <button class="btn btn-sm btn-outline-secondary" v-if="<%= policy(PriceList).unarchive? %> && priceList.archived_at" v-on:click="unarchivePriceList(priceList)">
+                <button class="btn btn-sm btn-outline-secondary" v-if="<%= policy(PriceList).unarchive? %> && priceList.archived_at" v-on:click="unarchivePriceList(priceList)" aria-label="Prijslijst herstellen">
                   <i class="fas fa-repeat"></i>
                 </button>
-                <button class="btn btn-sm btn-outline-secondary" v-else-if="<%= policy(PriceList).archive? %>" v-on:click="archivePriceList(priceList)">
+                <button class="btn btn-sm btn-outline-secondary" v-else-if="<%= policy(PriceList).archive? %>" v-on:click="archivePriceList(priceList)" aria-label="Prijslijst archiveren">
                   <i class="fas fa-archive"></i>
                 </button>
               </div>
-              <button class="btn btn-sm btn-outline-secondary ms-2" v-if="<%= policy(PriceList).update? %>" v-on:click="editPriceList(priceList)">
+              <button class="btn btn-sm btn-outline-secondary ms-2" v-if="<%= policy(PriceList).update? %>" v-on:click="editPriceList(priceList)" aria-label="Prijslijst bewerken">
                 <i class="fas fa-pencil"></i>
               </button>
             </div>
