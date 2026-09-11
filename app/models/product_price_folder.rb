@@ -1,5 +1,4 @@
 class ProductPriceFolder < ApplicationRecord
-
   belongs_to :price_list
   has_many :product_prices, dependent: :nullify
 

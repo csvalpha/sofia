@@ -1,6 +1,4 @@
 class ProductPrice < ApplicationRecord
-
-
   belongs_to :product
   belongs_to :price_list
   belongs_to :product_price_folder, optional: true

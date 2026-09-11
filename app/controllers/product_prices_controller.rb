@@ -23,7 +23,7 @@ class ProductPricesController < ApplicationController
     end
   end
 
-  def reorder # rubocop:disable Metrics/MethodLength
+  def reorder # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     product_positions = params.require(:product_positions)
 
     ActiveRecord::Base.transaction do
@@ -31,11 +31,9 @@ class ProductPricesController < ApplicationController
         product_price = @price_list.product_prices.find(product_data[:id])
         authorize product_price, :update?
 
-        if product_data[:folder_id].present?
-           unless `@price_list.product_price_folders.exists`?(id: product_data[:folder_id])
-            raise ActiveRecord::RecordInvalid.new(product_price),
-                  'Folder does not belong to this price list'
-          end
+        if product_data[:folder_id].present? && !@price_list.product_price_folders.exists?(id: product_data[:folder_id])
+          raise ActiveRecord::RecordInvalid.new(product_price),
+                'Folder does not belong to this price list'
         end
 
         product_price.update!(
