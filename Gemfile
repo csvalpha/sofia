@@ -69,7 +69,7 @@ group :development do
   gem 'spring', '~> 4.7.0', require: false
   gem 'spring-commands-rspec', '~> 1.0.4', require: false
   gem 'spring-watcher-listen', '~> 2.1.0', require: false
-  gem 'web-console', '~> 4.3.0'
+  gem 'web-console', '~> 4.2.1'
 end
 
 group :test do
