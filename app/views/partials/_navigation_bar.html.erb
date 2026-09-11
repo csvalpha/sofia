@@ -10,60 +10,60 @@
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
           <%= nav_link root_path, class: 'nav-link' do %>
-            <%= fa_icon 'home', class: 'me-2', text: 'Home' %>
+            <i class="fas fa-home me-2"></i> Home
           <% end %>
         </li>
         <% if policy(Activity).index? %>
           <li class="nav-item">
             <%= nav_link activities_path, class: 'nav-link' do %>
-              <%= fa_icon 'calendar', class: 'me-2', text: 'Activiteiten' %>
+              <i class="fas fa-calendar-days me-2"></i> Activiteiten
             <% end %>
           </li>
         <% end %>
         <% if current_user&.treasurer? || current_user&.renting_manager? %>
           <li class="nav-item">
             <%= nav_link users_path, class: 'nav-link' do %>
-              <%= fa_icon 'users', class: 'me-2', text: 'Gebruikers' %>
+              <i class="fas fa-users me-2"></i> Gebruikers
             <% end %>
           </li>
           <li class="nav-item">
             <%= nav_link price_lists_path, class: 'nav-link' do %>
-              <%= fa_icon 'beer', class: 'me-2', text: 'Prijslijsten' %>
+              <i class="fas fa-beer-mug-empty me-2"></i> Prijslijsten
             <% end %>
           </li>
         <% end %>
         <% if current_user&.treasurer? %>
           <li class="nav-item">
             <%= nav_link credit_mutations_path, class: 'nav-link' do %>
-              <%= fa_icon 'money', class: 'me-2', text: 'Inleg en saldocorrecties' %>
+              <i class="fas fa-money-bill me-2"></i> Inleg en saldocorrecties
             <% end %>
           </li>
         <% end %>
         <% if policy(:zatladder).index? %>
           <li class="nav-item">
             <%= nav_link zatladder_index_path, class: 'nav-link' do %>
-              <%= fa_icon 'list', class: 'me-2', text: 'Zatladder' %>
+              <i class="fas fa-list me-2"></i> Zatladder
             <% end %>
           </li>
         <% end %>
         <% if policy(Invoice).index? %>
           <li class="nav-item">
             <%= nav_link invoices_path, class: 'nav-link' do %>
-              <%= fa_icon 'shopping-cart', class: 'me-2', text: 'Facturen' %>
+              <i class="fas fa-cart-shopping me-2"></i> Facturen
             <% end %>
           </li>
         <% end %>
         <% if policy(Payment).index? %>
           <li class="nav-item">
             <%= nav_link payments_path, class: 'nav-link' do %>
-              <%= fa_icon 'credit-card', class: 'me-2', text: 'Betalingen' %>
+              <i class="fas fa-credit-card me-2"></i> Betalingen
             <% end %>
           </li>
         <% end %>
         <% if policy(:finance_overview).index? %>
           <li class="nav-item">
             <%= nav_link finance_overview_index_path, class: 'nav-link' do %>
-              <%= fa_icon 'money', class: 'me-2', text: 'Financien' %>
+              <i class="fas fa-money-bill me-2"></i> Financien
             <% end %>
           </li>
         <% end %>
@@ -72,12 +72,12 @@
         <div class="navbar-nav">
           <%= nav_link current_user, class: 'nav-item' do %>
           <span class="nav-link">
-            <%= fa_icon 'user-circle-o', class: 'me-2', text: current_user.name %>
+            <i class="far fa-circle-user me-2"></i> <%= current_user.name %>
           </span>
           <% end %>
         </div>
         <div class="navbar-text small">
-          <%= link_to '(uitloggen)', destroy_user_session_path, class: 'ms-1', method: :delete %>
+          <%= link_to '(uitloggen)', destroy_user_session_path, class: 'ms-1', data: { turbo_method: :delete }%>
         </div>
       <% end %>
     </div>

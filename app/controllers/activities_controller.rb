@@ -22,45 +22,6 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
     @price_lists_json = PriceList.unarchived.to_json(only: %i[id name])
   end
 
-  def create
-    @activity = Activity.new(permitted_attributes.merge(created_by: current_user))
-    authorize @activity
-
-    if @activity.save
-      flash[:success] = 'Activiteit aangemaakt'
-    else
-      flash[:error] = @activity.errors.full_messages.join(', ')
-    end
-
-    redirect_to activities_url
-  end
-
-  def update
-    @activity = Activity.find(params[:id])
-    authorize @activity
-
-    if @activity.update(params.require(:activity).permit(%i[title]))
-      flash[:success] = 'Activiteit hernoemd'
-    else
-      flash[:error] = "Activiteit hernoemen mislukt; #{@activity.errors.full_messages.join(', ')}"
-    end
-
-    redirect_to @activity
-  end
-
-  def destroy
-    @activity = Activity.find(params[:id])
-    authorize @activity
-
-    if @activity.destroy
-      flash[:success] = 'Activiteit verwijderd'
-    else
-      flash[:error] = "Activiteit verwijderen mislukt; #{@activity.errors.full_messages.join(', ')}"
-    end
-
-    redirect_to Activity
-  end
-
   def show # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @activity = Activity.includes(:price_list,
                                   { orders: [{ order_rows: :product }, :user, :created_by] }).find(params[:id])
@@ -83,6 +44,45 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
     @count_per_product = @activity.count_per_product
   end
 
+  def create
+    @activity = Activity.new(activity_params.merge(created_by: current_user))
+    authorize @activity
+
+    if @activity.save
+      flash[:success] = 'Activiteit aangemaakt'
+    else
+      flash[:error] = @activity.errors.full_messages.join(', ')
+    end
+
+    redirect_to activities_url
+  end
+
+  def update
+    @activity = Activity.find(params[:id])
+    authorize @activity
+
+    if @activity.update(activity_params_for_update)
+      flash[:success] = 'Activiteit hernoemd'
+    else
+      flash[:error] = "Activiteit hernoemen mislukt; #{@activity.errors.full_messages.join(', ')}"
+    end
+
+    redirect_to @activity
+  end
+
+  def destroy
+    @activity = Activity.find(params[:id])
+    authorize @activity
+
+    if @activity.destroy
+      flash[:success] = 'Activiteit verwijderd'
+    else
+      flash[:error] = "Activiteit verwijderen mislukt; #{@activity.errors.full_messages.join(', ')}"
+    end
+
+    redirect_to Activity
+  end
+
   def order_screen # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     authorize Activity
 
@@ -90,7 +90,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
                         .find(params[:id])
 
     @product_prices_json = sorted_product_price(@activity).to_json(
-      include: { product: { only: %i[id name category], methods: %i[requires_age] } }
+      include: { product: { only: %i[id name category color], methods: %i[requires_age] } }
     )
 
     @users_json = users_hash.to_json
@@ -177,7 +177,11 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
     activity.price_list.product_price.sort_by { |p| p.product.id }
   end
 
-  def permitted_attributes
-    params.require(:activity).permit(%i[title start_time end_time price_list_id])
+  def activity_params
+    params.require(:activity).permit(policy(Activity.new).permitted_attributes)
+  end
+
+  def activity_params_for_update
+    params.require(:activity).permit(policy(@activity).permitted_attributes_for_update)
   end
 end

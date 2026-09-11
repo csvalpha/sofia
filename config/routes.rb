@@ -21,12 +21,12 @@ Rails.application.routes.draw do
 
   resources :users, only: %i[index show create update] do
     collection do
-      get :refresh_user_list
       post :search
     end
     member do
       get :activities
       get :json
+      patch :update_with_sofia_account
     end
   end
 
@@ -49,6 +49,23 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :sofia_accounts, only: %i[create] do
+    collection do
+      get :login
+      get :activate_account
+      get :new_activation_link
+      get :forgot_password, as: :forgot_password_view, action: :forgot_password_view
+      post :forgot_password
+    end
+    member do
+      get :reset_password, as: :reset_password_view, action: :reset_password_view
+      patch :reset_password
+      patch :update_password
+      patch :enable_otp
+      patch :disable_otp
+    end
+  end
+
   devise_scope :user do
     delete 'sign_out', to: 'devise/sessions#destroy', as: :destroy_user_session
   end
@@ -57,7 +74,7 @@ Rails.application.routes.draw do
   require 'sidekiq/web'
   require 'sidekiq-scheduler/web'
 
-  authenticate :user, ->(u) { u.treasurer? } do
+  authenticate :user, lambda(&:treasurer?) do
     mount Sidekiq::Web => '/sidekiq'
   end
 
@@ -65,6 +82,7 @@ Rails.application.routes.draw do
 
   get '/403', to: 'errors#forbidden'
   get '/404', to: 'errors#not_found'
-  get '/422', to: 'errors#unacceptable'
+  get '/406', to: 'errors#unacceptable'
+  get '/422', to: 'errors#unprocessable_entity'
   get '/500', to: 'errors#internal_server_error'
 end

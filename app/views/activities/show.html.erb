@@ -1,4 +1,7 @@
 <% content_for :title, "Activiteit #{@activity.title} - #{Rails.application.config.x.site_name}" %>
+<% content_for :head do %>
+  <%= javascript_include_tag "activity", "data-turbo-track": "reload", defer: true %>
+<% end %>
 <% content_for :modal do %>
   <%= render 'edit_modal' %>
 <% end %>
@@ -7,16 +10,16 @@
   <div class="row justify-content-between">
     <div class="col-sm-12 col-md-6 py-2">
       <h1>
-        <%= fa_icon 'calendar', class: 'me-2', text: @activity.title %>
+        <i class="fas fa-calendar-days me-2"></i> <%= @activity.title %>
       </h1>
       <% unless @activity.locked? %>
         <button class="btn btn-sm btn-primary mb-2" role="button" data-bs-toggle="modal" data-bs-target="#edit_activity_modal">
-          <%= fa_icon 'pencil' %> Naam aanpassen
+          <i class="fas fa-pencil"></i> Naam aanpassen
         </button>
       <% end %>
       <% if @activity.destroyable? %>
         <%= button_to @activity, method: :delete, class: 'btn btn-sm btn-danger mb-2' do %>
-          <%= fa_icon 'trash' %> Activiteit verwijderen
+          <i class="fas fa-trash"></i> Activiteit verwijderen
         <% end %>
       <% end %>
 
@@ -75,7 +78,7 @@
           <div class="d-grid">
             <%= link_to order_screen_activity_url(@activity), class: 'btn btn-primary' do %>
               Naar het streepscherm
-              <%= fa_icon 'calculator', class: 'ms-1' %>
+              <i class="fas fa-calculator ms-1"></i>
             <% end %>
           </div>
         <% else %>

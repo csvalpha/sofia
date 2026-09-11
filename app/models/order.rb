@@ -1,7 +1,7 @@
 class Order < ApplicationRecord
   belongs_to :activity
   belongs_to :user, optional: true
-  belongs_to :created_by, class_name: 'User', inverse_of: :orders
+  belongs_to :created_by, class_name: 'User'
 
   has_many :order_rows, dependent: :destroy
   accepts_nested_attributes_for :order_rows
@@ -15,7 +15,7 @@ class Order < ApplicationRecord
   before_create :can_user_create_order?
   before_destroy -> { throw(:abort) }
 
-  scope :orders_for, (->(user) { where(user: user) })
+  scope :orders_for, ->(user) { where(user:) }
 
   def can_user_create_order?
     throw(:abort) unless user.nil? || user.can_order(activity)
@@ -30,7 +30,7 @@ class Order < ApplicationRecord
 
     order_rows = OrderRow.where(order: records).group(:product_id, :name).joins(:product)
                          .pluck(:name, Arel.sql('SUM(product_count)'), Arel.sql('SUM(product_count * price_per_product)'))
-    order_rows.map { |name, amount, price| { name: name, amount: amount.to_i, price: price.to_f } }
+    order_rows.map { |name, amount, price| { name:, amount: amount.to_i, price: price.to_f } }
   end
 
   def self.count_per_category(from_date, to_date)
@@ -39,7 +39,7 @@ class Order < ApplicationRecord
     order_rows = OrderRow.where(order: records).group(:category).joins(:product)
                          .pluck(:category, Arel.sql('SUM(product_count)'), Arel.sql('SUM(product_count * price_per_product)'))
 
-    order_rows.map { |category, amount, price| { category: category, amount: amount.to_i, price: price.to_f } }
+    order_rows.map { |category, amount, price| { category:, amount: amount.to_i, price: price.to_f } }
   end
 
   private

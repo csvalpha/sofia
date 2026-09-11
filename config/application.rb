@@ -2,12 +2,24 @@ require_relative 'boot'
 
 require 'rails/all'
 
+# Require the gems listed in Gemfile, including any gems
+# you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
 module Sofia
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.0
+    config.load_defaults 7.2
+
+    # Please, add to the `ignore` list any other `lib` subdirectories that do
+    # not contain `.rb` files, or that should not be reloaded or eager loaded.
+    # Common ones are `templates`, `generators`, or `middleware`, for example.
+    config.autoload_lib(ignore: %w[assets tasks])
+
+    # Configuration for the application, engines, and railties goes here.
+    #
+    # These settings can be overridden in specific environments using the files
+    # in config/environments, which are processed later.
 
     config.time_zone = 'Europe/Amsterdam'
 
@@ -16,7 +28,10 @@ module Sofia
     config.i18n.default_locale = :nl
     config.i18n.fallbacks = [:nl]
 
-    config.cache_store = :redis_cache_store, { url: Rails.application.config_for(:cable)['url'] }
+    config.cache_store = :redis_cache_store, {
+      url: Rails.application.config_for(:cable)['url'],
+      pool: { size: ENV.fetch('RAILS_MAX_THREADS', 5).to_i, timeout: 5 }
+    }
     config.active_job.queue_adapter = :sidekiq
 
     config.exceptions_app = routes
@@ -24,19 +39,14 @@ module Sofia
     # See https://github.com/kickstarter/rack-attack#getting-started
     config.middleware.use Rack::Attack
 
-    config.x.amber_api_host      = credentials.dig(Rails.env.to_sym, :amber_host)
-    config.x.amber_api_url       = "#{Rails.env.development? ? 'http' : 'https'}://#{credentials.dig(Rails.env.to_sym, :amber_host)}"
+    config.x.amber_api_host       = credentials.dig(Rails.env.to_sym, :amber_host)
+    config.x.amber_api_url        = "#{Rails.env.development? ? 'http' : 'https'}://#{credentials.dig(Rails.env.to_sym, :amber_host)}"
 
-    config.x.amber_client_id     = credentials.dig(Rails.env.to_sym, :amber_client_id) || ENV.fetch('AMBER_CLIENT_ID', nil)
-    config.x.amber_client_secret = credentials.dig(
-      Rails.env.to_sym, :amber_client_secret
-    ) || ENV.fetch('AMBER_CLIENT_SECRET', nil)
+    config.x.amber_client_id      = credentials.dig(Rails.env.to_sym, :amber_client_id) || ENV.fetch('AMBER_CLIENT_ID', nil)
+    config.x.amber_client_secret  = credentials.dig(Rails.env.to_sym, :amber_client_secret) || ENV.fetch('AMBER_CLIENT_SECRET', nil)
 
-    config.x.amber_host          = credentials.dig(Rails.env.to_sym, :amber_host)
-    config.x.sofia_host          = credentials.dig(Rails.env.to_sym, :sofia_host)
-
-    config.x.slack_webhook        = credentials.dig(Rails.env.to_sym, :slack_webhook) || ''
-    config.x.slack_channel        = '#monitoring'
+    config.x.amber_host           = credentials.dig(Rails.env.to_sym, :amber_host)
+    config.x.sofia_host           = credentials.dig(Rails.env.to_sym, :sofia_host)
 
     config.x.smtp_username        = credentials.dig(:production, :smtp_username)
     config.x.smtp_password        = credentials.dig(:production, :smtp_password)
@@ -62,11 +72,19 @@ module Sofia
     config.x.company_address      = ENV.fetch('COMPANY_ADDRESS', nil)
     config.x.company_website      = ENV.fetch('COMPANY_WEBSITE', nil)
     config.x.company_kvk          = ENV.fetch('COMPANY_KVK', nil)
+    config.x.personal_transaction_iban = ENV.fetch('PERSONAL_TRANSACTION_IBAN', nil)
 
     config.x.site_name            = ENV.fetch('SITE_NAME', 'S.O.F.I.A.')
     config.x.site_short_name      = ENV.fetch('SITE_SHORT_NAME', 'SOFIA')
     config.x.site_long_name       = ENV.fetch('SITE_LONG_NAME', 'Streepsysteem voor de Ordentelijke Festiviteiten van Inleggend Alpha')
     config.x.site_association     = ENV.fetch('SITE_ASSOCIATION', 'C.S.V. Alpha')
+
+    config.x.subprovider_label    = ENV.fetch('SUBPROVIDER_LABEL', nil)
+    config.x.deposit_button_enabled = ENV.fetch('DEPOSIT_BUTTON_ENABLED', 'true') == 'true'
+
+    config.x.min_payment_amount   = [ENV.fetch('MIN_PAYMENT_AMOUNT', '21.8').to_f, 0.01].max
+    config.x.max_payment_amount   = ENV.fetch('MAX_PAYMENT_AMOUNT', '1000').to_f
+    config.x.min_invoice_amount   = [ENV.fetch('MIN_INVOICE_AMOUNT', '1').to_f, 0.01].max
 
     config.x.codes                = {
       beer: ENV.fetch('CODE_BEER', nil),

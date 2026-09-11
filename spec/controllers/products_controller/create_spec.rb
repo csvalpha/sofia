@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ProductsController, type: :controller do
+describe ProductsController do
   describe 'POST create' do
     let(:product) do
       build(:product)

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ActivitiesController, type: :controller do
+describe ActivitiesController do
   describe 'POST create_invoices' do
     let(:activity) { create(:activity) }
     let(:request) do

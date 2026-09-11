@@ -2,20 +2,22 @@ class UserCreditMailer < ApplicationMailer
   def insufficient_credit_mail(user)
     @user = user
     @title = 'Notificatie over je saldo'
-    @cab_link = url_for(controller: 'payments', action: 'add', resulting_credit: 20)
-    @cab_text = 'Saldo opwaarderen naar €20'
+    @cab_link = url_for(controller: 'payments', action: 'add', resulting_credit: Rails.application.config.x.min_payment_amount)
+    @cab_text = "Saldo opwaarderen naar €#{Rails.application.config.x.min_payment_amount}"
     mail to: user.email, subject: 'Verzoek met betrekking tot uw Zatladder saldo'
   end
 
-  def credit_delivery_report_mail(treasurer, success_count, unnotifyable_users)
-    @user = treasurer
+  def credit_delivery_report_mail(success_count, unnotifyable_users)
+    @user = Struct.new(:name).new(
+      Rails.application.config.x.treasurer_name
+    )
     @unnotifyable_users = unnotifyable_users
     @success_count = success_count
     @title = 'Notificatie over de saldomail'
 
     subject = "Er is #{@success_count.positive? ? 'een' : 'geen'} saldomail verstuurd"
 
-    mail to: treasurer.email, subject: subject
+    mail to: Rails.application.config.x.treasurer_email, subject:
   end
 
   def new_credit_mutation_mail(credit_mutation)

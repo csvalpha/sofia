@@ -6,11 +6,10 @@ class UserCreditMailerPreview < ActionMailer::Preview
   end
 
   def credit_delivery_report_mail
-    treasurer = FactoryBot.create(:user, :treasurer)
     unnotifyable_users = FactoryBot.create_list(:user, 2).map(&:name)
     success_count = 2
 
-    UserCreditMailer.credit_delivery_report_mail(treasurer, success_count, unnotifyable_users)
+    UserCreditMailer.credit_delivery_report_mail(success_count, unnotifyable_users)
   end
 
   def new_credit_mutation_mail

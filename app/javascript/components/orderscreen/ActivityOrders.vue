@@ -23,7 +23,15 @@
               <td class="text-end">
                 <span>
                   {{ doubleToCurrency(order.order_total) }}
-                  <i @click.stop="order.toggleDetails()" :class="['order-history-details-expand', 'fa', 'fa-lg', 'ps-2', 'pe-1', order.detailsShowing ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down']"></i>
+                  <i @click.stop="order.toggleDetails()"
+                    :class="[
+                      'order-history-details-expand',
+                      'fa-lg',
+                      'ps-2',
+                      'pe-1',
+                      'fas',
+                      order.detailsShowing ? 'fa-circle-chevron-up' : 'fa-circle-chevron-down'
+                    ]"></i>
                 </span>
               </td>
             </tr>
@@ -53,7 +61,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import api from '../../api/axiosInstance';
 import moment from 'moment';
 import ProductTable from '../ProductTable.vue';
 
@@ -89,7 +97,7 @@ export default {
         params = { user_id: this.user.id };
       }
 
-      let promise = axios.get('/orders', { params });
+      let promise = api.get('/orders', { params });
 
       return promise.then((response) => {
         const orders = response.data;

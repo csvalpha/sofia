@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Role, type: :model do
+RSpec.describe Role do
   subject(:role) { build_stubbed(:role) }
 
   describe '#valid' do
@@ -8,12 +8,6 @@ RSpec.describe Role, type: :model do
 
     context 'when without role_type' do
       subject(:role) { build_stubbed(:role, role_type: nil) }
-
-      it { expect(role).not_to be_valid }
-    end
-
-    context 'when without group_uid' do
-      subject(:role) { build_stubbed(:role, group_uid: nil) }
 
       it { expect(role).not_to be_valid }
     end

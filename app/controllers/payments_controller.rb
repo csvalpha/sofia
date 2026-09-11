@@ -3,7 +3,7 @@ class PaymentsController < ApplicationController
   after_action :verify_authorized, only: %i[index create add]
 
   def index
-    @payments = Payment.all.order(created_at: :desc)
+    @payments = Payment.order(created_at: :desc)
     authorize @payments
   end
 
@@ -15,7 +15,7 @@ class PaymentsController < ApplicationController
 
     if payment.valid?
       checkout_url = payment.mollie_payment.checkout_url
-      redirect_to URI.parse(checkout_url).to_s
+      redirect_to URI.parse(checkout_url).to_s, allow_other_host: true
     else
       flash[:error] = payment.errors
       redirect_to add_payments_path
@@ -34,7 +34,7 @@ class PaymentsController < ApplicationController
     @user = current_user
     @payment = Payment.new
 
-    @payment.amount = params[:resulting_credit].to_i - @user.credit if params[:resulting_credit]
+    @payment.amount = params[:resulting_credit].to_f - @user.credit if params[:resulting_credit]
   end
 
   def callback # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity

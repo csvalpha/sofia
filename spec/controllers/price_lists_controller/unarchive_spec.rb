@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe PriceListsController, type: :controller do
+describe PriceListsController do
   describe 'POST /:id/unarchive' do
     let(:price_list) do
       create(:price_list)

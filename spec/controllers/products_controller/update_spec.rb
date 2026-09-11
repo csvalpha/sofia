@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ProductsController, type: :controller do
+describe ProductsController do
   describe 'PUT update' do
     let(:product) do
       create(:product, product_prices: [create(:product_price)])

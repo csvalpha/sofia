@@ -8,7 +8,7 @@ class PriceListsController < ApplicationController
     authorize PriceList
 
     price_lists = policy_scope(PriceList.order(created_at: :desc))
-    products = Product.all.order(:id).includes(:product_prices)
+    products = Product.order(:id).includes(:product_prices)
 
     @price_list = PriceList.new
 
@@ -21,7 +21,7 @@ class PriceListsController < ApplicationController
   end
 
   def create
-    @price_list = PriceList.new(permitted_attributes)
+    @price_list = PriceList.new(price_list_params)
     authorize @price_list
 
     if @price_list.save
@@ -36,7 +36,7 @@ class PriceListsController < ApplicationController
     @price_list = PriceList.find(params[:id])
     authorize @price_list
 
-    if @price_list.update(permitted_attributes)
+    if @price_list.update(price_list_params)
       flash[:success] = 'Prijslijst opgeslagen'
     else
       flash[:error] = "Prijslijst wijzigen mislukt; #{@price_list.errors.full_messages.join(', ')}"
@@ -54,7 +54,7 @@ class PriceListsController < ApplicationController
       if @price_list.save
         format.json { render json: @price_list.archived_at }
       else
-        format.json { render json: @price_list.errors, status: :unprocessable_entity }
+        format.json { render json: @price_list.errors, status: :unprocessable_content }
       end
     end
   end
@@ -69,14 +69,14 @@ class PriceListsController < ApplicationController
       if @price_list.save
         format.json { render json: @price_list.archived_at }
       else
-        format.json { render json: @price_list.errors, status: :unprocessable_entity }
+        format.json { render json: @price_list.errors, status: :unprocessable_content }
       end
     end
   end
 
   private
 
-  def permitted_attributes
-    params.require(:price_list).permit(:name)
+  def price_list_params
+    params.require(:price_list).permit(policy(PriceList.new).permitted_attributes)
   end
 end

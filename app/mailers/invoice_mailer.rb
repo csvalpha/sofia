@@ -9,9 +9,16 @@ class InvoiceMailer < ApplicationMailer
       @cab_disabled = true
     end
 
-    attachments["#{invoice.human_id}.pdf"] = WickedPdf.new.pdf_from_string(
-      render_to_string(pdf: invoice.human_id.to_s, template: 'invoices/show', layout: 'pdf')
-    )
+    begin
+      # Use token-based URL for unauthenticated Grover access
+      url = url_for(controller: 'invoices', action: 'show', id: invoice.token, pdf: true, only_path: false)
+      pdf = Grover.new(url).to_pdf
+      attachments["#{invoice.human_id}.pdf"] = pdf
+    rescue StandardError => e
+      Rails.logger.error "Failed to generate PDF attachment for invoice #{invoice.id}: #{e.message}"
+      Rails.logger.error e.backtrace.join("\n")
+      # Continue sending email without PDF attachment
+    end
 
     mail to: @invoice.email, subject: "Factuur #{invoice.human_id} #{Rails.application.config.x.company_name}"
   end

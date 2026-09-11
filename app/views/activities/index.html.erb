@@ -1,4 +1,7 @@
 <% content_for :title, "Activiteiten - #{Rails.application.config.x.site_name}" %>
+<% content_for :head do %>
+  <%= javascript_include_tag "activities", "data-turbo-track": "reload", defer: true %>
+<% end %>
 <% content_for :modal do %>
   <%= render 'modal' %>
 <% end %>
@@ -10,7 +13,7 @@
         Activiteiten
       </h1>
       <button class="btn btn-sm btn-primary" data-bs-target="#new_activity_modal" data-bs-toggle="modal" role="button">
-        <%= fa_icon 'plus' %>
+        <i class="fas fa-plus"></i>
         <span class="d-none d-md-inline ms-1">
           Nieuwe activiteit
         </span>
@@ -33,7 +36,7 @@
             <tr>
               <td>
                 <% if activity.locked? %>
-                  <%= fa_icon 'lock' %>
+                  <i class="fas fa-lock"></i>
                 <% end %>
                 <%= link_to activity.title, activity %>
               </td>

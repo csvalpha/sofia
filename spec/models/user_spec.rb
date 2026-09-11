@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe User, type: :model do
+RSpec.describe User do
   subject(:user) { build_stubbed(:user) }
 
   describe '#valid' do
@@ -12,11 +12,17 @@ RSpec.describe User, type: :model do
       it { expect(user).not_to be_valid }
     end
 
+    context 'when with invalid email' do
+      subject(:user) { build_stubbed(:user, email: 'not_an_valid_email') }
+
+      it { expect(user).not_to be_valid }
+    end
+
     context 'when deactivating with credit' do
       subject(:user) { create(:user, deactivated: true) }
 
       before do
-        create(:order_with_items, user: user)
+        create(:order_with_items, user:)
       end
 
       it { expect(user).not_to be_valid }
@@ -38,6 +44,40 @@ RSpec.describe User, type: :model do
       before { user }
 
       it { expect(described_class.in_amber).not_to include user }
+    end
+  end
+
+  describe '.sofia_account' do
+    context 'when sofia_account' do
+      subject(:user) { create(:user, :sofia_account) }
+
+      before { user }
+
+      it { expect(described_class.sofia_account).to include user }
+    end
+
+    context 'when not sofia_account' do
+      subject(:user) { create(:user, provider: 'another_provider') }
+
+      before { user }
+
+      it { expect(described_class.sofia_account).not_to include user }
+    end
+
+    context 'when without email' do
+      subject(:user) { build(:user, :sofia_account, email: nil) }
+
+      before { build(:sofia_account, user:) }
+
+      it { expect(user).not_to be_valid }
+    end
+
+    context 'when with valid email' do
+      subject(:user) { build(:user, :sofia_account, email: 'valid@email.com') }
+
+      before { build(:sofia_account, user:) }
+
+      it { expect(user).to be_valid }
     end
   end
 
@@ -65,7 +105,7 @@ RSpec.describe User, type: :model do
 
       let(:treasurer_role) { create(:role, role_type: :treasurer) }
 
-      before { create(:roles_users, user: user, role: treasurer_role) }
+      before { create(:roles_users, user:, role: treasurer_role) }
 
       it { expect(described_class.treasurer).to include user }
     end
@@ -75,30 +115,40 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '.active / .inactive' do
+  describe '.active / .deactivated / .not_activated' do
     context 'when active' do
       subject(:user) { create(:user) }
 
       it { expect(described_class.active).to include user }
-      it { expect(described_class.inactive).not_to include user }
+      it { expect(described_class.not_activated).not_to include user }
+      it { expect(described_class.deactivated).not_to include user }
     end
 
     context 'when deactivated' do
       subject(:user) { create(:user, deactivated: true) }
 
       it { expect(described_class.active).not_to include user }
-      it { expect(described_class.inactive).to include user }
+      it { expect(described_class.not_activated).not_to include user }
+      it { expect(described_class.deactivated).to include user }
+    end
+
+    context 'when not activated' do
+      subject(:user) { create(:user, :sofia_account) }
+
+      it { expect(described_class.active).not_to include user }
+      it { expect(described_class.not_activated).to include user }
+      it { expect(described_class.deactivated).not_to include user }
     end
   end
 
   describe '#credit' do
     subject(:user) { create(:user) }
 
-    let(:order) { create(:order, user: user) }
+    let(:order) { create(:order, user:) }
     let(:product_price) { create(:product_price, price_list: order.activity.price_list, price: 1.23) }
 
     before do
-      create(:order_row, order: order, product: product_price.product, product_count: 1)
+      create(:order_row, order:, product: product_price.product, product_count: 1)
     end
 
     it { expect(user.credit).to eq(-1.23) }
@@ -111,24 +161,24 @@ RSpec.describe User, type: :model do
       let(:role) { create(:role) }
 
       before do
-        create(:roles_users, role: role, user: user)
+        create(:roles_users, role:, user:)
       end
 
-      it { expect(user.roles).to match_array [role] }
+      it { expect(user.roles).to contain_exactly(role) }
     end
 
     context 'when with a destroyed role' do
       subject(:user) { create(:user) }
 
       let(:role) { create(:role) }
-      let(:roles_users) { create(:roles_users, role: role, user: user) }
+      let(:roles_users) { create(:roles_users, role:, user:) }
 
       before do
         roles_users
         roles_users.destroy
       end
 
-      it { expect(user.roles).not_to match_array [role] }
+      it { expect(user.roles).not_to contain_exactly(role) }
     end
   end
 
@@ -189,7 +239,7 @@ RSpec.describe User, type: :model do
       let(:role) { create(:role, role_type: :treasurer) }
 
       before do
-        create(:roles_users, role: role, user: user)
+        create(:roles_users, role:, user:)
       end
 
       it { expect(user.treasurer?).to be true }
@@ -209,7 +259,7 @@ RSpec.describe User, type: :model do
       let(:role) { create(:role, role_type: :main_bartender) }
 
       before do
-        create(:roles_users, role: role, user: user)
+        create(:roles_users, role:, user:)
       end
 
       it { expect(user.main_bartender?).to be true }
@@ -224,7 +274,7 @@ RSpec.describe User, type: :model do
 
   describe '#update_role' do
     context 'when getting new roles' do
-      subject(:user) { create(:user) }
+      subject(:user) { create(:user, :from_amber) }
 
       let(:role) { create(:role) }
 
@@ -264,9 +314,9 @@ RSpec.describe User, type: :model do
 
     let(:product_price) { build(:product_price, price: 2.00) }
     let(:price_list) { build(:price_list, product_price: [product_price]) }
-    let(:activity) { build(:activity, price_list: price_list) }
+    let(:activity) { build(:activity, price_list:) }
 
-    let(:default_order) { { products: [product_price.product], activity: activity, user: user } }
+    let(:default_order) { { products: [product_price.product], activity:, user: } }
 
     let(:order) do
       create(:order_with_items, default_order.merge(created_at: 4.weeks.ago))
@@ -277,7 +327,7 @@ RSpec.describe User, type: :model do
     end
 
     let(:third_order) do
-      create(:order_with_items, default_order.merge(user: user, created_at: Time.zone.now))
+      create(:order_with_items, default_order.merge(user:, created_at: Time.zone.now))
     end
 
     before do
@@ -349,10 +399,10 @@ RSpec.describe User, type: :model do
     context 'when with data' do
       let(:product_price) { build(:product_price, price: 2.18) }
       let(:price_list) { build(:price_list, product_price: [product_price]) }
-      let(:activity) { build(:activity, price_list: price_list) }
+      let(:activity) { build(:activity, price_list:) }
 
       context 'without orders' do
-        let(:credit_mutation) { create(:credit_mutation, user: user, amount: 20) }
+        let(:credit_mutation) { create(:credit_mutation, user:, amount: 20) }
 
         before do
           credit_mutation
@@ -363,7 +413,7 @@ RSpec.describe User, type: :model do
 
       context 'without credit_mutations' do
         let(:order) do
-          build(:order_with_items, products: [product_price.product], activity: activity, user: user)
+          build(:order_with_items, products: [product_price.product], activity:, user:)
         end
 
         before do
@@ -375,9 +425,9 @@ RSpec.describe User, type: :model do
 
       context 'when with both' do
         let(:order) do
-          build(:order_with_items, products: [product_price.product], activity: activity, user: user)
+          build(:order_with_items, products: [product_price.product], activity:, user:)
         end
-        let(:credit_mutation) { create(:credit_mutation, user: user, amount: 20) }
+        let(:credit_mutation) { create(:credit_mutation, user:, amount: 20) }
 
         before do
           credit_mutation
@@ -388,15 +438,32 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe 'destroy' do
+    context 'with sofia_account' do
+      subject(:user) { create(:user, :sofia_account) }
+
+      before do
+        create(:sofia_account, user:)
+        user.destroy
+      end
+
+      it { expect(SofiaAccount.count).to eq 0 }
+    end
+  end
+
   describe '#archive!' do
-    context 'when archiving a user' do
-      subject(:user) { create(:user) }
+    context 'with sofia_account' do
+      subject(:user) { create(:user, :sofia_account) }
 
       let(:nil_attributes) do
         %w[avatar_thumb_url email birthday]
       end
 
-      before { user.archive! && user.reload }
+      before do
+        create(:sofia_account, user:)
+        user.archive!
+        user.reload
+      end
 
       it { expect(user.archive!).to be true }
       it { expect(user.name).to eq "Gearchiveerde gebruiker #{user.id}" }
@@ -405,11 +472,113 @@ RSpec.describe User, type: :model do
       it { expect { user.archive! }.not_to(change(user, :id)) }
       it { expect { user.archive! }.not_to(change(user, :uid)) }
       it { expect { user.archive! }.not_to(change(user, :provider)) }
+      it { expect { user.archive! }.not_to(change(user, :sofia_account)) }
+      it { expect(SofiaAccount.count).to eq 1 }
 
       it do
         nil_attributes.each do |attribute|
           expect(user[attribute]).to be_nil
         end
+      end
+    end
+  end
+
+  describe '#before_save' do
+    context 'with sofia_account' do
+      subject(:user) { create(:user, :sofia_account) }
+
+      it { expect(user.activation_token).not_to be_nil }
+
+      it do
+        expect(user.activation_token_valid_till).not_to be_nil
+        expect(user.activation_token_valid_till).to be_within(1.minute).of(5.days.from_now)
+      end
+    end
+
+    context 'without sofia_account' do
+      subject(:user) { create(:user) }
+
+      it { expect(user.activation_token).to be_nil }
+      it { expect(user.activation_token_valid_till).to be_nil }
+    end
+  end
+
+  describe '#after_save' do
+    context 'when deactivated upon creation' do
+      subject(:user) { build(:user, deactivated: true) }
+
+      it do
+        expect(user).to receive(:archive!) # rubocop:disable RSpec/SubjectStub, RSpec/MessageSpies
+        user.save
+      end
+    end
+
+    context 'when deactivated after update' do
+      subject(:user) { create(:user, deactivated: false) }
+
+      before { user.deactivated = true }
+
+      it do
+        expect(user).to receive(:archive!) # rubocop:disable RSpec/SubjectStub, RSpec/MessageSpies
+        user.save
+      end
+    end
+
+    context 'when deactivated and not changed' do
+      subject(:user) { create(:user, deactivated: true) }
+
+      before { user.email = 'valid@email.com' }
+
+      it do
+        expect(user).not_to receive(:archive!) # rubocop:disable RSpec/SubjectStub, RSpec/MessageSpies
+        user.save
+      end
+    end
+
+    context 'when not deactivated upon creation' do
+      subject(:user) { build(:user, deactivated: false) }
+
+      it do
+        expect(user).not_to receive(:archive!) # rubocop:disable RSpec/SubjectStub, RSpec/MessageSpies
+        user.save
+      end
+    end
+
+    context 'when not deactivated after update' do
+      subject(:user) { create(:user, deactivated: true) }
+
+      before { user.deactivated = false }
+
+      it do
+        expect(user).not_to receive(:archive!) # rubocop:disable RSpec/SubjectStub, RSpec/MessageSpies
+        user.save
+      end
+    end
+  end
+
+  describe '#after_create' do
+    context 'with sofia_account' do
+      subject(:user) { build(:user, :sofia_account) }
+
+      after do
+        clear_enqueued_jobs
+      end
+
+      it do
+        expect { user.save }.to have_enqueued_mail(UserMailer, :account_creation_email).with(user)
+      end
+    end
+
+    context 'without sofia_account' do
+      subject(:user) { build(:user) }
+
+      after do
+        clear_enqueued_jobs
+      end
+
+      it do
+        expect(UserMailer).not_to receive(:account_creation_email) # rubocop:disable RSpec/MessageSpies
+        user.save
       end
     end
   end

@@ -1,5 +1,5 @@
 class OrderRow < ApplicationRecord
-  belongs_to :order, inverse_of: :order_rows
+  belongs_to :order
   belongs_to :product
 
   validates :product_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }

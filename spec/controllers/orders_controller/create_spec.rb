@@ -1,11 +1,11 @@
 require 'rails_helper'
 
-describe OrdersController, type: :controller do
+describe OrdersController do
   describe 'POST create' do
     let(:activity) { create(:activity) }
     let(:locked_activity) { create(:activity) }
     let(:order) do
-      build(:order, activity: activity, user: create(:user))
+      build(:order, activity:, user: create(:user))
     end
     let(:order_on_locked_activity) do
       build(:order, activity: locked_activity, user: create(:user))

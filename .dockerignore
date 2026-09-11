@@ -25,7 +25,6 @@ yarn-error.log
 /tmp
 /public/system
 /public/assets
-/public/packs-test
 /coverage
 /spec/tmp
 

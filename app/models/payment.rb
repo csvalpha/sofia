@@ -6,7 +6,7 @@ class Payment < ApplicationRecord
     undef_method :open
   end
   # See: https://docs.mollie.com/payments/status-changes
-  enum status: { open: 0, pending: 1, paid: 2, failed: 3, canceled: 4, expired: 5 }
+  enum :status, { open: 0, pending: 1, paid: 2, failed: 3, canceled: 4, expired: 5 }
   COMPLETE_STATUSES = %w[paid failed canceled expired].freeze
 
   belongs_to :user, optional: true
@@ -17,8 +17,9 @@ class Payment < ApplicationRecord
 
   validate :user_xor_invoice
   validate :user_amount
+  validate :invoice_amount
 
-  scope :not_completed, (-> { where.not(status: COMPLETE_STATUSES) })
+  scope :not_completed, -> { where.not(status: COMPLETE_STATUSES) }
 
   after_save :process_complete_payment!
 
@@ -32,7 +33,7 @@ class Payment < ApplicationRecord
 
     mollie_payment = Mollie::Payment.create(
       amount: { value: format('%<amount>.2f', amount: attributes[:amount]), currency: 'EUR' },
-      description: description,
+      description:,
       redirect_url: "http://#{Rails.application.config.x.sofia_host}/payments/#{obj.id}/callback"
     )
 
@@ -52,8 +53,8 @@ class Payment < ApplicationRecord
   end
 
   def process_user!
-    mutation = CreditMutation.create(user: user,
-                                     amount: amount,
+    mutation = CreditMutation.create(user:,
+                                     amount:,
                                      description: 'iDEAL inleg', created_by: user)
 
     UserCreditMailer.new_credit_mutation_mail(mutation).deliver_later
@@ -61,7 +62,7 @@ class Payment < ApplicationRecord
 
   def process_invoice!
     CreditMutation.create(user: invoice.user,
-                          amount: amount,
+                          amount:,
                           description: "Betaling factuur #{invoice.human_id}", created_by: invoice.user)
     invoice.update(status: 'paid')
 
@@ -74,9 +75,19 @@ class Payment < ApplicationRecord
     errors.add(:payment, 'must belong to a user xor invoice') unless user.present? ^ invoice.present?
   end
 
-  def user_amount
+  def user_amount # rubocop:disable Metrics/AbcSize
     return unless user
 
-    errors.add(:amount, 'must be bigger than or equal to 20') unless amount && (amount >= 20)
+    min_amount = Rails.application.config.x.min_payment_amount
+    max_amount = Rails.application.config.x.max_payment_amount
+    errors.add(:amount, "must be greater than or equal to €#{format('%.2f', min_amount)}") unless amount && (amount >= min_amount)
+    errors.add(:amount, "must be less than or equal to €#{format('%.2f', max_amount)}") unless amount && (amount <= max_amount)
+  end
+
+  def invoice_amount
+    return unless invoice
+
+    min_amount = Rails.application.config.x.min_invoice_amount
+    errors.add(:amount, "must be greater than or equal to €#{format('%.2f', min_amount)}") unless amount && (amount >= min_amount)
   end
 end

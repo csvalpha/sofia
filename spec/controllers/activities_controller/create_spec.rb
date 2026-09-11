@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ActivitiesController, type: :controller do
+describe ActivitiesController do
   describe 'POST create' do
     let(:activity) do
       build(:activity, price_list: create(:price_list))

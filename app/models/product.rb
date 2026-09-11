@@ -1,12 +1,14 @@
 class Product < ApplicationRecord
-  enum category: { beer: 0, low_alcohol_beer: 9, craft_beer: 6, non_alcoholic: 1, distilled: 2, whiskey: 8, wine: 3, food: 4, tobacco: 5,
-                   donation: 7 }
+  enum :category, { beer: 0, low_alcohol_beer: 9, craft_beer: 6, non_alcoholic: 1, distilled: 2, whiskey: 8, wine: 3, food: 4, tobacco: 5,
+                    donation: 7 }
 
   has_many :product_prices, dependent: :destroy
   has_many :price_lists, through: :product_prices, dependent: :restrict_with_error
 
-  validates :name, :category, presence: true
-  validate :name_readonly
+  attribute :color, :string, default: '#f8f9fa'
+
+  validates :name, :category, :color, presence: true
+  validates :color, format: { with: /\A#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})\z/, message: 'must be a valid hexcode (e.g., #FF5733 or #F57)' }
 
   accepts_nested_attributes_for :product_prices, allow_destroy: true
 
@@ -16,13 +18,5 @@ class Product < ApplicationRecord
 
   def t_category
     I18n.t category
-  end
-
-  private
-
-  def name_readonly
-    return if new_record?
-
-    errors.add(:name, 'is readonly') if name_changed?
   end
 end

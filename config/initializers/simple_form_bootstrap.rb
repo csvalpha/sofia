@@ -358,6 +358,21 @@ SimpleForm.setup do |config|
     b.use :hint, wrap_with: { class: 'form-text' }
   end
 
+  # small link underneath input
+  config.wrappers :with_hint_link do |b|
+    b.use :html5
+    b.use :placeholder
+    b.optional :maxlength
+    b.optional :minlength
+    b.optional :pattern
+    b.optional :min_max
+    b.optional :readonly
+    b.use :label, class: 'form-label'
+    b.use :input, class: 'form-control', error_class: config.input_field_error_class, valid_class: config.input_field_valid_class
+    b.use :full_error, wrap_with: { class: 'invalid-feedback' }
+    b.use :hint, wrap_with: { tag: :a, class: 'form-text link-secondary' }
+  end
+
 
   # The default wrapper to be used by the FormBuilder.
   config.default_wrapper = :vertical_form

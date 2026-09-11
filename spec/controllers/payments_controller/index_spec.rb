@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe PaymentsController, type: :controller do
+describe PaymentsController do
   describe 'GET index' do
     let(:payments) { create_list(:payment, 2) }
 

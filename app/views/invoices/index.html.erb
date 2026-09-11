@@ -1,4 +1,7 @@
 <% content_for :title, "Facturen - #{Rails.application.config.x.site_name}" %>
+<% content_for :head do %>
+  <%= javascript_include_tag "invoices", "data-turbo-track": "reload", defer: true %>
+<% end %>
 <% content_for :modal do %>
   <%= render 'modal' %>
 <% end %>
@@ -31,6 +34,9 @@
             <th scope="col">Status</th>
             <% if policy(Invoice).send_invoice? %>
               <th scope="col">Verstuur</th>
+            <% end %>
+            <% if policy(Invoice).download? %>
+              <th scope="col">Download</th>
             <% end %>
           </tr>
           </thead>
@@ -72,6 +78,11 @@
                       <%= f.button :submit, 'Factuur versturen', class: 'btn btn-primary' %>
                     <% end %>
                   <% end %>
+                </td>
+              <% end %>
+              <% if policy(Invoice).download? %>
+                <td>
+                  <%= link_to 'Downloaden', invoice_path(invoice, format: :pdf), class: 'btn btn-primary', download: "Factuur-#{invoice.human_id}.pdf" %>
                 </td>
               <% end %>
             </tr>

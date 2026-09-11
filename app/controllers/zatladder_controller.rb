@@ -23,15 +23,19 @@ class ZatladderController < ApplicationController
     end
   end
 
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def zatladder_spendings(from, to)
-    @users_spendings = User.in_amber.calculate_spendings(from: from, to: to)
-    zatladder = User.in_amber.select(:id, :name).map do |user|
+    users = User.in_amber.exists? ? User.in_amber : User.sofia_account
+    @users_spendings = users.calculate_spendings(from:, to:)
+    zatladder = users.select(:id, :name).map do |user|
       {
         id: user.id,
         name: user.name,
         spendings: @users_spendings.fetch(user.id, 0)
       }
     end
+    zatladder.reject! { |user| user[:spendings].zero? }
     zatladder.sort_by { |id| id[:spendings] }.reverse!
   end
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 end

@@ -3,10 +3,6 @@ class UserPolicy < ApplicationPolicy
     user&.treasurer? || user&.renting_manager? || user&.main_bartender?
   end
 
-  def refresh_user_list?
-    user&.treasurer?
-  end
-
   def search?
     index?
   end
@@ -21,5 +17,23 @@ class UserPolicy < ApplicationPolicy
 
   def activities?
     show?
+  end
+
+  def update_with_sofia_account?
+    record == user
+  end
+
+  def permitted_attributes
+    %i[name email provider sub_provider]
+  end
+
+  def permitted_attributes_for_update
+    %i[name email sub_provider deactivated]
+  end
+
+  def permitted_attributes_for_update_with_sofia_account
+    base = %i[email sub_provider]
+    base += %i[name deactivated] if user&.treasurer?
+    base + [{ sofia_account_attributes: %i[id username] }]
   end
 end

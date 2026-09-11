@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ActivitiesController, type: :controller do
+describe ActivitiesController do
   describe 'POST lock' do
     let(:activity) { create(:activity) }
     let(:request) do

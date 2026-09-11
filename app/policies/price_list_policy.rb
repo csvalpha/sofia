@@ -36,4 +36,8 @@ class PriceListPolicy < ApplicationPolicy
   def search?
     index?
   end
+
+  def permitted_attributes
+    %i[name]
+  end
 end

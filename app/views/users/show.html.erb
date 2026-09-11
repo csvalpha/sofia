@@ -1,7 +1,11 @@
 <% content_for :title, "Gebruiker #{@user.name} - #{Rails.application.config.x.site_name}" %>
+<% content_for :head do %>
+  <%= javascript_include_tag "user", "data-turbo-track": "reload", defer: true %>
+<% end %>
 <% content_for :modal do %>
   <%= render 'mutation_modal' %>
   <%= render 'modal' %>
+  <%= render 'edit_sofia_account_modal' %>
 <% end %>
 
 
@@ -11,7 +15,7 @@
     <div class="col-sm-12 col-md-6 py-2">
 
       <h1>
-        <%= fa_icon 'user', class: 'me-2' %>
+        <i class="fas fa-user me-2"></i>
         <%= @user.name %>
 
       </h1>
@@ -65,14 +69,21 @@
           <% end %></tr>
         </tbody>
       </table>
+      <% if @sofia_account && policy(@sofia_account).update_with_sofia_account? %>
+        <button class="btn btn-sm btn-primary pull-right ms-2" data-bs-target="#edit_sofia_account_modal" data-bs-toggle="modal" role="button">
+          <i class="fas fa-sliders-h me-1"></i>
+          Instellingen
+        </button>
+      <% end %>
+
       <% if current_user.treasurer? %>
         <button class="btn btn-sm btn-primary pull-right ms-2" data-bs-target="#edit_user_modal" data-bs-toggle="modal" role="button">
-          <%= fa_icon 'pencil', class: 'me-1' %>
+          <i class="fas fa-pencil me-1"></i>
           Gebruiker wijzigen
         </button>
         <button class="btn btn-sm btn-secondary pull-right" data-bs-target="#new_mutation_modal" data-bs-toggle="modal" role="button">
-          <%= fa_icon 'plus', class: 'me-1' %>
-          Inleggen
+          <i class="fas fa-plus me-1"></i>
+          Contant Inleggen
         </button>
       <% end %>
       <h2>
@@ -104,30 +115,32 @@
               <%= content_tag :div, class: "alert mb-1 alert-#{@user.credit <= 0 ? 'danger' : 'info'}" do %>
                 <h4 class="alert-heading">
                   <%= @user.credit <= 0 ? 'Je staat rood!' : 'Inleggen' %>
-
                 </h4>
                 <p class="card-text">
-                  <% if Rails.application.config.x.mollie_api_key.present? %>
+                  <% if Rails.application.config.x.mollie_api_key.present? && Rails.application.config.x.personal_transaction_iban.present? %>
                     Om je saldo aan te vullen kan je zelf geld overmaken of betalen met iDEAL.
-                  <% else %>
+                  <% elsif Rails.application.config.x.mollie_api_key.present? %>
+                    Om je saldo aan te vullen kan je betalen met iDEAL.
+                  <% elsif Rails.application.config.x.personal_transaction_iban.present? %>
                     Om je saldo aan te vullen kan je zelf geld overmaken.
+                  <% else %>
+                    Er is geen betaalmethode geconfigureerd om je saldo aan te vullen. Neem contact op met de penningmeester.
                   <% end %>
-                  <%= "Dat kan naar #{Rails.application.config.x.company_iban} t.n.v. #{Rails.application.config.x.company_name}" %>
-                  <%= 'onder vermelding van je naam en \'Inleg Zatladder\'.' %>
-
+                  <% if Rails.application.config.x.personal_transaction_iban.present? %>
+                    <%= "Dat kan naar #{Rails.application.config.x.personal_transaction_iban} t.n.v. #{Rails.application.config.x.company_name}" %>
+                    <%= 'onder vermelding van je naam en \'Inleg Zatladder\'.' %>
+                  <% end %>
                   <% if Rails.application.config.x.mollie_api_key.present? %>
                     <%= link_to add_payments_path do %>
                       <%= 'Klik hier om je saldo over te maken via iDEAL ' %>
                     <% end %>
                   <% end %>
-
                 </p>
-
-
-              <% end %></div>
+              <% end %>
+            </div>
             <div aria-labelledby="roleInfo-tab" class="tab-pane p-2" id="roleInfo" role="tabpanel">
               <button class="pull-right btn btn-sm btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#role-sync-description" aria-expanded="false" aria-controls="role-sync-description">
-                <%= fa_icon 'question-circle' %>
+                <i class="fas fa-circle-question"></i>
               </button>
               <h2 class="card-title">
                 Rollen
@@ -139,8 +152,11 @@
               </div>
               <p class="card-text d-none d-md-block">
                 <%= 'Rechten zijn afhankelijk van de rollen die een gebruiker in het streepsysteem heeft. ' %>
-                <%= 'Rollen worden bepaald aan de hand van de groepen waar een gebruiker lid van is in de Alpha website.' %>
-
+                <% if Rails.application.config.x.amber_api_host.present? %>
+                  <%= 'Rollen worden bepaald aan de hand van de groepen waar een gebruiker lid van is in de gekoppelde website.' %>
+                <% else %>
+                  <%= 'Rollen kunnen geconfigureerd worden via de console van de serviceprovider.' %>
+                <% end %>
               </p>
               <% if @user.roles_users.any? %>
                 <ul class="mb-1">

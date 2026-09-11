@@ -4,16 +4,25 @@ on:
   workflow_dispatch:
     inputs:
       merge:
-        description: Merge staging into master first? (y/N)
+        type: boolean
+        description: Merge staging into master first?
         required: false
-        default: 'n'
+        default: false
+      ignore_metadata_diff:
+        type: boolean
+        description: Perform all jobs, regardless of whether there are actual changes?
+        required: false
+        default: false
       target_env:
         type: choice
         description: Target environment
         options:
+          - staging
           - csvalpha
           - luxadmosam
-        default: 'csvalpha'
+          - euros
+          - demo
+        default: 'staging'
 
 concurrency:
   group: cd-${{ github.ref_name }}
@@ -26,6 +35,9 @@ jobs:
     name: Branch Check
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
       - name: Validate branch
         env:
           TARGET_ENV: ${{ github.event.inputs.target_env }}
@@ -34,8 +46,18 @@ jobs:
             echo 'This workflow can only be run on branches staging and master.'
             exit 1
           fi
-          if [ "$TARGET_ENV" == 'luxadmosam' ] && [ "$GITHUB_REF_NAME" != 'master' ]; then
-            echo 'Only the master branch can be deployed to Lux ad Mosam.'
+          # Check branch restriction from deploy_targets.yml
+          BRANCH_RESTRICTION=$(python3 << 'PYTHON_EOF'
+          import yaml
+          with open('config/deploy_targets.yml', 'r') as f:
+            config = yaml.safe_load(f)
+            target = config['targets']['${{ github.event.inputs.target_env }}']
+            restriction = target.get('branch_restriction')
+            print(restriction if restriction else '')
+          PYTHON_EOF
+          )
+          if [ -n "$BRANCH_RESTRICTION" ] && [ "$GITHUB_REF_NAME" != "$BRANCH_RESTRICTION" ]; then
+            echo "Target $TARGET_ENV can only be deployed from branch $BRANCH_RESTRICTION, but current branch is $GITHUB_REF_NAME."
             exit 1
           fi
 
@@ -48,16 +70,16 @@ jobs:
       stage: ${{ steps.get_metadata.outputs.stage }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Get metadata
         id: get_metadata
         env:
-          INPUT_MERGE: ${{ github.event.inputs.merge }}
+          INPUT_MERGE: ${{ inputs.merge }}
           TARGET_ENV: ${{ github.event.inputs.target_env }}
         run: |
           if [ "$GITHUB_REF_NAME" = 'master' ]; then
-            if [ "${INPUT_MERGE,,}" = 'y' ]; then
+            if [ "$INPUT_MERGE" = 'true' ]; then
               git fetch origin staging
               if ! git diff origin/master origin/staging --exit-code; then
                 echo 'has_diff=true' >> "$GITHUB_OUTPUT"
@@ -65,21 +87,30 @@ jobs:
                 echo 'has_diff=false' >> "$GITHUB_OUTPUT"
               fi
             fi
-
-            if [ "$TARGET_ENV" == 'luxadmosam' ]; then
-              echo 'stage=luxproduction' >> "$GITHUB_OUTPUT"
-            else
-              echo 'stage=production' >> "$GITHUB_OUTPUT"
-            fi
-          else
-            echo 'stage=staging' >> "$GITHUB_OUTPUT"
           fi
+
+          # Get stage from deploy_targets.yml
+          STAGE=$(python3 << 'PYTHON_EOF'
+          import yaml
+          with open('config/deploy_targets.yml', 'r') as f:
+            config = yaml.safe_load(f)
+            target_env = '${{ github.event.inputs.target_env }}'
+            current_branch = '${{ github.ref_name }}'
+            # If on staging branch, always use staging stage unless targeting external party
+            if current_branch == 'staging':
+              print('staging')
+            else:
+              # On master: use the stage from the target environment
+              print(config['targets'][target_env]['stage'])
+          PYTHON_EOF
+          )
+          echo "stage=$STAGE" >> "$GITHUB_OUTPUT"
 
   merge:
     name: Merge
     runs-on: ubuntu-latest
     needs: metadata
-    if: github.event.inputs.merge == 'y'
+    if: inputs.merge
     outputs:
       sha: ${{ steps.get_sha.outputs.sha }}
     steps:
@@ -98,11 +129,11 @@ jobs:
 
       - name: Checkout code
         if: fromJSON(needs.metadata.outputs.has_diff)
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Run merge
-        if: fromJSON(needs.metadata.outputs.has_diff)
-        uses: devmasx/merge-branch@854d3ac71ed1e9deb668e0074781b81fdd6e771f # tag=v1.4.0
+        if: fromJSON(needs.metadata.outputs.has_diff) || github.event.inputs.ignore_metadata_diff
+        uses: devmasx/merge-branch@854d3ac71ed1e9deb668e0074781b81fdd6e771f # v1.4.0
         with:
           type: now
           from_branch: staging
@@ -111,7 +142,7 @@ jobs:
 
       - name: Get merge commit SHA
         id: get_sha
-        if: fromJSON(needs.metadata.outputs.has_diff)
+        if: fromJSON(needs.metadata.outputs.has_diff) || github.event.inputs.ignore_metadata_diff
         run: |
           git fetch origin master
           echo 'sha='"$(git rev-parse origin/master)" >> "$GITHUB_OUTPUT"
@@ -119,8 +150,8 @@ jobs:
   continuous_integration:
     name: Continuous Integration
     needs: [metadata, merge]
-    if: fromJSON(needs.metadata.outputs.has_diff)
-    uses: csvalpha/sofia/.github/workflows/continuous-integration.yml@staging
+    if: fromJSON(needs.metadata.outputs.has_diff) || github.event.inputs.ignore_metadata_diff
+    uses: ./.github/workflows/continuous-integration.yml
     with:
       sha: ${{ needs.merge.outputs.sha }}
     secrets:
@@ -130,12 +161,11 @@ jobs:
   publish_image:
     name: Publish Image
     needs: [metadata, merge]
-    if: fromJSON(needs.metadata.outputs.has_diff)
-    uses: csvalpha/sofia/.github/workflows/publish-image.yml@staging
+    if: fromJSON(needs.metadata.outputs.has_diff) || github.event.inputs.ignore_metadata_diff
+    uses: ./.github/workflows/publish-image.yml
     with:
       sha: ${{ needs.merge.outputs.sha }}
     secrets:
-      rails_master_key: ${{ secrets.RAILS_MASTER_KEY }}
       sentry_auth_token: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
   deploy:
@@ -144,36 +174,44 @@ jobs:
     needs: [metadata, merge, continuous_integration, publish_image]
     if: |
       (github.ref_name == 'staging' || github.ref_name == 'master') && ((github.ref_name == 'master' &&
-      github.event.inputs.merge == 'y' && fromJSON(needs.metadata.outputs.has_diff) && success()) ||
-      ((github.event.inputs.merge != 'y' || !fromJSON(needs.metadata.outputs.has_diff)) && !cancelled()))
+      inputs.merge && fromJSON(needs.metadata.outputs.has_diff) || github.event.inputs.ignore_metadata_diff && success()) ||
+      ((!inputs.merge|| !fromJSON(needs.metadata.outputs.has_diff)) || github.event.inputs.ignore_metadata_diff && !cancelled()))
     steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.merge.outputs.sha }}
+
       - name: Get environment URL
         id: get_url
         env:
           TARGET_ENV: ${{ github.event.inputs.target_env }}
         run: |
-          if [ "$TARGET_ENV" == 'luxadmosam' ] && [ "$GITHUB_REF_NAME" = 'master' ]; then
-            echo 'environment_url=https://luxstreep.csvalpha.nl' >> "$GITHUB_OUTPUT"
-          elif [ "$GITHUB_REF_NAME" = 'master' ]; then
-            echo 'environment_url=https://streep.csvalpha.nl' >> "$GITHUB_OUTPUT"
-          else
-            echo 'environment_url=https://stagingstreep.csvalpha.nl' >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Checkout code
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
-        with:
-          ref: ${{ needs.merge.outputs.sha }}
+          # Get URL from deploy_targets.yml based on current branch and target
+          URL=$(python3 << 'PYTHON_EOF'
+          import yaml
+          with open('config/deploy_targets.yml', 'r') as f:
+            config = yaml.safe_load(f)
+            current_branch = '${{ github.ref_name }}'
+            target_env = '${{ github.event.inputs.target_env }}'
+            # If on staging, use stagingstreep URL; otherwise use the target's URL
+            if current_branch == 'staging':
+              print(config['targets']['staging']['url'])
+            else:
+              print(config['targets'][target_env]['url'])
+          PYTHON_EOF
+          )
+          echo "environment_url=$URL" >> "$GITHUB_OUTPUT"
 
       - name: Start deployment
-        uses: bobheadxi/deployments@88ce5600046c82542f8246ac287d0a53c461bca3 # v1.4.0
+        uses: bobheadxi/deployments@648679e8e4915b27893bd7dbc35cb504dc915bc8 # v1.5.0
         id: start_deployment
         with:
           step: start
           env: ${{ needs.metadata.outputs.stage }}
 
       - name: Deploy
-        uses: appleboy/ssh-action@55dabf81b49d4120609345970c91507e2d734799 # v1.0.0
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1.2.5
         env:
           STAGE: ${{ needs.metadata.outputs.stage }}
         with:
@@ -188,18 +226,18 @@ jobs:
             docker-compose up -d
 
       - name: Finalize Sentry release
-        uses: getsentry/action-release@4744f6a65149f441c5f396d5b0877307c0db52c7 # v1.4.1
+        uses: getsentry/action-release@ff07929a6537bac57790c3451cf4d364aca38528 # v3.7.0
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ vars.SENTRY_ORG_NAME }}
           SENTRY_PROJECT: ${{ env.PROJECT_NAME }}
         with:
           environment: ${{ needs.metadata.outputs.stage }}
-          version: ${{ needs.merge.outputs.sha }}
+          release: ${{ needs.merge.outputs.sha }}
           set_commits: skip
 
       - name: Finish deployment
-        uses: bobheadxi/deployments@88ce5600046c82542f8246ac287d0a53c461bca3 # v1.4.0
+        uses: bobheadxi/deployments@648679e8e4915b27893bd7dbc35cb504dc915bc8 # v1.5.0
         if: steps.start_deployment.conclusion == 'success' && always()
         with:
           step: finish
@@ -230,7 +268,7 @@ jobs:
           done
 
       - name: Update Continuous Delivery check run
-        uses: LouisBrunner/checks-action@6b626ffbad7cc56fd58627f774b9067e6118af23 # v2.0.0
+        uses: LouisBrunner/checks-action@937cbbcde3259005b50746dc91cde29098aac2ff # v3.1.0
         with:
           sha: ${{ needs.merge.outputs.sha }}
           token: ${{ github.token }}

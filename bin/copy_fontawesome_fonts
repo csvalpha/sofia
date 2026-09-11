@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+# Copies FontAwesome font files from node_modules to public/webfonts
+
+require 'fileutils'
+
+# Source and destination directories
+source = File.expand_path('../node_modules/@fortawesome/fontawesome-free/webfonts', __dir__)
+dest   = File.expand_path('../public/webfonts', __dir__)
+
+unless Dir.exist?(source)
+  abort "Source directory not found: #{source}\nDid you run 'yarn install' or 'npm install'?"
+end
+
+FileUtils.mkdir_p(dest)
+
+# Copy all font files
+font_exts = %w[.woff2 .woff .ttf .eot]
+Dir.entries(source).each do |file|
+  next unless font_exts.include?(File.extname(file))
+  FileUtils.cp(File.join(source, file), File.join(dest, file))
+  puts "Copied #{file}"
+end
+
+puts "All FontAwesome fonts copied to #{dest}"

@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="user-input position-relative">
     <input type="text" class="d-none" :name="name" :value="selectedSuggestion.id">
-    <input type="text" class="form-control bg-white" v-model="query" placeholder="Begin met typen..."
+    <input type="text" class="form-control bg-white" v-model="query" placeholder="Zoek op gebruiker"
            @input="updateValue"
            @keydown.enter="selectFirstSuggestion"
            aria-haspopup="true" v-bind:aria-expanded="dropdownOpened"
@@ -19,6 +19,8 @@
 </template>
 
 <script>
+import api from '../api/axiosInstance';
+
 export default {
   props: {
     name: {
@@ -43,7 +45,8 @@ export default {
       selectedSuggestion: this.value,
       open: true,
       suggestions: [],
-      suggestionsUpdatedAt: null
+      // This will hold the timer ID for our custom debounce function
+      debounceTimer: null,
     };
   },
   computed: {
@@ -55,20 +58,42 @@ export default {
   },
   methods: {
     updateValue() {
+      clearTimeout(this.debounceTimer);
+
       if (this.query === '') {
-        // Clear user
         this.selectedSuggestion = {};
         this.$emit('input', this.selectedSuggestion);
+        this.suggestions = [];
+        return;
       }
 
-      if ((new Date() - this.suggestionsUpdatedAt) > 150) {
+      this.debounceTimer = setTimeout(() => {
         this.updateSuggestions();
-      } else if (this.open === false) {
-        this.open = true;
-      }
+      }, 400);
     },
 
-    // When one of the suggestion is clicked
+    updateSuggestions() {
+      if (this.query.length < 2) {
+        this.suggestions = [];
+        return;
+      }
+
+      api.post('/users/search.json', { query: this.query }).then( (response) => {
+        let results = response.data || [];
+
+        if (this.includePin && 'gepind'.indexOf(this.query.toLowerCase()) >= 0) {
+          results.push({ name: 'Gepind', paid_with_pin: true });
+        }
+        if (this.includeCash && 'contant betaald'.indexOf(this.query.toLowerCase()) >= 0) {
+          results.push({ name: 'Contant betaald', paid_with_cash: true });
+        }
+
+        this.suggestions = results;
+        this.open = true;
+      });
+    },
+
+    // When a suggestion is clicked, this logic is still correct
     suggestionClicked(index) {
       this.selectedSuggestion = this.suggestions[index];
       this.query = this.selectedSuggestion.name;
@@ -76,36 +101,7 @@ export default {
       this.$emit('input', this.selectedSuggestion);
     },
 
-    updateSuggestions() {
-      this.suggestions = [];
-      if (this.query.length < 2) {
-        return;
-      }
-      this.$http.post('/users/search.json', { query: this.query }).then( (response) => {
-        response.data.forEach((a) => {
-          this.suggestions.push(a);
-        });
-        if (this.includePin) {
-          if ('gepind'.indexOf(this.query.toLowerCase()) >= 0) {
-            this.suggestions.push({
-              name: 'Gepind',
-              paid_with_pin: true
-            });
-          }
-        }
-        if (this.includeCash) {
-          if ('contant betaald'.indexOf(this.query.toLowerCase()) >= 0) {
-            this.suggestions.push({
-              name: 'Contant betaald',
-              paid_with_cash: true
-            });
-          }
-        }
-        this.updateValue();
-      });
-      this.suggestionsUpdatedAt = new Date();
-    },
-
+    // The enter key logic is still correct
     selectFirstSuggestion(e) {
       if (this.open) {
         e.preventDefault();
@@ -114,6 +110,9 @@ export default {
         this.suggestionClicked(0);
       }
     }
+  },
+  beforeDestroy() {
+    clearTimeout(this.debounceTimer);
   }
 };
 </script>

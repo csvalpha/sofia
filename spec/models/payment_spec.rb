@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Payment, type: :model do
+RSpec.describe Payment do
   subject(:payment) { build_stubbed(:payment) }
 
   describe '#valid' do
@@ -38,6 +38,46 @@ RSpec.describe Payment, type: :model do
       end
     end
 
+    context 'when with too high amount' do
+      context 'when with user' do
+        subject(:payment) { build_stubbed(:payment, amount: 1001) }
+
+        it { expect(payment).not_to be_valid }
+      end
+
+      context 'when with invoice and high amount' do
+        subject(:payment) { build_stubbed(:payment, :invoice, amount: 1001) }
+
+        it { expect(payment).to be_valid }
+      end
+    end
+
+    context 'when with boundary amounts' do
+      context 'when with user at max amount' do
+        subject(:payment) { build_stubbed(:payment, amount: 1000) }
+
+        it { expect(payment).to be_valid }
+      end
+
+      context 'when with user just over max amount' do
+        subject(:payment) { build_stubbed(:payment, amount: 1000.01) }
+
+        it { expect(payment).not_to be_valid }
+      end
+
+      context 'when with invoice below minimum' do
+        subject(:payment) { build_stubbed(:payment, :invoice, amount: 0.99) }
+
+        it { expect(payment).not_to be_valid }
+      end
+
+      context 'when with invoice at minimum' do
+        subject(:payment) { build_stubbed(:payment, :invoice, amount: 1) }
+
+        it { expect(payment).to be_valid }
+      end
+    end
+
     context 'when without a status' do
       subject(:payment) { build_stubbed(:payment, status: nil) }
 
@@ -48,7 +88,7 @@ RSpec.describe Payment, type: :model do
   describe '.not_completed' do
     context 'when with not_completed status' do
       %w[open pending].each do |status|
-        subject(:payment) { create(:payment, status: status) }
+        subject(:payment) { create(:payment, status:) }
 
         before { payment }
 
@@ -58,7 +98,7 @@ RSpec.describe Payment, type: :model do
 
     context 'when with complete status' do
       %w[paid failed canceled expired].each do |status|
-        subject(:payment) { create(:payment, status: status) }
+        subject(:payment) { create(:payment, status:) }
 
         before { payment }
 
@@ -71,7 +111,7 @@ RSpec.describe Payment, type: :model do
     let(:user) { create(:user) }
 
     context 'when updating user payment to paid' do
-      subject(:payment) { create(:payment, user: user, amount: 22.00, status: 'open') }
+      subject(:payment) { create(:payment, user:, amount: 22.00, status: 'open') }
 
       describe 'creates credit mutation' do
         before do
@@ -89,9 +129,9 @@ RSpec.describe Payment, type: :model do
 
     context 'when updating invoice payment to paid' do
       let(:invoice_row) { create(:invoice_row, amount: 1, price: 22.00) }
-      let(:invoice) { create(:invoice, rows: [invoice_row], user: user) }
+      let(:invoice) { create(:invoice, rows: [invoice_row], user:) }
 
-      subject(:payment) { create(:payment, user: nil, invoice: invoice, amount: invoice.amount, status: 'open') }
+      subject(:payment) { create(:payment, user: nil, invoice:, amount: invoice.amount, status: 'open') }
 
       describe 'creates credit mutation' do
         before do
@@ -109,7 +149,7 @@ RSpec.describe Payment, type: :model do
     end
 
     context 'when not updating payment to paid' do
-      subject(:payment) { create(:payment, user: user, amount: 22.00, status: 'open') }
+      subject(:payment) { create(:payment, user:, amount: 22.00, status: 'open') }
 
       it { expect { payment.update(status: 'open') }.not_to change(CreditMutation, :count) }
       it { expect { payment.update(status: 'pending') }.not_to change(CreditMutation, :count) }
@@ -119,7 +159,7 @@ RSpec.describe Payment, type: :model do
     end
 
     context 'when updating already paid payment' do
-      subject(:payment) { create(:payment, user: user, amount: 22.00, status: 'paid') }
+      subject(:payment) { create(:payment, user:, amount: 22.00, status: 'paid') }
 
       before do
         payment.update(status: 'paid')

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe ActivityInvoiceJob, type: :job do
+RSpec.describe ActivityInvoiceJob do
   describe '#perform' do
     let(:activity) { create(:activity) }
     let(:manual_users) { create_list(:user, 3) }
@@ -9,8 +9,8 @@ RSpec.describe ActivityInvoiceJob, type: :job do
     subject(:job) { perform_enqueued_jobs { described_class.perform_now(activity) } }
 
     before do
-      manual_users.each { |u| create(:order_with_items, user: u, activity: activity) }
-      external_users.each { |u| create(:order_with_items, user: u, activity: activity) }
+      manual_users.each { |u| create(:order_with_items, user: u, activity:) }
+      external_users.each { |u| create(:order_with_items, user: u, activity:) }
       activity.update(locked_by: create(:user))
 
       job

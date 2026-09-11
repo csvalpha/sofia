@@ -6,7 +6,7 @@
       "matchManagers": ["regex"],
       "matchPackageNames": ["@sentry/browser"],
       "draftPR": true,
-      "prBodyNotes": ":warning: **Note**: Make sure to update the integrity hashes before merging this PR. You should be able to find the full HTML tag here: https://docs.sentry.io/platforms/javascript/install/cdn/"
+      "prBodyNotes": ":warning: **Note**: Make sure to update the integrity hashes before merging this PR. You should be able to find the full HTML tag here: https://docs.sentry.io/platforms/javascript/install/cdn/ or https://github.com/getsentry/sentry-release-registry/tree/master/packages/npm/@sentry/browser"
     }
   ],
   "regexManagers": [

@@ -3,32 +3,61 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
 
   after_action :verify_authorized
 
-  def index # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def index # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     authorize User
 
     @manual_users = User.manual.active.order(:name).select { |u| policy(u).show? }
     @amber_users = User.in_amber.active.order(:name).select { |u| policy(u).show? }
-    @inactive_users = User.inactive.order(:name).select { |u| policy(u).show? }
+    @sofia_account_users = User.sofia_account.active.order(:name).select { |u| policy(u).show? }
+    @not_activated_users = User.not_activated.order(:name).select { |u| policy(u).show? }
+    @deactivated_users = User.deactivated.order(:name).select { |u| policy(u).show? }
     @users_credits = User.calculate_credits
 
     @manual_users_json = @manual_users.as_json(only: %w[id name])
                                       .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
+    @sofia_account_users_json = @sofia_account_users.as_json(only: %w[id name])
+                                                    .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
+
     @amber_users_json = @amber_users.as_json(only: %w[id name])
                                     .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
-    @inactive_users_json = @inactive_users.as_json(only: %w[id name])
-                                          .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
+    @not_activated_users_json = @not_activated_users.as_json(only: %w[id name])
+                                                    .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
+
+    @deactivated_users_json = @deactivated_users.as_json(only: %w[id name])
+                                                .each { |u| u['credit'] = @users_credits.fetch(u['id'], 0) }
 
     @new_user = User.new
   end
 
-  def show
+  def show # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     @user = User.includes(:credit_mutations, roles_users: :role).find(params[:id])
     authorize @user
 
     @user_json = @user.to_json(only: %i[id name deactivated])
     @new_mutation = CreditMutation.new(user: @user)
+
+    @sofia_account = SofiaAccount.find_by(user_id: @user.id)
+    if @sofia_account
+      qr_code = RQRCode::QRCode.new(@sofia_account.provisioning_uri(@sofia_account.username,
+                                                                    issuer: "Streepsysteem #{Rails.application.config.x.site_association}"))
+      @svg_qr_code = qr_code.as_svg(
+        color: '000',
+        shape_rendering: 'crispEdges',
+        module_size: 10,
+        standalone: true,
+        use_path: true,
+        viewbox: true,
+        svg_attributes: {
+          width: '100%',
+          height: 'auto',
+          class: 'qr-code'
+        }
+      )
+    else
+      @sofia_account = SofiaAccount.new
+    end
 
     @new_user = @user
   end
@@ -43,7 +72,7 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
   end
 
   def create
-    @user = User.new(permitted_attributes)
+    @user = User.new(user_params)
     authorize @user
 
     if @user.save
@@ -59,28 +88,13 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     @user = User.find(params[:id])
     authorize @user
 
-    if @user.update(params.require(:user).permit(%i[name email deactivated]))
+    if update_user
       flash[:success] = 'Gebruiker geupdate'
     else
       flash[:error] = "Gebruiker updaten mislukt; #{@user.errors.full_messages.join(', ')}"
     end
 
     redirect_to @user
-  end
-
-  def refresh_user_list
-    authorize User
-
-    users_json.each do |user_json|
-      find_or_create_user(user_json)
-    end
-
-    users_not_in_json = User.active.in_amber.where.not(uid: users_json.pluck('id')).where.not(name: 'Streepsysteem Flux')
-    users_not_in_json.each(&:archive!)
-
-    send_slack_users_refresh_notification
-
-    redirect_to users_path
   end
 
   def search
@@ -114,20 +128,32 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     render json: activities_hash
   end
 
-  private
+  def update_with_sofia_account # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    @user = User.find(params[:id])
+    authorize @user
 
-  def send_slack_users_refresh_notification
-    return unless Rails.env.production? || Rails.env.staging? || Rails.env.luxproduction?
+    @sofia_account = @user.sofia_account
+    unless @sofia_account
+      flash[:alert] = 'Nog geen Sofia-account geactiveerd.'
+      redirect_back_or_to @user
+      return
+    end
+    authorize @sofia_account
 
-    # :nocov:
-    SlackMessageJob.perform_later("User ##{current_user.id} (#{current_user.name}) "\
-                                  "is importing users from Amber (#{Rails.application.config.x.amber_api_host})")
-    # :nocov:
+    if @user.update(params.require(:user).permit(policy(@user).permitted_attributes_for_update_with_sofia_account))
+      flash[:success] = 'Gegevens gewijzigd'
+    else
+      flash[:error] = "Gegevens wijzigen mislukt; #{@user.errors.full_messages.join(', ')}"
+    end
+
+    redirect_to @user
   end
 
-  def users_json
-    JSON.parse(RestClient.get("#{Rails.application.config.x.amber_api_url}/api/v1/users?filter[group]=Leden",
-                              'Authorization' => "Bearer #{api_token}"))['data']
+  private
+
+  def update_user
+    permitted_params = params.require(:user).permit(policy(@user).permitted_attributes_for_update)
+    @user.update(permitted_params)
   end
 
   def find_or_create_user(user_json) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
@@ -144,7 +170,7 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     u.save
   end
 
-  def permitted_attributes
-    params.require(:user).permit(%w[name email])
+  def user_params
+    params.require(:user).permit(policy(User.new).permitted_attributes)
   end
 end
