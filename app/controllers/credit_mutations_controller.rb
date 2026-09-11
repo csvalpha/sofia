@@ -41,6 +41,6 @@ class CreditMutationsController < ApplicationController
   end
 
   def credit_mutation_params
-    params.require(:credit_mutation).permit(policy(CreditMutation).permitted_attributes)
+    params.require(:credit_mutation).permit(policy(CreditMutation.new).permitted_attributes)
   end
 end
