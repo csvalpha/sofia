@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :activity do
-    title { Faker::Book.title }
+    sequence(:title) { |n| "#{Faker::Book.title} #{n}" }
     start_time { Faker::Time.between(from: 1.day.ago, to: Time.zone.today).beginning_of_hour }
     end_time { Faker::Time.between(from: 1.day.from_now, to: 2.days.from_now).beginning_of_hour }
     created_by factory: %i[user]
