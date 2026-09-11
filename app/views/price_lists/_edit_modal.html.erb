@@ -7,17 +7,24 @@
         </h5>
         <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"/>
       </div>
-      <%= simple_form_for(:price_list, wrapper: :horizontal_form, method: :patch) do |f| %>
+      <form :action="url" method="post">
+        <input type="hidden" name="_method" value="patch">
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
         <div class="modal-body">
-          <%= f.input :name, label: 'Naam', placeholder: 'Naam', required: true, input_html: { ':value': 'name' } %>
+          <div class="mb-3">
+            <label class="form-label">Naam *</label>
+            <input class="form-control" name="price_list[name]" v-model="name" required="true" placeholder="Naam">
+          </div>
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">
             Annuleren
           </button>
-          <%= f.button :submit, 'Naam wijzigen', :data => {:disable_with => 'Bezig...'}, class: 'btn btn-primary', method: :patch, ':formaction': 'url'  %>
+          <button class="btn btn-primary" type="submit" data-disable-with="Bezig...">
+            Naam wijzigen
+          </button>
         </div>
-      <% end %>
+      </form>
     </div>
   </div>
 </div>

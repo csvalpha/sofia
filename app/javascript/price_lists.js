@@ -189,9 +189,16 @@ document.addEventListener('turbo:load', () => {
         url() {
           return '/price_lists/' + app.currentlyEditingPriceList?.id;
         },
-        name() {
-          return app.currentlyEditingPriceList?.name;
-        },
+        name: {
+          get() {
+            return app.currentlyEditingPriceList?.name || '';
+          },
+          set(value) {
+            if (app.currentlyEditingPriceList) {
+              app.currentlyEditingPriceList.name = value;
+            }
+          }
+        }
       }
     });
   }
