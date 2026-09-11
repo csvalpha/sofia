@@ -18,6 +18,7 @@ document.addEventListener('turbo:load', () => {
     const depositButtonEnabled = element.dataset.depositButtonEnabled === 'true';
     const isTreasurer = element.dataset.isTreasurer === 'true';
     const priceListId = element.dataset.priceListId;
+    const priceListGridSize = parseInt(element.dataset.priceListGridSize || '4');
 
     window.flash = function(message, actionText, type) {
       const event = new CustomEvent('flash', { detail: { message: message, actionText: actionText, type: type } } );
@@ -53,7 +54,8 @@ document.addEventListener('turbo:load', () => {
           editingFolder: null,
           folderForm: { name: '', color: '#6c757d' },
           draggedItem: null,
-          sortableInstance: null
+          sortableInstance: null,
+          gridSize: priceListGridSize
         };
       },
       methods: {
@@ -461,6 +463,14 @@ document.addEventListener('turbo:load', () => {
           this.draggedItem = null;
         },
 
+        updateGridSize() {
+          api.patch(`/price_lists/${this.priceListId}`, {
+            price_list: { grid_size: this.gridSize }
+          }).catch((response) => {
+            this.handleXHRError(response);
+          });
+        },
+
         openFolderModal(folder = null) {
           this.editingFolder = folder;
           if (folder) {
@@ -613,6 +623,20 @@ document.addEventListener('turbo:load', () => {
 
         isInFolder() {
           return this.currentFolder !== null;
+        },
+
+        productGridStyle() {
+          return {
+            gridTemplateColumns: `repeat(${this.gridSize}, 1fr)`,
+            gridTemplateRows: `repeat(${this.gridSize}, auto)`
+          };
+        }
+      },
+
+      watch: {
+        gridSize: {
+          handler: 'updateGridSize',
+          immediate: false
         }
       },
 

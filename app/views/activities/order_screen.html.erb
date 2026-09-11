@@ -3,7 +3,7 @@
   <%= javascript_include_tag "order_screen", "data-turbo-track": "reload", defer: true %>
 <% end %>
 <%= content_tag :div, id: 'order-screen', class: 'order-screen',
-                data: {users: @users_json, product_prices: @product_prices_json, folders: @folders_json, activity: @activity_json, is_treasurer: @is_treasurer, price_list_id: @price_list_id, sumup_callback: sumup_callback_activity_url, sumup_key: @sumup_key, flashes: flash, site_name: Rails.application.config.x.site_short_name, deposit_button_enabled: Rails.application.config.x.deposit_button_enabled} do
+                data: {users: @users_json, product_prices: @product_prices_json, folders: @folders_json, activity: @activity_json, is_treasurer: @is_treasurer, price_list_id: @price_list_id, price_list_grid_size: @price_list_grid_size, sumup_callback: sumup_callback_activity_url, sumup_key: @sumup_key, flashes: flash, site_name: Rails.application.config.x.site_short_name, deposit_button_enabled: Rails.application.config.x.deposit_button_enabled} do
 
 %>
 
@@ -54,6 +54,10 @@
         <i :class="keepUserSelected ? 'fas fa-square-check' : 'far fa-square'" class="fa-lg me-1"></i>
         <span>Persoon onthouden</span>
       </button>
+      <div v-if="editMode" class="header-slider m-3">
+        <input type="range" min="2" max="9" step="1" v-model="gridSize" class="form-range" id="gridSizeSlider">
+        <label for="gridSizeSlider" class="ms-2">{{ gridSize }}×{{ gridSize }}</label>
+      </div>
     </div>
 
     <flash-notification>
@@ -168,7 +172,7 @@
     <activity-orders ref="activityOrders" :activity="activity" editable expand_first>
     </activity-orders>
   </div>
-  <div class="product-grid" v-if="selectedUser || payWithCash || payWithPin">
+  <div class="product-grid" v-if="selectedUser || payWithCash || payWithPin" :style="productGridStyle">
     <div v-if="currentFolder" 
          @click.stop="exitFolder"
          @dragover.prevent

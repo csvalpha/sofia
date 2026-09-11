@@ -11,10 +11,10 @@
 
   .flash {
     position: fixed;
-    display: flex;
     bottom: 1.5rem;
     right: 1.5rem;
     z-index: 1000;
+    display: flex;
     height: auto;
     min-width: 250px;
     max-width: 450px;
@@ -122,6 +122,24 @@
   .header-actions {
     display: flex;
     flex-direction: row-reverse;
+    align-items: center;
+  }
+
+  .header-slider {
+    display: flex;
+    width: 150px;
+    align-items: center;
+  }
+
+  .header-slider .form-range {
+    flex-grow: 1;
+    height: 0.5rem;
+  }
+
+  .header-slider label {
+    font-size: $font-size-sm;
+    color: $font-color-dark;
+    white-space: nowrap;
   }
 
   .side-panel {
@@ -139,8 +157,8 @@
 
     &.edit-mode-disabled {
       pointer-events: none;
-      opacity: 0.5;
       user-select: none;
+      opacity: 0.5;
     }
   }
 
@@ -255,8 +273,6 @@
     display: grid;
     grid-area: product-grid;
     grid-auto-flow: dense;
-    grid-template-rows: auto;
-    grid-template-columns: repeat(4, 1fr);
     gap: 2px;
     justify-content: flex-start;
     background-color: $gray-400;
@@ -323,8 +339,8 @@
 
     .folder-back-arrow {
       position: absolute;
-      bottom: 0;
       right: -0.5rem;
+      bottom: 0;
       padding: 0.2rem;
       font-size: 1rem;
       color: $white;
@@ -347,16 +363,16 @@
     position: absolute;
     top: 8px;
     right: 8px;
-    width: 56px;
     display: flex;
-    height: 56px;
     align-items: center;
     justify-content: center;
-    background-color: rgb(255 255 255 / 90%);
-    border-radius: 50%;
-    cursor: pointer;
+    width: 56px;
+    height: 56px;
     font-size: 1.6rem;
     color: $gray-700;
+    cursor: pointer;
+    background-color: rgb(255 255 255 / 90%);
+    border-radius: 50%;
     transition: all 0.2s ease;
 
     &:hover {
@@ -427,20 +443,20 @@
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 1050;
+    display: flex;
     width: 100vw;
     height: 100vh;
-    z-index: 1050;
     background-color: rgb(0 0 0 / 50%);
-    display: flex;
     align-items: center;
     justify-content: center;
   }
 
   .folder-modal {
     background-color: $white;
-    border-radius: 8px;
     width: 90%;
     max-width: 400px;
+    border-radius: 8px;
     box-shadow: 0 4px 20px rgb(0 0 0 / 30%);
   }
 

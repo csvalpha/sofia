@@ -5,6 +5,15 @@ class PriceList < ApplicationRecord
   has_many :product_price_folders, dependent: :destroy
 
   validates :name, presence: true
+  validates :grid_size, numericality: { only_integer: true, greater_than_or_equal_to: 2, less_than_or_equal_to: 9 }, allow_nil: true
+
+  after_initialize :set_defaults, unless: :persisted?
+
+  private
+
+  def set_defaults
+    self.grid_size ||= 4
+  end
 
   scope :unarchived, -> { where(archived_at: nil) }
 

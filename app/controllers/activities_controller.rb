@@ -104,6 +104,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
 
     @is_treasurer = current_user.treasurer?
     @price_list_id = @activity.price_list_id
+    @price_list_grid_size = @activity.price_list.grid_size
 
     @sumup_key = Rails.application.config.x.sumup_key
     @sumup_enabled = @sumup_key.present?
