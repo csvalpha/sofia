@@ -9,12 +9,6 @@ class PriceList < ApplicationRecord
 
   after_initialize :set_defaults, unless: :persisted?
 
-  private
-
-  def set_defaults
-    self.grid_size ||= 4
-  end
-
   scope :unarchived, -> { where(archived_at: nil) }
 
   def product_price_for(product)
@@ -24,5 +18,11 @@ class PriceList < ApplicationRecord
 
   def to_s
     name
+  end
+
+  private
+
+  def set_defaults
+    self.grid_size ||= 4
   end
 end

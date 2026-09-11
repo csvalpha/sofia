@@ -11,13 +11,13 @@
 
   .flash {
     position: fixed;
-    bottom: 1.5rem;
     right: 1.5rem;
+    bottom: 1.5rem;
     z-index: 1000;
     display: flex;
-    height: auto;
     min-width: 250px;
     max-width: 450px;
+    height: auto;
     font-size: $font-size-lg;
     vertical-align: middle;
     color: $font-color-light;
@@ -127,8 +127,8 @@
 
   .header-slider {
     display: flex;
-    width: 150px;
     align-items: center;
+    width: 150px;
   }
 
   .header-slider .form-range {
@@ -445,17 +445,17 @@
     left: 0;
     z-index: 1050;
     display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100vw;
     height: 100vh;
     background-color: rgb(0 0 0 / 50%);
-    align-items: center;
-    justify-content: center;
   }
 
   .folder-modal {
-    background-color: $white;
     width: 90%;
     max-width: 400px;
+    background-color: $white;
     border-radius: 8px;
     box-shadow: 0 4px 20px rgb(0 0 0 / 30%);
   }
