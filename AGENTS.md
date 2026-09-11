@@ -139,7 +139,7 @@ end
 ```ruby
 FactoryBot.define do
   factory :model do
-    name { Faker::Type.method }
+    sequence(:name) { |n| "#{Faker::Type.method} #{n}" }
     user
 
     trait :role_name do
