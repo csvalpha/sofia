@@ -278,11 +278,24 @@
     background-color: $gray-400;
   }
 
+  .product-grid .grid-tile-back {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
   .products-container {
     display: contents;
   }
 
-  .product-grid-product {
+  .grid-tile-back {
+    .grid-tile-name {
+      font-size: $font-size-lg;
+      color: $white;
+      text-shadow: none;
+    }
+  }
+
+  .grid-tile {
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
@@ -295,15 +308,38 @@
     }
   }
 
-  .product-requires-age {
-    filter: brightness(0.7);
+  .grid-tile-product {
+    color: $font-color-dark;
+    text-align: center;
+    
+    &.product-requires-age {
+      filter: brightness(0.7);
 
-    &:hover {
-      filter: brightness(0.6);
+      &:hover {
+        filter: brightness(0.6);
+      }
     }
   }
 
-  .product-grid-product-name {
+  .grid-tile-folder,
+  .grid-tile-back {
+    color: $white;
+    background-color: $gray-600;
+    
+    .grid-tile-name {
+      font-size: $font-size-lg;
+      color: $font-color-dark;
+      text-shadow: none;
+    }
+  }
+
+  .grid-tile-name {
+    font-size: $font-size-lg;
+    color: $font-color-dark;
+    text-align: center;
+  }
+
+  .grid-tile-price {
     font-size: $font-size-lg;
     color: $font-color-dark;
     text-align: center;
@@ -319,15 +355,10 @@
     overflow-y: auto;
   }
 
-  .folder-container {
-    display: contents;
-  }
-
-  .folder-tile {
+  .grid-tile-folder,
+  .grid-tile-back {
     position: relative;
-    color: $white;
-    background-color: $gray-600;
-
+    
     .folder-icon {
       position: relative;
       display: flex;
@@ -348,14 +379,22 @@
       border-radius: 50%;
     }
 
-    .product-grid-product-name {
-      font-size: $font-size-lg;
-      color: $font-color-dark;
-      text-shadow: none;
-    }
-
     &.edit-mode {
       cursor: grab;
+    }
+  }
+
+  .grid-tile-back {
+    pointer-events: auto;
+    
+    .folder-icon {
+      font-size: 2rem;
+    }
+    
+    .grid-tile-name {
+      font-size: $font-size-lg;
+      color: $white;
+      text-shadow: none;
     }
   }
 
@@ -381,36 +420,6 @@
     }
   }
 
-  .add-folder-tile {
-    background-color: $gray-400;
-    border: 2px dashed $gray-600;
-
-    .folder-icon {
-      color: $gray-600;
-    }
-
-    .product-grid-product-name {
-      color: $gray-600;
-    }
-
-    &:hover {
-      background-color: $gray-300;
-    }
-  }
-
-  .drop-home-tile {
-    background-color: $gray-500;
-    border: 2px dashed $gray-700;
-  }
-
-  .back-button-tile {
-    pointer-events: auto;
-    
-    .folder-icon {
-      font-size: 2rem;
-    }
-  }
-
   .draggable {
     cursor: grab;
 
@@ -424,7 +433,10 @@
     top: 8px;
     left: 8px;
     font-size: 1rem;
-    color: rgb(0 0 0 / 30%);
+    color: $gray-700;
+    cursor: grab;
+    opacity: 1;
+    transition: opacity 0.2s ease;
   }
 
   .sortable-ghost {
@@ -437,6 +449,11 @@
 
   .sortable-drag {
     background-color: $white;
+  }
+
+  .drop-target {
+    background-color: $gray-500;
+    border: 2px dashed $gray-700;
   }
 
   .folder-modal-backdrop {

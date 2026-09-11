@@ -44,7 +44,7 @@
           {{ editMode ? 'Klaar' : 'Bewerken' }}
         </span>
       </button>
-      <button v-if="editMode" type="button" class="btn btn-outline-secondary m-3 w-auto" @click="openFolderModal(null)">
+      <button v-if="editMode && !currentFolder" type="button" class="btn btn-outline-secondary m-3 w-auto" @click="openFolderModal(null)">
         <i class="fas fa-folder-plus"></i>
         <span class="ms-1">
           Nieuwe map
@@ -172,76 +172,25 @@
     <activity-orders ref="activityOrders" :activity="activity" editable expand_first>
     </activity-orders>
   </div>
-  <div class="product-grid" v-if="selectedUser || payWithCash || payWithPin" :style="productGridStyle">
-    <div v-if="currentFolder" 
-         @click.stop="exitFolder"
-         @dragover.prevent
-         @drop="onDropOnBackButton"
-         class="product-grid-product folder-tile back-button-tile"
-         :class="{ 'drop-target': draggedItem }"
-         :style="{ backgroundColor: currentFolder.color }">
-      <span class="product-grid-product-name">
-        Terug
-      </span>
-      <span class="folder-icon">
-        <i class="fas fa-folder-open"></i>
-        <i class="fas fa-arrow-left folder-back-arrow"></i>
-      </span>
-    </div>
-
-    <div v-if="!currentFolder" ref="foldersContainer">
-      <div v-for="folder in sortedFolders" 
-           :key="'folder-' + folder.id"
-           :data-folder-id="folder.id"
-           @click="!editMode && enterFolder(folder)"
-           @dragover.prevent
-           @drop="onDropOnFolder($event, folder)"
-           class="product-grid-product folder-tile"
-           :class="{ 'edit-mode': editMode, 'drop-target': draggedItem }"
-           :style="{ backgroundColor: folder.color }">
-        <span class="folder-edit-btn" v-if="editMode" @click.stop="openFolderModal(folder)">
-          <i class="fas fa-pen"></i>
-        </span>
-        <span class="product-grid-product-name">
-          {{ folder.name }}
-        </span>
-        <span class="folder-icon">
-          <i class="fas fa-folder"></i>
-        </span>
-      </div>
-    </div>
-
-    <div class="products-container" ref="productsContainer">
-      <div v-for="productPrice in visibleProducts"
-           :key="'product-' + productPrice.id"
-           :data-product-price-id="productPrice.id"
-           @click="!editMode && selectProduct(productPrice)"
-           :draggable="editMode"
-           @dragstart="onDragStartProduct($event, productPrice)"
-           @dragend="onDragEnd"
-           class="product-grid-product"
-           :class="{ 
-             'product-requires-age': (selectedUser && selectedUser.minor && productPrice.product.requires_age),
-             'draggable': editMode
-           }"
-           :style="productPrice.product.color ? { backgroundColor: productPrice.product.color } : {}">
-        <span class="product-grid-product-requires-age mb-2 fa-stack" v-if="selectedUser && selectedUser.minor && productPrice.product.requires_age">
-          <i class="fa fa-circle fa-circle-lighter fa-stack-2x">
-          </i>
-          <span class="fa fa-stack-1x fa-inverse fa-plus18">
-          </span>
-        </span>
-        <span class="drag-handle" v-if="editMode">
-          <i class="fas fa-grip-vertical"></i>
-        </span>
-        <span class="product-grid-product-name">
-          {{productPrice.product.name}}
-        </span>
-        <span class="product-grid-product-price">
-          {{doubleToCurrency(productPrice.price)}}
-        </span>
-      </div>
-    </div>
+  <div class="product-grid" v-if="selectedUser || payWithCash || payWithPin" :style="productGridStyle" ref="gridContainer">
+    <grid-tile
+      v-for="gridItem in gridItems"
+      :key="gridItem.type + '-' + gridItem.id"
+      :item-type="gridItem.type"
+      :item="gridItem.item"
+      :edit-mode="editMode"
+      :selected-user="selectedUser"
+      :dragged-item="draggedItem"
+      :dragged-item-type="draggedItemType"
+      :background-color="gridItem.type === 'back' ? currentFolder.color : null"
+      @click="handleTileClick"
+      @edit="handleTileEdit"
+      @dragstart="onDragStart"
+      @dragend="onDragEnd"
+      @dragover="handleDragOver"
+      @drop="onDrop"
+    />
+  </div>
 
     <em class="no-items" v-if="!visibleProducts.length && !sortedFolders.length">
       <span>

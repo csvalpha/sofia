@@ -6,6 +6,7 @@ import Sortable from 'sortablejs';
 import FlashNotification from './components/FlashNotification.vue';
 import UserSelection from './components/orderscreen/UserSelection.vue';
 import ActivityOrders from './components/orderscreen/ActivityOrders.vue';
+import GridTile from './components/orderscreen/GridTile.vue';
 
 document.addEventListener('turbo:load', () => {
   const element = document.getElementById('order-screen');
@@ -54,6 +55,7 @@ document.addEventListener('turbo:load', () => {
           editingFolder: null,
           folderForm: { name: '', color: '#6c757d' },
           draggedItem: null,
+          draggedItemType: null,
           sortableInstance: null,
           gridSize: priceListGridSize
         };
@@ -290,15 +292,39 @@ document.addEventListener('turbo:load', () => {
           });
         },
 
-        enterFolder(folder) {
-          if (!this.editMode) {
-            this.currentFolder = folder;
+        handleTileClick(payload) {
+          if (this.editMode || !payload) return;
+          
+          const itemType = payload.itemType;
+          const item = payload.item;
+          
+          if (itemType === 'folder') {
+            this.currentFolder = item;
+          } else if (itemType === 'back') {
+            this.currentFolder = null;
+          } else if (itemType === 'product') {
+            this.selectProduct(item);
           }
         },
 
-        exitFolder() {
-          if (!this.editMode) {
-            this.currentFolder = null;
+        handleTileEdit(payload) {
+          if (!this.editMode || !payload) return;
+          
+          const itemType = payload.itemType;
+          const item = payload.item;
+          
+          if (itemType === 'folder') {
+            this.openFolderModal(item);
+          }
+        },
+
+        handleDragOver(payload) {
+          // Allow drag over for drop targets
+          if (this.editMode && this.draggedItem && payload && (payload.itemType === 'folder' || payload.itemType === 'back')) {
+            if (payload.evt && payload.evt.dataTransfer) {
+              payload.evt.preventDefault();
+              payload.evt.dataTransfer.dropEffect = 'move';
+            }
           }
         },
 
@@ -314,33 +340,22 @@ document.addEventListener('turbo:load', () => {
         },
 
         initSortable() {
-          const productsContainer = this.$refs.productsContainer;
-          if (productsContainer && !this.sortableInstance) {
-            this.sortableInstance = Sortable.create(productsContainer, {
-              animation: 100,
+          const gridContainer = this.$refs.gridContainer;
+          if (gridContainer && !this.sortableInstance) {
+            this.sortableInstance = Sortable.create(gridContainer, {
+              animation: 250,
               ghostClass: 'sortable-ghost',
               chosenClass: 'sortable-chosen',
               dragClass: 'sortable-drag',
               forceFallback: false,
               touchStartThreshold: 0,
               delayOnTouchOnly: true,
-              delay: 50,
-              onEnd: this.onProductDragEnd.bind(this)
-            });
-          }
-          
-          const foldersContainer = this.$refs.foldersContainer;
-          if (foldersContainer && !this.folderSortableInstance) {
-            this.folderSortableInstance = Sortable.create(foldersContainer, {
-              animation: 100,
-              ghostClass: 'sortable-ghost',
-              chosenClass: 'sortable-chosen',
-              dragClass: 'sortable-drag',
-              forceFallback: false,
-              touchStartThreshold: 0,
-              delayOnTouchOnly: true,
-              delay: 50,
-              onEnd: this.onFolderDragEnd.bind(this)
+              filter: '.grid-tile-back',
+              draggable: '.grid-tile:not(.grid-tile-back)',
+              swapThreshold: 0.75,
+              fallbackOnBody: false,
+              fallbackTolerance: 0,
+              onEnd: this.onGridDragEnd.bind(this)
             });
           }
         },
@@ -350,28 +365,54 @@ document.addEventListener('turbo:load', () => {
             this.sortableInstance.destroy();
             this.sortableInstance = null;
           }
-          if (this.folderSortableInstance) {
-            this.folderSortableInstance.destroy();
-            this.folderSortableInstance = null;
-          }
         },
 
-        onProductDragEnd(evt) {
-          const productPositions = [];
-          const productElements = evt.to.querySelectorAll('[data-product-price-id]');
-          productElements.forEach((el, index) => {
-            const productPriceId = el.dataset.productPriceId;
-            if (productPriceId) {
-              productPositions.push({ 
-                id: parseInt(productPriceId), 
-                position: index,
-                folder_id: this.currentFolder ? this.currentFolder.id : null
-              });
-              const productPrice = this.productPrices.find(p => p.id == productPriceId);
-              if (productPrice) productPrice.position = index;
+        onGridDragEnd(evt) {
+          const positions = [];
+          const gridElements = evt.to.querySelectorAll('.grid-tile');
+          
+          gridElements.forEach((el, index) => {
+            const itemId = el.dataset.itemId;
+            const itemType = el.dataset.itemType;
+            
+            if (itemId && itemId !== 'back') {
+              if (itemType === 'folder') {
+                const folder = this.folders.find(f => f.id == itemId);
+                if (folder) {
+                  folder.position = index;
+                  positions.push({ 
+                    id: parseInt(itemId), 
+                    position: index,
+                    type: 'folder'
+                  });
+                }
+              } else if (itemType === 'product') {
+                const productPrice = this.productPrices.find(pp => pp.id == itemId);
+                if (productPrice) {
+                  productPrice.position = index;
+                  positions.push({ 
+                    id: parseInt(itemId), 
+                    position: index,
+                    type: 'product',
+                    folder_id: this.currentFolder ? this.currentFolder.id : null
+                  });
+                }
+              }
             }
           });
-          
+
+          // Separate folder and product positions for API calls
+          const folderPositions = positions.filter(p => p.type === 'folder').map(p => ({ id: p.id, position: p.position }));
+          const productPositions = positions.filter(p => p.type === 'product').map(p => ({ id: p.id, position: p.position, folder_id: p.folder_id }));
+
+          if (folderPositions.length > 0) {
+            api.patch(`/price_lists/${this.priceListId}/product_price_folders/reorder`, {
+              folder_positions: folderPositions
+            }).catch((response) => {
+              this.handleXHRError(response);
+            });
+          }
+
           if (productPositions.length > 0) {
             api.patch(`/price_lists/${this.priceListId}/product_prices/reorder`, {
               product_positions: productPositions
@@ -381,86 +422,69 @@ document.addEventListener('turbo:load', () => {
           }
         },
 
-        onFolderDragEnd(evt) {
-          const folderPositions = [];
-          const folderElements = evt.to.querySelectorAll('.folder-tile');
-          folderElements.forEach((el, index) => {
-            const folderId = el.dataset.folderId;
-            if (folderId) {
-              folderPositions.push({ id: parseInt(folderId), position: index });
-              const folder = this.folders.find(f => f.id == folderId);
-              if (folder) folder.position = index;
-            }
-          });
+        onDrop(payload) {
+          if (!this.draggedItem || !payload || !payload.item) return;
+          
+          const draggedItemType = this.draggedItemType;
+          const draggedItem = this.draggedItem;
+          const targetItemType = payload.itemType;
+          const targetItem = payload.item;
+          
+          // Ensure we have a valid event object
+          if (payload.evt && typeof payload.evt.preventDefault === 'function') {
+            payload.evt.preventDefault();
+            payload.evt.stopPropagation();
+          }
+          
+          // Only allow dropping products onto folders or back button
+          if (draggedItemType === 'product' && (targetItemType === 'folder' || targetItemType === 'back')) {
+            // Fast path for folder/back drops - respond immediately
+            if (targetItemType === 'folder') {
+              const folderId = parseInt(targetItem.id);
+              const productsInFolder = this.productPrices.filter(pp => pp.product_price_folder_id == folderId);
+              let maxPosition = -1;
+              productsInFolder.forEach(pp => {
+                if (typeof pp.position === 'number' && pp.position > maxPosition) {
+                  maxPosition = pp.position;
+                }
+              });
 
-          if (folderPositions.length > 0) {
-            api.patch(`/price_lists/${this.priceListId}/product_price_folders/reorder`, {
-              folder_positions: folderPositions
-            }).catch((response) => {
-              this.handleXHRError(response);
-            });
+              // Update UI immediately for fast response
+              draggedItem.product_price_folder_id = folderId;
+              draggedItem.position = maxPosition + 1;
+              
+              // API call with minimal delay
+              api.patch(`/product_prices/${draggedItem.id}/assign_folder`, {
+                folder_id: folderId
+              }).catch((response) => {
+                this.handleXHRError(response);
+              });
+            } else if (targetItemType === 'back') {
+              // Update UI immediately
+              draggedItem.product_price_folder_id = null;
+              const rootProducts = this.productPrices.filter(pp => !pp.product_price_folder_id);
+              draggedItem.position = rootProducts.length > 0 ? rootProducts.length - 1 : 0;
+              
+              // API call with minimal delay
+              api.patch(`/product_prices/${draggedItem.id}/assign_folder`, {
+                folder_id: null
+              }).catch((response) => {
+                this.handleXHRError(response);
+              });
+            }
           }
         },
 
-        assignProductToFolder(productPrice, folderId, newPosition = 0) {
-          api.patch(`/product_prices/${productPrice.id}/assign_folder`, {
-            folder_id: folderId
-          }).then(() => {
-            productPrice.product_price_folder_id = folderId ? parseInt(folderId) : null;
-            productPrice.position = newPosition;
-          }).catch((response) => {
-            this.handleXHRError(response);
-          });
-        },
-
-        onDropOnFolder(evt, folder) {
-          evt.preventDefault();
-          evt.stopPropagation();
-          if (!this.draggedItem || !folder) return;
-          
-          const productPrice = this.draggedItem;
-          const folderId = parseInt(folder.id);
-          
-          const productsInFolder = this.productPrices.filter(pp => pp.product_price_folder_id == folderId);
-          let maxPosition = -1;
-          productsInFolder.forEach(pp => {
-            if (typeof pp.position === 'number' && pp.position > maxPosition) {
-              maxPosition = pp.position;
-            }
-          });
-
-          productPrice.product_price_folder_id = folderId;
-          productPrice.position = maxPosition + 1;
-          api.patch(`/product_prices/${productPrice.id}/assign_folder`, {
-            folder_id: folder.id
-          }).catch((response) => {
-            this.handleXHRError(response);
-          });
-        },
-
-        onDropOnBackButton(evt) {
-          evt.preventDefault();
-          evt.stopPropagation();
-          if (!this.draggedItem) return;
-          
-          const productPrice = this.draggedItem;
-          productPrice.product_price_folder_id = null;
-          const rootProducts = this.productPrices.filter(pp => !pp.product_price_folder_id);
-          productPrice.position = rootProducts.length > 0 ? rootProducts.length - 1 : 0;
-          
-          api.patch(`/product_prices/${productPrice.id}/assign_folder`, {
-            folder_id: null
-          }).catch((response) => {
-            this.handleXHRError(response);
-          });
-        },
-
-        onDragStartProduct(evt, productPrice) {
-          this.draggedItem = productPrice;
+        onDragStart(payload) {
+          if (payload && payload.item) {
+            this.draggedItem = payload.item;
+            this.draggedItemType = payload.itemType;
+          }
         },
 
         onDragEnd() {
           this.draggedItem = null;
+          this.draggedItemType = null;
         },
 
         updateGridSize() {
@@ -625,6 +649,49 @@ document.addEventListener('turbo:load', () => {
           return this.currentFolder !== null;
         },
 
+        gridItems() {
+          const items = [];
+          
+          // Add back button if in folder - always first and fixed
+          if (this.currentFolder) {
+            items.push({
+              type: 'back',
+              item: this.currentFolder,
+              id: 'back',
+              position: -1000 // Always first, fixed position
+            });
+          }
+          
+          // Add folders if not in folder
+          if (!this.currentFolder) {
+            this.sortedFolders.forEach(folder => {
+              items.push({
+                type: 'folder',
+                item: folder,
+                id: folder.id,
+                position: folder.position
+              });
+            });
+          }
+          
+          // Add products
+          this.visibleProducts.forEach(productPrice => {
+            items.push({
+              type: 'product',
+              item: productPrice,
+              id: productPrice.id,
+              position: productPrice.position
+            });
+          });
+          
+          // Sort by position, but keep back button always first
+          return items.sort((a, b) => {
+            if (a.type === 'back') return -1;
+            if (b.type === 'back') return 1;
+            return a.position - b.position;
+          });
+        },
+
         productGridStyle() {
           return {
             gridTemplateColumns: `repeat(${this.gridSize}, 1fr)`,
@@ -652,7 +719,8 @@ document.addEventListener('turbo:load', () => {
       components: {
         FlashNotification,
         UserSelection,
-        ActivityOrders
+        ActivityOrders,
+        GridTile
       },
     });
 
