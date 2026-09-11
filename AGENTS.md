@@ -191,7 +191,7 @@ Devise, Pundit, Sidekiq, PaperTrail, Paranoia, Mollie API, OmniAuth, Turbo Rails
 - Don't use `docker exec ... bundle exec ...` directly (PATH + working dir issues)
 - Don't skip tests
 - Don't ignore RuboCop
-- Use `policy(Model).permitted_attributes` for strong params
+- Use `policy(Model.new).permitted_attributes` for create actions, `policy(@model).permitted_attributes_for_update` for existing records
 - Use `authorize @model` in controllers
 - Use Pundit scopes: `policy_scope(Model)`
 - Keep controllers thin, move logic to models/services
