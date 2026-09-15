@@ -7,6 +7,7 @@ class ProductPricesController < ApplicationController
     authorize @product_price, :update?
 
     folder_id = params[:folder_id]
+    position = params[:position]
 
     if folder_id.present?
       folder = ProductPriceFolder.find_by(id: folder_id)
@@ -16,7 +17,10 @@ class ProductPricesController < ApplicationController
       end
     end
 
-    if @product_price.update(product_price_folder_id: folder_id)
+    update_params = { product_price_folder_id: folder_id }
+    update_params[:position] = position if position.present?
+
+    if @product_price.update(update_params)
       render json: @product_price, include: product_price_includes
     else
       render json: { errors: @product_price.errors.full_messages }, status: :unprocessable_content

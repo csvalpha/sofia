@@ -56,6 +56,7 @@ document.addEventListener('turbo:load', () => {
           folderForm: { name: '', color: '#6c757d' },
           draggedItem: null,
           draggedItemType: null,
+          draggedItemHandled: false,
           sortableInstance: null,
           gridSize: priceListGridSize,
           gridSizeUpdateInProgress: false,
@@ -370,6 +371,12 @@ document.addEventListener('turbo:load', () => {
         },
 
         onGridDragEnd(evt) {
+          // Skip if the dragged item was already handled by onDrop (folder/back drops)
+          if (this.draggedItemHandled) {
+            this.draggedItemHandled = false;
+            return;
+          }
+          
           const positions = [];
           const gridElements = evt.to.querySelectorAll('.grid-tile');
           
@@ -455,23 +462,36 @@ document.addEventListener('turbo:load', () => {
               draggedItem.product_price_folder_id = folderId;
               draggedItem.position = maxPosition + 1;
               
-              // API call with minimal delay
+              // Mark as handled to prevent onGridDragEnd from processing
+              this.draggedItemHandled = true;
+              
+              // API call with minimal delay - include position
               api.patch(`/product_prices/${draggedItem.id}/assign_folder`, {
-                folder_id: folderId
+                folder_id: folderId,
+                position: maxPosition + 1
               }).catch((response) => {
                 this.handleXHRError(response);
+              }).finally(() => {
+                this.draggedItemHandled = false;
               });
             } else if (targetItemType === 'back') {
               // Update UI immediately
               draggedItem.product_price_folder_id = null;
               const rootProducts = this.productPrices.filter(pp => !pp.product_price_folder_id);
-              draggedItem.position = rootProducts.length > 0 ? rootProducts.length - 1 : 0;
+              const newPosition = rootProducts.length > 0 ? Math.max(...rootProducts.map(p => p.position).filter(p => typeof p === 'number'), 0) + 1 : 0;
+              draggedItem.position = newPosition;
               
-              // API call with minimal delay
+              // Mark as handled to prevent onGridDragEnd from processing
+              this.draggedItemHandled = true;
+              
+              // API call with minimal delay - include position
               api.patch(`/product_prices/${draggedItem.id}/assign_folder`, {
-                folder_id: null
+                folder_id: null,
+                position: newPosition
               }).catch((response) => {
                 this.handleXHRError(response);
+              }).finally(() => {
+                this.draggedItemHandled = false;
               });
             }
           }
@@ -487,20 +507,38 @@ document.addEventListener('turbo:load', () => {
         onDragEnd() {
           this.draggedItem = null;
           this.draggedItemType = null;
+          this.draggedItemHandled = false;
         },
 
         updateGridSize() {
           // Prevent rapid consecutive calls
           if (this.gridSizeUpdateInProgress) return;
+          
+          // Capture the value being sent
+          const gridSizeToSend = this.gridSize;
           this.gridSizeUpdateInProgress = true;
           
           api.patch(`/price_lists/${this.priceListId}`, {
-            price_list: { grid_size: this.gridSize }
+            price_list: { grid_size: gridSizeToSend }
           }).then(() => {
             this.gridSizeUpdateInProgress = false;
+            // Check if gridSize changed during the request
+            if (this.gridSize !== gridSizeToSend) {
+              // Schedule a retry with the current value
+              this.gridSizeUpdateTimeout = setTimeout(() => {
+                this.updateGridSize();
+              }, 500);
+            }
           }).catch((response) => {
             this.gridSizeUpdateInProgress = false;
             this.handleXHRError(response);
+            // Check if gridSize changed during the request
+            if (this.gridSize !== gridSizeToSend) {
+              // Schedule a retry with the current value
+              this.gridSizeUpdateTimeout = setTimeout(() => {
+                this.updateGridSize();
+              }, 500);
+            }
           });
         },
 
@@ -693,10 +731,16 @@ document.addEventListener('turbo:load', () => {
             });
           });
           
-          // Sort by position, but keep back button always first
+          // Sort: back button first, then folders by position, then products by position
           return items.sort((a, b) => {
             if (a.type === 'back') return -1;
             if (b.type === 'back') return 1;
+            
+            // Group folders before products
+            if (a.type === 'folder' && b.type === 'product') return -1;
+            if (a.type === 'product' && b.type === 'folder') return 1;
+            
+            // Within same type, sort by position
             return a.position - b.position;
           });
         },
@@ -712,13 +756,13 @@ document.addEventListener('turbo:load', () => {
       watch: {
         gridSize: {
           handler: function(newVal, oldVal) {
-            // Only call update if value actually changed and we're not already updating
-            if (newVal !== oldVal && !this.gridSizeUpdateInProgress) {
+            // Only call update if value actually changed
+            if (newVal !== oldVal) {
               // Clear any pending update
               if (this.gridSizeUpdateTimeout) {
                 clearTimeout(this.gridSizeUpdateTimeout);
               }
-              // Debounce the update
+              // Debounce the update - always schedule, updateGridSize will handle in-progress
               this.gridSizeUpdateTimeout = setTimeout(() => {
                 this.updateGridSize();
               }, 500);
