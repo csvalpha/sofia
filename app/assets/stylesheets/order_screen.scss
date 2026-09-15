@@ -302,8 +302,8 @@
     justify-content: center;
     cursor: pointer;
     outline: none;
-    transition: filter 0.2s ease;
     border: none;
+    transition: filter 0.2s ease;
 
     &:hover {
       filter: brightness(0.85);
