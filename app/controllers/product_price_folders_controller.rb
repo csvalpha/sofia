@@ -3,6 +3,8 @@ class ProductPriceFoldersController < ApplicationController
   before_action :set_price_list, only: %i[index create reorder]
   before_action :set_folder, only: %i[update destroy]
 
+  after_action :verify_authorized
+
   def index
     authorize ProductPriceFolder, :index?
     @folders = @price_list.product_price_folders.order(:position)
@@ -73,6 +75,6 @@ class ProductPriceFoldersController < ApplicationController
   end
 
   def folder_params
-    params.require(:product_price_folder).permit(:name, :color, :position)
+    params.require(:product_price_folder).permit(policy(ProductPriceFolder.new).permitted_attributes)
   end
 end

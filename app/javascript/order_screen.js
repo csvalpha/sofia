@@ -431,69 +431,54 @@ document.addEventListener('turbo:load', () => {
           }
         },
 
+        nextPositionAfter(products) {
+          const maxPosition = products.reduce((max, pp) => (
+            typeof pp.position === 'number' && pp.position > max ? pp.position : max
+          ), -1);
+          return maxPosition + 1;
+        },
+
+        assignProductToFolder(product, folderId) {
+          const siblingProducts = this.productPrices.filter((pp) => (
+            folderId ? pp.product_price_folder_id == folderId : !pp.product_price_folder_id
+          ));
+          const position = this.nextPositionAfter(siblingProducts);
+
+          // Update UI immediately for fast response
+          product.product_price_folder_id = folderId;
+          product.position = position;
+
+          // Mark as handled to prevent onGridDragEnd from processing
+          this.draggedItemHandled = true;
+
+          api.patch(`/product_prices/${product.id}/assign_folder`, {
+            folder_id: folderId,
+            position
+          }).catch((response) => {
+            this.handleXHRError(response);
+          }).finally(() => {
+            this.draggedItemHandled = false;
+          });
+        },
+
         onDrop(payload) {
           if (!this.draggedItem || !payload || !payload.item) return;
-          
+
           const draggedItemType = this.draggedItemType;
           const draggedItem = this.draggedItem;
           const targetItemType = payload.itemType;
           const targetItem = payload.item;
-          
+
           // Ensure we have a valid event object
           if (payload.evt && typeof payload.evt.preventDefault === 'function') {
             payload.evt.preventDefault();
             payload.evt.stopPropagation();
           }
-          
+
           // Only allow dropping products onto folders or back button
           if (draggedItemType === 'product' && (targetItemType === 'folder' || targetItemType === 'back')) {
-            // Fast path for folder/back drops - respond immediately
-            if (targetItemType === 'folder') {
-              const folderId = parseInt(targetItem.id);
-              const productsInFolder = this.productPrices.filter(pp => pp.product_price_folder_id == folderId);
-              let maxPosition = -1;
-              productsInFolder.forEach(pp => {
-                if (typeof pp.position === 'number' && pp.position > maxPosition) {
-                  maxPosition = pp.position;
-                }
-              });
-
-              // Update UI immediately for fast response
-              draggedItem.product_price_folder_id = folderId;
-              draggedItem.position = maxPosition + 1;
-              
-              // Mark as handled to prevent onGridDragEnd from processing
-              this.draggedItemHandled = true;
-              
-              // API call with minimal delay - include position
-              api.patch(`/product_prices/${draggedItem.id}/assign_folder`, {
-                folder_id: folderId,
-                position: maxPosition + 1
-              }).catch((response) => {
-                this.handleXHRError(response);
-              }).finally(() => {
-                this.draggedItemHandled = false;
-              });
-            } else if (targetItemType === 'back') {
-              // Update UI immediately
-              draggedItem.product_price_folder_id = null;
-              const rootProducts = this.productPrices.filter(pp => !pp.product_price_folder_id);
-              const newPosition = rootProducts.length > 0 ? Math.max(...rootProducts.map(p => p.position).filter(p => typeof p === 'number'), 0) + 1 : 0;
-              draggedItem.position = newPosition;
-              
-              // Mark as handled to prevent onGridDragEnd from processing
-              this.draggedItemHandled = true;
-              
-              // API call with minimal delay - include position
-              api.patch(`/product_prices/${draggedItem.id}/assign_folder`, {
-                folder_id: null,
-                position: newPosition
-              }).catch((response) => {
-                this.handleXHRError(response);
-              }).finally(() => {
-                this.draggedItemHandled = false;
-              });
-            }
+            const folderId = targetItemType === 'folder' ? parseInt(targetItem.id) : null;
+            this.assignProductToFolder(draggedItem, folderId);
           }
         },
 
@@ -513,28 +498,19 @@ document.addEventListener('turbo:load', () => {
         updateGridSize() {
           // Prevent rapid consecutive calls
           if (this.gridSizeUpdateInProgress) return;
-          
+
           // Capture the value being sent
           const gridSizeToSend = this.gridSize;
           this.gridSizeUpdateInProgress = true;
-          
+
           api.patch(`/price_lists/${this.priceListId}`, {
             price_list: { grid_size: gridSizeToSend }
-          }).then(() => {
-            this.gridSizeUpdateInProgress = false;
-            // Check if gridSize changed during the request
-            if (this.gridSize !== gridSizeToSend) {
-              // Schedule a retry with the current value
-              this.gridSizeUpdateTimeout = setTimeout(() => {
-                this.updateGridSize();
-              }, 500);
-            }
           }).catch((response) => {
-            this.gridSizeUpdateInProgress = false;
             this.handleXHRError(response);
-            // Check if gridSize changed during the request
+          }).finally(() => {
+            this.gridSizeUpdateInProgress = false;
+            // Schedule a retry if gridSize changed during the request
             if (this.gridSize !== gridSizeToSend) {
-              // Schedule a retry with the current value
               this.gridSizeUpdateTimeout = setTimeout(() => {
                 this.updateGridSize();
               }, 500);

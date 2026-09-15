@@ -118,54 +118,46 @@ export default {
   },
 
   methods: {
-    handleClick(evt) {
-      if (this.editMode) return;
-      
-      evt.stopPropagation();
-      
-      this.$emit('click', {
+    emitItemEvent(eventName, evt) {
+      this.$emit(eventName, {
         evt,
         itemType: this.itemType,
         item: this.item
       });
+    },
+
+    handleClick(evt) {
+      if (this.editMode) return;
+
+      evt.stopPropagation();
+
+      this.emitItemEvent('click', evt);
     },
 
     handleDragOver(evt) {
       if (!this.editMode) return;
-      
+
       evt.preventDefault && evt.preventDefault();
       evt.stopPropagation && evt.stopPropagation();
-      
-      this.$emit('dragover', {
-        evt,
-        itemType: this.itemType,
-        item: this.item
-      });
+
+      this.emitItemEvent('dragover', evt);
     },
 
     handleDrop(evt) {
       if (!this.editMode) return;
-      
+
       evt.preventDefault && evt.preventDefault();
       evt.stopPropagation && evt.stopPropagation();
-      
-      this.$emit('drop', {
-        evt,
-        itemType: this.itemType,
-        item: this.item
-      });
+
+      this.emitItemEvent('drop', evt);
     },
 
     handleDragStart(evt) {
       if (!this.editMode) return;
-      
+
       evt.dataTransfer.setData('text/plain', this.item.id);
-      
-      this.$emit('dragstart', {
-        evt,
-        itemType: this.itemType,
-        item: this.item
-      });
+
+      this.emitItemEvent('dragstart', evt);
     },
 
     handleDragEnd() {
@@ -174,12 +166,8 @@ export default {
 
     handleEdit(evt) {
       if (!this.editMode) return;
-      
-      this.$emit('edit', {
-        evt,
-        itemType: this.itemType,
-        item: this.item
-      });
+
+      this.emitItemEvent('edit', evt);
     }
   }
 };

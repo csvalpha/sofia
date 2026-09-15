@@ -15,7 +15,7 @@ class ProductPricePolicy < ApplicationPolicy
     update?
   end
 
-  class Scope < ApplicationPolicy::Scope
+  class Scope < Scope
     def resolve
       scope.all
     end

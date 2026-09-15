@@ -3,7 +3,9 @@ class ProductPricesController < ApplicationController
   before_action :set_product_price, only: %i[assign_folder]
   before_action :set_price_list, only: %i[reorder]
 
-  def assign_folder # rubocop:disable Metrics/MethodLength
+  after_action :verify_authorized
+
+  def assign_folder # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     authorize @product_price, :update?
 
     folder_id = params[:folder_id]

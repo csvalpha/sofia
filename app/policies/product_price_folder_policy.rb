@@ -23,7 +23,11 @@ class ProductPriceFolderPolicy < ApplicationPolicy
     user&.treasurer?
   end
 
-  class Scope < ApplicationPolicy::Scope
+  def permitted_attributes
+    %i[name color position]
+  end
+
+  class Scope < Scope
     def resolve
       scope.all
     end
