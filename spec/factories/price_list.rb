@@ -1,6 +1,7 @@
 FactoryBot.define do
   factory :price_list do
     sequence(:name) { |n| "#{Faker::Book.title} #{n}" }
+    grid_size { 4 }
 
     transient do
       with_all_products { false }

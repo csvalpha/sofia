@@ -15,8 +15,8 @@ class ErrorsController < ApplicationController
     render_error_page('errors/unacceptable', :not_acceptable, '406 Not Acceptable')
   end
 
-  def unprocessable_entity
-    render_error_page('errors/unprocessable_entity', :unprocessable_entity, '422 Unprocessable Entity')
+  def unprocessable_content
+    render_error_page('errors/unprocessable_content', :unprocessable_content, '422 Unprocessable Entity')
   end
 
   def internal_server_error

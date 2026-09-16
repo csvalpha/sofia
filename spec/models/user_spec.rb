@@ -313,7 +313,7 @@ RSpec.describe User do
     let(:user) { create(:user) }
 
     let(:product_price) { build(:product_price, price: 2.00) }
-    let(:price_list) { build(:price_list, product_price: [product_price]) }
+    let(:price_list) { build(:price_list, product_prices: [product_price]) }
     let(:activity) { build(:activity, price_list:) }
 
     let(:default_order) { { products: [product_price.product], activity:, user: } }
@@ -398,7 +398,7 @@ RSpec.describe User do
 
     context 'when with data' do
       let(:product_price) { build(:product_price, price: 2.18) }
-      let(:price_list) { build(:price_list, product_price: [product_price]) }
+      let(:price_list) { build(:price_list, product_prices: [product_price]) }
       let(:activity) { build(:activity, price_list:) }
 
       context 'without orders' do
