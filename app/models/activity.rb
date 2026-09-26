@@ -3,6 +3,7 @@ class Activity < ApplicationRecord
 
   has_many :orders, dependent: :destroy
   has_many :credit_mutations, dependent: :destroy
+  has_many :invoices, dependent: :destroy
   has_many :ordering_users, through: :orders, source: :user
   belongs_to :price_list
   belongs_to :created_by, class_name: 'User'

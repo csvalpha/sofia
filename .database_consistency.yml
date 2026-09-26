@@ -1,0 +1,9 @@
+# Invoice#human_id is populated deterministically by a before_create callback
+# (Invoice#set_human_id) rather than being set directly, so it is never nil at
+# INSERT time even though the column is NOT NULL. Adding a presence validator
+# would run before that callback and would break specs built with
+# FactoryBot's build_stubbed (which never runs on: :create callbacks).
+Invoice:
+  human_id:
+    NullConstraintChecker:
+      enabled: false
