@@ -18,6 +18,30 @@ RSpec.describe User do
       it { expect(user).not_to be_valid }
     end
 
+    context 'when email is already taken by another manual or sofia_account user' do
+      before { create(:user, :manual, email: 'duplicate@example.com') }
+
+      subject(:user) { build(:user, :sofia_account, email: 'DUPLICATE@example.com') }
+
+      it { expect(user).not_to be_valid }
+    end
+
+    context 'when email is already taken but only by an amber user' do
+      before { create(:user, :from_amber, email: 'duplicate@example.com') }
+
+      subject(:user) { build(:user, :manual, email: 'duplicate@example.com') }
+
+      it { expect(user).to be_valid }
+    end
+
+    context 'when email is already taken by an amber user with the same email' do
+      before { create(:user, :from_amber, email: 'duplicate@example.com') }
+
+      subject(:user) { build(:user, :from_amber, email: 'duplicate@example.com') }
+
+      it { expect(user).to be_valid }
+    end
+
     context 'when deactivating with credit' do
       subject(:user) { create(:user, deactivated: true) }
 
