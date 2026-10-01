@@ -14,8 +14,7 @@ if [ "${TYPE}" = "lint" ] || [ "${TYPE}" = "" ]; then
   gem install bundler-audit
   bundle-audit update && bundle-audit check --ignore CVE-2015-9284 || true
   RAILS_ENV=test bundle exec rails db:create db:environment:set db:schema:load
-  # uncomment when it does not fail anymore :)
-  # bundle exec database_consistency
+  RAILS_ENV=test bundle exec database_consistency
 
   echo "--- :eslint: Yarn lint"
   yarn install # Why do I need to do this again? This was done in Dockerfile, rite?

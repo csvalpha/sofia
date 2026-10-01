@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_12_12_000001) do
+ActiveRecord::Schema[7.2].define(version: 2026_09_16_095221) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -21,8 +21,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_12_000001) do
     t.datetime "deleted_at", precision: nil
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.bigint "price_list_id"
-    t.bigint "created_by_id"
+    t.bigint "price_list_id", null: false
+    t.bigint "created_by_id", null: false
     t.bigint "locked_by_id"
     t.index ["created_by_id"], name: "index_activities_on_created_by_id"
     t.index ["locked_by_id"], name: "index_activities_on_locked_by_id"
@@ -37,14 +37,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_12_000001) do
     t.datetime "deleted_at", precision: nil
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.bigint "created_by_id"
+    t.bigint "created_by_id", null: false
     t.index ["activity_id"], name: "index_credit_mutations_on_activity_id"
     t.index ["created_by_id"], name: "index_credit_mutations_on_created_by_id"
     t.index ["user_id"], name: "index_credit_mutations_on_user_id"
+    t.check_constraint "amount <= 5000::numeric", name: "credit_mutations_amount_check"
   end
 
   create_table "invoice_rows", force: :cascade do |t|
-    t.bigint "invoice_id"
+    t.bigint "invoice_id", null: false
     t.string "name", null: false
     t.integer "amount", null: false
     t.decimal "price", precision: 8, scale: 2, null: false
@@ -78,6 +79,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_12_000001) do
     t.datetime "deleted_at", precision: nil
     t.index ["order_id"], name: "index_order_rows_on_order_id"
     t.index ["product_id"], name: "index_order_rows_on_product_id"
+    t.check_constraint "price_per_product > 0::numeric", name: "order_rows_price_per_product_check"
+    t.check_constraint "product_count >= 0", name: "order_rows_product_count_check"
   end
 
   create_table "orders", force: :cascade do |t|
@@ -86,7 +89,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_12_000001) do
     t.datetime "deleted_at", precision: nil
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.bigint "created_by_id"
+    t.bigint "created_by_id", null: false
     t.boolean "paid_with_cash", default: false, null: false
     t.boolean "paid_with_pin", default: false, null: false
     t.decimal "order_total", precision: 8, scale: 2
@@ -97,7 +100,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_12_000001) do
 
   create_table "payments", force: :cascade do |t|
     t.string "mollie_id"
-    t.decimal "amount", precision: 8, scale: 2
+    t.decimal "amount", precision: 8, scale: 2, null: false
     t.integer "status", default: 0, null: false
     t.bigint "user_id"
     t.datetime "deleted_at", precision: nil
@@ -118,15 +121,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_12_000001) do
   end
 
   create_table "product_prices", force: :cascade do |t|
-    t.bigint "product_id"
-    t.bigint "price_list_id"
-    t.decimal "price", precision: 8, scale: 2
+    t.bigint "product_id", null: false
+    t.bigint "price_list_id", null: false
+    t.decimal "price", precision: 8, scale: 2, null: false
     t.datetime "deleted_at", precision: nil
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["price_list_id"], name: "index_product_prices_on_price_list_id"
     t.index ["product_id", "price_list_id", "deleted_at"], name: "index_product_prices_on_product_id_and_price_list_id", unique: true
-    t.index ["product_id"], name: "index_product_prices_on_product_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -143,7 +145,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_12_000001) do
     t.datetime "deleted_at", precision: nil
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.integer "role_type"
+    t.integer "role_type", null: false
   end
 
   create_table "roles_users", force: :cascade do |t|
@@ -154,7 +156,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_12_000001) do
     t.datetime "updated_at", precision: nil, null: false
     t.index ["role_id"], name: "index_roles_users_on_role_id"
     t.index ["user_id", "role_id", "created_at"], name: "index_roles_users_on_user_id_and_role_id_and_created_at", unique: true
-    t.index ["user_id"], name: "index_roles_users_on_user_id"
   end
 
   create_table "sofia_accounts", force: :cascade do |t|
@@ -166,7 +167,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_12_000001) do
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_sofia_accounts_on_user_id"
+    t.index ["user_id"], name: "index_sofia_accounts_on_user_id", unique: true
     t.index ["username"], name: "index_sofia_accounts_on_username", unique: true
   end
 
@@ -174,7 +175,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_12_000001) do
     t.datetime "deleted_at", precision: nil
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.string "name"
+    t.string "name", null: false
     t.string "provider"
     t.string "uid"
     t.string "avatar_thumb_url"
@@ -184,6 +185,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_12_000001) do
     t.string "activation_token"
     t.datetime "activation_token_valid_till"
     t.string "sub_provider"
+    t.index "lower((email)::text)", name: "index_users_on_lower_email_for_sofia_and_manual", unique: true, where: "((deleted_at IS NULL) AND (email IS NOT NULL) AND ((provider)::text IS DISTINCT FROM 'amber_oauth2'::text))"
     t.index ["sub_provider"], name: "index_users_on_sub_provider"
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end
@@ -198,9 +200,25 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_12_000001) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
+  add_foreign_key "activities", "price_lists"
   add_foreign_key "activities", "users", column: "created_by_id"
   add_foreign_key "activities", "users", column: "locked_by_id"
+  add_foreign_key "credit_mutations", "activities"
+  add_foreign_key "credit_mutations", "users"
   add_foreign_key "credit_mutations", "users", column: "created_by_id"
+  add_foreign_key "invoice_rows", "invoices"
+  add_foreign_key "invoices", "activities"
+  add_foreign_key "invoices", "users"
+  add_foreign_key "order_rows", "orders"
+  add_foreign_key "order_rows", "products"
+  add_foreign_key "orders", "activities"
+  add_foreign_key "orders", "users"
   add_foreign_key "orders", "users", column: "created_by_id"
+  add_foreign_key "payments", "invoices"
+  add_foreign_key "payments", "users"
+  add_foreign_key "product_prices", "price_lists"
+  add_foreign_key "product_prices", "products"
+  add_foreign_key "roles_users", "roles"
+  add_foreign_key "roles_users", "users"
   add_foreign_key "sofia_accounts", "users"
 end
