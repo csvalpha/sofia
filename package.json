@@ -55,7 +55,7 @@
     "postcss-preset-env": "^11.2.0",
     "postcss-scss": "^4.0.9",
     "sass": "^1.97.3",
-    "stylelint": "^17.4.0",
+    "stylelint": "^18.0.0",
     "stylelint-config-recess-order": "^7.6.1",
     "stylelint-config-standard-scss": "^17.0.0",
     "stylelint-order": "^8.1.1",
