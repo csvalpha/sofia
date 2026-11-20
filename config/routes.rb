@@ -44,9 +44,12 @@ Rails.application.routes.draw do
   resources :payments, only: %i[index create] do
     member do
       get :callback
+      get :mandate_callback
     end
     collection do
       get :add
+      post :setup_mandate
+      post :toggle_auto_charge
     end
   end
 
