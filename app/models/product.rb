@@ -4,6 +4,7 @@ class Product < ApplicationRecord
 
   has_many :product_prices, dependent: :destroy
   has_many :price_lists, through: :product_prices, dependent: :restrict_with_error
+  has_many :order_rows, dependent: :destroy
 
   attribute :color, :string, default: '#f8f9fa'
 

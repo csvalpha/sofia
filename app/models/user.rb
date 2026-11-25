@@ -4,6 +4,8 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   has_many :order_rows, through: :orders, dependent: :destroy
   has_many :credit_mutations, dependent: :destroy
   has_many :activities, dependent: :destroy, foreign_key: 'created_by_id', inverse_of: :created_by
+  has_many :payments, dependent: :destroy
+  has_many :invoices, dependent: :destroy
 
   has_many :roles_users, class_name: 'RolesUsers', dependent: :destroy
   has_many :roles, through: :roles_users
@@ -13,6 +15,10 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   validate :no_deactivation_when_nonzero_credit
   validates :email, format: { with: Devise.email_regexp }, allow_blank: true
   validates :email, presence: true, if: ->(user) { !user.deactivated && user.sofia_account.present? }
+  validates :email, uniqueness: {
+    case_sensitive: false,
+    conditions: -> { where(deleted_at: nil).where.not(email: nil).where('provider IS DISTINCT FROM ?', 'amber_oauth2') }
+  }, if: ->(user) { user.email.present? && user.deleted_at.nil? && user.provider != 'amber_oauth2' }
 
   scope :in_amber, -> { where(provider: 'amber_oauth2') }
   scope :sofia_account, -> { where(provider: 'sofia_account') }

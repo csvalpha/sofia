@@ -74,7 +74,7 @@ RSpec.describe SofiaAccount do
       end
 
       context 'with user' do
-        subject(:duplicate_sofia_account) { build_stubbed(:sofia_account, user: sofia_account.user) }
+        subject(:duplicate_sofia_account) { build(:sofia_account, user: sofia_account.user) }
 
         it { expect(duplicate_sofia_account).not_to be_valid }
       end
