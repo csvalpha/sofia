@@ -115,7 +115,7 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   # TODO: Spec this method
-  # :nocov:
+  # simplecov:disable
   def self.from_omniauth(auth) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     user = where(provider: auth.provider, uid: auth.uid).first_or_create do |u|
       u.name = auth[:info][:name]
@@ -137,7 +137,7 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
     sofia_account.user
   end
 
-  # :nocov:
+  # simplecov:enable
 
   def self.full_name_from_attributes(first_name, last_name_prefix, last_name, nickname)
     full_name = first_name
