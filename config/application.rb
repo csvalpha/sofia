@@ -81,6 +81,7 @@ module Sofia
 
     config.x.subprovider_label    = ENV.fetch('SUBPROVIDER_LABEL', nil)
     config.x.deposit_button_enabled = ENV.fetch('DEPOSIT_BUTTON_ENABLED', 'true') == 'true'
+    config.x.occupancy_api_token  = ENV.fetch('OCCUPANCY_API_TOKEN', nil).presence
 
     config.x.min_payment_amount   = [ENV.fetch('MIN_PAYMENT_AMOUNT', '21.8').to_f, 0.01].max
     config.x.max_payment_amount   = ENV.fetch('MAX_PAYMENT_AMOUNT', '1000').to_f

@@ -39,6 +39,7 @@ Rails.application.routes.draw do
     end
   end
   resources :zatladder, only: %i[index]
+  resources :occupancy, only: %i[index create]
   resources :finance_overview, only: %i[index]
   resources :payments, only: %i[index create] do
     member do

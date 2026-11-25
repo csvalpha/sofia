@@ -6,6 +6,8 @@ import 'bootstrap';
 
 import WebFont from 'webfontloader';
 
+import './occupancy/counter';
+
 WebFont.load({
   google: {
     families: ['Roboto:300,400,500']

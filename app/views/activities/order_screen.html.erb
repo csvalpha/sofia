@@ -49,6 +49,11 @@
           Persoon onthouden
         </span>
       </button>
+      <% if policy(:occupancy).index? %>
+        <div class="w-auto align-self-center">
+          <%= render partial: 'partials/occupancy_counter' %>
+        </div>
+      <% end %>
     </div>
 
     <flash-notification>
