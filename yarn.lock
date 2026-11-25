@@ -5627,6 +5627,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nanoid@npm:^3.3.20":
+  version: 3.3.20
+  resolution: "nanoid@npm:3.3.20"
+  bin:
+    nanoid: bin/nanoid.cjs
+  checksum: 10c0/856e8bf3bddb959d65997bd94908be030dbc5e6ed88fb3af2a638e51d1938f4d4f454c7c7231aba340775224f88b8cfd3ce1693c70471bfd05f5b6a2227c0c1e
+  languageName: node
+  linkType: hard
+
 "natural-compare@npm:^1.4.0":
   version: 1.4.0
   resolution: "natural-compare@npm:1.4.0"
@@ -6448,12 +6457,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss-sorting@npm:^10.0.0":
-  version: 10.0.0
-  resolution: "postcss-sorting@npm:10.0.0"
+"postcss-sorting@npm:^11.0.0":
+  version: 11.0.0
+  resolution: "postcss-sorting@npm:11.0.0"
   peerDependencies:
     postcss: ^8.4.20
-  checksum: 10c0/2e53560ccfaefb6ccfaa44cd258735f815de7a06ff6c79e6fb0fe789422f10242266044902c716e2eec9680879d7e0872b4ecd5d89e9bd8670f6d9f6c3ce5adc
+  checksum: 10c0/74b7039312f0a7b9e30ae93a347f01306fe0eed705c13281a981253f8b4a4a679ef6552b4bcca61c1c95fb83dc52df8d93c7a9bbb66f7485d33bd575f0e7fad6
   languageName: node
   linkType: hard
 
@@ -6474,7 +6483,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.4.14, postcss@npm:^8.4.40, postcss@npm:^8.5.6, postcss@npm:^8.5.8":
+"postcss@npm:^8.4.14, postcss@npm:^8.4.40, postcss@npm:^8.5.6":
   version: 8.5.28
   resolution: "postcss@npm:8.5.28"
   dependencies:
@@ -6482,6 +6491,17 @@ __metadata:
     picocolors: "npm:^1.1.1"
     source-map-js: "npm:^1.2.1"
   checksum: 10c0/9fe44215a6628d89c8a75184b92f5b2f77e16f9e5b13b39b9009bb7e8e6eccddf82c8854bae922db1f17ace6ef3445073fe38abff513caeb03e5285b1b55620a
+  languageName: node
+  linkType: hard
+
+"postcss@npm:^8.5.33":
+  version: 8.5.33
+  resolution: "postcss@npm:8.5.33"
+  dependencies:
+    nanoid: "npm:^3.3.20"
+    picocolors: "npm:^1.1.1"
+    source-map-js: "npm:^1.2.2"
+  checksum: 10c0/8711c5ad32a798813ae52dd51024881915ecc6171030f9cc1d3766d1969da20ade4cf71a645d7e54668cb45cb9622eac938dc1ce91fe1f9a0fa5f0bc8cbaa05a
   languageName: node
   linkType: hard
 
@@ -7001,7 +7021,7 @@ __metadata:
     stylelint: "npm:^17.4.0"
     stylelint-config-recess-order: "npm:^7.6.1"
     stylelint-config-standard-scss: "npm:^17.0.0"
-    stylelint-order: "npm:^8.1.1"
+    stylelint-order: "npm:^9.0.0"
     vue: "npm:^2.7.16"
     vue-eslint-parser: "npm:^10.4.0"
     vue-loader: "npm:^15.11.1"
@@ -7017,6 +7037,13 @@ __metadata:
   version: 1.2.1
   resolution: "source-map-js@npm:1.2.1"
   checksum: 10c0/7bda1fc4c197e3c6ff17de1b8b2c20e60af81b63a52cb32ec5a5d67a20a7d42651e2cb34ebe93833c5a2a084377e17455854fee3e21e7925c64a51b6a52b0faf
+  languageName: node
+  linkType: hard
+
+"source-map-js@npm:^1.2.2":
+  version: 1.2.4
+  resolution: "source-map-js@npm:1.2.4"
+  checksum: 10c0/b0fb346b142e89a19fa3299a259d8c0dc66626321634c30df260b2e8a1d4c1e219a6a28e8d10617cc54e7816d94eff5c4edd96e208172e93efc2c6fd75b111c6
   languageName: node
   linkType: hard
 
@@ -7166,15 +7193,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stylelint-order@npm:^8.1.1":
-  version: 8.1.1
-  resolution: "stylelint-order@npm:8.1.1"
+"stylelint-order@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "stylelint-order@npm:9.0.0"
   dependencies:
-    postcss: "npm:^8.5.8"
-    postcss-sorting: "npm:^10.0.0"
+    postcss: "npm:^8.5.33"
+    postcss-sorting: "npm:^11.0.0"
   peerDependencies:
-    stylelint: ^16.18.0 || ^17.0.0
-  checksum: 10c0/ef135a414d3ed98a53cc19e52f1cdff25105e34d96430ecc805d831dbdf4f505031d692dba0f2275b6e7b3a4f4b406f352d85a3924e2e3d89931af65a64eb047
+    stylelint: ^16.18.0 || ^17.0.0 || ^18.0.0
+  checksum: 10c0/470ae49dfd34162633ca186b39ce26ee29ad048bbf14203cc3a8e8e3faa16ff200b049f9f034b4898deedb61779acaa975b686959a824e86341d345e7c109e9a
   languageName: node
   linkType: hard
 
