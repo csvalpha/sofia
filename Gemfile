@@ -4,6 +4,9 @@ gem 'active_model_otp', '~> 2.3', '>= 2.3.4'
 gem 'bcrypt', '~> 3.1.21'
 gem 'bootsnap', '~> 1.21.1'
 gem 'browser', '~> 6.2.0'
+# Rails 7.2 passes a positional options hash to ConnectionPool.new (RedisCacheStore); connection_pool 3 is keyword-only.
+# Drop this pin once Rails calls ConnectionPool.new(**pool_options).
+gem 'connection_pool', '< 3'
 gem 'cssbundling-rails', '~> 1.4', '>= 1.4.3'
 gem 'dartsass-rails', '~> 0.5.1'
 gem 'devise', '~>5.0.0'
