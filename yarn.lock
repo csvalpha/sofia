@@ -5178,13 +5178,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jquery@npm:^3.7.1":
-  version: 3.7.1
-  resolution: "jquery@npm:3.7.1"
-  checksum: 10c0/808cfbfb758438560224bf26e17fcd5afc7419170230c810dd11f5c1792e2263e2970cca8d659eb84fcd9acc301edb6d310096e450277d54be4f57071b0c82d9
-  languageName: node
-  linkType: hard
-
 "js-tokens@npm:^4.0.0":
   version: 4.0.0
   resolution: "js-tokens@npm:4.0.0"
@@ -7022,7 +7015,6 @@ __metadata:
     eslint-plugin-vue: "npm:^9.33.0"
     eslint-webpack-plugin: "npm:^6.0.0"
     globals: "npm:^17.3.0"
-    jquery: "npm:^3.7.1"
     moment: "npm:^2.30.1"
     popper.js: "npm:^1.16.1"
     postcss: "npm:^8.5.6"

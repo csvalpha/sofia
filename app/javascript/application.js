@@ -1,7 +1,6 @@
 import { Turbo } from '@hotwired/turbo-rails';
 Turbo.start();
 
-import 'jquery';
 import 'bootstrap';
 
 import WebFont from 'webfontloader';
