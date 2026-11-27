@@ -24,7 +24,8 @@
           </ul>
           <p>
             Kolommen mogen gescheiden zijn door een komma of puntkomma.
-            <%= link_to 'Download een voorbeeldbestand', '/voorbeeld_gebruikers_import.csv', download: true %>.
+            <% example_file = Rails.application.config.x.subprovider_label.present? ? 'voorbeeld_gebruikers_import_subprovider.csv' : 'voorbeeld_gebruikers_import.csv' %>
+            <%= link_to 'Download een voorbeeldbestand', "/#{example_file}", download: true %>.
           </p>
           <%= f.file_field :file, accept: '.csv,text/csv', required: true, class: 'form-control' %>
         </div>

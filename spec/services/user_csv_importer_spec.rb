@@ -45,6 +45,16 @@ describe UserCsvImporter do
       end
     end
 
+    context 'with the example file with subprovider that can be downloaded' do
+      let(:content) { Rails.public_path.join('voorbeeld_gebruikers_import_subprovider.csv').read }
+      let(:subprovider_label) { 'Vereniging' }
+
+      it 'imports all users' do
+        expect { importer.import }.to change(User, :count).by(3)
+        expect(importer.errors).to be_empty
+      end
+    end
+
     context 'with semicolons, a byte order mark, english headers and blank lines' do
       let(:content) { "﻿Name;E-mail;Birthday\r\nJan Jansen;jan@example.com;1-5-2001\r\n;;\r\n" }
 
