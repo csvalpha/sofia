@@ -3,11 +3,13 @@
 
 
 .order-screen {
+  // Pin to the viewport instead of using 100vw/100vh: iPadOS Safari can keep stale
+  // viewport-unit values after switching apps, leaving the screen at half size.
+  position: fixed;
+  inset: 0;
   display: grid;
   grid-template-rows: [header-start] 80px [header-end user-details-start product-grid-start orders-start order-grid-start] 1fr [user-details-end orders-end product-grid-end order-grid-end];
   grid-template-columns: [header-start orders-start user-details-start] minmax(35%, 340px) [user-details-end orders-end product-grid-start order-grid-start] 1fr [header-end product-grid-end order-grid-end];
-  width: 100vw;
-  height: 100vh;
 
   .flash {
     position: fixed;
@@ -455,14 +457,11 @@
 
   .folder-modal-backdrop {
     position: fixed;
-    top: 0;
-    left: 0;
+    inset: 0;
     z-index: 1050;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100vw;
-    height: 100vh;
     background-color: rgb(0 0 0 / 50%);
   }
 

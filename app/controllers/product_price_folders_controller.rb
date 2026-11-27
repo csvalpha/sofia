@@ -7,7 +7,7 @@ class ProductPriceFoldersController < ApplicationController
 
   def index
     authorize ProductPriceFolder, :index?
-    @folders = @price_list.product_price_folders.order(:position)
+    @folders = @price_list.product_price_folders.ordered
     render json: @folders
   end
 

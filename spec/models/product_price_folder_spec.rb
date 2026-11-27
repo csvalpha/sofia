@@ -58,13 +58,13 @@ RSpec.describe ProductPriceFolder do
     end
   end
 
-  describe 'default scope' do
+  describe '.ordered' do
     subject(:price_list) { create(:price_list) }
 
     it 'orders folders by position' do
       second = create(:product_price_folder, price_list:, position: 1)
       first = create(:product_price_folder, price_list:, position: 0)
-      expect(price_list.product_price_folders).to eq [first, second]
+      expect(price_list.product_price_folders.ordered).to eq [first, second]
     end
   end
 

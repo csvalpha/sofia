@@ -119,6 +119,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_16_095221) do
     t.datetime "updated_at", precision: nil, null: false
     t.datetime "archived_at"
     t.integer "grid_size", default: 4
+    t.check_constraint "grid_size >= 2 AND grid_size <= 9", name: "price_lists_grid_size_check"
   end
 
   create_table "product_price_folders", force: :cascade do |t|
@@ -131,7 +132,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_16_095221) do
     t.datetime "updated_at", null: false
     t.index ["deleted_at"], name: "index_product_price_folders_on_deleted_at"
     t.index ["price_list_id", "position"], name: "index_product_price_folders_on_price_list_id_and_position"
-    t.index ["price_list_id"], name: "index_product_price_folders_on_price_list_id"
+    t.check_constraint "\"position\" >= 0", name: "product_price_folders_position_check"
   end
 
   create_table "product_prices", force: :cascade do |t|
@@ -144,10 +145,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_16_095221) do
     t.bigint "product_price_folder_id"
     t.integer "position", default: 0, null: false
     t.index ["price_list_id", "product_price_folder_id", "position"], name: "index_product_prices_on_folder_and_position"
-    t.index ["price_list_id"], name: "index_product_prices_on_price_list_id"
     t.index ["product_id", "price_list_id", "deleted_at"], name: "index_product_prices_on_product_id_and_price_list_id", unique: true
-    t.index ["product_id"], name: "index_product_prices_on_product_id"
     t.index ["product_price_folder_id"], name: "index_product_prices_on_product_price_folder_id"
+    t.check_constraint "\"position\" >= 0", name: "product_prices_position_check"
   end
 
   create_table "products", force: :cascade do |t|
@@ -233,11 +233,11 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_16_095221) do
   add_foreign_key "orders", "activities"
   add_foreign_key "orders", "users"
   add_foreign_key "orders", "users", column: "created_by_id"
-  add_foreign_key "product_price_folders", "price_lists"
-  add_foreign_key "product_prices", "product_price_folders"
   add_foreign_key "payments", "invoices"
   add_foreign_key "payments", "users"
+  add_foreign_key "product_price_folders", "price_lists"
   add_foreign_key "product_prices", "price_lists"
+  add_foreign_key "product_prices", "product_price_folders", on_delete: :nullify
   add_foreign_key "product_prices", "products"
   add_foreign_key "roles_users", "roles"
   add_foreign_key "roles_users", "users"

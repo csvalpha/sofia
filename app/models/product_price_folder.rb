@@ -7,7 +7,7 @@ class ProductPriceFolder < ApplicationRecord
                     format: { with: /\A#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})\z/, message: 'must be a valid hexcode (e.g., #FF5733 or #F57)' }
   validates :position, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
-  default_scope { order(:position) }
+  scope :ordered, -> { order(:position) }
 
   before_validation :set_default_position, on: :create
 

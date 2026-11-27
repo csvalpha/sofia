@@ -94,7 +94,7 @@ class ActivitiesController < ApplicationController # rubocop:disable Metrics/Cla
       include: { product: { only: %i[id name category color], methods: %i[requires_age] } }
     )
 
-    @folders_json = @activity.price_list.product_price_folders.order(:position).to_json(
+    @folders_json = @activity.price_list.product_price_folders.ordered.to_json(
       only: %i[id name position color]
     )
 
