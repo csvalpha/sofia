@@ -38,6 +38,6 @@ class PriceListPolicy < ApplicationPolicy
   end
 
   def permitted_attributes
-    %i[name]
+    %i[name grid_size]
   end
 end

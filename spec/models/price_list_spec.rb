@@ -11,6 +11,34 @@ RSpec.describe PriceList do
 
       it { expect(price_list).not_to be_valid }
     end
+
+    context 'when with a grid_size below the minimum' do
+      subject(:price_list) { build_stubbed(:price_list, grid_size: 1) }
+
+      it { expect(price_list).not_to be_valid }
+    end
+
+    context 'when with a grid_size above the maximum' do
+      subject(:price_list) { build_stubbed(:price_list, grid_size: 10) }
+
+      it { expect(price_list).not_to be_valid }
+    end
+
+    context 'when without a grid_size' do
+      subject(:price_list) { build_stubbed(:price_list, grid_size: nil) }
+
+      it { expect(price_list).to be_valid }
+    end
+  end
+
+  describe '#set_defaults' do
+    it 'defaults grid_size to 4 when not given' do
+      expect(described_class.new.grid_size).to eq 4
+    end
+
+    it 'does not override an explicitly given grid_size' do
+      expect(described_class.new(grid_size: 6).grid_size).to eq 6
+    end
   end
 
   describe '#product_price_for' do
