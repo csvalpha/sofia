@@ -5,6 +5,9 @@
 <% content_for :modal do %>
   <%= render 'modal' %>
   <%= render 'new_sofia_account_user_modal' %>
+  <% if policy(User).import? %>
+    <%= render 'import_users_modal' %>
+  <% end %>
 <% end %>
 
 <div class="container footer-padding">
@@ -33,14 +36,24 @@
     
     <div class="d-flex justify-content-between align-items-center">
       <h3>Streepsysteem gebruikers</h3>
-      <% if policy(User).create? %>
-        <button class="btn btn-sm btn-primary" data-bs-target="#new_sofia_account_user_modal" data-bs-toggle="modal" role="button">
-          <i class="fas fa-plus"></i>
-          <span class="d-none d-md-inline ms-1">
-            Nieuwe gebruiker
-          </span>
-        </button>
-      <% end %>
+      <div>
+        <% if policy(User).import? %>
+          <button class="btn btn-sm btn-secondary" data-bs-target="#import_users_modal" data-bs-toggle="modal" role="button">
+            <i class="fas fa-file-import"></i>
+            <span class="d-none d-md-inline ms-1">
+              Importeren (CSV)
+            </span>
+          </button>
+        <% end %>
+        <% if policy(User).create? %>
+          <button class="btn btn-sm btn-primary" data-bs-target="#new_sofia_account_user_modal" data-bs-toggle="modal" role="button">
+            <i class="fas fa-plus"></i>
+            <span class="d-none d-md-inline ms-1">
+              Nieuwe gebruiker
+            </span>
+          </button>
+        <% end %>
+      </div>
     </div>
     <users-table :users="sofia_account_users" class="mb-5"></users-table>
 

@@ -7,6 +7,10 @@ class UserPolicy < ApplicationPolicy
     index?
   end
 
+  def import?
+    create?
+  end
+
   def show?
     user&.treasurer? || (user&.renting_manager? && User.manual.exists?(id: record)) || record == user
   end

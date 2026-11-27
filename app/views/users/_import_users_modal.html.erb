@@ -1,0 +1,41 @@
+<div aria-hidden="true" aria-labelledby="import_users_modal_label" class="modal fade" id="import_users_modal" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="import_users_modal_label">
+          Streepsysteem gebruikers importeren
+        </h5>
+        <button aria-label="close" class="btn-close" data-bs-dismiss="modal" type="button"/>
+      </div>
+      <%= form_with url: import_users_path, method: :post, multipart: true do |f| %>
+        <div class="modal-body">
+          <p>
+            Upload een CSV-bestand met een kopregel en per regel één gebruiker. Elke gebruiker krijgt een activatie-mail.
+            Als één regel niet klopt, wordt er niemand geïmporteerd.
+          </p>
+          <ul>
+            <li><strong>naam</strong> (verplicht)</li>
+            <li><strong>email</strong> (verplicht)</li>
+            <li><strong>geboortedatum</strong> (optioneel, als DD-MM-JJJJ)</li>
+            <% if Rails.application.config.x.subprovider_label.present? %>
+              <li><strong>subprovider</strong> (verplicht, <%= Rails.application.config.x.subprovider_label %>)</li>
+            <% end %>
+          </ul>
+          <p>
+            Kolommen mogen gescheiden zijn door een komma of puntkomma.
+            <%= link_to 'Download een voorbeeldbestand', '/voorbeeld_gebruikers_import.csv', download: true %>.
+          </p>
+          <%= f.file_field :file, accept: '.csv,text/csv', required: true, class: 'form-control' %>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">
+            Annuleren
+          </button>
+          <%= f.submit 'Importeren en activatie-mails versturen', data: { disable_with: 'Bezig...' }, class: 'btn btn-primary' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
