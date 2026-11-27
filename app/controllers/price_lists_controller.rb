@@ -41,7 +41,7 @@ class PriceListsController < ApplicationController
     else
       flash[:error] = "Prijslijst wijzigen mislukt; #{@price_list.errors.full_messages.join(', ')}"
     end
-    redirect_to @price_list
+    redirect_to price_lists_path
   end
 
   def archive

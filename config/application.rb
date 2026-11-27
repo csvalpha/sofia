@@ -57,7 +57,7 @@ module Sofia
 
     config.x.authorize_url        = ENV.fetch('AUTHORIZE_URL', '/oauth/authorize')
     config.x.token_url            = ENV.fetch('TOKEN_URL', '/api/v1/oauth/token')
-    config.x.me_url               = ENV.fetch('ME_URL', '/api/v1/users?filter[me]&include="active_groups"')
+    config.x.me_url               = ENV.fetch('ME_URL', '/api/v1/users?filter[me]&include=active_groups')
 
     config.x.from_email           = ENV.fetch('FROM_EMAIL', 'noreply@example.com')
     config.x.ict_email            = ENV.fetch('ICT_EMAIL', 'ict@example.com')
@@ -81,6 +81,7 @@ module Sofia
 
     config.x.subprovider_label    = ENV.fetch('SUBPROVIDER_LABEL', nil)
     config.x.deposit_button_enabled = ENV.fetch('DEPOSIT_BUTTON_ENABLED', 'true') == 'true'
+    config.x.occupancy_api_token  = ENV.fetch('OCCUPANCY_API_TOKEN', nil).presence
 
     config.x.min_payment_amount   = [ENV.fetch('MIN_PAYMENT_AMOUNT', '21.8').to_f, 0.01].max
     config.x.max_payment_amount   = ENV.fetch('MAX_PAYMENT_AMOUNT', '1000').to_f

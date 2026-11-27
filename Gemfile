@@ -4,6 +4,9 @@ gem 'active_model_otp', '~> 2.3', '>= 2.3.4'
 gem 'bcrypt', '~> 3.1.21'
 gem 'bootsnap', '~> 1.21.1'
 gem 'browser', '~> 6.2.0'
+# Rails 7.2 passes a positional options hash to ConnectionPool.new (RedisCacheStore); connection_pool 3 is keyword-only.
+# Drop this pin once Rails calls ConnectionPool.new(**pool_options).
+gem 'connection_pool', '< 3'
 gem 'cssbundling-rails', '~> 1.4', '>= 1.4.3'
 gem 'dartsass-rails', '~> 0.5.1'
 gem 'devise', '~>5.0.0'
@@ -20,7 +23,7 @@ gem 'mollie-api-ruby', '~> 4.18.0'
 gem 'net-imap', '~> 0.6.2'
 gem 'net-pop',  '~> 0.1.2'
 gem 'net-smtp', '~> 0.5.1'
-gem 'omniauth', '~> 2.1.4'
+gem 'omniauth', '~> 2.2.0'
 gem 'omniauth-identity', '~> 3.1', '>= 3.1.5'
 gem 'omniauth-oauth2', '~> 1.9.0'
 gem 'paper_trail', '~> 17.0.0'
@@ -51,7 +54,7 @@ group :development, :test do
   gem 'brakeman', '~> 8.0.1', require: false
   gem 'bullet', '~> 8.1'
   gem 'colorize', '~> 1.1.0'
-  gem 'database_consistency', '~> 2.1.1'
+  gem 'database_consistency', '~> 3.0.12'
   gem 'dotenv-rails', '~> 3.2.0'
   gem 'guard-livereload', '~> 2.5.2'
   gem 'guard-rspec', '~> 4.7.3', require: false

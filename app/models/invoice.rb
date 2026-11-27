@@ -6,7 +6,10 @@ class Invoice < ApplicationRecord
   belongs_to :user
   belongs_to :activity
   has_many :rows, class_name: 'InvoiceRow', dependent: :destroy
+  has_many :payments, dependent: :destroy
   accepts_nested_attributes_for :rows
+
+  validates :token, uniqueness: true
 
   validate :activity_is_locked
 

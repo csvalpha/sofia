@@ -58,6 +58,11 @@
         <input type="range" min="2" max="9" step="1" v-model="gridSize" class="form-range" id="gridSizeSlider">
         <label for="gridSizeSlider" class="ms-2">{{ gridSize }}×{{ gridSize }}</label>
       </div>
+      <% if policy(:occupancy).index? %>
+        <div class="w-auto align-self-center">
+          <%= render partial: 'partials/occupancy_counter' %>
+        </div>
+      <% end %>
     </div>
 
     <flash-notification>
