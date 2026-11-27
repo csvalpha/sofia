@@ -13,6 +13,7 @@
         <div class="modal-body" id="activities_modal">
           <%= f.input :name, label: 'Naam', placeholder: 'Naam', required: true %>
           <%= f.input :email, label: 'E-mailadres', placeholder: 'E-mailadres', required: true %>
+          <%= f.input :birthday, as: :date, html5: true, label: 'Geboortedatum', required: false, hint: 'Optioneel, wordt gebruikt voor leeftijdscontrole' %>
           <% if Rails.application.config.x.subprovider_label.present? %>
             <%= f.input :sub_provider, label: 'Subprovider', placeholder: Rails.application.config.x.subprovider_label, required: true, input_html: { style: 'text-transform: uppercase;', onkeyup: 'this.value = this.value.toUpperCase();' } %>
           <% end %>

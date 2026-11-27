@@ -24,11 +24,14 @@ class UserPolicy < ApplicationPolicy
   end
 
   def permitted_attributes
-    %i[name email provider sub_provider]
+    %i[name email provider sub_provider birthday]
   end
 
+  # Birthday of Amber users is synced from Amber on every login, so it cannot be edited here
   def permitted_attributes_for_update
-    %i[name email sub_provider deactivated]
+    base = %i[name email sub_provider deactivated]
+    base << :birthday unless record.is_a?(User) && record.provider == 'amber_oauth2'
+    base
   end
 
   def permitted_attributes_for_update_with_sofia_account
