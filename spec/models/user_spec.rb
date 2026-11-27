@@ -42,6 +42,18 @@ RSpec.describe User do
       it { expect(user).to be_valid }
     end
 
+    context 'when with a birthday in the past' do
+      subject(:user) { build_stubbed(:user, birthday: 20.years.ago.to_date) }
+
+      it { expect(user).to be_valid }
+    end
+
+    context 'when with a birthday in the future' do
+      subject(:user) { build_stubbed(:user, birthday: 1.day.from_now.to_date) }
+
+      it { expect(user).not_to be_valid }
+    end
+
     context 'when deactivating with credit' do
       subject(:user) { create(:user, deactivated: true) }
 

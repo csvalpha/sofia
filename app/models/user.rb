@@ -13,6 +13,7 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   validates :name, presence: true
   validates :uid, uniqueness: true, allow_blank: true
   validate :no_deactivation_when_nonzero_credit
+  validate :birthday_not_in_future
   validates :email, format: { with: Devise.email_regexp }, allow_blank: true
   validates :email, presence: true, if: ->(user) { !user.deactivated && user.sofia_account.present? }
   validates :email, uniqueness: {
@@ -176,5 +177,11 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
     return unless deactivated && credit != 0
 
     errors.add(:deactivated, 'cannot deactivate when credit is non zero')
+  end
+
+  def birthday_not_in_future
+    return unless birthday && birthday > Time.zone.today
+
+    errors.add(:birthday, 'mag niet in de toekomst liggen')
   end
 end

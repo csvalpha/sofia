@@ -34,5 +34,25 @@ describe UsersController do
       request
       expect(response).to be_redirect
     end
+
+    context 'with a birthday' do
+      let(:user) { build(:user, :sofia_account, birthday: Date.new(2000, 5, 17)) }
+
+      it 'stores the birthday' do
+        sign_in create(:user, :treasurer)
+        request
+        expect(User.last.birthday).to eq Date.new(2000, 5, 17)
+      end
+    end
+
+    context 'with a birthday in the future' do
+      let(:user) { build(:user, :sofia_account, birthday: 1.day.from_now.to_date) }
+
+      it 'does not create the user' do
+        sign_in create(:user, :treasurer)
+        expect { request }.not_to change(User, :count)
+        expect(flash[:error]).to include 'Birthday'
+      end
+    end
   end
 end
