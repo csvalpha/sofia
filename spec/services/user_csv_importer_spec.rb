@@ -199,6 +199,17 @@ describe UserCsvImporter do
           expect(User.last.sub_provider).to eq 'ABC'
         end
       end
+
+      context 'with allowed subprovider options' do
+        let(:content) { "naam,email,subprovider\nJan Jansen,jan@example.com,drz\nPiet,piet@example.com,XYZ\n" }
+
+        before { allow(Rails.application.config.x).to receive(:subprovider_options).and_return(%w[DRZ DKV DRV]) }
+
+        it 'rejects other values' do
+          expect(importer.import).to be false
+          expect(importer.errors).to eq ['Rij 3: Sub provider moet een van de volgende zijn: DRZ, DKV, DRV']
+        end
+      end
     end
   end
 end

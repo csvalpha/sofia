@@ -1,0 +1,6 @@
+<% options = Rails.application.config.x.subprovider_options %>
+<% if options.any? %>
+  <%= f.input :sub_provider, label: 'Subprovider', collection: options, prompt: 'Kies een subprovider', required: true %>
+<% else %>
+  <%= f.input :sub_provider, label: 'Subprovider', placeholder: Rails.application.config.x.subprovider_label, required: true, input_html: { style: 'text-transform: uppercase;', onkeyup: 'this.value = this.value.toUpperCase();' } %>
+<% end %>

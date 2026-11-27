@@ -53,6 +53,51 @@ RSpec.describe User do
     end
   end
 
+  describe 'sub_provider validation' do
+    let(:options) { %w[DRZ DKV DRV] }
+
+    before { allow(Rails.application.config.x).to receive(:subprovider_options).and_return(options) }
+
+    context 'when with an allowed sub_provider' do
+      subject(:user) { build(:user, sub_provider: 'DKV') }
+
+      it { expect(user).to be_valid }
+    end
+
+    context 'when with an allowed sub_provider in lowercase' do
+      subject(:user) { build(:user, sub_provider: 'dkv') }
+
+      it { expect(user).to be_valid }
+    end
+
+    context 'when with a sub_provider that is not allowed' do
+      subject(:user) { build(:user, sub_provider: 'XYZ') }
+
+      it 'is invalid' do
+        expect(user).not_to be_valid
+        expect(user.errors[:sub_provider]).to eq ['moet een van de volgende zijn: DRZ, DKV, DRV']
+      end
+    end
+
+    context 'when an existing user has an old sub_provider' do
+      subject(:user) { create(:user) }
+
+      it 'can still be updated without changing it' do
+        user.update_column(:sub_provider, 'OLD') # rubocop:disable Rails/SkipsModelValidations
+        user.reload.name = 'New name'
+        expect(user).to be_valid
+      end
+    end
+
+    context 'when no options are configured' do
+      subject(:user) { build(:user, sub_provider: 'XYZ') }
+
+      let(:options) { [] }
+
+      it { expect(user).to be_valid }
+    end
+  end
+
   describe '.in_amber' do
     context 'when in amber' do
       subject(:user) { create(:user, provider: 'amber_oauth2') }

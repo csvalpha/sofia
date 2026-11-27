@@ -19,6 +19,8 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
     case_sensitive: false,
     conditions: -> { where(deleted_at: nil).where.not(email: nil).where('provider IS DISTINCT FROM ?', 'amber_oauth2') }
   }, if: ->(user) { user.email.present? && user.deleted_at.nil? && user.provider != 'amber_oauth2' }
+  # Only validated on change, so existing users with an old value can still be updated
+  validate :sub_provider_in_options, if: :sub_provider_changed?
 
   scope :in_amber, -> { where(provider: 'amber_oauth2') }
   scope :sofia_account, -> { where(provider: 'sofia_account') }
@@ -171,6 +173,13 @@ class User < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   private
+
+  def sub_provider_in_options
+    options = Rails.application.config.x.subprovider_options
+    return if options.empty? || sub_provider.blank? || options.include?(sub_provider.upcase)
+
+    errors.add(:sub_provider, "moet een van de volgende zijn: #{options.join(', ')}")
+  end
 
   def no_deactivation_when_nonzero_credit
     return unless deactivated && credit != 0
