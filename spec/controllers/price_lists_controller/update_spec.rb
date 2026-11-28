@@ -41,4 +41,25 @@ describe PriceListsController do
       it { expect(price_list.name).to eq 'New Name' }
     end
   end
+
+  describe 'PATCH update as json' do
+    let(:price_list) { create(:price_list) }
+    let(:user) { create(:user, :treasurer) }
+
+    before { sign_in user }
+
+    it 'updates the grid size without redirecting' do
+      patch :update, params: { id: price_list.id, price_list: { grid_size: 6 } }, format: :json
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body['grid_size']).to eq 6
+      expect(price_list.reload.grid_size).to eq 6
+      expect(flash).to be_empty
+    end
+
+    it 'returns errors for an invalid grid size' do
+      patch :update, params: { id: price_list.id, price_list: { grid_size: 12 } }, format: :json
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(price_list.reload.grid_size).not_to eq 12
+    end
+  end
 end
