@@ -3,6 +3,9 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
 
   after_action :verify_authorized
 
+  # Only show the first import errors, the flash is stored in the session cookie which has a size limit
+  MAX_IMPORT_ERRORS_SHOWN = 10
+
   def index # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     authorize User
 
@@ -97,6 +100,18 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
     redirect_to @user
   end
 
+  def import
+    authorize User
+
+    if params[:file].blank?
+      flash[:error] = 'Geen bestand geselecteerd'
+    else
+      import_users(params[:file].read)
+    end
+
+    redirect_to users_path
+  end
+
   def search
     authorize User
 
@@ -150,6 +165,22 @@ class UsersController < ApplicationController # rubocop:disable Metrics/ClassLen
   end
 
   private
+
+  def import_users(content)
+    importer = UserCsvImporter.new(content)
+    if importer.import
+      flash[:success] = "#{importer.users.size} gebruiker(s) geïmporteerd, er is een activatie-mail naar ze verstuurd"
+    else
+      flash[:error] = "Importeren mislukt, er is niemand geïmporteerd; #{import_errors_summary(importer.errors)}"
+    end
+  end
+
+  def import_errors_summary(errors)
+    shown = errors.first(MAX_IMPORT_ERRORS_SHOWN)
+    hidden = errors.size - shown.size
+    shown << "en nog #{hidden} andere fout(en)" if hidden.positive?
+    shown.join('; ')
+  end
 
   def update_user
     permitted_params = params.require(:user).permit(policy(@user).permitted_attributes_for_update)

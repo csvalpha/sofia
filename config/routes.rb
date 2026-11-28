@@ -39,6 +39,7 @@ Rails.application.routes.draw do
   resources :users, only: %i[index show create update] do
     collection do
       post :search
+      post :import
     end
     member do
       get :activities

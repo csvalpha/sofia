@@ -7,7 +7,9 @@ gem 'browser', '~> 6.2.0'
 # Rails 7.2 passes a positional options hash to ConnectionPool.new (RedisCacheStore); connection_pool 3 is keyword-only.
 # Drop this pin once Rails calls ConnectionPool.new(**pool_options).
 gem 'connection_pool', '< 3'
+# csv is no longer a default gem from Ruby 3.4 onwards, used for importing users
 gem 'cssbundling-rails', '~> 1.4', '>= 1.4.3'
+gem 'csv', '~> 3.3'
 gem 'dartsass-rails', '~> 0.5.1'
 gem 'devise', '~>5.0.0'
 gem 'devise-i18n', '~>1.15.0'
