@@ -50,7 +50,7 @@ describe PriceListsController do
 
     it 'updates the grid size without redirecting' do
       patch :update, params: { id: price_list.id, price_list: { grid_size: 6 } }, format: :json
-      expect(response.status).to eq 200
+      expect(response).to have_http_status(:ok)
       expect(response.parsed_body['grid_size']).to eq 6
       expect(price_list.reload.grid_size).to eq 6
       expect(flash).to be_empty
@@ -58,7 +58,7 @@ describe PriceListsController do
 
     it 'returns errors for an invalid grid size' do
       patch :update, params: { id: price_list.id, price_list: { grid_size: 12 } }, format: :json
-      expect(response.status).to eq 422
+      expect(response).to have_http_status(:unprocessable_content)
       expect(price_list.reload.grid_size).not_to eq 12
     end
   end

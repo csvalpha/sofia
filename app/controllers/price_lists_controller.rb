@@ -36,16 +36,10 @@ class PriceListsController < ApplicationController
     @price_list = PriceList.find(params[:id])
     authorize @price_list
 
-    respond_to do |format|
-      if @price_list.update(price_list_params)
-        format.html { redirect_to price_lists_path, flash: { success: 'Prijslijst opgeslagen' } }
-        format.json { render json: @price_list.as_json(only: %i[id name grid_size]) }
-      else
-        format.html do
-          redirect_to price_lists_path, flash: { error: "Prijslijst wijzigen mislukt; #{@price_list.errors.full_messages.join(', ')}" }
-        end
-        format.json { render json: @price_list.errors, status: :unprocessable_content }
-      end
+    if @price_list.update(price_list_params)
+      respond_to_update_success
+    else
+      respond_to_update_failure
     end
   end
 
@@ -80,6 +74,21 @@ class PriceListsController < ApplicationController
   end
 
   private
+
+  def respond_to_update_success
+    respond_to do |format|
+      format.html { redirect_to price_lists_path, flash: { success: 'Prijslijst opgeslagen' } }
+      format.json { render json: @price_list.as_json(only: %i[id name grid_size]) }
+    end
+  end
+
+  def respond_to_update_failure
+    errors = @price_list.errors
+    respond_to do |format|
+      format.html { redirect_to price_lists_path, flash: { error: "Prijslijst wijzigen mislukt; #{errors.full_messages.join(', ')}" } }
+      format.json { render json: errors, status: :unprocessable_content }
+    end
+  end
 
   def price_list_params
     params.require(:price_list).permit(policy(PriceList.new).permitted_attributes)
