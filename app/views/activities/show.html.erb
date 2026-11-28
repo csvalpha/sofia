@@ -251,7 +251,7 @@
                   <thead>
                   <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Datum</th>
+                    <th scope="col">Tijd</th>
                     <th scope="col">Gebruiker</th>
                     <th scope="col">Bedrag</th>
                   </tr>
@@ -260,7 +260,7 @@
                   <% @credit_mutations.each do |mutation| %>
                     <tr>
                       <th scope="row"><%= mutation.id %></th>
-                      <td><%= l mutation.created_at, format: :with_year %></td>
+                      <td><%= l mutation.created_at, format: :time_only %></td>
                       <td>
                         <% if policy(User).show? %>
                         <%= link_to mutation.user.name, mutation.user %>
