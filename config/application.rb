@@ -80,8 +80,6 @@ module Sofia
     config.x.site_association     = ENV.fetch('SITE_ASSOCIATION', 'C.S.V. Alpha')
 
     config.x.subprovider_label    = ENV.fetch('SUBPROVIDER_LABEL', nil)
-    # Comma separated list of allowed subproviders, e.g. "DRZ,DKV,DRV". When empty any value is allowed.
-    config.x.subprovider_options  = ENV.fetch('SUBPROVIDER_OPTIONS', '').split(',').map { |o| o.strip.upcase }.compact_blank
     config.x.deposit_button_enabled = ENV.fetch('DEPOSIT_BUTTON_ENABLED', 'true') == 'true'
     config.x.occupancy_api_token  = ENV.fetch('OCCUPANCY_API_TOKEN', nil).presence
 

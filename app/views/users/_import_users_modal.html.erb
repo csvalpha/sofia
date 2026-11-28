@@ -19,11 +19,7 @@
             <li><strong>email</strong> (verplicht)</li>
             <li><strong>geboortedatum</strong> (optioneel, als DD-MM-JJJJ)</li>
             <% if Rails.application.config.x.subprovider_label.present? %>
-              <% if Rails.application.config.x.subprovider_options.any? %>
-                <li><strong>subprovider</strong> (verplicht, een van: <%= Rails.application.config.x.subprovider_options.join(', ') %>)</li>
-              <% else %>
-                <li><strong>subprovider</strong> (verplicht, <%= Rails.application.config.x.subprovider_label %>)</li>
-              <% end %>
+              <li><strong>subprovider</strong> (verplicht, <%= Rails.application.config.x.subprovider_label %>)</li>
             <% end %>
           </ul>
           <p>
