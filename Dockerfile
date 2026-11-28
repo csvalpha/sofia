@@ -1,4 +1,4 @@
-FROM ruby:3.3.7-slim@sha256:696f37b3cd55288b5127850e3eeae67dd20595ab77a6724f7bb05baa8c6b4878
+FROM ruby:4.0.10-slim@sha256:ccc3afdcf3fdf474e7faea6b82ee071e5744c1c045bbf126cc9ecd407f8ce0df
 
 # Define args that can be supplied with
 # `docker build --build-args RAILS_ENV=<env>`, defaults to production.
