@@ -36,12 +36,17 @@ class PriceListsController < ApplicationController
     @price_list = PriceList.find(params[:id])
     authorize @price_list
 
-    if @price_list.update(price_list_params)
-      flash[:success] = 'Prijslijst opgeslagen'
-    else
-      flash[:error] = "Prijslijst wijzigen mislukt; #{@price_list.errors.full_messages.join(', ')}"
+    respond_to do |format|
+      if @price_list.update(price_list_params)
+        format.html { redirect_to price_lists_path, flash: { success: 'Prijslijst opgeslagen' } }
+        format.json { render json: @price_list.as_json(only: %i[id name grid_size]) }
+      else
+        format.html do
+          redirect_to price_lists_path, flash: { error: "Prijslijst wijzigen mislukt; #{@price_list.errors.full_messages.join(', ')}" }
+        end
+        format.json { render json: @price_list.errors, status: :unprocessable_content }
+      end
     end
-    redirect_to price_lists_path
   end
 
   def archive
